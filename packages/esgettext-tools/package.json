@@ -10,13 +10,7 @@
   "bin": {
     "gtx-i18n-xgettext": "bin/gtx-i18n-xgettext.js"
   },
-  "keywords": [
-    "gettext",
-    "i18n",
-    "translate",
-    "translation",
-    "l10n"
-  ],
+  "keywords": [],
   "scripts": {
     "build": "npm run clean && tsc",
     "watch": "npm run clean && tsc --watch",
@@ -24,11 +18,13 @@
     "lint": "tslint --force './src/**.*.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
   "author": "Guido Flohr <guido.flohr@cantanea.com> (http://www.guido.flohr.net/)",
   "license": "WTFPL",
   "devDependencies": {
+    "@types/yargs": "^15.0.4",
+    "typescript": "^3.8.3"
   },
   "dependencies": {
+    "yargs": "^15.3.1"
   }
 }
