@@ -2,8 +2,11 @@
   "name": "gtx-i18n-tools",
   "version": "1.0.0",
   "description": "Gettext-like po creation and manipulation",
-  "main": "index.js",
+  "bin": {
+    "gtx-i18n-xgettext": "dist/bin/gtx-i18n-xgettext.js"
+  },
   "scripts": {
+    "build": "babel src --out-dir dist",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
