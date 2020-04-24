@@ -8,7 +8,9 @@ const usage = gtx._('Usage: $0 [OPTIONS] INPUTFILE...\n')
 	+ gtx._('Extract translatable strings from given input files\n')
 	+ '\n'
 	+ gtx._('Mandatory arguments to long options are mandatory for short options too.\n')
-	+ gtx._('Similarly for optional arguments.');
+	+ gtx._('Similarly for optional arguments.\n')
+	+ '\n'
+	+ gtx._('Argumts to options are refered to in CAPS in the description.')
 
 export const cli = yargs
 .usage(usage)
@@ -38,6 +40,38 @@ export const cli = yargs
 	alias: 'p',
 	type: 'string',
 	describe: gtx._('output files will be placed in directory DIR\nIf output file is -, output is written to standard output.'),
+})
+.group(['language'], gtx._('Choice of input file language'))
+.option('language' {
+	alias: 'L',
+	type: 'string',
+	describe: gtx._('recognise the specified language (JavaScript, TypeScript, HTML)\nDefault is to auto-detect language based on filename extension.')
+})
+.group('from-code', gtx._('Interpretation of input files.'))
+.option('from-code', {
+	type: 'string',
+	describe: gtx._('encoding of input files'),
+	default: 'ASCII',
+})
+.group(['join-existing', 'exclude-file', 'add-comments', 'add-all-comments'], gtx._('Operation mode'))
+.option('join-existing', {
+	alias: 'j',
+	type: 'string',
+	describe: gtx._('join messages with existing file'),
+})
+.option('exclude-file', {
+	alias: 'x',
+	type: 'string',
+	describe: gtx._('entries from FILE.po are not extracted'),
+})
+.option('add-comments', {
+	alias: 'c',
+	type: 'string',
+	describe: gtx._('place comment blocks starting with TAG and preceding keyword lines in output file'),
+})
+.option('add-all-comments', {
+	describe: gtx._('place all comment blocks preceding keyword lines in output file'),
+	type: 'boolean',
 })
 .group(['version', 'help'], 'Informative output')
 .version(require(__dirname + '/../../package.json').version)
