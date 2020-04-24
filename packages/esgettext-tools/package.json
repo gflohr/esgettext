@@ -2,22 +2,33 @@
   "name": "gtx-i18n-tools",
   "version": "1.0.0",
   "description": "Gettext-like po creation and manipulation",
+  "main": "dist/index.js",
+  "files": [
+    "bin/",
+    "dist/"
+  ],
   "bin": {
-    "gtx-i18n-xgettext": "dist/bin/gtx-i18n-xgettext.js"
+    "gtx-i18n-xgettext": "bin/gtx-i18n-xgettext.js"
   },
+  "keywords": [
+    "gettext",
+    "i18n",
+    "translate",
+    "translation",
+    "l10n"
+  ],
   "scripts": {
-    "build": "babel src --out-dir dist",
+    "build": "npm run clean && tsc",
+    "watch": "npm run clean && tsc --watch",
+    "clean": "rm -rf ./dist",
+    "lint": "tslint --force './src/**.*.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "Guido Flohr <guido.flohr@cantanea.com> (http://www.guido.flohr.net/)",
   "license": "WTFPL",
   "devDependencies": {
-    "@babel/cli": "^7.8.4",
-    "@babel/core": "^7.9.0",
-    "@babel/preset-env": "^7.9.5"
   },
   "dependencies": {
-    "@babel/polyfill": "^7.8.7"
   }
 }
