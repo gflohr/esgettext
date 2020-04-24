@@ -1,0 +1,12 @@
+{
+  "name": "gtx-i18n-tools",
+  "version": "1.0.0",
+  "description": "Gettext-like po creation and manipulation",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Guido Flohr <guido.flohr@cantanea.com> (http://www.guido.flohr.net/)",
+  "license": "WTFPL"
+}
