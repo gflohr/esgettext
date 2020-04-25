@@ -64,5 +64,9 @@
 		"typescript": "^3.8.3",
 		"webpack": "^4.43.0",
 		"webpack-cli": "^3.3.11"
+	},
+	"dependencies": {
+		"@types/detect-node": "^2.0.0",
+		"detect-node": "^2.0.4"
 	}
 }

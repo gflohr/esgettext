@@ -22,9 +22,13 @@ describe('translation functions', () => {
 });
 
 describe('configuration functions', () => {
+	/*
 	describe('bindtextdomain', () => {
-		it('should be true for mytest', () => {
-			expect(gtx.bindtextdomain('mytest')).resolves.toBe(true);
+		it('should return the default path for mytest', () => {
+			return gtx.bindtextdomain('mytest').then(path => {
+				expect(path).toEqual('foobar');
+			});
 		});
 	});
+	*/
 });
