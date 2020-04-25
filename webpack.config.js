@@ -1,18 +1,25 @@
 const path = require('path');
 
-module.exports = [
-	'source-map'
-].map(devtool => ({
+module.exports = {
+	entry: './src/index.ts',
 	mode: 'development',
-	entry: './src/index.js',
-	output: {
-		path: path.resolve(__dirname, 'dist'),
-		filename: 'gtx-i18n.js',
-		library: 'GtxI18N',
-		libraryTarget: 'umd',
+	devtool: 'inline-source-map',
+	module: {
+		rules: [
+			{
+				test: /\.tsx?$/,
+				use: 'ts-loader',
+				exclude: /node_modules/,
+			},
+		],
 	},
-	devtool,
-	optimization: {
-		runtimeChunk: true
-	}
-}));
+	resolve: {
+		extensions: [ '.tsx', '.ts', '.js' ],
+	},
+	output: {
+		filename: 'gtx-i18n.js',
+		library: 'gtx',
+		libraryTarget: 'umd',
+		path: path.resolve(__dirname, 'dist'),
+	},
+  };
