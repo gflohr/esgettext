@@ -30,9 +30,9 @@ const nodeLocaleRegex = new RegExp(
  * @returns the locale in use
  */
 export function setLocale(locale?: string): string {
-	const ucLocale = locale.toUpperCase();
-
 	if (typeof locale !== 'undefined') {
+		const ucLocale = locale.toUpperCase();
+
 		if (ucLocale === 'POSIX' || ucLocale === 'C') {
 			useLocale = ucLocale;
 		} else if (browser() && browserLocaleRegex.exec(locale)) {

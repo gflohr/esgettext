@@ -1,0 +1,18 @@
+{
+	"minor": 1,
+	"entries": {
+		"Hello, world!": [["Hello, worlds!"], ["Hallo, Welt!", "Hallo, Welten!"]],
+		"": [
+			[],
+			[
+				"Project-Id-Version: something 0.1.1\nReport-Msgid-Bugs-To: Guido Flohr <guido.flohr@cantanea.com>\nPOT-Creation-Date: 2018-05-16 20:36+0300\nPO-Revision-Date: 2018-05-16 20:37+0300\nLast-Translator: Guido Flohr <guido.flohr@cantanea.com>\nLanguage-Team: German\nLanguage: de\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
+			]
+		],
+		"duplicate\u0004Hello, world!": [
+			["Hello, worlds!"],
+			["Hallo, Welt!", "Hallo, Welten!"]
+		],
+		"Menu\u0004Open ...": [[], ["Öffnen ..."]]
+	},
+	"major": 0
+}
