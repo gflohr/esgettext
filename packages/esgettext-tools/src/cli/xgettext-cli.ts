@@ -89,7 +89,7 @@ const optionGroups: Array<OptionGroup> = [
 				name: 'join-existing',
 				yargsOptions: {
 					alias: 'j',
-					type: 'string',
+					type: 'boolean',
 					describe: gtx._('join messages with existing file'),
 				}
 			},

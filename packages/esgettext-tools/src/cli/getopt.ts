@@ -80,10 +80,38 @@ export class Getopt {
 	 */
 	argv() {
 		const argv = this.cli.argv;
+		const keys = Object.keys(argv);
 
 		// TODO! Check for invalid usage!
+		for (let i = 0; i < keys.length; ++i) {
+			const key = keys[i];
+			if (!this.allowedKeys.has(key)) {
+				if (key.length) {
+					this.errorExit(gtx._x("'{progName}': unrecognized option '--{option}'",
+					               { progName: this.progName, option: key}));
+				} else {
+					this.errorExit(gtx._x("'{progName}': invalid option -- '{option}'",
+					               { progName: this.progName, option: key}));
+				}
+			}
+			const flags = this.allowedKeys.get(key);
+			const value = argv[key];
+			if (Array.isArray(value) && value.length > 1) {
+				if (!flags.multiple) {
+					this.errorExit(gtx._x("The option '{option}' can be given only once.",
+					               { option: key })));
+				}
+			}
+		}
 
 		return argv;
+	}
+
+	private errorExit(message: string) {
+		console.error(message);
+		console.error(gtx._x("Try '{progName} --help' for more information",
+		              { progName: this.progName}));
+		process.exit(1);
 	}
 
 	private buildUsage(usage: string, description: string) {

@@ -15,7 +15,7 @@ export class Gtx {
 	}
 
 	_x(msgid: string, placeholders: Placeholder): string {
-		return msgid.replace(/\{([a-zA-Z][0-9a-zA-Z]*)\})/g, match => {
+		return msgid.replace(/\{([a-zA-Z][0-9a-zA-Z]*)\}/g, (_, match) => {
 			if (placeholders.hasOwnProperty(match)) {
 				return placeholders[match];
 			} else {
