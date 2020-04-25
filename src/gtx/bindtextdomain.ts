@@ -1,4 +1,5 @@
 import { browser } from './browser';
+import { setLocale } from './set-locale';
 
 /**
  * Bind a textdomain to a certain path. The catalog file will be searched
@@ -26,7 +27,45 @@ export function bindtextdomain(
 		}
 	}
 
+	const paths = expandPath(path, domainname);
+
 	return new Promise((resolve) => {
 		resolve(path);
 	});
+}
+
+function expandPath(path: string, domainname: string): Array<string> {
+	let locale = setLocale();
+	let paths = new Array<string>();
+	const extender = 'json';
+
+	path = path.replace(/[/\\]*$/, '');
+
+	paths.push(`${path}/${locale}/LC_MESSAGES/${domainname}.${extender}`);
+
+	let next;
+
+	next = locale.replace(/\..+$/, '');
+	if (next) {
+		paths.push(`${path}/${next}/LC_MESSAGES/${domainname}.${extender}`);
+		locale = next;
+	}
+
+	next = locale.replace(/@.+$/, '');
+	if (next) {
+		paths.push(`${path}/${next}/LC_MESSAGES/${domainname}.${extender}`);
+		locale = next;
+	}
+
+	while (true) {
+		next = locale.replace(/-.+$/, '');
+		if (next) {
+			paths.push(`${path}/${next}/LC_MESSAGES/${domainname}.${extender}`);
+			locale = next;
+		} else {
+			break;
+		}
+	}
+
+	return paths;
 }
