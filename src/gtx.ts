@@ -3,15 +3,15 @@
 /* eslint no-underscore-dangle: "off" */
 
 interface Placeholder {
-	[index: string]: string
-};
+	[index: string]: string;
+}
 
 function expand(msg: string, placeholders: Placeholder): string {
 	return msg.replace(/\{([a-zA-Z][0-9a-zA-Z]*)\}/g, (_, match) => {
 		if (Object.prototype.hasOwnProperty.call(placeholders, match)) {
-				return placeholders[match];
+			return placeholders[match];
 		} else {
-				return `{${match}}`;
+			return `{${match}}`;
 		}
 	});
 }
@@ -28,9 +28,12 @@ export function useJSON(_json: boolean): void {
 	//useJSONCatalog = json;
 }
 
-export function bindtextdomain(_domainname: string, _path?: string): Promise<void> {
-	return new Promise(resolve => {
-		resolve();
+export function bindtextdomain(
+	_domainname: string,
+	_path?: string,
+): Promise<boolean> {
+	return new Promise((resolve) => {
+		resolve(true);
 	});
 }
 
