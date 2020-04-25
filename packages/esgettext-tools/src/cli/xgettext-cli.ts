@@ -1,23 +1,9 @@
 import * as yargs from 'yargs';
 import { Gtx } from '../gtx-i18n-runtime';
 import * as camelCase from 'camelcase';
+import { OptionGroup, Getopt } from './getopt';
 
 const gtx = new Gtx('gtx-i18n-tools');
-
-interface OptionFlags {
-	multiple?: boolean,
-}
-
-interface Option {
-	name: string,
-	flags?: OptionFlags,
-	yargsOptions: yargs.Options,
-}
-
-interface OptionGroup {
-	description: string,
-	options: Array<Option>,
-}
 
 const optionGroups: Array<OptionGroup> = [
 	{
@@ -166,52 +152,7 @@ const optionGroups: Array<OptionGroup> = [
 	},
 ];
 
-const usage = gtx._('Usage: $0 [OPTIONS] INPUTFILE...\n')
-	+ '\n'
-	+ gtx._('Extract translatable strings from given input files\n')
-	+ '\n'
-	+ gtx._('Mandatory arguments to long options are mandatory for short options too.\n')
-	+ gtx._('Similarly for optional arguments.\n')
-	+ '\n'
-	+ gtx._('Argumts to options are refered to in CAPS in the description.')
-
-let cli = yargs;
-cli.usage(usage);
-
-let allowedKeys = new Map();
-allowedKeys.set('help', true);
-allowedKeys.set('h', true);
-allowedKeys.set('version', true);
-allowedKeys.set('v', true);
-allowedKeys.set('_', true);
-allowedKeys.set('$0': true);
-
-for (let i = 0; i < optionGroups.length; ++i) {
-	const group = optionGroups[i];
-	const options = group.options;
-	const optionKeys = options.map(option => option.name);
-	optionKeys.map(key => {
-		allowedKeys.set(key, true);
-		allowedKeys.set(camelCase(key), true);
-	});
-	options
-	.filter(option => option.yargsOptions.alias)
-	.map(option => allowedKeys.set(option.yargsOptions.alias, true));
-
-	cli = cli.group(optionKeys, group.description);
-	for (let j = 0; j < options.length; ++j) {
-		cli = cli.option(options[j].name, options[j].yargsOptions);
-	}
-}
-
-cli = cli
-.group(['version', 'help'], 'Informative output')
-.version(require(__dirname + '/../../package.json').version)
-.alias('version', 'v')
-.help()
-.alias('help', 'h')
-.epilogue(gtx._('Report bugs at https://github.com/gflohr/gtx-i18-tools/issues'));
-
-console.log(cli.argv);
-
-console.log(allowedKeys);
+const usage = gtx._('Usage: $0 [OPTIONS] INPUTFILE...');
+const description = gtx._('Extract translatable strings from given input files');
+const getopt = new Getopt(usage, description, optionGroups);
+console.log(getopt.argv());
