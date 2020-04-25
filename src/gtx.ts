@@ -1,4 +1,6 @@
-let useJSONCatalog = true;
+//let useJSONCatalog = true;
+
+/* eslint no-underscore-dangle: "off" */
 
 interface Placeholder {
 	[index: string]: string
@@ -6,7 +8,7 @@ interface Placeholder {
 
 function expand(msg: string, placeholders: Placeholder): string {
 	return msg.replace(/\{([a-zA-Z][0-9a-zA-Z]*)\}/g, (_, match) => {
-		if (placeholders.hasOwnProperty(match)) {
+		if (Object.prototype.hasOwnProperty.call(placeholders, match)) {
 				return placeholders[match];
 		} else {
 				return `{${match}}`;
@@ -22,11 +24,11 @@ function expand(msg: string, placeholders: Placeholder): string {
  * The library can either load message catalogs in GtxI18N JSON or
  * in mo format.
  */
-export function useJSON(json: boolean) {
-	useJSONCatalog = json;
+export function useJSON(_json: boolean): void {
+	//useJSONCatalog = json;
 }
 
-export function bindtextdomain(domainname: string, path?: string): Promise {
+export function bindtextdomain(_domainname: string, _path?: string): Promise<void> {
 	return new Promise(resolve => {
 		resolve();
 	});
@@ -39,7 +41,7 @@ export function bindtextdomain(domainname: string, path?: string): Promise {
  *
  * @returns the translated string
  */
-export function _(msgid: string) {
+export function _(msgid: string): string {
 	return msgid;
 }
 
