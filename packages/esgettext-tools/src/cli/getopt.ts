@@ -20,12 +20,23 @@ export interface OptionGroup {
 }
 
 export class Getopt {
+	progName: string;
 	cli: yargs.Argv<{}>;
 	allowedKeys = new Map<string, OptionFlags>();
 	defaultFlags: OptionFlags = {};
 
+	/**
+	 * Create a yargs option parser.
+	 *
+	 * @param usage string to print for usage
+	 * @param description short one-line description of the program
+	 * @param optionGroups all options grouped
+	 *
+	 * The strings should not end in a newline!
+	 */
 	constructor(usage: string, description: string,
 	            optionGroups: OptionGroup[]) {
+		this.progName = process.argv[1].split(/[\\/]/).pop();
 		this.cli = yargs;
 		this.buildUsage(usage, description);
 
@@ -62,6 +73,11 @@ export class Getopt {
 		this.addDefaultOptions();
 	}
 
+	/**
+	 * Parse the command-line options.
+	 *
+	 * @returns a dictionary with all options passed and their values.
+	 */
 	argv() {
 		const argv = this.cli.argv;
 
@@ -84,10 +100,9 @@ export class Getopt {
 	}
 
 	private addDefaultOptions() {
-		const progName = process.argv[1].split(/[\\/]/).pop();
 		const version = require(__dirname + '/../../package.json').version;
 		const packageName = require(__dirname + '/../../package.json').name;
-		const versionString = `${progName} (${packageName}) ${version}\n`
+		const versionString = `${this.progName} (${packageName}) ${version}\n`
 			+ gtx._('LICENSE: WTFPL <http://www.wtfpl.net/about/>\n')
 			+ gtx._('This is free software. You can do with it whatever you want.\n')
 			+ gtx._('There is NO WARRANTY, to the extent permitted by law.\n')
