@@ -1,6 +1,6 @@
 import * as gtx from './gtx';
 
-gtx.useBrowser(false);
+gtx.browser(false);
 
 describe('configuration functions', () => {
 	describe('setLocale', () => {

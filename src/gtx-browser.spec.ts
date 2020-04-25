@@ -1,6 +1,7 @@
 import * as gtx from './gtx';
 
-gtx.useBrowser(true);
+gtx.browser(true);
+
 describe('configuration functions', () => {
 	describe('setLocale', () => {
 		it('should accept dE-aT for the web and return it unmodified', () => {

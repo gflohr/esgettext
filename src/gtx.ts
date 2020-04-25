@@ -31,9 +31,14 @@ function expand(msg: string, placeholders: Placeholder): string {
  * environment with this function.
  *
  * @param browser whether to assume a browser or not
+ * @return the new setting.
  */
-export function useBrowser(browser: boolean): void {
-	isBrowser = browser;
+export function browser(browser?: boolean): boolean {
+	if (typeof browser !== 'undefined') {
+		isBrowser = browser;
+	}
+
+	return isBrowser;
 }
 
 /**
