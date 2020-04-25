@@ -1,4 +1,5 @@
 /* eslint no-underscore-dangle: "off" */
+
 interface Placeholder {
 	[index: string]: string;
 }
