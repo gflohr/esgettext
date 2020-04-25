@@ -1,5 +1,5 @@
 export interface Entry {
-	[key: string]: string[];
+	[key: string]: Array<Array<string>>;
 }
 
 export interface Catalog {
