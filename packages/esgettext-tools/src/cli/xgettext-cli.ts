@@ -11,6 +11,7 @@ const optionGroups: Array<OptionGroup> = [
 		options: [
 			{
 				name: 'files-from',
+				flags: { multiple: true },
 				yargsOptions: {
 					alias: 'f',
 					type: 'string',
@@ -19,6 +20,7 @@ const optionGroups: Array<OptionGroup> = [
 			},
 			{
 				name: 'directory',
+				flags: { multiple: true },
 				yargsOptions: {
 					alias: 'D',
 					type: 'string',
@@ -95,6 +97,7 @@ const optionGroups: Array<OptionGroup> = [
 			},
 			{
 				name: 'exclude-file',
+				flags: { multiple: true },
 				yargsOptions: {
 					alias: 'x',
 					type: 'string',
@@ -103,6 +106,7 @@ const optionGroups: Array<OptionGroup> = [
 			},
 			{
 				name: 'add-comments',
+				flags: { multiple: true },
 				yargsOptions: {
 					alias: 'c',
 					type: 'string',
@@ -131,9 +135,7 @@ const optionGroups: Array<OptionGroup> = [
 			},
 			{
 				name: 'keyword',
-				flags: {
-					multiple: true,
-				},
+				flags: { multiple: true },
 				yargsOptions: {
 					alias: 'k',
 					type: 'string',
@@ -142,6 +144,7 @@ const optionGroups: Array<OptionGroup> = [
 			},
 			{
 				name: 'flag',
+				flags: { multiple: true },
 				yargsOptions: {
 					alias: 'f',
 					type: 'string',
