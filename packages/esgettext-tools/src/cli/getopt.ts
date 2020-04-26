@@ -1,8 +1,10 @@
 import * as yargs from 'yargs';
-import { Gtx } from '../gtx-i18n-runtime';
+import * as gtx from 'gtx-i18n-runtime';
 import * as camelCase from 'camelcase';
 
-const gtx = new Gtx('gtx-i18n-tools');
+export interface Options {
+	[key: string]: any;
+}
 
 export interface OptionFlags {
 	multiple?: boolean,
@@ -78,7 +80,7 @@ export class Getopt {
 	 *
 	 * @returns a dictionary with all options passed and their values.
 	 */
-	argv() {
+	argv(): Options {
 		const argv = this.cli.argv;
 		const keys = Object.keys(argv);
 
@@ -99,7 +101,7 @@ export class Getopt {
 			if (Array.isArray(value) && value.length > 1) {
 				if (!flags.multiple) {
 					this.errorExit(gtx._x("The option '{option}' can be given only once.",
-					               { option: key })));
+					               { option: key }));
 				}
 			}
 		}

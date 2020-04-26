@@ -1,6 +1,6 @@
 {
   "name": "gtx-i18n-tools",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Gettext-like po creation and manipulation",
   "main": "dist/index.js",
   "files": [
@@ -8,7 +8,8 @@
     "dist/"
   ],
   "bin": {
-    "gtx-i18n-xgettext": "bin/gtx-i18n-xgettext.js"
+    "gtx-i18n-xgettext": "bin/gtx-i18n-xgettext.js",
+    "mo2json": "bin/mo2json"
   },
   "keywords": [],
   "scripts": {
@@ -24,6 +25,7 @@
     "@types/node": "^13.13.2",
     "@types/yargs": "^15.0.4",
     "camelcase": "^6.0.0",
+    "gtx-i18n-runtime": "file:../gtx-i18n-runtime",
     "typescript": "^3.8.3",
     "yargs": "^15.3.1"
   },
