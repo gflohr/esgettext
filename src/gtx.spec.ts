@@ -1,4 +1,4 @@
-import * as gtx from '..';
+import * as gtx from './gtx/index';
 
 /* eslint no-underscore-dangle: "off" */
 
