@@ -1,11 +1,7 @@
 import { browser } from './browser';
+import { splitLocale } from './split-locale';
 
 let useLocale = 'POSIX';
-const browserLocaleRegex = new RegExp('^[a-z0-9]+(?:-[a-z0-9]+)*', 'i');
-const nodeLocaleRegex = new RegExp(
-	'^([a-z]{2,3})(?:-([a-z]{2}))?(?:@([a-z]+))?(?:.([-a-z0-9]+))?$',
-	'i',
-);
 
 /**
  * Change or query the locale.
@@ -16,12 +12,12 @@ const nodeLocaleRegex = new RegExp(
  * For server environments, the locale identifier has to match the following
  * scheme:
  *
- *   ll-CC@variant.charset
+ *   ll-CC.charset@modifier
  *
  * `ll` is the two- or three-letter language code.
  * `CC` is the optionl two-letter country code.
- * `variant` is an optional variant (letters and digits).
  * `charset` is an optional character set (letters, digits, and the hyphen).
+ * `modifier` is an optional variant (letters and digits).
  *
  * The language code is always converted to lowercase, the country code is
  * converted to uppercase, variant and charset are used as is.
@@ -34,26 +30,35 @@ export function setLocale(locale?: string): string {
 		const ucLocale = locale.toUpperCase();
 
 		if (ucLocale === 'POSIX' || ucLocale === 'C') {
-			useLocale = ucLocale;
-		} else if (browser() && browserLocaleRegex.exec(locale)) {
+			useLocale = 'POSIX';
+			return ucLocale;
+		}
+
+		const split = splitLocale(locale);
+		if (!split) {
+			return useLocale;
+		}
+
+		// The check from splitLocale() is sufficient.
+		if (browser()) {
 			useLocale = locale;
-		} else if (!browser()) {
-			const match = nodeLocaleRegex.exec(locale);
-			if (match) {
-				// The language and region are case-converted so that you can use
-				// the same locale identifiers for the web and the command-line.
-				useLocale = match[1].toLowerCase();
-				if (match[2]) {
-					useLocale += '-' + match[2].toUpperCase();
-				}
-				// But do *not* convert a possible modifier and charset.
-				if (match[3]) {
-					useLocale += '@' + match[3];
-				}
-				if (match[4]) {
-					useLocale += '.' + match[4];
-				}
-			}
+			return useLocale;
+		}
+
+		// Node.
+		split.tags[0] = split.tags[0].toLowerCase();
+		if (split.tags.length > 1) {
+			split.tags[1] = split.tags[1].toUpperCase();
+		}
+
+		useLocale = split.tags.join('-');
+
+		if (typeof split.charset !== 'undefined') {
+			useLocale += '.' + split.charset;
+		}
+
+		if (typeof split.modifier !== 'undefined') {
+			useLocale += '@' + split.modifier;
 		}
 	}
 

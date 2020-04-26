@@ -1,1 +1,3 @@
-export * from './gtx/index';
+export * from './gtx';
+export * from './transport.interface';
+export * from './transport';

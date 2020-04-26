@@ -10,11 +10,11 @@ describe('configuration functions', () => {
 		it('should convert DE-de to de-DE', () => {
 			expect(gtx.setLocale('DE-de')).toEqual('de-DE');
 		});
-		it('should convert DE-de@Koelle to de-DE@Koelle', () => {
-			expect(gtx.setLocale('DE-de@Koelle')).toEqual('de-DE@Koelle');
+		it('should convert DE-de@Koelsch to de-DE@Koelsch', () => {
+			expect(gtx.setLocale('DE-de@Koelsch')).toEqual('de-DE@Koelsch');
 		});
-		it('should convert DE-de@Koelle.uTf-8 to de-DE@Koelle.uTf-8', () => {
-			expect(gtx.setLocale('DE-de@Koelle.uTf-8')).toEqual('de-DE@Koelle.uTf-8');
+		it('should convert DE-de.uTf-8@Koelle to de-DE.uTf-8@Koelle', () => {
+			expect(gtx.setLocale('DE-de.uTf-8@Koelsch')).toEqual('de-DE.uTf-8@Koelsch');
 		});
 	});
 });
