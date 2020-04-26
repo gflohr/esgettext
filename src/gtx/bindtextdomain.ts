@@ -5,12 +5,16 @@ import { browser } from './browser';
 import { format } from './format';
 import { Catalog } from './catalog';
 import { setLocale } from './set-locale';
+import { splitLocale, SplitLocale } from './split-locale';
+import { parseMO } from './parse-mo';
+
+/* eslint-disable no-console */
 
 interface DomainCache {
 	[key: string]: Catalog;
 }
 
-function loadCatalog(url: string) : Promise<string> {
+function loadCatalog(url: string): Promise<Catalog> {
 	let transport;
 
 	// Check whether this is a valid URL.
@@ -21,7 +25,7 @@ function loadCatalog(url: string) : Promise<string> {
 		} else if (parsedURL.protocol === 'file:') {
 			transport = 'fs';
 		}
-	} catch(e) {
+	} catch (e) {
 		if (typeof transport === undefined) {
 			if (browser()) {
 				transport = 'http';
@@ -38,17 +42,37 @@ function loadCatalog(url: string) : Promise<string> {
 		transportInstance = new TransportFs();
 	}
 
-	return transportInstance.loadFile(url);
+	console.log(`try to load ${url} with transport ${transport}`);
+
+	return new Promise<Catalog>((resolve, reject) => {
+		transportInstance
+			.loadFile(url)
+			.then((data) => {
+				resolve(parseMO(data));
+			})
+			.catch((e) => reject(e));
+	});
 }
 
-function assemblePath(base: string, locale: string,
-	                  domainname: string, charset?: string): string {
+function assemblePath(
+	base: string,
+	locale: SplitLocale,
+	domainname: string,
+	charset?: string,
+): string {
 	const extender = format();
-	if (typeof charset === 'undefined') {
-		return base + '/' + locale + '/LC_MESSAGES/' + domainname + '.' + extender;
-	} else {
-		return base + '/' + locale + '.' + charset + '/LC_MESSAGES/' + domainname + '.' + extender;
+
+	base += locale.tags.join('-');
+	if (typeof charset !== 'undefined') {
+		base += '.' + charset;
 	}
+	if (typeof locale.modifier !== 'undefined') {
+		base += '@' + locale.modifier;
+	}
+
+	base += `/LC_MESSAGES/${domainname}.${extender}`;
+
+	return base;
 }
 
 /*
@@ -56,14 +80,18 @@ function assemblePath(base: string, locale: string,
  * charset converted to uppercase (if it differs from the origina charset),
  * and finally without a charset.
  */
-function loadCatalogWithCharset(base: string, locale: string,
-	                            domainname: string, charset?: string): Promise<string> {
-	return new Promise(resolve => {
-		type CatalogLoader = (url: string) => Promise<string>;
+function loadCatalogWithCharset(
+	locale: SplitLocale,
+	base: string,
+	domainname: string,
+	charset?: string,
+): Promise<Catalog> {
+	return new Promise((resolve) => {
+		type CatalogLoader = (url: string) => Promise<Catalog>;
 		const tries = new Array<CatalogLoader>();
 		let path: string;
 
-		if (typeof charset !== undefined) {
+		if (typeof locale.charset !== undefined) {
 			path = assemblePath(base, locale, domainname, charset);
 			tries.push(() => loadCatalog(path));
 			const ucCharset = charset.toUpperCase();
@@ -76,51 +104,21 @@ function loadCatalogWithCharset(base: string, locale: string,
 		path = assemblePath(base, locale, domainname);
 		tries.push(() => loadCatalog(path));
 
-		tries.reduce((p, fn: CatalogLoader) => p.catch(fn), Promise.reject())
-		.then(value => resolve(value));
+		tries
+			.reduce((p, fn: CatalogLoader) => p.catch(fn), Promise.reject())
+			.then((value) => resolve(value));
 	});
 }
 
-function loadDomain(base: string, domainname: string): Promise<string> {
-	const locale = setLocale();
+function loadDomain(
+	locale: SplitLocale,
+	base: string,
+	domainname: string,
+): Promise<Catalog> {
+	// FIXME! For 'de-DE' we have to first load 'de', then 'de-DE'!
 
-	return new Promise((_resolve, reject) => reject());
+	return loadCatalogWithCharset(locale, base, domainname);
 }
-
-// function expandPath(path: string, domainname: string): Array<string> {
-// 	let locale = setLocale();
-// 	const paths = new Array<string>();
-// 	const extender = format();
-
-// 	path = path.replace(/[/\\]*$/, '');
-
-// 	paths.push(`${path}/${locale}/LC_MESSAGES/${domainname}.${extender}`);
-
-// 	let next;
-
-// 	next = locale.replace(/\..+$/, '');
-// 	if (next) {
-// 		paths.push(`${path}/${next}/LC_MESSAGES/${domainname}.${extender}`);
-// 		locale = next;
-// 	}
-
-// 	next = locale.replace(/@.+$/, '');
-// 	if (next) {
-// 		paths.push(`${path}/${next}/LC_MESSAGES/${domainname}.${extender}`);
-// 		locale = next;
-// 	}
-
-// 	next = '';
-// 	while (next !== locale) {
-// 		next = locale.replace(/-.+$/, '');
-// 		if (next !== locale) {
-// 			paths.push(`${path}/${next}/LC_MESSAGES/${domainname}.${extender}`);
-// 			locale = next;
-// 		}
-// 	}
-
-// 	return paths;
-// }
 
 /**
  * Bind a textdomain to a certain path. The catalog file will be searched
@@ -148,7 +146,13 @@ export function bindtextdomain(
 		}
 	}
 
-	return new Promise(resolve => resolve(path + '/POSIX/LC_MESSAGES/mytest.json'));
-
-	//return loadDomain(path, domainname);
+	const locale = splitLocale(setLocale());
+	return new Promise((resolve) => {
+		loadDomain(locale, path, domainname)
+			.then((catalog) => {
+				console.log(catalog);
+				resolve('okay');
+			})
+			.catch((e) => resolve(`not okay: ${e}`));
+	});
 }

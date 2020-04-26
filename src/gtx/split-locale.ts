@@ -1,6 +1,6 @@
 const tagRegex = new RegExp('^[a-z0-9]+(?:-[a-z0-9]+)*$', 'i');
 
-interface SplitLocale {
+export interface SplitLocale {
 	tags: Array<string>;
 	charset?: string;
 	modifier?: string;
@@ -27,7 +27,7 @@ export function splitLocale(locale: string): SplitLocale | null {
 	if (!tags.length) {
 		return null;
 	}
-	const empty = tags.filter(value => value === '');
+	const empty = tags.filter((value) => value === '');
 	if (empty.length) {
 		return null;
 	}
