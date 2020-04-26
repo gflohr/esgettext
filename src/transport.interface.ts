@@ -1,3 +1,3 @@
 export interface Transport {
-	loadFile(url: string): Promise<string>;
+	loadFile(url: string, encoding: string): Promise<string>;
 }

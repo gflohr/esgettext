@@ -14,6 +14,11 @@ interface DomainCache {
 	[key: string]: Catalog;
 }
 
+function validateCatalog(json: string): Catalog {
+	console.log(json);
+	throw new Error('not yet implemented');
+}
+
 function loadCatalog(url: string): Promise<Catalog> {
 	let transport;
 
@@ -26,12 +31,10 @@ function loadCatalog(url: string): Promise<Catalog> {
 			transport = 'fs';
 		}
 	} catch (e) {
-		if (typeof transport === undefined) {
-			if (browser()) {
-				transport = 'http';
-			} else {
-				transport = 'fs';
-			}
+		if (browser()) {
+			transport = 'http';
+		} else {
+			transport = 'fs';
 		}
 	}
 
@@ -42,13 +45,21 @@ function loadCatalog(url: string): Promise<Catalog> {
 		transportInstance = new TransportFs();
 	}
 
-	console.log(`try to load ${url} with transport ${transport}`);
+	type Validator = (data: string) => Catalog;
 
+	let validator: Validator, encoding: string;
+	if ('json' === format()) {
+		validator = validateCatalog;
+		encoding = 'utf-8';
+	} else {
+		validator = parseMO;
+		encoding = 'binary';
+	}
 	return new Promise<Catalog>((resolve, reject) => {
 		transportInstance
-			.loadFile(url)
+			.loadFile(url, encoding)
 			.then((data) => {
-				resolve(parseMO(data));
+				resolve(validator(data));
 			})
 			.catch((e) => reject(e));
 	});
@@ -62,7 +73,7 @@ function assemblePath(
 ): string {
 	const extender = format();
 
-	base += locale.tags.join('-');
+	base += '/' + locale.tags.join('-');
 	if (typeof charset !== 'undefined') {
 		base += '.' + charset;
 	}
@@ -91,7 +102,7 @@ function loadCatalogWithCharset(
 		const tries = new Array<CatalogLoader>();
 		let path: string;
 
-		if (typeof locale.charset !== undefined) {
+		if (typeof charset !== 'undefined') {
 			path = assemblePath(base, locale, domainname, charset);
 			tries.push(() => loadCatalog(path));
 			const ucCharset = charset.toUpperCase();
@@ -116,6 +127,9 @@ function loadDomain(
 	domainname: string,
 ): Promise<Catalog> {
 	// FIXME! For 'de-DE' we have to first load 'de', then 'de-DE'!
+
+	console.log('loadDomain');
+	console.log(locale, base, domainname);
 
 	return loadCatalogWithCharset(locale, base, domainname);
 }
@@ -146,8 +160,13 @@ export function bindtextdomain(
 		}
 	}
 
-	const locale = splitLocale(setLocale());
+	const localeIdentifier = setLocale();
+	if (localeIdentifier === 'C' || localeIdentifier === 'POSIX') {
+		return new Promise((resolve) => resolve('not okay'));
+	}
+
 	return new Promise((resolve) => {
+		const locale = splitLocale(localeIdentifier);
 		loadDomain(locale, path, domainname)
 			.then((catalog) => {
 				console.log(catalog);

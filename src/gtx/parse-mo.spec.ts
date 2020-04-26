@@ -3,9 +3,9 @@ import { promisify } from 'util';
 import * as gtx from '../index';
 
 describe('parse MO', () => {
-	describe('de.mo parsed', () => {
+	describe('mytest.mo parsed', () => {
 		let catalog: gtx.Catalog;
-		const filename = 'src/assets/po/de.mo';
+		const filename = 'src/assets/locale/de/LC_MESSAGES/mytest.mo';
 
 		beforeAll(async () => {
 			const raw = await promisify(readFile)(filename);
@@ -41,7 +41,7 @@ describe('parse MO', () => {
 	});
 
 	describe('revision1.mo parsed', () => {
-		const filename = 'src/assets/po/revision1.mo';
+		const filename = 'src/assets/locale/de/LC_MESSAGES/revision1.mo';
 
 		it('should throw an exception', async () => {
 			const raw = await promisify(readFile)(filename);
@@ -50,7 +50,7 @@ describe('parse MO', () => {
 	});
 
 	describe('de.po parsed', () => {
-		const filename = 'src/assets/po/de.po';
+		const filename = 'src/assets/locale/de/LC_MESSAGES/mytest.po';
 
 		it('should throw an exception', async () => {
 			const raw = await promisify(readFile)(filename);
