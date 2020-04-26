@@ -23,5 +23,20 @@ describe('parse MO', () => {
 		it('should have be of minor revision 0', () => {
 			expect(catalog.minor).toEqual(0);
 		});
+
+		it('should have a translation for "Open ..." with context', () => {
+			const trans = ['Öffnen ...'];
+			expect(catalog.entries['Menu\u0004Open ...']).toEqual(trans);
+		});
+
+		it('should have two translations for "Hello, world!"', () => {
+			const trans = ['Hallo, Welt!', 'Hallo, Welten!'];
+			expect(catalog.entries['Hello, world!']).toEqual(trans);
+		});
+
+		it('should have two translations for "Hello, world!" with context', () => {
+			const trans = ['Hallo, Welt!', 'Hallo, Welten!'];
+			expect(catalog.entries['duplicate\u0004Hello, world!']).toEqual(trans);
+		});
 	});
 });
