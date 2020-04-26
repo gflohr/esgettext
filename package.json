@@ -48,6 +48,8 @@
 		]
 	},
 	"devDependencies": {
+		"@types/gettext-parser": "^4.0.0",
+		"@types/jdataview": "0.0.30",
 		"@types/jest": "^25.2.1",
 		"@typescript-eslint/eslint-plugin": "^2.29.0",
 		"@typescript-eslint/parser": "^2.29.0",
@@ -68,6 +70,7 @@
 	"dependencies": {
 		"@types/detect-node": "^2.0.0",
 		"@types/node": "^13.13.2",
-		"detect-node": "^2.0.4"
+		"detect-node": "^2.0.4",
+		"jdataview": "^2.5.0"
 	}
 }
