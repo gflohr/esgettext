@@ -10,7 +10,6 @@ describe('parse MO', () => {
 		beforeAll(async () => {
 			const raw = await promisify(readFile)(filename);
 			catalog = gtx.parseMO(raw);
-			//console.log(catalog);
 		});
 
 		it('should not be null', () => {
