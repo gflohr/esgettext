@@ -2,6 +2,13 @@
 	"name": "gtx-i18n-runtime",
 	"version": "1.0.0",
 	"description": "",
+	"main": "dist/gtx-i18n.js",
+	"typings": "dist/index.d.ts",
+	"repository": "https://github.com/gflohr/gtx-i18n-runtime",
+	"bugs": {
+		"url": "https://github.com/gflohr/gtx-i18n-runtime/issues"
+	},
+	"homepage": "https://github.com/gflohr/gtx-i18n-runtime",
 	"scripts": {
 		"build": "webpack",
 		"format": "prettier --write 'src/**/*.ts' 'test/**/*.ts'",
