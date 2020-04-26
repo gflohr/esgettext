@@ -9,6 +9,9 @@ module.exports = {
 	},
 	mode: 'production',
 	devtool: 'source-map',
+	node: {
+		fs: 'empty',
+	},
 	optimization: {
 		minimize: true,
 		minimizer: [
