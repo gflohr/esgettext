@@ -32,8 +32,7 @@
 	"license": "ISC",
 	"husky": {
 		"hooks": {
-			"pre-commit": "npm run lint:staged --concurrency 1 --stream --since origin/master",
-			"pre-push": "npm run test:cov --since origin/master --include-dependents"
+			"pre-commit": "npm run lint:staged --concurrency 1 --stream --since origin/master"
 		}
 	},
 	"jest": {
