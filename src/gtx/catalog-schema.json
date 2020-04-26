@@ -4,26 +4,6 @@
 	"type": "object",
 	"title": "JSON Message Catalog",
 	"description": "A schema for a message catalog.",
-	"definitions": {
-		"entry": {
-			"type": "object",
-			"properties": {
-				"p": {
-					"type": "string",
-					"description": "A possible plural form"
-				},
-				"t": {
-					"type": "array",
-					"description": "The translations for all forms (singular, plural, plural2, ...)",
-					"items": {
-						"type": "string"
-					}
-				}
-			},
-			"required": ["t"],
-			"additionalProperties": false
-		}
-	},
 	"additionalProperties": false,
 	"required": ["major", "minor", "entries"],
 	"properties": {
@@ -48,7 +28,11 @@
 			"description": "All entries in the catalog.",
 			"patternProperties": {
 				"^.*$": {
-					"$ref": "#/definitions/entry"
+					"type": "array",
+					"description": "One or more translations for the msgid",
+					"items": {
+						"type": "string"
+					}
 				}
 			}
 		}

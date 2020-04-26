@@ -1,3 +1,4 @@
+import Ajv from 'ajv';
 import { TransportHttp } from '../transport/http';
 import { TransportFs } from '../transport/fs';
 import { Transport } from '../transport.interface';
@@ -7,6 +8,7 @@ import { Catalog } from './catalog';
 import { setLocale } from './set-locale';
 import { splitLocale, SplitLocale } from './split-locale';
 import { parseMO } from './parse-mo';
+import * as catalogSchema from './catalog-schema.json';
 
 /* eslint-disable no-console */
 
@@ -15,8 +17,15 @@ interface DomainCache {
 }
 
 function validateCatalog(json: string): Catalog {
-	console.log(json);
-	throw new Error('not yet implemented');
+	const data = JSON.parse(json);
+	const ajv = new Ajv();
+
+	if (!ajv.validate(catalogSchema, data)) {
+		//console.log(ajv.errorsText());
+		throw new Error(ajv.errorsText());
+	}
+
+	return data as Catalog;
 }
 
 function loadCatalog(url: string): Promise<Catalog> {
@@ -128,9 +137,6 @@ function loadDomain(
 ): Promise<Catalog> {
 	// FIXME! For 'de-DE' we have to first load 'de', then 'de-DE'!
 
-	console.log('loadDomain');
-	console.log(locale, base, domainname);
-
 	return loadCatalogWithCharset(locale, base, domainname);
 }
 
@@ -168,8 +174,7 @@ export function bindtextdomain(
 	return new Promise((resolve) => {
 		const locale = splitLocale(localeIdentifier);
 		loadDomain(locale, path, domainname)
-			.then((catalog) => {
-				console.log(catalog);
+			.then((_catalog) => {
 				resolve('okay');
 			})
 			.catch((e) => resolve(`not okay: ${e}`));
