@@ -39,4 +39,22 @@ describe('parse MO', () => {
 			expect(catalog.entries['duplicate\u0004Hello, world!']).toEqual(trans);
 		});
 	});
+
+	describe('revision1.mo parsed', () => {
+		const filename = 'src/assets/po/revision1.mo';
+
+		it('should throw an exception', async () => {
+			const raw = await promisify(readFile)(filename);
+			expect(() => gtx.parseMO(raw)).toThrow('unsupported major revision 1');
+		});
+	});
+
+	describe('de.po parsed', () => {
+		const filename = 'src/assets/po/de.po';
+
+		it('should throw an exception', async () => {
+			const raw = await promisify(readFile)(filename);
+			expect(() => gtx.parseMO(raw)).toThrow('mo file corrupted');
+		});
+	});
 });
