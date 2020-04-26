@@ -1,4 +1,4 @@
-import * as gtx from './gtx';
+import * as gtx from './gtx/index';
 
 gtx.browser(false);
 

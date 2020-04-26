@@ -1,1 +1,1 @@
-export * from './gtx';
+export * from './gtx/index';
