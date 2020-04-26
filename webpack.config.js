@@ -1,25 +1,45 @@
+const webpack = require('webpack');
 const path = require('path');
+const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
-	entry: './src/index.ts',
-	mode: 'development',
-	devtool: 'inline-source-map',
+	entry: {
+		'gtx-i18n-runtime': './src/index.ts',
+		'gtx-i18n-runtime.min': './src/index.ts',
+	},
+	mode: 'production',
+	devtool: 'source-map',
+	optimization: {
+		minimize: true,
+		minimizer: [
+			new TerserPlugin({
+				cache: true,
+				parallel: true,
+				sourceMap: true,
+				terserOptions: {},
+			}),
+		],
+	},
 	module: {
 		rules: [
 			{
 				test: /\.tsx?$/,
-				use: 'ts-loader',
+				loader: 'awesome-typescript-loader',
 				exclude: /node_modules/,
+				query: {
+					declaration: false,
+				},
 			},
 		],
 	},
 	resolve: {
-		extensions: [ '.tsx', '.ts', '.js' ],
+		extensions: ['.ts', '.tsx', '.js'],
 	},
 	output: {
-		filename: 'gtx-i18n.js',
-		library: 'gtx',
+		path: path.resolve(__dirname, '_bundles'),
+		filename: '[name].js',
 		libraryTarget: 'umd',
-		path: path.resolve(__dirname, 'dist'),
+		library: 'gtx',
+		umdNamedDefine: true,
 	},
-  };
+};

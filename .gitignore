@@ -1,6 +1,8 @@
 
 # compiled output
-/dist
+/_bundles
+/lib
+/lib-esm
 /tmp
 /out-tsc
 
