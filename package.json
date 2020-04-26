@@ -1,6 +1,6 @@
 {
 	"name": "gtx-i18n-runtime",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "A gettext-like translation runtime for JavaScript",
 	"main": "lib/gtx-i18n.js",
 	"types": "lib/index.d.ts",
@@ -10,7 +10,7 @@
 	},
 	"homepage": "https://github.com/gflohr/gtx-i18n-runtime",
 	"scripts": {
-		"build": "npm run clean && npm run build:lib && npm run build-lib:esm && npm run build:webpack",
+		"build": "npm run clean && npm run build:lib && npm run build:lib-esm && npm run build:webpack",
 		"build:lib": "tsc",
 		"build:lib-esm": "tsc -m es6 --outDir lib-esm",
 		"build:webpack": "webpack",
