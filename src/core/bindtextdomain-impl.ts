@@ -8,6 +8,7 @@ import { setLocale } from './set-locale';
 import { splitLocale, SplitLocale } from './split-locale';
 import { catalogFormat } from './catalog-format';
 import { germanicPlural } from './germanic-plural';
+import { CatalogCache } from './catalog-cache';
 
 /* eslint-disable no-console */
 
@@ -160,7 +161,8 @@ function loadDomain(
 
 export function bindtextdomainImpl(
 	domainname: string,
-	path: string,
+	cache: CatalogCache,
+	path?: string,
 ): Promise<string> {
 	// FIXME! Check whether we already have the translations ...
 

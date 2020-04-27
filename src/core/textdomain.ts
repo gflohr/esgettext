@@ -1,4 +1,5 @@
 import { bindtextdomainImpl } from './bindtextdomain-impl';
+import { CatalogCache } from './catalog-cache';
 
 interface Textdomains {
 	[key: string]: Textdomain;
@@ -10,6 +11,7 @@ interface Placeholder {
 
 export class Textdomain {
 	private static domains: Textdomains = {};
+	private static cache = CatalogCache.getInstance();
 	private domain: string;
 
 	private constructor() {
@@ -48,7 +50,7 @@ export class Textdomain {
 	 *             for the web or 'src/assets/locale' for the file system.
 	 */
 	bindtextdomain(path?: string): Promise<string> {
-		return bindtextdomainImpl(this.domain, path);
+		return bindtextdomainImpl(this.domain, Textdomain.cache, path);
 	}
 
 	/**
