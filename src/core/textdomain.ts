@@ -11,7 +11,7 @@ interface Placeholder {
 
 export class Textdomain {
 	private static domains: Textdomains = {};
-	private static cache = CatalogCache.getInstance();
+	private static readonly cache = CatalogCache.getInstance();
 	private domain: string;
 
 	private constructor() {

@@ -6,12 +6,10 @@ interface CatalogCacheInterface {
 		// Locale Key.
 		[key: string]: {
 			// Textdomain.
-			[key: string]: Catalog | Promise<Catalog> | null
-		}
-	}
+			[key: string]: Catalog | Promise<Catalog> | null;
+		};
+	};
 }
-
-const cache = {};
 
 /**
  * Caches catalog lookups by path, locale, and textdomain.
@@ -54,7 +52,11 @@ export class CatalogCache {
 	 * @param textdomain the textdomain
 	 * @returns the cached Catalog, a Promise or null for failure
 	 */
-	public lookup(path: string, localeKey: string, textdomain: string): Catalog | Promise<Catalog> | null {
+	public lookup(
+		path: string,
+		localeKey: string,
+		textdomain: string,
+	): Catalog | Promise<Catalog> | null {
 		if (this.cache[path] && this.cache[path][localeKey]) {
 			const ptr = this.cache[path][localeKey];
 			if (Object.prototype.hasOwnProperty.call(ptr, textdomain)) {
@@ -67,8 +69,12 @@ export class CatalogCache {
 		return null;
 	}
 
-	public store(path: string, localeKey: string, textdomain: string,
-	             entry: Catalog | Promise<Catalog> | null) {
+	public store(
+		path: string,
+		localeKey: string,
+		textdomain: string,
+		entry: Catalog | Promise<Catalog> | null,
+	): void {
 		if (!this.cache[path]) {
 			this.cache[path] = {};
 		}

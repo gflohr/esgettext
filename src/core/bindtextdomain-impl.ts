@@ -12,10 +12,6 @@ import { CatalogCache } from './catalog-cache';
 
 /* eslint-disable no-console */
 
-interface DomainCache {
-	[key: string]: Catalog;
-}
-
 function loadCatalog(url: string): Promise<Catalog> {
 	let transport;
 
@@ -92,7 +88,6 @@ function loadCatalogWithCharset(
 	locale: SplitLocale,
 	base: string,
 	domainname: string,
-	_cache: CatalogCache,
 ): Promise<Catalog> {
 	return new Promise((resolve) => {
 		type CatalogLoader = (url: string) => Promise<Catalog>;
@@ -122,7 +117,7 @@ function loadDomain(
 	locale: SplitLocale,
 	base: string,
 	domainname: string,
-	cache: CatalogCache,
+	_cache: CatalogCache,
 ): Promise<Catalog> {
 	const promises = new Array<Promise<void>>();
 	const entries: CatalogEntries = {};
@@ -149,7 +144,6 @@ function loadDomain(
 			partialLocale,
 			base,
 			domainname,
-			cache,
 		).then((result) => {
 			catalog.major = result.major;
 			catalog.minor = result.minor;
