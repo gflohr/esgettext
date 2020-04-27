@@ -92,19 +92,19 @@ function loadCatalogWithCharset(
 	locale: SplitLocale,
 	base: string,
 	domainname: string,
-	charset?: string,
+	_cache: CatalogCache,
 ): Promise<Catalog> {
 	return new Promise((resolve) => {
 		type CatalogLoader = (url: string) => Promise<Catalog>;
 		const tries = new Array<CatalogLoader>();
 		let path: string;
 
-		if (typeof charset !== 'undefined') {
-			path = assemblePath(base, locale, domainname, charset);
+		if (typeof locale.charset !== 'undefined') {
+			path = assemblePath(base, locale, domainname, locale.charset);
 			tries.push(() => loadCatalog(path));
-			const ucCharset = charset.toUpperCase();
-			if (ucCharset !== charset) {
-				path = assemblePath(base, locale, domainname, charset);
+			const ucCharset = locale.charset.toUpperCase();
+			if (ucCharset !== locale.charset) {
+				path = assemblePath(base, locale, domainname, locale.charset);
 				tries.push(() => loadCatalog(path));
 			}
 		}
@@ -122,6 +122,7 @@ function loadDomain(
 	locale: SplitLocale,
 	base: string,
 	domainname: string,
+	cache: CatalogCache,
 ): Promise<Catalog> {
 	const promises = new Array<Promise<void>>();
 	const entries: CatalogEntries = {};
@@ -148,6 +149,7 @@ function loadDomain(
 			partialLocale,
 			base,
 			domainname,
+			cache,
 		).then((result) => {
 			catalog.major = result.major;
 			catalog.minor = result.minor;
@@ -181,7 +183,7 @@ export function bindtextdomainImpl(
 
 	return new Promise((resolve) => {
 		const locale = splitLocale(localeIdentifier);
-		loadDomain(locale, path, domainname)
+		loadDomain(locale, path, domainname, cache)
 			.then((_catalog) => {
 				resolve('okay');
 			})
