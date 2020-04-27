@@ -4,5 +4,5 @@ export * from './set-locale';
 export * from './browser-environment';
 export * from './textdomain';
 export * from './bindtextdomain';
-export * from './format';
+export * from './catalog-format';
 export * from './parse-mo';

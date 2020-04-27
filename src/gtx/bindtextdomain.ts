@@ -3,11 +3,11 @@ import { TransportHttp } from '../transport/http';
 import { TransportFs } from '../transport/fs';
 import { Transport } from '../transport.interface';
 import { browserEnvironment } from './browser-environment';
-import { format } from './format';
 import { Catalog } from './catalog';
 import { setLocale } from './set-locale';
 import { splitLocale, SplitLocale } from './split-locale';
 import { parseMO } from './parse-mo';
+import { catalogFormat } from './catalog-format';
 import * as catalogSchema from './catalog-schema.json';
 
 /* eslint-disable no-console */
@@ -57,7 +57,7 @@ function loadCatalog(url: string): Promise<Catalog> {
 	type Validator = (data: string) => Catalog;
 
 	let validator: Validator, encoding: string;
-	if ('json' === format()) {
+	if ('json' === catalogFormat()) {
 		validator = validateCatalog;
 		encoding = 'utf-8';
 	} else {
@@ -80,7 +80,7 @@ function assemblePath(
 	domainname: string,
 	charset?: string,
 ): string {
-	const extender = format();
+	const extender = catalogFormat();
 
 	base += '/' + locale.tags.join('-');
 	if (typeof charset !== 'undefined') {

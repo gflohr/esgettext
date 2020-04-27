@@ -6,7 +6,7 @@ let useFormat = 'json';
  * @param format one of 'json' or 'mo'
  * @return the format selected
  */
-export function format(format?: string): string {
+export function catalogFormat(format?: string): string {
 	if (typeof format !== 'undefined') {
 		format = format.toLowerCase();
 		if (format === 'json') {

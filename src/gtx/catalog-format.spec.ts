@@ -1,33 +1,33 @@
-import * as gtx from '../index';
+import { catalogFormat } from '../index';
 
 /* eslint no-underscore-dangle: "off" */
 
 describe('format', () => {
 	describe('default', () => {
 		it('should default to json', () => {
-			expect(gtx.format()).toEqual('json');
+			expect(catalogFormat()).toEqual('json');
 		});
 	});
 
 	describe('setting', () => {
 		it('should accept json', () => {
-			expect(gtx.format('json')).toEqual('json');
+			expect(catalogFormat('json')).toEqual('json');
 		});
 		it('should accept mo', () => {
-			expect(gtx.format('mo')).toEqual('mo');
+			expect(catalogFormat('mo')).toEqual('mo');
 		});
 		it('should reject me', () => {
-			const old = gtx.format();
-			expect(gtx.format('me')).toEqual(old);
+			const old = catalogFormat();
+			expect(catalogFormat('me')).toEqual(old);
 		});
 	});
 
 	describe('normalize', () => {
 		it('should lowercase jSoN', () => {
-			expect(gtx.format('jSoN')).toEqual('json');
-		})
+			expect(catalogFormat('jSoN')).toEqual('json');
+		});
 		it('should lowercase mO', () => {
-			expect(gtx.format('mO')).toEqual('mo');
-		})
+			expect(catalogFormat('mO')).toEqual('mo');
+		});
 	});
 });
