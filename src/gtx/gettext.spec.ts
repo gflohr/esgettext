@@ -1,8 +1,8 @@
-import * as gtx from './gtx/index';
-
-/* eslint no-underscore-dangle: "off" */
+import { Textdomain } from './textdomain';
 
 describe('translation functions', () => {
+	const gtx = Textdomain.instance('test');
+
 	describe('normal gettext (_)', () => {
 		it('should echo its argument', () => {
 			expect(gtx._('foobar')).toEqual('foobar');
