@@ -60,10 +60,8 @@ export class CatalogCache {
 		if (this.cache[path] && this.cache[path][localeKey]) {
 			const ptr = this.cache[path][localeKey];
 			if (Object.prototype.hasOwnProperty.call(ptr, textdomain)) {
-				return null;
+				return ptr[textdomain];
 			}
-
-			return ptr[textdomain];
 		}
 
 		return null;

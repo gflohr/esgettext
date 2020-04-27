@@ -1,7 +1,11 @@
 import { TransportHttp } from '../transport/http';
 import { TransportFs } from '../transport/fs';
 import { Transport } from '../transport/transport.interface';
-import { parseJsonCatalog, parseMoCatalog } from '../parser';
+import {
+	parseJsonCatalog,
+	parseMoCatalog,
+	validateJsonCatalog,
+} from '../parser';
 import { browserEnvironment } from './browser-environment';
 import { Catalog, CatalogEntries } from './catalog';
 import { setLocale } from './set-locale';
@@ -117,7 +121,7 @@ function loadDomain(
 	locale: SplitLocale,
 	base: string,
 	domainname: string,
-	_cache: CatalogCache,
+	cache: CatalogCache,
 ): Promise<Catalog> {
 	const promises = new Array<Promise<void>>();
 	const entries: CatalogEntries = {};
@@ -128,6 +132,29 @@ function loadDomain(
 		pluralFunction: germanicPlural,
 		entries,
 	};
+
+	const localeKey = setLocale();
+	const cacheHit = cache.lookup(base, localeKey, domainname);
+	if (cacheHit !== null) {
+		// Promise?
+		if (cacheHit === Object(cacheHit) && typeof cacheHit === 'function') {
+			const p = cacheHit as Promise<Catalog>;
+			return new Promise((resolve, reject) => {
+				p.then((result) => {
+					try {
+						const valid = validateJsonCatalog(result);
+						cache.store(base, localeKey, domainname, valid);
+					} catch (e) {
+						cache.store(base, localeKey, domainname, catalog);
+						reject(e);
+					}
+				});
+			});
+		} else {
+			// Normal cache hit.
+			return new Promise((resolve) => resolve(cacheHit));
+		}
+	}
 
 	for (let i = 0; i < locale.tags.length; ++i) {
 		const partialLocale: SplitLocale = {
@@ -152,6 +179,8 @@ function loadDomain(
 		promises.push(promise);
 	}
 
+	cache.store(base, localeKey, domainname, catalog);
+
 	return new Promise((resolve) => resolve(catalog));
 }
 
@@ -160,8 +189,6 @@ export function bindtextdomainImpl(
 	cache: CatalogCache,
 	path?: string,
 ): Promise<string> {
-	// FIXME! Check whether we already have the translations ...
-
 	if (typeof path === 'undefined') {
 		if (browserEnvironment()) {
 			path = '/assets/locale';
