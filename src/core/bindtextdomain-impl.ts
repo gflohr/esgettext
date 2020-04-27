@@ -3,10 +3,11 @@ import { TransportFs } from '../transport/fs';
 import { Transport } from '../transport/transport.interface';
 import { parseJsonCatalog, parseMoCatalog } from '../parser';
 import { browserEnvironment } from './browser-environment';
-import { Catalog } from './catalog';
+import { Catalog, CatalogEntries } from './catalog';
 import { setLocale } from './set-locale';
 import { splitLocale, SplitLocale } from './split-locale';
 import { catalogFormat } from './catalog-format';
+import { germanicPlural } from './germanic-plural';
 
 /* eslint-disable no-console */
 
@@ -121,9 +122,40 @@ function loadDomain(
 	base: string,
 	domainname: string,
 ): Promise<Catalog> {
-	// FIXME! For 'de-DE' we have to first load 'de', then 'de-DE'!
+	const promises = new Array<Promise<void>>();
+	const entries: CatalogEntries = {};
 
-	return loadCatalogWithCharset(locale, base, domainname);
+	const catalog: Catalog = {
+		major: 0,
+		minor: 0,
+		pluralFunction: germanicPlural,
+		entries,
+	};
+
+	for (let i = 0; i < locale.tags.length; ++i) {
+		const partialLocale: SplitLocale = {
+			tags: locale.tags.slice(0, i + 1),
+		};
+		if (typeof locale.charset !== 'undefined') {
+			partialLocale.charset = locale.charset;
+		}
+		if (typeof locale.modifier !== 'undefined') {
+			partialLocale.modifier = locale.modifier;
+		}
+
+		const promise = loadCatalogWithCharset(
+			partialLocale,
+			base,
+			domainname,
+		).then((result) => {
+			catalog.major = result.major;
+			catalog.minor = result.minor;
+			catalog.entries = { ...catalog.entries, ...result.entries };
+		});
+		promises.push(promise);
+	}
+
+	return new Promise((resolve) => resolve(catalog));
 }
 
 export function bindtextdomainImpl(
