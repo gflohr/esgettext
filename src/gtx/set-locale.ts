@@ -1,4 +1,4 @@
-import { browser } from './browser';
+import { browserEnvironment } from './browser-environment';
 import { splitLocale } from './split-locale';
 
 let useLocale = 'POSIX';
@@ -40,7 +40,7 @@ export function setLocale(locale?: string): string {
 		}
 
 		// The check from splitLocale() is sufficient.
-		if (browser()) {
+		if (browserEnvironment()) {
 			useLocale = locale;
 			return useLocale;
 		}

@@ -2,7 +2,7 @@ import Ajv from 'ajv';
 import { TransportHttp } from '../transport/http';
 import { TransportFs } from '../transport/fs';
 import { Transport } from '../transport.interface';
-import { browser } from './browser';
+import { browserEnvironment } from './browser-environment';
 import { format } from './format';
 import { Catalog } from './catalog';
 import { setLocale } from './set-locale';
@@ -40,7 +40,7 @@ function loadCatalog(url: string): Promise<Catalog> {
 			transport = 'fs';
 		}
 	} catch (e) {
-		if (browser()) {
+		if (browserEnvironment()) {
 			transport = 'http';
 		} else {
 			transport = 'fs';
@@ -159,7 +159,7 @@ export function bindtextdomain(
 	// FIXME! Check whether we already have the translations ...
 
 	if (typeof path === 'undefined') {
-		if (browser()) {
+		if (browserEnvironment()) {
 			path = '/assets/locale';
 		} else {
 			path = 'src/assets/locale';

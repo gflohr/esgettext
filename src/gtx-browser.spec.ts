@@ -1,14 +1,14 @@
-import * as gtx from './gtx/index';
+import { browserEnvironment, setLocale } from './index';
 
-gtx.browser(true);
+browserEnvironment(true);
 
 describe('configuration functions', () => {
 	describe('setLocale', () => {
 		it('should accept dE-aT for the web and return it unmodified', () => {
-			expect(gtx.setLocale('dE-aT')).toEqual('dE-aT');
+			expect(setLocale('dE-aT')).toEqual('dE-aT');
 		});
 		it('should recect -fR-fR for the web and return it unmodified', () => {
-			expect(gtx.setLocale('-fR-fR')).toEqual('dE-aT');
+			expect(setLocale('-fR-fR')).toEqual('dE-aT');
 		});
 	});
 });

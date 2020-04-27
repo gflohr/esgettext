@@ -9,7 +9,7 @@ let isBrowser = isNode ? false : true;
  * @param browser whether to assume a browser or not
  * @return the new setting.
  */
-export function browser(browser?: boolean): boolean {
+export function browserEnvironment(browser?: boolean): boolean {
 	if (typeof browser !== 'undefined') {
 		isBrowser = browser;
 	}
