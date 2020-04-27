@@ -1,6 +1,6 @@
 import jDataView from 'jdataview';
-import { Catalog } from '../gtx/catalog';
-import { germanicPlural } from '../gtx/germanic-plural';
+import { Catalog } from '../core/catalog';
+import { germanicPlural } from '../core/germanic-plural';
 
 /* eslint-disable @typescript-eslint/no-explicit-any, no-control-regex, no-bitwise */
 

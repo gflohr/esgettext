@@ -10,13 +10,13 @@ describe('split locale', () => {
 		it('de.utf-8', () => {
 			expect(gtx.splitLocale('de.utf-8')).toEqual({
 				tags: ['de'],
-				charset: 'utf-8'
+				charset: 'utf-8',
 			});
 		});
 		it('de@koelsch', () => {
 			expect(gtx.splitLocale('de@koelsch')).toEqual({
 				tags: ['de'],
-				modifier: 'koelsch'
+				modifier: 'koelsch',
 			});
 		});
 		it('de.utf-8@koelsch', () => {

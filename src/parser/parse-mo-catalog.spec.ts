@@ -1,6 +1,6 @@
 import { readFile } from 'fs';
 import { promisify } from 'util';
-import { Catalog } from '../gtx/catalog';
+import { Catalog } from '../core/catalog';
 import { parseMoCatalog } from './parse-mo-catalog';
 
 describe('parse MO', () => {
