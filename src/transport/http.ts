@@ -1,4 +1,4 @@
-import { Transport } from '../transport.interface';
+import { Transport } from './transport.interface';
 
 export class TransportHttp implements Transport {
 	loadFile(_url: string, _encoding: string): Promise<string> {

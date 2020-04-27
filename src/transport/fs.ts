@@ -1,5 +1,5 @@
 import { readFile } from 'fs';
-import { Transport } from '../transport.interface';
+import { Transport } from './transport.interface';
 
 export class TransportFs implements Transport {
 	loadFile(url: string, encoding: string): Promise<string> {

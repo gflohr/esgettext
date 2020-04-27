@@ -1,7 +1,7 @@
 import Ajv from 'ajv';
 import { TransportHttp } from '../transport/http';
 import { TransportFs } from '../transport/fs';
-import { Transport } from '../transport.interface';
+import { Transport } from '../transport/transport.interface';
 import { browserEnvironment } from './browser-environment';
 import { Catalog } from './catalog';
 import { setLocale } from './set-locale';
