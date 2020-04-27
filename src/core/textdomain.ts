@@ -8,9 +8,8 @@ interface Placeholder {
 	[index: string]: string;
 }
 
-const domains: Textdomains = {};
-
 export class Textdomain {
+	private static domains: Textdomains = {};
 	private domain: string;
 
 	private constructor() {
@@ -31,12 +30,12 @@ export class Textdomain {
 		) {
 			throw new Error('Cannot instantiate TextDomain without a textdomain');
 		}
-		if (Object.prototype.hasOwnProperty.call(domains, textdomain)) {
-			return domains[textdomain];
+		if (Object.prototype.hasOwnProperty.call(Textdomain.domains, textdomain)) {
+			return Textdomain.domains[textdomain];
 		} else {
 			const domain = new Textdomain();
 			domain.domain = textdomain;
-			domains[textdomain] = domain;
+			Textdomain.domains[textdomain] = domain;
 			return domain;
 		}
 	}
