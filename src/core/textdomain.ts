@@ -1,3 +1,5 @@
+import { bindtextdomainImpl } from './bindtextdomain-impl';
+
 interface Textdomains {
 	[key: string]: Textdomain;
 }
@@ -37,6 +39,17 @@ export class Textdomain {
 			domains[textdomain] = domain;
 			return domain;
 		}
+	}
+
+	/**
+	 * Bind a textdomain to a certain path. The catalog file will be searched
+	 * in `${path}/LOCALE/LC_MESSAGES/${domainname}.EXT`.
+	 *
+	 * @param path the path where to search, defaults to '/assets/locale'
+	 *             for the web or 'src/assets/locale' for the file system.
+	 */
+	bindtextdomain(path?: string): Promise<string> {
+		return bindtextdomainImpl(this.domain, path);
 	}
 
 	/**

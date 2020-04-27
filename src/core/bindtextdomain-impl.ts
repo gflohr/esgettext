@@ -126,22 +126,10 @@ function loadDomain(
 	return loadCatalogWithCharset(locale, base, domainname);
 }
 
-/**
- * Bind a textdomain to a certain path. The catalog file will be searched
- * in `${path}/LOCALE/LC_MESSAGES/${domainname}.EXT`.
- *
- * @param domainname the textdomain to use, defaults to 'messages'
- * @param path the path where to search, defaults to '/assets/locale'
- *             for the web or 'src/assets/locale' for the file system.
- */
-export function bindtextdomain(
-	domainname?: string,
-	path?: string,
+export function bindtextdomainImpl(
+	domainname: string,
+	path: string,
 ): Promise<string> {
-	if (typeof domainname === 'undefined' || domainname === '') {
-		domainname = 'messages';
-	}
-
 	// FIXME! Check whether we already have the translations ...
 
 	if (typeof path === 'undefined') {

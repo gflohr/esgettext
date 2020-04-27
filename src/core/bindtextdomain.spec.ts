@@ -1,19 +1,20 @@
 import { setLocale } from './set-locale';
 import { catalogFormat } from './catalog-format';
-import { bindtextdomain } from './bindtextdomain';
+import { bindtextdomainImpl } from './bindtextdomain-impl';
 
+// FIXME! Use the method, not the function!
 describe('bindtextdomain', () => {
 	setLocale('de');
 	describe('simple test', () => {
 		it('should return the default path for mytest.json', () => {
 			catalogFormat('json');
-			return bindtextdomain('mytest').then((path) => {
+			return bindtextdomainImpl('mytest').then((path) => {
 				expect(path).toEqual('okay');
 			});
 		});
 		it('should return the default path for mytest.mo', () => {
 			catalogFormat('mo');
-			return bindtextdomain('mytest').then((path) => {
+			return bindtextdomainImpl('mytest').then((path) => {
 				expect(path).toEqual('okay');
 			});
 		});
