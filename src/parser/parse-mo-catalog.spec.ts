@@ -1,15 +1,16 @@
 import { readFile } from 'fs';
 import { promisify } from 'util';
-import * as gtx from '../index';
+import { Catalog } from '../gtx/catalog';
+import { parseMoCatalog } from './parse-mo-catalog';
 
 describe('parse MO', () => {
 	describe('mytest.mo parsed', () => {
-		let catalog: gtx.Catalog;
+		let catalog: Catalog;
 		const filename = 'src/assets/locale/de/LC_MESSAGES/mytest.mo';
 
 		beforeAll(async () => {
 			const raw = await promisify(readFile)(filename);
-			catalog = gtx.parseMO(raw);
+			catalog = parseMoCatalog(raw);
 		});
 
 		it('should not be null', () => {
@@ -45,7 +46,7 @@ describe('parse MO', () => {
 
 		it('should throw an exception', async () => {
 			const raw = await promisify(readFile)(filename);
-			expect(() => gtx.parseMO(raw)).toThrow('unsupported major revision 1');
+			expect(() => parseMoCatalog(raw)).toThrow('unsupported major revision 1');
 		});
 	});
 
@@ -54,7 +55,7 @@ describe('parse MO', () => {
 
 		it('should throw an exception', async () => {
 			const raw = await promisify(readFile)(filename);
-			expect(() => gtx.parseMO(raw)).toThrow('mo file corrupted');
+			expect(() => parseMoCatalog(raw)).toThrow('mo file corrupted');
 		});
 	});
 });

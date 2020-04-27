@@ -1,6 +1,6 @@
 import jDataView from 'jdataview';
-import { Catalog } from './catalog';
-import { germanicPlural } from './germanic-plural';
+import { Catalog } from '../gtx/catalog';
+import { germanicPlural } from '../gtx/germanic-plural';
 
 /* eslint-disable @typescript-eslint/no-explicit-any, no-control-regex, no-bitwise */
 
@@ -17,7 +17,7 @@ interface POHeader {
  *            storage (`Array`, `Uint8Array`, `Arguments`, `jQuery(Array)`, ...)
  * @return a `Catalog`
  */
-export function parseMO(raw: any): Catalog {
+export function parseMoCatalog(raw: any): Catalog {
 	const catalog: Catalog = {
 		major: 0,
 		minor: 0,

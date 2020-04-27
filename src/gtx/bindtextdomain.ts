@@ -1,31 +1,17 @@
-import Ajv from 'ajv';
 import { TransportHttp } from '../transport/http';
 import { TransportFs } from '../transport/fs';
 import { Transport } from '../transport/transport.interface';
+import { parseJsonCatalog, parseMoCatalog } from '../parser';
 import { browserEnvironment } from './browser-environment';
 import { Catalog } from './catalog';
 import { setLocale } from './set-locale';
 import { splitLocale, SplitLocale } from './split-locale';
-import { parseMO } from './parse-mo';
 import { catalogFormat } from './catalog-format';
-import * as catalogSchema from './catalog-schema.json';
 
 /* eslint-disable no-console */
 
 interface DomainCache {
 	[key: string]: Catalog;
-}
-
-function validateCatalog(json: string): Catalog {
-	const data = JSON.parse(json);
-	const ajv = new Ajv();
-
-	if (!ajv.validate(catalogSchema, data)) {
-		//console.log(ajv.errorsText());
-		throw new Error(ajv.errorsText());
-	}
-
-	return data as Catalog;
 }
 
 function loadCatalog(url: string): Promise<Catalog> {
@@ -58,10 +44,10 @@ function loadCatalog(url: string): Promise<Catalog> {
 
 	let validator: Validator, encoding: string;
 	if ('json' === catalogFormat()) {
-		validator = validateCatalog;
+		validator = parseJsonCatalog;
 		encoding = 'utf-8';
 	} else {
-		validator = parseMO;
+		validator = parseMoCatalog;
 		encoding = 'binary';
 	}
 	return new Promise<Catalog>((resolve, reject) => {
