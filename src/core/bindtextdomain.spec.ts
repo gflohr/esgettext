@@ -1,12 +1,15 @@
 import { setLocale } from './set-locale';
 import { catalogFormat } from './catalog-format';
 import { Textdomain } from './textdomain';
+import { CatalogCache } from './catalog-cache';
 
 // FIXME! Use the method, not the function!
 describe('bindtextdomain', () => {
 	const gtx = Textdomain.instance('mytest');
 
 	setLocale('de');
+	beforeAll(() => CatalogCache.clear());
+
 	describe('simple test', () => {
 		it('should return the default path for mytest.json', () => {
 			catalogFormat('json');

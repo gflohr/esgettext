@@ -88,12 +88,12 @@ function assemblePath(
  * charset converted to uppercase (if it differs from the origina charset),
  * and finally without a charset.
  */
-function loadCatalogWithCharset(
+async function loadCatalogWithCharset(
 	locale: SplitLocale,
 	base: string,
 	domainname: string,
 ): Promise<Catalog> {
-	return new Promise((resolve) => {
+	return new Promise(resolve => {
 		type CatalogLoader = (url: string) => Promise<Catalog>;
 		const tries = new Array<CatalogLoader>();
 		let path: string;
@@ -112,18 +112,19 @@ function loadCatalogWithCharset(
 		tries.push(() => loadCatalog(path));
 
 		tries
-			.reduce((p, fn: CatalogLoader) => p.catch(fn), Promise.reject())
-			.then((value) => resolve(value));
+		.reduce((promise, fn: CatalogLoader) => promise.catch(fn), Promise.reject())
+		.then(value => {
+			resolve(value)
+		})
 	});
 }
 
-function loadDomain(
+async function loadDomain(
 	locale: SplitLocale,
 	base: string,
 	domainname: string,
 	cache: CatalogCache,
 ): Promise<Catalog> {
-	const promises = new Array<Promise<void>>();
 	const entries: CatalogEntries = {};
 
 	const catalog: Catalog = {
@@ -167,7 +168,7 @@ function loadDomain(
 			partialLocale.modifier = locale.modifier;
 		}
 
-		const promise = loadCatalogWithCharset(
+		await loadCatalogWithCharset(
 			partialLocale,
 			base,
 			domainname,
@@ -176,12 +177,9 @@ function loadDomain(
 			catalog.minor = result.minor;
 			catalog.entries = { ...catalog.entries, ...result.entries };
 		});
-		promises.push(promise);
 	}
 
-	cache.store(base, localeKey, domainname, catalog);
-
-	return new Promise((resolve) => resolve(catalog));
+	return new Promise(resolve => resolve(catalog));
 }
 
 export function bindtextdomainImpl(
@@ -208,6 +206,8 @@ export function bindtextdomainImpl(
 			.then((_catalog) => {
 				resolve('okay');
 			})
-			.catch((e) => resolve(`not okay: ${e}`));
+			.catch((e) => {
+				resolve(`not okay: ${e}`)
+			});
 	});
 }
