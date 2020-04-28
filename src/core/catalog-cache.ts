@@ -23,7 +23,7 @@ interface CatalogCacheInterface {
  */
 export class CatalogCache {
 	private static instance: CatalogCache;
-	private cache: CatalogCacheInterface = {};
+	private static cache: CatalogCacheInterface = {};
 
 	private constructor() {
 		/* Singleton. */
@@ -35,6 +35,10 @@ export class CatalogCache {
 		}
 
 		return CatalogCache.instance;
+	}
+
+	static clear(): void {
+		CatalogCache.cache = {};
 	}
 
 	/**
@@ -57,8 +61,8 @@ export class CatalogCache {
 		localeKey: string,
 		textdomain: string,
 	): Catalog | Promise<Catalog> | null {
-		if (this.cache[path] && this.cache[path][localeKey]) {
-			const ptr = this.cache[path][localeKey];
+		if (CatalogCache.cache[path] && CatalogCache.cache[path][localeKey]) {
+			const ptr = CatalogCache.cache[path][localeKey];
 			if (Object.prototype.hasOwnProperty.call(ptr, textdomain)) {
 				return ptr[textdomain];
 			}
@@ -73,12 +77,12 @@ export class CatalogCache {
 		textdomain: string,
 		entry: Catalog | Promise<Catalog> | null,
 	): void {
-		if (!this.cache[path]) {
-			this.cache[path] = {};
+		if (!CatalogCache.cache[path]) {
+			CatalogCache.cache[path] = {};
 		}
-		if (!this.cache[path][localeKey]) {
-			this.cache[path][localeKey] = {};
+		if (!CatalogCache.cache[path][localeKey]) {
+			CatalogCache.cache[path][localeKey] = {};
 		}
-		this.cache[path][localeKey][textdomain] = entry;
+		CatalogCache.cache[path][localeKey][textdomain] = entry;
 	}
 }
