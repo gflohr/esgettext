@@ -1,5 +1,6 @@
 import { bindtextdomainImpl } from './bindtextdomain-impl';
 import { CatalogCache } from './catalog-cache';
+import { Catalog } from './catalog';
 
 interface Textdomains {
 	[key: string]: Textdomain;
@@ -46,10 +47,13 @@ export class Textdomain {
 	 * Bind a textdomain to a certain path. The catalog file will be searched
 	 * in `${path}/LOCALE/LC_MESSAGES/${domainname}.EXT`.
 	 *
+	 * The promise will always resolve. If no catalog was found, an empty
+	 * catalog will be returned that is still usable.
+	 *
 	 * @param path the path where to search, defaults to '/assets/locale'
 	 *             for the web or 'src/assets/locale' for the file system.
 	 */
-	bindtextdomain(path?: string): Promise<string> {
+	bindtextdomain(path?: string): Promise<Catalog> {
 		return bindtextdomainImpl(this.domain, Textdomain.cache, path);
 	}
 

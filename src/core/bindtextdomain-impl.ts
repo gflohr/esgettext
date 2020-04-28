@@ -189,11 +189,70 @@ async function loadDomain(
 	return new Promise((resolve) => resolve(catalog));
 }
 
+function pluralExpression(str: string): Function {
+	const tokens = str
+		.replace(/[ \t\r\013\014]/g, '')
+		.replace(/;$/, '')
+		// Do NOT allow square brackets here. JSFuck!
+		.split(/[<>!=]=|&&|\|\||[-!*/%+<>=?:;]/);
+
+	for (let i = 0; i < tokens.length; ++i) {
+		const token = tokens[i].replace(/^\(+/, '').replace(/\)+$/, '');
+		if (
+			token !== 'nplurals' &&
+			token !== 'plural' &&
+			token !== 'n' &&
+			// Does not catch invalid octal numbers but the compiler
+			// takes care of that.
+			null === /^[0-9]+$/.exec(token)
+		) {
+			return germanicPlural;
+		}
+	}
+
+	const code = 'var nplurals = 1, plural = 0;' + str + '; return 0 + plural';
+
+	// This may throw an exception!
+	return new Function('n', code);
+}
+
+function setPluralFunction(catalog: Catalog): Catalog {
+	const headersRaw = catalog.entries[''][0];
+	if (!headersRaw.length) {
+		return catalog;
+	}
+
+	const headers = headersRaw.split('\n');
+	headers.forEach((header) => {
+		const tokens = header.split(':');
+		if ('plural-forms' === tokens.shift()) {
+			const code = tokens.join(':');
+			try {
+				catalog.pluralFunction = pluralExpression(code);
+			} catch (e) {
+				// If the plural function was invalid,
+				catalog.major = catalog.minor = 0;
+				catalog.pluralFunction = germanicPlural;
+				catalog.entries = {};
+			}
+		}
+	});
+
+	return catalog;
+}
+
 export function bindtextdomainImpl(
 	domainname: string,
 	cache: CatalogCache,
 	path?: string,
-): Promise<string> {
+): Promise<Catalog> {
+	const defaultCatalog: Catalog = {
+		major: 0,
+		minor: 0,
+		pluralFunction: germanicPlural,
+		entries: {},
+	};
+
 	if (typeof path === 'undefined') {
 		if (browserEnvironment()) {
 			path = '/assets/locale';
@@ -204,17 +263,17 @@ export function bindtextdomainImpl(
 
 	const localeIdentifier = setLocale();
 	if (localeIdentifier === 'C' || localeIdentifier === 'POSIX') {
-		return new Promise((resolve) => resolve('not okay'));
+		return new Promise((resolve) => resolve(defaultCatalog));
 	}
 
 	return new Promise((resolve) => {
 		const locale = splitLocale(localeIdentifier);
 		loadDomain(locale, path, domainname, cache)
-			.then((_catalog) => {
-				resolve('okay');
+			.then((catalog) => {
+				resolve(setPluralFunction(catalog));
 			})
-			.catch((e) => {
-				resolve(`not okay: ${e}`);
+			.catch(() => {
+				resolve(defaultCatalog);
 			});
 	});
 }
