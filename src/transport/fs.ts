@@ -3,7 +3,7 @@ import { Transport } from './transport.interface';
 
 export class TransportFs implements Transport {
 	loadFile(url: string, encoding: string): Promise<string> {
-		return new Promise(function (resolve, reject) {
+		return new Promise((resolve, reject) => {
 			readFile(url, encoding, (err, data) => {
 				return err ? reject(err) : resolve(data);
 			});
