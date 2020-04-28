@@ -93,7 +93,7 @@ async function loadCatalogWithCharset(
 	base: string,
 	domainname: string,
 ): Promise<Catalog> {
-	return new Promise(resolve => {
+	return new Promise((resolve) => {
 		type CatalogLoader = (url: string) => Promise<Catalog>;
 		const tries = new Array<CatalogLoader>();
 		let path: string;
@@ -112,10 +112,13 @@ async function loadCatalogWithCharset(
 		tries.push(() => loadCatalog(path));
 
 		tries
-		.reduce((promise, fn: CatalogLoader) => promise.catch(fn), Promise.reject())
-		.then(value => {
-			resolve(value)
-		})
+			.reduce(
+				(promise, fn: CatalogLoader) => promise.catch(fn),
+				Promise.reject(),
+			)
+			.then((value) => {
+				resolve(value);
+			});
 	});
 }
 
@@ -157,6 +160,7 @@ async function loadDomain(
 		}
 	}
 
+	const results = new Array<Promise<void>>();
 	for (let i = 0; i < locale.tags.length; ++i) {
 		const partialLocale: SplitLocale = {
 			tags: locale.tags.slice(0, i + 1),
@@ -168,18 +172,21 @@ async function loadDomain(
 			partialLocale.modifier = locale.modifier;
 		}
 
-		await loadCatalogWithCharset(
-			partialLocale,
-			base,
-			domainname,
-		).then((result) => {
-			catalog.major = result.major;
-			catalog.minor = result.minor;
-			catalog.entries = { ...catalog.entries, ...result.entries };
-		});
+		const p = loadCatalogWithCharset(partialLocale, base, domainname)
+			.then((result) => {
+				catalog.major = result.major;
+				catalog.minor = result.minor;
+				catalog.entries = { ...catalog.entries, ...result.entries };
+			})
+			.catch(() => {
+				/* ignored */
+			});
+		results.push(p);
 	}
 
-	return new Promise(resolve => resolve(catalog));
+	await Promise.all(results);
+
+	return new Promise((resolve) => resolve(catalog));
 }
 
 export function bindtextdomainImpl(
@@ -207,7 +214,7 @@ export function bindtextdomainImpl(
 				resolve('okay');
 			})
 			.catch((e) => {
-				resolve(`not okay: ${e}`)
+				resolve(`not okay: ${e}`);
 			});
 	});
 }
