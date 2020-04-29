@@ -13,7 +13,7 @@ module.exports = {
 		fs: 'empty',
 	},
 	optimization: {
-		minimize: true,
+		minimize: false,
 		minimizer: [
 			new TerserPlugin({
 				cache: true,
@@ -42,7 +42,7 @@ module.exports = {
 		path: path.resolve(__dirname, '_bundles'),
 		filename: '[name].js',
 		libraryTarget: 'umd',
-		library: 'Gtx',
+		library: 'GtxI18n',
 		umdNamedDefine: true,
 	},
 };
