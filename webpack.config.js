@@ -7,7 +7,7 @@ module.exports = {
 		'gtx-i18n-runtime': './src/index.ts',
 		'gtx-i18n-runtime.min': './src/index.ts',
 	},
-	mode: 'production',
+	mode: 'development',
 	devtool: 'source-map',
 	node: {
 		fs: 'empty',
@@ -42,7 +42,7 @@ module.exports = {
 		path: path.resolve(__dirname, '_bundles'),
 		filename: '[name].js',
 		libraryTarget: 'umd',
-		library: 'gtx',
+		library: 'Gtx',
 		umdNamedDefine: true,
 	},
 };
