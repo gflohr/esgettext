@@ -159,7 +159,8 @@ async function loadDomain(
 		}
 	}
 
-	const results = new Array<Promise<void>>();
+	const promises = new Array<Promise<void | Catalog>>();
+	const results = new Array<Catalog>();
 	for (let i = 0; i < locale.tags.length; ++i) {
 		const partialLocale: SplitLocale = {
 			tags: locale.tags.slice(0, i + 1),
@@ -172,18 +173,25 @@ async function loadDomain(
 		}
 
 		const p = loadCatalogWithCharset(partialLocale, base, domainname)
-			.then((result) => {
-				catalog.major = result.major;
-				catalog.minor = result.minor;
-				catalog.entries = { ...catalog.entries, ...result.entries };
-			})
+			.then((result) => (results[i] = result))
 			.catch(() => {
 				/* ignored */
 			});
-		results.push(p);
+		promises.push(p);
 	}
 
-	await Promise.all(results);
+	await Promise.all(promises);
+
+	for (let i = 0; i < locale.tags.length; ++i) {
+		const result = results[i];
+		if (!result) {
+			continue;
+		}
+
+		catalog.major = result.major;
+		catalog.minor = result.minor;
+		catalog.entries = { ...catalog.entries, ...result.entries };
+	}
 
 	return new Promise((resolve) => resolve(catalog));
 }
