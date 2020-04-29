@@ -93,7 +93,7 @@ async function loadCatalogWithCharset(
 	base: string,
 	domainname: string,
 ): Promise<Catalog> {
-	return new Promise((resolve) => {
+	return new Promise((resolve, reject) => {
 		type CatalogLoader = (url: string) => Promise<Catalog>;
 		const tries = new Array<CatalogLoader>();
 		let path: string;
@@ -116,9 +116,8 @@ async function loadCatalogWithCharset(
 				(promise, fn: CatalogLoader) => promise.catch(fn),
 				Promise.reject(),
 			)
-			.then((value) => {
-				resolve(value);
-			});
+			.then((value) => resolve(value))
+			.catch(() => reject());
 	});
 }
 
