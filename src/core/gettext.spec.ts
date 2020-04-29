@@ -1,7 +1,7 @@
 import { Textdomain } from './textdomain';
 
 describe('translation functions', () => {
-	const gtx = Textdomain.instance('test');
+	const gtx = Textdomain.getInstance('test');
 
 	describe('normal gettext (_)', () => {
 		it('should echo its argument', () => {

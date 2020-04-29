@@ -1,5 +1,4 @@
 import { setLocale } from './set-locale';
-import { catalogFormat } from './catalog-format';
 import { Textdomain } from './textdomain';
 import { CatalogCache } from './catalog-cache';
 
@@ -9,26 +8,26 @@ describe('bindtextdomain', () => {
 	beforeAll(() => CatalogCache.clear());
 
 	describe('simple test', () => {
-		const gtx = Textdomain.instance('mytest');
+		const gtx = Textdomain.getInstance('mytest');
 
 		it('should return something for mytest.json', () => {
-			catalogFormat('json');
+			gtx.catalogFormat('json');
 			return gtx.bindtextdomain().then((catalog) => {
 				expect(catalog).toBeTruthy();
 			});
 		});
 
 		it('should return something for mytest.mo', () => {
-			const gtx = Textdomain.instance('mytest');
+			const gtx = Textdomain.getInstance('mytest');
 
-			catalogFormat('mo');
+			gtx.catalogFormat('mo');
 			return gtx.bindtextdomain().then((catalog) => {
 				expect(catalog).toBeTruthy();
 			});
 		});
 
 		it('should also return something for not-exists.mo', () => {
-			const gtx = Textdomain.instance('not-exists');
+			const gtx = Textdomain.getInstance('not-exists');
 
 			return gtx.bindtextdomain().then((catalog) => {
 				expect(catalog).toBeTruthy();

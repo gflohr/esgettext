@@ -10,13 +10,12 @@ import { browserEnvironment } from './browser-environment';
 import { Catalog, CatalogEntries } from './catalog';
 import { setLocale } from './set-locale';
 import { splitLocale, SplitLocale } from './split-locale';
-import { catalogFormat } from './catalog-format';
 import { germanicPlural } from './germanic-plural';
 import { CatalogCache } from './catalog-cache';
 
 /* eslint-disable no-console */
 
-function loadCatalog(url: string): Promise<Catalog> {
+function loadCatalog(url: string, format: string): Promise<Catalog> {
 	let transport;
 
 	// Check whether this is a valid URL.
@@ -45,7 +44,7 @@ function loadCatalog(url: string): Promise<Catalog> {
 	type Validator = (data: string) => Catalog;
 
 	let validator: Validator, encoding: string;
-	if ('json' === catalogFormat()) {
+	if ('json' === format) {
 		validator = parseJsonCatalog;
 		encoding = 'utf-8';
 	} else {
@@ -66,10 +65,9 @@ function assemblePath(
 	base: string,
 	locale: SplitLocale,
 	domainname: string,
+	extender: string,
 	charset?: string,
 ): string {
-	const extender = catalogFormat();
-
 	base += '/' + locale.tags.join('-');
 	if (typeof charset !== 'undefined') {
 		base += '.' + charset;
@@ -92,6 +90,7 @@ async function loadCatalogWithCharset(
 	locale: SplitLocale,
 	base: string,
 	domainname: string,
+	format: string,
 ): Promise<Catalog> {
 	return new Promise((resolve, reject) => {
 		type CatalogLoader = (url: string) => Promise<Catalog>;
@@ -99,17 +98,17 @@ async function loadCatalogWithCharset(
 		let path: string;
 
 		if (typeof locale.charset !== 'undefined') {
-			path = assemblePath(base, locale, domainname, locale.charset);
-			tries.push(() => loadCatalog(path));
+			path = assemblePath(base, locale, domainname, format, locale.charset);
+			tries.push(() => loadCatalog(path, format));
 			const ucCharset = locale.charset.toUpperCase();
 			if (ucCharset !== locale.charset) {
-				path = assemblePath(base, locale, domainname, locale.charset);
-				tries.push(() => loadCatalog(path));
+				path = assemblePath(base, locale, domainname, format, locale.charset);
+				tries.push(() => loadCatalog(path, format));
 			}
 		}
 
-		path = assemblePath(base, locale, domainname);
-		tries.push(() => loadCatalog(path));
+		path = assemblePath(base, locale, domainname, format);
+		tries.push(() => loadCatalog(path, format));
 
 		tries
 			.reduce(
@@ -125,6 +124,7 @@ async function loadDomain(
 	locale: SplitLocale,
 	base: string,
 	domainname: string,
+	format: string,
 	cache: CatalogCache,
 ): Promise<Catalog> {
 	const entries: CatalogEntries = {};
@@ -172,7 +172,7 @@ async function loadDomain(
 			partialLocale.modifier = locale.modifier;
 		}
 
-		const p = loadCatalogWithCharset(partialLocale, base, domainname)
+		const p = loadCatalogWithCharset(partialLocale, base, domainname, format)
 			.then((result) => (results[i] = result))
 			.catch(() => {
 				/* ignored */
@@ -251,7 +251,8 @@ function setPluralFunction(catalog: Catalog): Catalog {
 export function bindtextdomainImpl(
 	domainname: string,
 	cache: CatalogCache,
-	path?: string,
+	path: string,
+	format: string,
 ): Promise<Catalog> {
 	const defaultCatalog: Catalog = {
 		major: 0,
@@ -260,14 +261,6 @@ export function bindtextdomainImpl(
 		entries: {},
 	};
 
-	if (typeof path === 'undefined') {
-		if (browserEnvironment()) {
-			path = '/assets/locale';
-		} else {
-			path = 'src/assets/locale';
-		}
-	}
-
 	const localeIdentifier = setLocale();
 	if (localeIdentifier === 'C' || localeIdentifier === 'POSIX') {
 		return new Promise((resolve) => resolve(defaultCatalog));
@@ -275,7 +268,7 @@ export function bindtextdomainImpl(
 
 	return new Promise((resolve) => {
 		const locale = splitLocale(localeIdentifier);
-		loadDomain(locale, path, domainname, cache)
+		loadDomain(locale, path, domainname, format, cache)
 			.then((catalog) => {
 				resolve(setPluralFunction(catalog));
 			})

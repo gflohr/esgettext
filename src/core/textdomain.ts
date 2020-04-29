@@ -1,6 +1,7 @@
 import { bindtextdomainImpl } from './bindtextdomain-impl';
 import { CatalogCache } from './catalog-cache';
 import { Catalog } from './catalog';
+import { browserEnvironment } from './browser-environment';
 
 interface Textdomains {
 	[key: string]: Textdomain;
@@ -14,6 +15,7 @@ export class Textdomain {
 	private static domains: Textdomains = {};
 	private static readonly cache = CatalogCache.getInstance();
 	private domain: string;
+	private format = 'json';
 
 	private constructor() {
 		/* Prevent instantiation. */
@@ -25,7 +27,7 @@ export class Textdomain {
 	 *
 	 * @param textdomain {string} the textdomain of your application or library.
 	 */
-	static instance(textdomain: string): Textdomain {
+	static getInstance(textdomain: string): Textdomain {
 		if (
 			typeof textdomain === 'undefined' ||
 			textdomain === null ||
@@ -54,7 +56,36 @@ export class Textdomain {
 	 *             for the web or 'src/assets/locale' for the file system.
 	 */
 	bindtextdomain(path?: string): Promise<Catalog> {
-		return bindtextdomainImpl(this.domain, Textdomain.cache, path);
+		if (typeof path === 'undefined') {
+			if (browserEnvironment()) {
+				path = '/assets/locale';
+			} else {
+				path = 'src/assets/locale';
+			}
+		}
+
+		return bindtextdomainImpl(this.domain, Textdomain.cache, path, this.format);
+	}
+
+	/**
+	 * Query or set the format to use.
+	 *
+	 * @param format one of 'json' or 'mo'
+	 * @return the format selected
+	 */
+	public catalogFormat(format?: string): string {
+		if (typeof format !== 'undefined') {
+			format = format.toLowerCase();
+			if (format === 'json') {
+				this.format = 'json';
+			} else if (format === 'mo') {
+				this.format = 'mo';
+			} else {
+				throw new Error(`unsupported format ${format}`);
+			}
+		}
+
+		return this.format;
 	}
 
 	/**
