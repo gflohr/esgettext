@@ -5,3 +5,7 @@
 /node_modules
 /coverage
 **/*.spec.ts
+/po
+/src/po-test
+existing.mo
+additional.mo

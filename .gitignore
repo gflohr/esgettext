@@ -43,3 +43,6 @@ Thumbs.db
 # For local testing
 /index.html
 /locale
+
+# I18N
+*.gmo
