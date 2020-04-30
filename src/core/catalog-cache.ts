@@ -47,13 +47,13 @@ export class CatalogCache {
 	 * The base path is the path without the part LOCALE/LC_MESSAGES/, for
 	 * example something like /usr/share/locale or /assets/locale.
 	 *
-	 * The locale key is usually the locale identifier (e.g. de-DE or sr@latin).
+	 * The locale key is usually the locale identifier (e.g. de-DE or sr\@latin).
 	 * But it can also be a colon separated list of such locale identifiers.
 	 *
 	 *
-	 * @param path the base(!) path that the domain is bound to
-	 * @param localeKey the locale key
-	 * @param textdomain the textdomain
+	 * @param path - the base(!) path that the domain is bound to
+	 * @param localeKey - the locale key
+	 * @param textdomain - the textdomain
 	 * @returns the cached Catalog, a Promise or null for failure
 	 */
 	public lookup(

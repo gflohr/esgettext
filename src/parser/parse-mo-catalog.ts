@@ -13,9 +13,9 @@ interface POHeader {
  *
  * An exception is thrown for invalid data.
  *
- * @param raw The input as either a binary `String`, any `Array`-like byte
- *            storage (`Array`, `Uint8Array`, `Arguments`, `jQuery(Array)`, ...)
- * @return a `Catalog`
+ * @param raw - The input as either a binary `String`, any `Array`-like byte
+ *              storage (`Array`, `Uint8Array`, `Arguments`, `jQuery(Array)`, ...)
+ * @returns a Catalog
  */
 export function parseMoCatalog(raw: any): Catalog {
 	const catalog: Catalog = {

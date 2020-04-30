@@ -11,6 +11,10 @@ interface Placeholder {
 	[index: string]: string;
 }
 
+/**
+ * A Textdomain is a container for an esgettext configuration and all loaded
+ * catalogs for the textual domain selected.
+ */
 export class Textdomain {
 	private static domains: Textdomains = {};
 	private static readonly cache = CatalogCache.getInstance();
@@ -27,7 +31,7 @@ export class Textdomain {
 	 * Instantiate a Textdomain object. Textdomain objects are singletons
 	 * for each textdomain identifier.
 	 *
-	 * @param textdomain {string} the textdomain of your application or library.
+	 * @param textdomain - the textdomain of your application or library.
 	 */
 	static getInstance(textdomain: string): Textdomain {
 		if (
@@ -51,9 +55,9 @@ export class Textdomain {
 	 * Bind a textdomain to a certain path. The catalog file will be searched
 	 * in `${path}/LOCALE/LC_MESSAGES/${domainname}.EXT`.
 	 *
-	 * @param path the base path for this textdomain
+	 * @param path - the base path for this textdomain
 	 */
-	bindtextdomain(path: string) {
+	bindtextdomain(path: string): void {
 		Textdomain.boundDomains[this.domain] = path;
 	}
 
@@ -63,6 +67,8 @@ export class Textdomain {
 	 *
 	 * The promise will always resolve. If no catalog was found, an empty
 	 * catalog will be returned that is still usable.
+	 *
+	 * @returns a promise for a Catalog that will always resolve.
 	 */
 	resolve(): Promise<Catalog> {
 		let path = Textdomain.boundDomains[this.domain];
@@ -81,8 +87,8 @@ export class Textdomain {
 	/**
 	 * Query or set the format to use.
 	 *
-	 * @param format one of 'json' or 'mo'
-	 * @return the format selected
+	 * @param format - one of 'json' or 'mo'
+	 * @returns the format selected
 	 */
 	public catalogFormat(format?: string): string {
 		if (typeof format !== 'undefined') {
@@ -102,7 +108,7 @@ export class Textdomain {
 	/**
 	 * Translate a simple string.
 	 *
-	 * @param msgid the string to translate
+	 * @param msgid - the string to translate
 	 *
 	 * @returns the translated string
 	 */
@@ -117,8 +123,10 @@ export class Textdomain {
 	 * and can be followed by an arbitrary number of ASCII alphabetic characters
 	 * or ASCII digits (a-z, A-Z).
 	 *
-	 * @param msgid
-	 * @param placeholders
+	 * @param msgid - the msgid to translate
+	 * @param placeholders - a dictionary of placeholders
+	 *
+	 * @returns the translated string with placeholders expanded
 	 */
 	_x(msgid: string, placeholders: Placeholder): string {
 		return this.expand(msgid, placeholders);

@@ -6,8 +6,8 @@ let isBrowser = isNode ? false : true;
  * browser) is auto-detected. You can force the library to assume a certain
  * environment with this function.
  *
- * @param browser whether to assume a browser or not
- * @return the new setting.
+ * @param browser - whether to assume a browser or not
+ * @returns the new setting.
  */
 export function browserEnvironment(browser?: boolean): boolean {
 	if (typeof browser !== 'undefined') {

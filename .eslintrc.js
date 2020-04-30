@@ -5,7 +5,7 @@ module.exports = {
 		project: 'tsconfig.json',
 		sourceType: 'module',
 	},
-	plugins: ['@typescript-eslint/eslint-plugin'],
+	plugins: ['@typescript-eslint/eslint-plugin', 'eslint-plugin-tsdoc'],
 	extends: [
 		'eslint:recommended',
 		'plugin:import/recommended',
@@ -55,6 +55,7 @@ module.exports = {
 		'import/no-cycle': 'error',
 		'import/no-self-import': 'error',
 		'import/no-default-export': 'error',
+		'tsdoc/syntax': 'warn',
 	},
 	overrides: [
 		{

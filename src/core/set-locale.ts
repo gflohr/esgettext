@@ -12,7 +12,7 @@ let useLocale = 'POSIX';
  * For server environments, the locale identifier has to match the following
  * scheme:
  *
- *   ll-CC.charset@modifier
+ *   `ll-CC.charset\@modifier`
  *
  * `ll` is the two- or three-letter language code.
  * `CC` is the optionl two-letter country code.
@@ -22,7 +22,7 @@ let useLocale = 'POSIX';
  * The language code is always converted to lowercase, the country code is
  * converted to uppercase, variant and charset are used as is.
  *
- * @param locale the locale identifier
+ * @param locale - the locale identifier
  * @returns the locale in use
  */
 export function setLocale(locale?: string): string {
