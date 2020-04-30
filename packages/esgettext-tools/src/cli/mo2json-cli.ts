@@ -1,9 +1,9 @@
-import { Textdomain } from 'gtx-i18n-runtime';
+import { Textdomain } from 'esgettext-runtime';
 import { OptionGroup, Getopt } from './getopt';
 import { readFileSync, writeFileSync } from 'fs';
-import { parseMoCatalog } from 'gtx-i18n-runtime';
+import { parseMoCatalog } from 'esgettext-runtime';
 
-const gtx = Textdomain.getInstance('gtx-i18n-tools');
+const gtx = Textdomain.getInstance('esgettext-tools');
 gtx.bindtextdomain().then(() => {
 	const optionGroups: Array<OptionGroup> = [
 		{

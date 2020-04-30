@@ -1,8 +1,8 @@
 import * as yargs from 'yargs';
 import * as camelCase from 'camelcase';
-import { Textdomain } from 'gtx-i18n-runtime';
+import { Textdomain } from 'esgettext-runtime';
 
-const gtx = Textdomain.getInstance('gtx-i18n-tools');
+const gtx = Textdomain.getInstance('esgettext-tools');
 
 export interface Options {
 	[key: string]: any;

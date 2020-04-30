@@ -1,9 +1,9 @@
 import * as yargs from 'yargs';
-import { Gtx } from '../gtx-i18n-runtime';
+import { Gtx } from '../esgettext-runtime';
 import * as camelCase from 'camelcase';
 import { OptionGroup, Getopt } from './getopt';
 
-const gtx = new Gtx('gtx-i18n-tools');
+const gtx = new Gtx('esgettext-tools');
 
 const optionGroups: Array<OptionGroup> = [
 	{
