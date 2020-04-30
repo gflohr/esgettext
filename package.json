@@ -1,7 +1,7 @@
 {
-	"name": "gtx-i18n-runtime",
+	"name": "esgettext-runtime",
 	"version": "0.0.1",
-	"description": "A gettext-like translation runtime for JavaScript",
+	"description": "A gettext-like translation runtime for JavaScript aka EcmaScript",
 	"main": "lib/index.js",
 	"types": "lib/index.d.ts",
 	"repository": "https://github.com/gflohr/gtx-i18n-runtime",
