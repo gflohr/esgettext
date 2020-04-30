@@ -19,7 +19,7 @@ interface CatalogCacheInterface {
  * It is also possible to store a Promise. In that case, if a request is
  * made to bind the textdomain, the promise is settled. Note that this
  * mechanism is never used for message lookup but only for loading the
- * catalog via bindtextdomain.
+ * catalog via resolve.
  */
 export class CatalogCache {
 	private static instance: CatalogCache;

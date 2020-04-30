@@ -248,7 +248,7 @@ function setPluralFunction(catalog: Catalog): Catalog {
 	return catalog;
 }
 
-export function bindtextdomainImpl(
+export function resolveImpl(
 	domainname: string,
 	cache: CatalogCache,
 	path: string,

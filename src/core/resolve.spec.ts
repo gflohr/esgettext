@@ -3,7 +3,7 @@ import { Textdomain } from './textdomain';
 import { CatalogCache } from './catalog-cache';
 
 // FIXME! Use the method, not the function!
-describe('bindtextdomain', () => {
+describe('resolve', () => {
 	setLocale('de');
 	beforeAll(() => CatalogCache.clear());
 
@@ -12,7 +12,7 @@ describe('bindtextdomain', () => {
 
 		it('should return something for mytest.json', () => {
 			gtx.catalogFormat('json');
-			return gtx.bindtextdomain().then((catalog) => {
+			return gtx.resolve().then((catalog) => {
 				expect(catalog).toBeTruthy();
 			});
 		});
@@ -21,7 +21,7 @@ describe('bindtextdomain', () => {
 			const gtx = Textdomain.getInstance('mytest');
 
 			gtx.catalogFormat('mo');
-			return gtx.bindtextdomain().then((catalog) => {
+			return gtx.resolve().then((catalog) => {
 				expect(catalog).toBeTruthy();
 			});
 		});
@@ -29,7 +29,7 @@ describe('bindtextdomain', () => {
 		it('should also return something for not-exists.mo', () => {
 			const gtx = Textdomain.getInstance('not-exists');
 
-			return gtx.bindtextdomain().then((catalog) => {
+			return gtx.resolve().then((catalog) => {
 				expect(catalog).toBeTruthy();
 			});
 		});

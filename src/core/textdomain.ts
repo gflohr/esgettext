@@ -1,4 +1,4 @@
-import { bindtextdomainImpl } from './bindtextdomain-impl';
+import { resolveImpl } from './resolve-impl';
 import { CatalogCache } from './catalog-cache';
 import { Catalog } from './catalog';
 import { browserEnvironment } from './browser-environment';
@@ -55,7 +55,7 @@ export class Textdomain {
 	 * @param path the path where to search, defaults to '/assets/locale'
 	 *             for the web or 'src/assets/locale' for the file system.
 	 */
-	bindtextdomain(path?: string): Promise<Catalog> {
+	resolve(path?: string): Promise<Catalog> {
 		if (typeof path === 'undefined') {
 			if (browserEnvironment()) {
 				path = '/assets/locale';
@@ -64,7 +64,7 @@ export class Textdomain {
 			}
 		}
 
-		return bindtextdomainImpl(this.domain, Textdomain.cache, path, this.format);
+		return resolveImpl(this.domain, Textdomain.cache, path, this.format);
 	}
 
 	/**
