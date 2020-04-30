@@ -14,6 +14,7 @@
 		"bootstrap": "lerna bootstrap",
 		"publish": "lerna publish",
 		"build": "lerna run build --stream",
+		"start": "lerna run build --scope @esgettext/esgettext-runtime && lerna run start --parallel --scope @magic-invoice/esgettext-tools",
 		"format": "lerna run format --stream",
 		"lint": "lerna run lint --stream",
 		"lint:fix": "lerna run lint:fix --stream",
@@ -53,5 +54,9 @@
 		"ts-node": "^8.9.1",
 		"tsconfig-paths": "^3.9.0",
 		"typescript": "^3.8.3"
+	},
+	"dependencies": {
+		"@typescript-eslint/eslint-plugin": "^2.30.0",
+		"@typescript-eslint/parser": "^2.30.0"
 	}
 }

@@ -1,25 +1,9 @@
 {
-  "compilerOptions": {
-    "allowSyntheticDefaultImports": true,
-      "noImplicitAny": true,
-      "noImplicitReturns": true,
-      "noImplicitThis": true,
-      "noImplicitUseStrict": true,
-      "removeComments": true,
-      "declaration": true,
-      "target": "es2019",
-      "lib": [
-        "es2019"
-      ],
-      "module": "commonjs",
-      "outDir": "dist",
-      "sourceMap": true,
-      "typeRoots" : [
-        "node_modules/@types"
-      ]
-  },
-  "include": [
-    "src/**/*.ts"
-  ],
-  "exclude": []
+	"extends": "../../tsconfig.json",
+	"compilerOptions": {
+		"outDir": "dist"
+	},
+	"includes": [
+		"./src"
+	],
 }

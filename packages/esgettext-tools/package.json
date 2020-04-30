@@ -33,12 +33,14 @@
 	},
 	"author": "Guido Flohr <guido.flohr@cantanea.com> (http://www.guido.flohr.net/)",
 	"license": "WTFPL",
-	"devDependencies": {
+	"dependencies": {
 		"@types/node": "^13.13.2",
 		"@types/yargs": "^15.0.4",
 		"camelcase": "^6.0.0",
 		"typescript": "^3.8.3",
 		"yargs": "^15.3.1"
 	},
-	"dependencies": {}
+	"devDependencies": {
+		"shx": "^0.3.2"
+	}
 }

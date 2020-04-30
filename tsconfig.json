@@ -10,13 +10,18 @@
 		"target": "es5",
 		"lib": ["es2015", "dom"],
 		"module": "commonjs",
-		"outDir": "lib",
 		"sourceMap": true,
 		"typeRoots": ["node_modules/@types"],
 		"esModuleInterop": true,
 		"moduleResolution": "node",
-		"resolveJsonModule": true
+		"resolveJsonModule": true,
+		"baseUrl": "./",
+		"paths": {
+			"@esgettext/*": ["packages/*/src"]
+		}
 	},
-	"include": ["src/**/*.ts"],
-	"exclude": []
+	"exclude": [
+		"node_modules",
+		"**/*.spec..ts"
+	]
 }

@@ -1,6 +1,6 @@
-import * as yargs from 'yargs';
-import * as camelCase from 'camelcase';
-import { Textdomain } from 'esgettext-runtime';
+import yargs from 'yargs';
+import camelCase from 'camelcase';
+import { Textdomain } from '../../../esgettext-runtime/src';
 
 const gtx = Textdomain.getInstance('esgettext-tools');
 
@@ -25,7 +25,7 @@ export interface OptionGroup {
 
 export class Getopt {
 	progName: string;
-	cli: yargs.Argv<{}>;
+	cli = yargs;
 	allowedKeys = new Map<string, OptionFlags>();
 	defaultFlags: OptionFlags = {};
 
@@ -41,7 +41,7 @@ export class Getopt {
 	constructor(usage: string, description: string,
 	            optionGroups: OptionGroup[]) {
 		this.progName = process.argv[1].split(/[\\/]/).pop();
-		this.cli = yargs;
+		//this.cli = yargs;
 		this.buildUsage(usage, description);
 
 		this.allowedKeys.set('help', this.defaultFlags);

@@ -1,10 +1,10 @@
-import { Textdomain } from 'esgettext-runtime';
+import { Textdomain } from '../../../esgettext-runtime/src';
 import { OptionGroup, Getopt } from './getopt';
 import { readFileSync, writeFileSync } from 'fs';
-import { parseMoCatalog } from 'esgettext-runtime';
+import { parseMoCatalog } from '../../../esgettext-runtime/src';
 
 const gtx = Textdomain.getInstance('esgettext-tools');
-gtx.bindtextdomain().then(() => {
+gtx.resolve().then(() => {
 	const optionGroups: Array<OptionGroup> = [
 		{
 			description: gtx._('File locations:'),
