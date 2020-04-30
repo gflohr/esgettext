@@ -29,7 +29,7 @@
 # misc
 /.sass-cache
 /connect.lock
-/coverage
+coverage
 /libpeerconnection.log
 npm-debug.log
 yarn-error.log
@@ -39,10 +39,6 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
-
-# For local testing
-/index.html
-/locale
 
 # I18N
 *.gmo

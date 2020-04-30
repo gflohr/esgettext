@@ -2,16 +2,6 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"name": "Debug Jest",
-			"port": 9229,
-			"request": "launch",
-			"runtimeArgs": ["test"],
-			"runtimeExecutable": "npm",
-			"skipFiles": ["<node_internals>/**"],
-			"cwd": "${workspaceFolder}",
-			"type": "node"
-		},
-		{
 			"type": "node",
 			"request": "attach",
 			"name": "Attach Debugger",

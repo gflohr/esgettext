@@ -1,6 +1,13 @@
-# gtx-i18n-runtime
+# esgettext
 
-GNU gettext-alike translation runtime library.
+GNU gettext-alike runtime and tools for EcmaScript/JavaScript.
+
+## Packages
+
+This mono-repo contains the following packages:
+
+* [packages/esgettext-runtime/README.md](esgettext-runtime)
+* [packages/esgettext-tools/README.md](esgettext-tools)
 
 ## Status
 
