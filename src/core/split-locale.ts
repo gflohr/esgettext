@@ -1,13 +1,17 @@
-const tagRegex = new RegExp('^[a-z0-9]+(?:-[a-z0-9]+)*$', 'i');
+const tagHyphenRegex = new RegExp('^[a-z0-9]+(?:-[a-z0-9]+)*$', 'i');
+const tagUnderscoreRegex = new RegExp('^[a-z0-9]+(?:_[a-z0-9]+)*$', 'i');
 
 export interface SplitLocale {
 	tags: Array<string>;
+	underscoreSeparator: boolean;
 	charset?: string;
 	modifier?: string;
 }
 
 export function splitLocale(locale: string): SplitLocale | null {
 	let charset, modifier;
+
+	const underscoreSeparator = locale.includes('_');
 
 	locale = locale.replace(/@([a-z]+)$/i, (_, match) => {
 		modifier = match;
@@ -19,11 +23,18 @@ export function splitLocale(locale: string): SplitLocale | null {
 		return '';
 	});
 
-	if (!tagRegex.exec(locale)) {
-		return null;
+	if (underscoreSeparator) {
+		if (!tagUnderscoreRegex.exec(locale)) {
+			return null;
+		}
+	} else {
+		if (!tagHyphenRegex.exec(locale)) {
+			return null;
+		}
 	}
 
-	const tags = locale.split('-');
+	const separator = underscoreSeparator ? '_' : '-';
+	const tags = locale.split(separator);
 	if (!tags.length) {
 		return null;
 	}
@@ -32,7 +43,7 @@ export function splitLocale(locale: string): SplitLocale | null {
 		return null;
 	}
 
-	const split: SplitLocale = { tags: tags };
+	const split: SplitLocale = { tags: tags, underscoreSeparator };
 
 	if (typeof charset !== 'undefined') {
 		split.charset = charset;

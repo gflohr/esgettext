@@ -44,13 +44,18 @@ export class Textdomain {
 	}
 
 	/**
-	 * Bind a textdomain to a certain path. The catalog file will be searched
+	 * Bind a textdomain to a certain path or queries the path that a
+	 * textdomain is bound to. The catalog file will be searched
 	 * in `${path}/LOCALE/LC_MESSAGES/${domainname}.EXT`.
 	 *
 	 * @param path - the base path for this textdomain
 	 */
-	bindtextdomain(path: string): void {
-		Textdomain.boundDomains[this.domain] = path;
+	bindtextdomain(path?: string): string {
+		if (typeof path === 'undefined') {
+			Textdomain.boundDomains[this.domain] = path;
+		}
+
+		return Textdomain.boundDomains[this.domain];
 	}
 
 	/**
@@ -63,9 +68,9 @@ export class Textdomain {
 	 * @returns a promise for a Catalog that will always resolve.
 	 */
 	resolve(): Promise<Catalog> {
-		let path = Textdomain.boundDomains[this.domain];
+		let path = this.bindtextdomain(this.domain);
 
-		if (typeof path === 'undefined') {
+		if (typeof path === 'undefined' || path === null) {
 			if (browserEnvironment()) {
 				path = '/assets/locale';
 			} else {

@@ -12,7 +12,7 @@ let useLocale = 'POSIX';
  * For server environments, the locale identifier has to match the following
  * scheme:
  *
- *   `ll-CC.charset\@modifier`
+ *   `ll_CC.charset\@modifier`
  *
  * `ll` is the two- or three-letter language code.
  * `CC` is the optionl two-letter country code.
@@ -51,7 +51,8 @@ export function setLocale(locale?: string): string {
 			split.tags[1] = split.tags[1].toUpperCase();
 		}
 
-		useLocale = split.tags.join('-');
+		const separator = split.underscoreSeparator ? '_' : '-';
+		useLocale = split.tags.join(separator);
 
 		if (typeof split.charset !== 'undefined') {
 			useLocale += '.' + split.charset;

@@ -68,7 +68,8 @@ function assemblePath(
 	extender: string,
 	charset?: string,
 ): string {
-	base += '/' + locale.tags.join('-');
+	const separator = locale.underscoreSeparator ? '_' : '-';
+	base += '/' + locale.tags.join(separator);
 	if (typeof charset !== 'undefined') {
 		base += '.' + charset;
 	}
@@ -164,6 +165,7 @@ async function loadDomain(
 	for (let i = 0; i < locale.tags.length; ++i) {
 		const partialLocale: SplitLocale = {
 			tags: locale.tags.slice(0, i + 1),
+			underscoreSeparator: locale.underscoreSeparator,
 		};
 		if (typeof locale.charset !== 'undefined') {
 			partialLocale.charset = locale.charset;
