@@ -1,0 +1,11 @@
+{
+	"major": 0,
+	"minor": 0,
+	"entries": {
+		"": [
+			"Project-Id-Version: libintl-perl-text 1.12\nPOT-Creation-Date: 2002-07-13 11:47+02:00\nPO-Revision-Date: 2005-08-10 19:01+03:00\nLast-Translator: Guido Flohr <guido.flohr@cantanea.com>\nLanguage-Team: Bogus\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8-bit\n"
+		],
+		"February": ["Feber"],
+		"January": ["Jänner"]
+	}
+}

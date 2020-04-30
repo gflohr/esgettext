@@ -52,4 +52,4 @@ clean:
 	$(MSGFMT) --check --statistics --verbose -o $@ $<
 
 .gmo.json:
-	$(MO2JSON) --output=$@ --input=$<
+	$(MO2JSON) --input=$< >$@

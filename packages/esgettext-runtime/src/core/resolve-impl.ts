@@ -40,6 +40,7 @@ function loadCatalog(url: string, format: string): Promise<Catalog> {
 	} else {
 		transportInstance = new TransportFs();
 	}
+	console.log(`trying to load ${url} with transport ${transport}`);
 
 	type Validator = (data: string) => Catalog;
 

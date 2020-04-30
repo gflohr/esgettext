@@ -22,22 +22,20 @@ describe('translation functions without catalog', () => {
 	});
 });
 
-describe('existing translations for locale de_AT', () => {
+describe('existing translations for locale de', () => {
 	const gtx = Textdomain.getInstance('existing');
 
 	beforeAll(() => {
-		setLocale('de_AT');
-		gtx.catalogFormat('mo');
+		setLocale('de');
 		return gtx.resolve();
 	});
 
-	describe('locale should be de_AT indeed', () => {
-		it('should use the locale de_AT', () => {
-			expect(setLocale()).toEqual('de_AT');
+	describe('locale should be de indeed', () => {
+		it('should use the locale de', () => {
+			expect(setLocale()).toEqual('des');
 		});
 	});
 
-	/* First convert to monorepo
 	describe('normal strings', () => {
 		it('should translate "December"', () => {
 			expect(gtx._('December')).toEqual('Dezember');
@@ -47,9 +45,12 @@ describe('existing translations for locale de_AT', () => {
 			expect(gtx._('September')).toEqual('September');
 		});
 
-		it('should translate "January" to Austrian not German', () => {
-			expect(gtx._('January')).toEqual('Jänner');
+		it('should translate "January" to German not Austrian', () => {
+			expect(gtx._('January')).toEqual('Januar');
+		});
+
+		it('should translate "February" to German not Austrian', () => {
+			expect(gtx._('February')).toEqual('Februar');
 		});
 	});
-	*/
 });

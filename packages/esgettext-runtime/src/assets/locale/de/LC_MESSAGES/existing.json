@@ -1,0 +1,27 @@
+{
+	"major": 0,
+	"minor": 0,
+	"entries": {
+		"": [
+			"Project-Id-Version: libintl-perl-text 1.12\nPOT-Creation-Date: 2002-07-13 11:47+02:00\nPO-Revision-Date: 2005-08-10 19:02+03:00\nLast-Translator: Guido Flohr <guido.flohr@cantanea.com>\nLanguage-Team: German <de@li.org>\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8-bit\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
+		],
+		"April": ["April"],
+		"August": ["August"],
+		"Context here (2)\u0004Singular": ["Einzahl 2", "Mehrzahl 2"],
+		"Context here (3)\u0004Singular 3": ["Einzahl 3", "Mehrzahl 3"],
+		"December": ["Dezember"],
+		"February": ["Februar"],
+		"January": ["Januar"],
+		"July": ["Juli"],
+		"June": ["Juni"],
+		"March": ["März"],
+		"May": ["Mai"],
+		"November": ["November"],
+		"October": ["Oktober"],
+		"September": ["September"],
+		"Singular": ["Einzahl", "Mehrzahl"],
+		"View": ["Anzeigen"],
+		"Which folder would you like to view?\u0004View": ["Ansicht"],
+		"Which folder would you like to view? (2)\u0004View": ["View 2"]
+	}
+}
