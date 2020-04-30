@@ -1,4 +1,3 @@
-
 # compiled output
 _bundles/
 lib/
@@ -43,3 +42,6 @@ Thumbs.db
 
 # I18N
 *.gmo
+
+# lerna
+/lerna-debug.log
