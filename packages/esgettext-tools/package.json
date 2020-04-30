@@ -21,11 +21,10 @@
 		"build": "yarn run clean && tsc",
 		"watch": "tsc --watch",
 		"clean": "shx rm -rf ./dist",
-		"lint": "tslint ./src/**.*.ts",
+		"lint": "eslint './src/**/*.ts'",
 		"lint:fix": "eslint --fix './src/**/*.ts'",
 		"lint:fix-dry-run": "eslint --fix './src/**/*.ts'",
 		"lint:staged": "lint-staged",
-		"typedoc": "typedoc --out api-docs --excludeNotExported --excludePrivate --excludeProtected src",
 		"test": "jest --passWithNoTests",
 		"test:watch": "jest --passWithNoTests --watch",
 		"test:cov": "jest --passWithNoTests --coverage",
@@ -39,8 +38,5 @@
 		"camelcase": "^6.0.0",
 		"typescript": "^3.8.3",
 		"yargs": "^15.3.1"
-	},
-	"devDependencies": {
-		"shx": "^0.3.2"
 	}
 }
