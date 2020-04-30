@@ -1,5 +1,5 @@
 {
-	"name": "esgettext-runtime",
+	"name": "@esgettext/esgettext-runtime",
 	"version": "0.0.1",
 	"description": "A gettext-like translation runtime for JavaScript aka EcmaScript",
 	"main": "lib/index.js",
@@ -62,6 +62,10 @@
 	"devDependencies": {
 		"eslint": "^6.8.0",
 		"jest": "^25.5.2",
-		"shx": "^0.3.2"
+		"shx": "^0.3.2",
+		"tsc": "^1.20150623.0",
+		"typescript": "^3.8.3",
+		"webpack": "^4.43.0",
+		"webpack-cli": "^3.3.11"
 	}
 }

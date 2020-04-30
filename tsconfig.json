@@ -13,12 +13,7 @@
 		"sourceMap": true,
 		"typeRoots": ["node_modules/@types"],
 		"esModuleInterop": true,
-		"moduleResolution": "node",
-		"resolveJsonModule": true,
-		"baseUrl": "./",
-		"paths": {
-			"@esgettext/*": ["packages/*/src"]
-		}
+		"moduleResolution": "node"
 	},
 	"exclude": [
 		"node_modules",

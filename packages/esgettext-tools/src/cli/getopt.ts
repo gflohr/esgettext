@@ -1,6 +1,6 @@
 import yargs from 'yargs';
 import camelCase from 'camelcase';
-import { Textdomain } from '../../../esgettext-runtime/src';
+import { Textdomain } from '@esgettext/esgettext-runtime';
 
 const gtx = Textdomain.getInstance('esgettext-tools');
 

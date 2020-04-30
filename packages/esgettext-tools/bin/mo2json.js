@@ -1,3 +1,3 @@
 #! /usr/bin/env node
 
-require('../dist/esgettext-tools/src/cli/mo2json-cli');
+require('../dist/cli/mo2json-cli');
