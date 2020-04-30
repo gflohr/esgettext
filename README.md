@@ -13,6 +13,14 @@ This mono-repo contains the following packages:
 
 in development.
 
+## Setup
+
+```
+$ yarn install
+$ yarn run bootstrap
+$ yarn run test
+```
+
 ## Copyright
 
 Copyright (C) 2020 Guido Flohr <guido.flohr@cantanea.com>, all
