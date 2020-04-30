@@ -1,13 +1,14 @@
 
 # compiled output
-/_bundles
-/lib
-/lib-esm
+_bundles/
+lib/
+lib-esm/
+dist/
 /tmp
 /out-tsc
 
 # dependencies
-/node_modules
+node_modules/
 
 # IDEs and editors
 /.idea
@@ -27,14 +28,14 @@
 !.vscode/extensions.json
 
 # misc
-/.sass-cache
+.sass-cache/
 /connect.lock
-coverage
+coverage/
 /libpeerconnection.log
 npm-debug.log
 yarn-error.log
 testem.log
-/typings
+typings/
 
 # System Files
 .DS_Store
