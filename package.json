@@ -1,11 +1,6 @@
 {
 	"name": "esgettext",
 	"description": "gettext like runtime and tools for EcmaScript/JavaScript",
-	"workspaces": {
-		"packages": [
-			"packages/*"
-		]
-	},
 	"keywords": [
 		"i18n",
 		"l10n",
@@ -16,6 +11,8 @@
 		"xgettext"
 	],
 	"scripts": {
+		"bootstrap": "lerna bootstrap",
+		"publish": "lerna publish",
 		"build": "lerna run build --stream",
 		"format": "lerna run format --stream",
 		"lint": "lerna run lint --stream",
@@ -27,7 +24,34 @@
 		"test:e2e": "lerna run test:e2e --stream",
 		"test:ci": "lerna exec --stream -- DOTENV_CONFIG_PATH=./.env.example jest --coverage --ci --reporters=default --reporters=jest-junit --coverage-reporters=text --coverage-reporters=cobertura"
 	},
+	"husky": {
+		"hooks": {
+			"pre-commit": "yarn lerna run lint:staged --concurrency 1 --stream --since origin/master",
+			"pre-push": "yarn test:cov --since origin/master --include-dependents"
+		}
+	},
+	"lint-staged": {
+		"*.{js,ts,json,scss,css,md}": [
+			"prettier --write"
+		],
+		"{src,apps,libs,test}/**/*.ts": [
+			"eslint"
+		]
+	},
 	"devDependencies": {
-		"lerna": "^3.20.2"
+		"@types/jest": "^25.2.1",
+		"eslint": "^6.8.0",
+		"eslint-config-prettier": "^6.11.0",
+		"eslint-plugin-import": "^2.20.2",
+		"eslint-plugin-tsdoc": "^0.2.4",
+		"husky": "^4.2.5",
+		"jest": "^25.5.2",
+		"lerna": "^3.20.2",
+		"lint-staged": "^10.2.0",
+		"prettier": "^2.0.5",
+		"ts-jest": "^25.4.0",
+		"ts-node": "^8.9.1",
+		"tsconfig-paths": "^3.9.0",
+		"typescript": "^3.8.3"
 	}
 }

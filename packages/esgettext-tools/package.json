@@ -18,7 +18,7 @@
 		"mo2json": "bin/mo2json"
 	},
 	"scripts": {
-		"build": "npm run clean && tsc",
+		"build": "yarn run clean && tsc",
 		"watch": "tsc --watch",
 		"clean": "shx rm -rf ./dist",
 		"lint": "tslint ./src/**.*.ts",
@@ -26,11 +26,10 @@
 		"lint:fix-dry-run": "eslint --fix './src/**/*.ts'",
 		"lint:staged": "lint-staged",
 		"typedoc": "typedoc --out api-docs --excludeNotExported --excludePrivate --excludeProtected src",
-		"test": "jest",
-		"test:watch": "jest --watch",
-		"test:cov": "jest --coverage",
-		"test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-		"test:e2e": "jest --config ./test/jest-e2e.json"
+		"test": "jest --passWithNoTests",
+		"test:watch": "jest --passWithNoTests --watch",
+		"test:cov": "jest --passWithNoTests --coverage",
+		"test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand"
 	},
 	"author": "Guido Flohr <guido.flohr@cantanea.com> (http://www.guido.flohr.net/)",
 	"license": "WTFPL",
