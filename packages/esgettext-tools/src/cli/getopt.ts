@@ -1,26 +1,28 @@
 import yargs from 'yargs';
+/* eslint-disable-next-line import/default */
 import camelCase from 'camelcase';
-import { Textdomain } from '@esgettext/esgettext-runtime';
+import { Textdomain } from 'esgettext-runtime';
 
 const gtx = Textdomain.getInstance('esgettext-tools');
 
 export interface Options {
+	/* eslint-disable-next-line @typescript-eslint/no-explicit-any */
 	[key: string]: any;
 }
 
 export interface OptionFlags {
-	multiple?: boolean,
+	multiple?: boolean;
 }
 
 export interface Option {
-	name: string,
-	flags?: OptionFlags,
-	yargsOptions: yargs.Options,
+	name: string;
+	flags?: OptionFlags;
+	yargsOptions: yargs.Options;
 }
 
 export interface OptionGroup {
-	description: string,
-	options: Array<Option>,
+	description: string;
+	options: Array<Option>;
 }
 
 export class Getopt {
@@ -28,18 +30,17 @@ export class Getopt {
 	cli = yargs;
 	allowedKeys = new Map<string, OptionFlags>();
 	defaultFlags: OptionFlags = {};
-
+	options = yargs.option({});
 	/**
 	 * Create a yargs option parser.
 	 *
-	 * @param usage string to print for usage
-	 * @param description short one-line description of the program
-	 * @param optionGroups all options grouped
+	 * @param usage - string to print for usage
+	 * @param description - short one-line description of the program
+	 * @param optionGroups - all options grouped
 	 *
 	 * The strings should not end in a newline!
 	 */
-	constructor(usage: string, description: string,
-	            optionGroups: OptionGroup[]) {
+	constructor(usage: string, description: string, optionGroups: OptionGroup[]) {
 		this.progName = process.argv[1].split(/[\\/]/).pop();
 		//this.cli = yargs;
 		this.buildUsage(usage, description);
@@ -54,17 +55,19 @@ export class Getopt {
 		for (let i = 0; i < optionGroups.length; ++i) {
 			const group = optionGroups[i];
 			const options = group.options;
-			const optionKeys = options.map(option => option.name);
+			const optionKeys = options.map((option) => option.name);
 
 			for (let j = 0; j < options.length; ++j) {
 				const option = options[j];
 				const flags = option.flags || this.defaultFlags;
 				this.allowedKeys.set(option.name, flags);
 				this.allowedKeys.set(camelCase(option.name), flags);
-				const alias = (typeof option.yargsOptions.alias === 'string') ?
-					[option.yargsOptions.alias] : option.yargsOptions.alias;
+				const alias =
+					typeof option.yargsOptions.alias === 'string'
+						? [option.yargsOptions.alias]
+						: option.yargsOptions.alias;
 				if (alias) {
-					alias.map(a => this.allowedKeys.set(a, flags));
+					alias.map((a) => this.allowedKeys.set(a, flags));
 				}
 			}
 
@@ -91,19 +94,30 @@ export class Getopt {
 			const key = keys[i];
 			if (!this.allowedKeys.has(key)) {
 				if (key.length) {
-					this.errorExit(gtx._x("'{progName}': unrecognized option '--{option}'",
-					               { progName: this.progName, option: key}));
+					this.errorExit(
+						gtx._x("'{progName}': unrecognized option '--{option}'", {
+							progName: this.progName,
+							option: key,
+						}),
+					);
 				} else {
-					this.errorExit(gtx._x("'{progName}': invalid option -- '{option}'",
-					               { progName: this.progName, option: key}));
+					this.errorExit(
+						gtx._x("'{progName}': invalid option -- '{option}'", {
+							progName: this.progName,
+							option: key,
+						}),
+					);
 				}
 			}
 			const flags = this.allowedKeys.get(key);
 			const value = argv[key];
 			if (Array.isArray(value) && value.length > 1) {
 				if (!flags.multiple) {
-					this.errorExit(gtx._x("The option '{option}' can be given only once.",
-					               { option: key }));
+					this.errorExit(
+						gtx._x("The option '{option}' can be given only once.", {
+							option: key,
+						}),
+					);
 				}
 			}
 		}
@@ -111,41 +125,53 @@ export class Getopt {
 		return argv;
 	}
 
-	private errorExit(message: string) {
-		console.error(message);
-		console.error(gtx._x("Try '{progName} --help' for more information",
-		              { progName: this.progName}));
+	private errorExit(message: string): void {
+		process.stderr.write(message);
+		process.stderr.write(
+			gtx._x("Try '{progName} --help' for more information", {
+				progName: this.progName,
+			}),
+		);
 		process.exit(1);
 	}
 
-	private buildUsage(usage: string, description: string) {
+	private buildUsage(usage: string, description: string): void {
 		this.cli = this.cli.usage(
-			usage + '\n'
-			+ '\n'
-			+ description + '\n'
-			+ '\n'
-			+ gtx._('Mandatory arguments to long options are mandatory for short options too.\n')
-			+ gtx._('Similarly for optional arguments.\n')
-			+ '\n'
-			+ gtx._('Arguments to options are refered to in CAPS in the description.')
+			usage +
+				'\n' +
+				'\n' +
+				description +
+				'\n' +
+				'\n' +
+				gtx._(
+					'Mandatory arguments to long options are mandatory for short options too.\n',
+				) +
+				gtx._('Similarly for optional arguments.\n') +
+				'\n' +
+				gtx._(
+					'Arguments to options are refered to in CAPS in the description.',
+				),
 		);
 	}
 
-	private addDefaultOptions() {
+	private addDefaultOptions(): void {
 		const version = require(__dirname + '/../../../../package.json').version;
 		const packageName = require(__dirname + '/../../../../package.json').name;
-		const versionString = `${this.progName} (${packageName}) ${version}\n`
-			+ gtx._('LICENSE: WTFPL <http://www.wtfpl.net/about/>\n')
-			+ gtx._('This is free software. You can do with it whatever you want.\n')
-			+ gtx._('There is NO WARRANTY, to the extent permitted by law.\n')
-			+ gtx._('Written by Guido Flohr.');
+		const versionString =
+			`${this.progName} (${packageName}) ${version}\n` +
+			gtx._('LICENSE: WTFPL <http://www.wtfpl.net/about/>\n') +
+			gtx._('This is free software. You can do with it whatever you want.\n') +
+			gtx._('There is NO WARRANTY, to the extent permitted by law.\n') +
+			gtx._('Written by Guido Flohr.');
 
 		this.cli = this.cli
-		.group(['version', 'help'], 'Informative output')
-		.version(versionString)
-		.alias('version', 'v')
-		.help()
-		.alias('help', 'h')
-		.epilogue(gtx._('Report bugs at https://github.com/gflohr/gtx-i18-tools/issues'));
+			.group(['version', 'help'], 'Informative output')
+			.version(versionString)
+			.alias('version', 'v')
+			.help()
+			.alias('help', 'h')
+			.epilogue(
+				gtx._('Report bugs at https://github.com/gflohr/gtx-i18-tools/issues'),
+			);
 	}
 }

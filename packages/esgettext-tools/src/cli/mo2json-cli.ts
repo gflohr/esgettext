@@ -1,7 +1,6 @@
 import { readFileSync, writeFileSync } from 'fs';
-import { Textdomain , parseMoCatalog } from '@esgettext/esgettext-runtime';
+import { Textdomain, parseMoCatalog } from 'esgettext-runtime';
 import { OptionGroup, Getopt } from './getopt';
-
 
 const gtx = Textdomain.getInstance('esgettext-tools');
 gtx.resolve().then(() => {
@@ -15,7 +14,7 @@ gtx.resolve().then(() => {
 						alias: 'i',
 						type: 'string',
 						describe: gtx._('location of the input MO file'),
-						demandOption: gtx._('Error: the option \'--input\' is required.'),
+						demandOption: gtx._("Error: the option '--input' is required."),
 					},
 				},
 				{
@@ -23,10 +22,10 @@ gtx.resolve().then(() => {
 					yargsOptions: {
 						alias: 'o',
 						type: 'string',
-						describe: gtx._('location of the output JSON file')
+						describe: gtx._('location of the output JSON file'),
 					},
 				},
-			]
+			],
 		},
 	];
 

@@ -1,1 +1,1 @@
-export * from './cli/xgettext-cli';
+import './cli/xgettext-cli';

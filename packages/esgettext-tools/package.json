@@ -1,5 +1,5 @@
 {
-	"name": "@esgettext/esgettext-tools",
+	"name": "esgettext-tools",
 	"version": "0.0.1",
 	"description": "Gettext-like po creation and manipulation",
 	"main": "dist/index.js",
@@ -33,7 +33,7 @@
 	"author": "Guido Flohr <guido.flohr@cantanea.com> (http://www.guido.flohr.net/)",
 	"license": "WTFPL",
 	"dependencies": {
-		"@esgettext/esgettext-runtime": "^0.0.1",
+		"esgettext-runtime": "^0.0.1",
 		"@types/node": "^13.13.2",
 		"@types/yargs": "^15.0.4",
 		"camelcase": "^6.0.0",

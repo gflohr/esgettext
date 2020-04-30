@@ -1,4 +1,4 @@
-import { Textdomain } from '@esgettext/esgettext-runtime';
+import { Textdomain } from 'esgettext-runtime';
 import { OptionGroup, Getopt } from './getopt';
 
 const gtx = Textdomain.getInstance('esgettext-tools');
@@ -22,10 +22,12 @@ gtx.resolve().then(() => {
 					yargsOptions: {
 						alias: 'D',
 						type: 'string',
-						describe: gtx._('add DIRECTORY to list for input files search\nIf input file is -, standard input is read.')
+						describe: gtx._(
+							'add DIRECTORY to list for input files search\nIf input file is -, standard input is read.',
+						),
 					},
 				},
-			]
+			],
 		},
 		{
 			description: gtx._('Output file location:'),
@@ -36,7 +38,7 @@ gtx.resolve().then(() => {
 						alias: 'd',
 						type: 'string',
 						describe: gtx._('use NAME.po for output (instead of messages.po)'),
-					}
+					},
 				},
 				{
 					name: 'output',
@@ -44,17 +46,19 @@ gtx.resolve().then(() => {
 						alias: 'o',
 						type: 'string',
 						describe: gtx._('write output to specified file'),
-					}
+					},
 				},
 				{
 					name: 'output-dir',
 					yargsOptions: {
 						alias: 'p',
 						type: 'string',
-						describe: gtx._('output files will be placed in directory DIR\nIf output file is -, output is written to standard output.'),
+						describe: gtx._(
+							'output files will be placed in directory DIR\nIf output file is -, output is written to standard output.',
+						),
 					},
 				},
-			]
+			],
 		},
 		{
 			description: gtx._('Choice of input file language:'),
@@ -64,10 +68,12 @@ gtx.resolve().then(() => {
 					yargsOptions: {
 						alias: 'L',
 						type: 'string',
-						describe: gtx._('recognise the specified language (JavaScript, TypeScript, HTML)\nDefault is to auto-detect language based on filename extension.')
+						describe: gtx._(
+							'recognise the specified language (JavaScript, TypeScript, HTML)\nDefault is to auto-detect language based on filename extension.',
+						),
 					},
 				},
-			]
+			],
 		},
 		{
 			description: gtx._('Interpretation of input files.'),
@@ -78,9 +84,9 @@ gtx.resolve().then(() => {
 						type: 'string',
 						describe: gtx._('encoding of input files'),
 						default: 'ASCII',
-					}
+					},
 				},
-			]
+			],
 		},
 		{
 			description: gtx._('Operation mode:'),
@@ -91,7 +97,7 @@ gtx.resolve().then(() => {
 						alias: 'j',
 						type: 'boolean',
 						describe: gtx._('join messages with existing file'),
-					}
+					},
 				},
 				{
 					name: 'exclude-file',
@@ -100,7 +106,7 @@ gtx.resolve().then(() => {
 						alias: 'x',
 						type: 'string',
 						describe: gtx._('entries from FILE.po are not extracted'),
-					}
+					},
 				},
 				{
 					name: 'add-comments',
@@ -108,17 +114,21 @@ gtx.resolve().then(() => {
 					yargsOptions: {
 						alias: 'c',
 						type: 'string',
-						describe: gtx._('place comment blocks starting with TAG and preceding keyword lines in output file'),
-					}
+						describe: gtx._(
+							'place comment blocks starting with TAG and preceding keyword lines in output file',
+						),
+					},
 				},
 				{
 					name: 'add-all-comments',
 					yargsOptions: {
-						describe: gtx._('place all comment blocks preceding keyword lines in output file'),
+						describe: gtx._(
+							'place all comment blocks preceding keyword lines in output file',
+						),
 						type: 'boolean',
-					}
+					},
 				},
-			]
+			],
 		},
 		{
 			description: gtx._('Language specific options:'),
@@ -128,7 +138,7 @@ gtx.resolve().then(() => {
 					yargsOptions: {
 						alias: 'a',
 						type: 'boolean',
-						describe: gtx._('extract all strings')
+						describe: gtx._('extract all strings'),
 					},
 				},
 				{
@@ -137,7 +147,7 @@ gtx.resolve().then(() => {
 					yargsOptions: {
 						alias: 'k',
 						type: 'string',
-						describe: gtx._('look for WORD as an additional keyword')
+						describe: gtx._('look for WORD as an additional keyword'),
 					},
 				},
 				{
@@ -146,15 +156,20 @@ gtx.resolve().then(() => {
 					yargsOptions: {
 						alias: 'f',
 						type: 'string',
-						describe: gtx._('argument: WORD:ARG:FLAG, additional flag for strings inside the argument number ARG of keyword WORD')
+						describe: gtx._(
+							'argument: WORD:ARG:FLAG, additional flag for strings inside the argument number ARG of keyword WORD',
+						),
 					},
 				},
-			]
+			],
 		},
 	];
 
 	const usage = gtx._('Usage: $0 [OPTIONS] INPUTFILE...');
-	const description = gtx._('Extract translatable strings from given input files');
+	const description = gtx._(
+		'Extract translatable strings from given input files',
+	);
 	const getopt = new Getopt(usage, description, optionGroups);
+	/* eslint-disable-next-line no-console */
 	console.log(getopt.argv());
 });
