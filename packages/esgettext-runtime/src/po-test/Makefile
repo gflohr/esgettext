@@ -2,7 +2,7 @@
 # maintainer. No problem if you cannot run it on your system.
 
 srcdir = .
-top_srcdir = ..
+top_srcdir = ../..
 
 LINGUAS = de de_AT xy xy_XY
 PACKAGES = existing additional
@@ -12,9 +12,9 @@ CATALOGS = $(LINGUAS)
 MO_FILES = $(foreach pkg,$(PACKAGES), $(addprefix $(pkg)., $(addsuffix .gmo, $(LINGUAS))))
 JSON_FILES = $(foreach pkg,$(PACKAGES), $(addprefix $(pkg)., $(addsuffix .json, $(LINGUAS))))
 
-MSGMERGE = msgmerge
-MSGFMT   = msgfmt
-CATOBJEXT = .po
+MSGMERGE  = msgmerge
+MSGFMT    = msgfmt
+MO2JSON   = ../../../esgettext-tools/bin/mo2json.js
 
 all: default
 
@@ -22,16 +22,17 @@ default: install
 
 install: $(MO_FILES) $(JSON_FILES)
 	cd $(srcdir); \
-	targetdir='$(top_srcdir)/assets/locale'; \
+	targetdir='$(top_srcdir)/src/assets/locale'; \
 	languages='$(LINGUAS)'; \
 	packages='$(PACKAGES)'; \
 	for package in $$packages; do \
 		for lang in $$languages; do \
+			mkdir -p "$$targetdir/$$lang/LC_MESSAGES"; \
 			dest="$$targetdir/$$lang/LC_MESSAGES/$$package.mo"; \
 			mocat="$$package.$$lang.gmo"; \
 			echo "installing $$mocat as $$dest"; \
-			mkdir -p "$$targetdir/$$lang/LC_MESSAGES"; \
 			install -C $$mocat $$dest && chmod 644 $$dest || exit 1; \
+			dest="$$targetdir/$$lang/LC_MESSAGES/$$package.json"; \
 			jsoncat="$$package.$$lang.json"; \
 			echo "installing $$jsoncat as $$dest"; \
 			mkdir -p "$$targetdir/$$lang/LC_MESSAGES"; \
@@ -45,10 +46,10 @@ clean:
 	rm -f $(MO_FILES) $(JSON_FILES) *~
 
 .SUFFIXES:
-.SUFFIXES: .po .gmo
+.SUFFIXES: .po .gmo .json
 
 .po.gmo:
 	$(MSGFMT) --check --statistics --verbose -o $@ $<
 
 .gmo.json:
-	$(MO2JSON) $< >$@
+	$(MO2JSON) --output=$@ --input=$<
