@@ -3,20 +3,12 @@ import { CatalogCache } from './catalog-cache';
 import { Catalog } from './catalog';
 import { browserEnvironment } from './browser-environment';
 
-interface Textdomains {
-	[key: string]: Textdomain;
-}
-
-interface Placeholder {
-	[index: string]: string;
-}
-
 /**
  * A Textdomain is a container for an esgettext configuration and all loaded
  * catalogs for the textual domain selected.
  */
 export class Textdomain {
-	private static domains: Textdomains = {};
+	private static domains: { [key: string]: Textdomain } = {};
 	private static readonly cache = CatalogCache.getInstance();
 	private static boundDomains: { [key: string]: string } = {};
 
@@ -128,7 +120,7 @@ export class Textdomain {
 	 *
 	 * @returns the translated string with placeholders expanded
 	 */
-	_x(msgid: string, placeholders: Placeholder): string {
+	_x(msgid: string, placeholders: { [key: string]: string }): string {
 		return this.expand(msgid, placeholders);
 	}
 
@@ -142,7 +134,7 @@ export class Textdomain {
 		return this.domain;
 	}
 
-	private expand(msg: string, placeholders: Placeholder): string {
+	private expand(msg: string, placeholders: { [key: string]: string }): string {
 		return msg.replace(/\{([a-zA-Z][0-9a-zA-Z]*)\}/g, (_, match) => {
 			if (Object.prototype.hasOwnProperty.call(placeholders, match)) {
 				return placeholders[match];
