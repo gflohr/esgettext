@@ -1,33 +1,45 @@
 {
-  "name": "esgettext-tools",
-  "version": "0.0.1",
-  "description": "Gettext-like po creation and manipulation",
-  "main": "dist/index.js",
-  "files": [
-    "bin/",
-    "dist/"
-  ],
-  "bin": {
-    "gtx-i18n-xgettext": "bin/gtx-i18n-xgettext.js",
-    "mo2json": "bin/mo2json"
-  },
-  "keywords": [],
-  "scripts": {
-    "build": "npm run clean && tsc",
-    "watch": "npm run clean && tsc --watch",
-    "clean": "rm -rf ./dist",
-    "lint": "tslint --force './src/**.*.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "Guido Flohr <guido.flohr@cantanea.com> (http://www.guido.flohr.net/)",
-  "license": "WTFPL",
-  "devDependencies": {
-    "@types/node": "^13.13.2",
-    "@types/yargs": "^15.0.4",
-    "camelcase": "^6.0.0",
-    "esgettext-runtime": "file:../esgettext-runtime",
-    "typescript": "^3.8.3",
-    "yargs": "^15.3.1"
-  },
-  "dependencies": {}
+	"name": "esgettext-tools",
+	"version": "0.0.1",
+	"description": "Gettext-like po creation and manipulation",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"repository": "https://github.com/gflohr/esgettext",
+	"bugs": {
+		"url": "https://github.com/gflohr/esgettext/issues"
+	},
+	"homepage": "https://github.com/gflohr/esgettext/packages/esgettext-tools",
+	"files": [
+		"bin/",
+		"dist/"
+	],
+	"bin": {
+		"gtx-i18n-xgettext": "bin/gtx-i18n-xgettext.js",
+		"mo2json": "bin/mo2json"
+	},
+	"scripts": {
+		"build": "npm run clean && tsc",
+		"watch": "tsc --watch",
+		"clean": "shx rm -rf ./dist",
+		"lint": "tslint ./src/**.*.ts",
+		"lint:fix": "eslint --fix './src/**/*.ts'",
+		"lint:fix-dry-run": "eslint --fix './src/**/*.ts'",
+		"lint:staged": "lint-staged",
+		"typedoc": "typedoc --out api-docs --excludeNotExported --excludePrivate --excludeProtected src",
+		"test": "jest",
+		"test:watch": "jest --watch",
+		"test:cov": "jest --coverage",
+		"test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
+		"test:e2e": "jest --config ./test/jest-e2e.json"
+	},
+	"author": "Guido Flohr <guido.flohr@cantanea.com> (http://www.guido.flohr.net/)",
+	"license": "WTFPL",
+	"devDependencies": {
+		"@types/node": "^13.13.2",
+		"@types/yargs": "^15.0.4",
+		"camelcase": "^6.0.0",
+		"typescript": "^3.8.3",
+		"yargs": "^15.3.1"
+	},
+	"dependencies": {}
 }

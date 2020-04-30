@@ -6,6 +6,15 @@
 			"packages/*"
 		]
 	},
+	"keywords": [
+		"i18n",
+		"l10n",
+		"internationalization",
+		"localization",
+		"javascript",
+		"gettext",
+		"xgettext"
+	],
 	"scripts": {
 		"build": "lerna run build --stream",
 		"format": "lerna run format --stream",
