@@ -14,6 +14,8 @@ interface Placeholder {
 export class Textdomain {
 	private static domains: Textdomains = {};
 	private static readonly cache = CatalogCache.getInstance();
+	private static boundDomains: { [key: string]: string } = {};
+
 	private domain: string;
 	private format = 'json';
 
@@ -49,13 +51,22 @@ export class Textdomain {
 	 * Bind a textdomain to a certain path. The catalog file will be searched
 	 * in `${path}/LOCALE/LC_MESSAGES/${domainname}.EXT`.
 	 *
+	 * @param path the base path for this textdomain
+	 */
+	bindtextdomain(path: string) {
+		Textdomain.boundDomains[this.domain] = path;
+	}
+
+	/**
+	 * Resolve a textdomain, i.e. load the catalogs for this domain and all
+	 * of its dependencies for the currently selected locale.
+	 *
 	 * The promise will always resolve. If no catalog was found, an empty
 	 * catalog will be returned that is still usable.
-	 *
-	 * @param path the path where to search, defaults to '/assets/locale'
-	 *             for the web or 'src/assets/locale' for the file system.
 	 */
-	resolve(path?: string): Promise<Catalog> {
+	resolve(): Promise<Catalog> {
+		let path = Textdomain.boundDomains[this.domain];
+
 		if (typeof path === 'undefined') {
 			if (browserEnvironment()) {
 				path = '/assets/locale';
