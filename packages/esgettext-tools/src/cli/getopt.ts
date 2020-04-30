@@ -61,7 +61,7 @@ export class Getopt {
 				const flags = option.flags || this.defaultFlags;
 				this.allowedKeys.set(option.name, flags);
 				this.allowedKeys.set(camelCase(option.name), flags);
-				let alias = (typeof option.yargsOptions.alias === 'string') ?
+				const alias = (typeof option.yargsOptions.alias === 'string') ?
 					[option.yargsOptions.alias] : option.yargsOptions.alias;
 				if (alias) {
 					alias.map(a => this.allowedKeys.set(a, flags));
@@ -127,13 +127,13 @@ export class Getopt {
 			+ gtx._('Mandatory arguments to long options are mandatory for short options too.\n')
 			+ gtx._('Similarly for optional arguments.\n')
 			+ '\n'
-			+ gtx._('Argumts to options are refered to in CAPS in the description.')
+			+ gtx._('Arguments to options are refered to in CAPS in the description.')
 		);
 	}
 
 	private addDefaultOptions() {
-		const version = require(__dirname + '/../../package.json').version;
-		const packageName = require(__dirname + '/../../package.json').name;
+		const version = require(__dirname + '/../../../../package.json').version;
+		const packageName = require(__dirname + '/../../../../package.json').name;
 		const versionString = `${this.progName} (${packageName}) ${version}\n`
 			+ gtx._('LICENSE: WTFPL <http://www.wtfpl.net/about/>\n')
 			+ gtx._('This is free software. You can do with it whatever you want.\n')

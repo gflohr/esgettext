@@ -1,7 +1,7 @@
-import { Textdomain } from '../../../esgettext-runtime/src';
-import { OptionGroup, Getopt } from './getopt';
 import { readFileSync, writeFileSync } from 'fs';
-import { parseMoCatalog } from '../../../esgettext-runtime/src';
+import { Textdomain , parseMoCatalog } from '../../../esgettext-runtime/src';
+import { OptionGroup, Getopt } from './getopt';
+
 
 const gtx = Textdomain.getInstance('esgettext-tools');
 gtx.resolve().then(() => {

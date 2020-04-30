@@ -1,5 +1,5 @@
-import { OptionGroup, Getopt } from './getopt';
 import { Textdomain } from '../../../esgettext-runtime/src';
+import { OptionGroup, Getopt } from './getopt';
 
 const gtx = Textdomain.getInstance('esgettext-tools');
 gtx.resolve().then(() => {
