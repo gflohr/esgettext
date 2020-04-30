@@ -38,5 +38,9 @@
 		"camelcase": "^6.0.0",
 		"typescript": "^3.8.3",
 		"yargs": "^15.3.1"
+	},
+	"devDependencies": {
+		"eslint": "^6.8.0",
+		"jest": "^25.5.2"
 	}
 }
