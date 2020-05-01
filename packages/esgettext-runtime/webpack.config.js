@@ -1,6 +1,6 @@
-const webpack = require('webpack');
 const path = require('path');
 const TerserPlugin = require('terser-webpack-plugin');
+const { TsConfigPathsPlugin } = require('awesome-typescript-loader');
 
 module.exports = {
 	entry: {
@@ -35,6 +35,7 @@ module.exports = {
 			},
 		],
 	},
+	plugins: [new TsConfigPathsPlugin({ configFile: './tsconfig-browser.json' })],
 	resolve: {
 		extensions: ['.ts', '.tsx', '.js'],
 	},
