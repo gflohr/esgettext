@@ -62,6 +62,7 @@
 		"superagent": "^5.2.2"
 	},
 	"devDependencies": {
+		"axios": "^0.19.2",
 		"eslint": "^6.8.0",
 		"jest": "^25.5.2",
 		"null-loader": "^4.0.0",
