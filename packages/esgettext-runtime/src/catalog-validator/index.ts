@@ -1,5 +1,5 @@
 import { Catalog } from '../core';
 
-export interface CatalogParser {
+export interface CatalogValidator {
 	validate: (catalog: Catalog) => Catalog;
 }
