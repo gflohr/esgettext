@@ -2,11 +2,7 @@
 	"extends": "../../tsconfig.json",
 	"compilerOptions": {
 		"resolveJsonModule": true,
-		"outDir": "lib",
-		"baseUrl": "./",
-		"paths": {
-			"@shims/*": ["./src/shims/node/*"]
-		}
+		"outDir": "lib"
 	},
 	"includes": ["./src"]
 }
