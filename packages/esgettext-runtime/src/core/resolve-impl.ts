@@ -41,19 +41,16 @@ function loadCatalog(url: string, format: string): Promise<Catalog> {
 		transportInstance = new TransportFs();
 	}
 
-	type Validator = (data: string) => Catalog;
-
-	let validator: Validator, encoding: string;
+	type Validator = (data: Buffer) => Catalog;
+	let validator: Validator;
 	if ('json' === format) {
 		validator = parseJsonCatalog;
-		encoding = 'utf-8';
 	} else {
 		validator = parseMoCatalog;
-		encoding = 'binary';
 	}
 	return new Promise<Catalog>((resolve, reject) => {
 		transportInstance
-			.loadFile(url, encoding)
+			.loadFile(url)
 			.then((data) => {
 				resolve(validator(data));
 			})
