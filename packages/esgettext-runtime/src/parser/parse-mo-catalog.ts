@@ -1,4 +1,4 @@
-import jDataView from 'jdataview';
+import { encodingExists, decode } from 'iconv-lite';
 import { Catalog } from '../core/catalog';
 import { germanicPlural } from '../core/germanic-plural';
 
@@ -17,69 +17,82 @@ interface POHeader {
  *              storage (`Array`, `Uint8Array`, `Arguments`, `jQuery(Array)`, ...)
  * @returns a Catalog
  */
-export function parseMoCatalog(raw: any): Catalog {
+export function parseMoCatalog(blob: Buffer): Catalog {
 	const catalog: Catalog = {
 		major: 0,
 		minor: 0,
 		entries: {},
 		pluralFunction: germanicPlural,
 	};
+	let charset = 'iso-8859-1';
+	let offset = 0;
 
-	let blob = new jDataView(raw, 0, raw.length, false);
-	const magic = blob.getUint32();
+	const magic = blob.readUInt32LE(offset);
 
-	if (magic === 0xde120495) {
-		blob = new jDataView(raw, 0, raw.length, true);
-	} else if (magic !== 0x950412de) {
+	type Reader = (buf: Buffer, off: number) => number;
+	let reader: Reader;
+	if (magic === 0x950412de) {
+		reader = (buf, off) => buf.readUInt32LE(off);
+	} else if (magic === 0xde12000495) {
+		reader = (buf, off) => buf.readUInt32BE(off);
+	} else {
 		throw new Error('mo file corrupted');
 	}
 
-	blob.skip(4);
+	offset += 4;
 
 	// The revision is encoded in two shorts, major and minor.  We don't care
 	// about the minor revision.
-	const major = blob.getUint32() >> 16;
+	const major = reader(blob, offset) >> 16;
+	offset += 4;
 	if (major > 0) {
 		throw new Error(`unsupported major revision ${major}`);
 	}
-	const numStrings = blob.getUint32();
-	const msgidOffset = blob.getUint32();
-	const msgstrOffset = blob.getUint32();
+	const numStrings = reader(blob, offset);
+	offset += 4;
+	const msgidOffset = reader(blob, offset);
+	offset += 4;
+	const msgstrOffset = reader(blob, offset);
 
-	blob.seek(msgidOffset);
+	offset = msgidOffset;
 	const origTab = [];
 	for (let i = 0; i < numStrings; ++i) {
-		const l = blob.getUint32();
-		const offset = blob.getUint32();
-		origTab.push([l, offset]);
+		const l = reader(blob, offset);
+		offset += 4;
+		const stringOffset = reader(blob, offset);
+		offset += 4;
+		origTab.push([l, stringOffset]);
 	}
 
-	blob.seek(msgstrOffset);
+	offset = msgstrOffset;
 	const transTab = [];
 	for (let i = 0; i < numStrings; ++i) {
-		const l = blob.getUint32();
-		const offset = blob.getUint32();
-		transTab.push([l, offset]);
+		const l = reader(blob, offset);
+		offset += 4;
+		const stringOffset = reader(blob, offset);
+		offset += 4;
+		transTab.push([l, stringOffset]);
 	}
 
 	const poHeader: POHeader = {};
-	let encoding = 'binary';
 	for (let i = 0; i < numStrings; ++i) {
 		const orig = origTab[i];
 		let l = orig[0];
-		let offset = orig[1];
+		offset = orig[1];
 
-		blob.seek(offset);
-		const msgid = blob
-			.getString(l, undefined, encoding)
-			.replace(/\u0000.*/, '');
+		// FIXME! Replace this with a stub for the browser. In the browser
+		// there is no need to support other charsets than utf-8.
+		const msgid = decode(blob.slice(offset, offset + l), charset).split(
+			'\u0000',
+		)[0];
 
 		const trans = transTab[i];
 		l = trans[0];
 		offset = trans[1];
 
-		blob.seek(offset);
-		const msgstr = blob.getString(l, undefined, encoding).split('\u0000');
+		const msgstr = decode(blob.slice(offset, offset + l), charset).split(
+			'\u0000',
+		);
 
 		let pairs, kv;
 		if (i === 0 && msgid === '') {
@@ -94,7 +107,10 @@ export function parseMoCatalog(raw: any): Catalog {
 			if (poHeader['content-type'] !== undefined) {
 				const enc = poHeader['content-type'].replace(/.*=/, '');
 				if (enc !== poHeader['content-type']) {
-					poHeader.charset = encoding = enc;
+					if (!encodingExists(enc)) {
+						throw new Error('encoding');
+					}
+					poHeader.charset = charset = enc;
 				}
 			}
 		}
