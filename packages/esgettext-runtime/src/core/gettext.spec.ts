@@ -32,7 +32,7 @@ describe('existing translations for locale de', () => {
 
 	describe('locale should be de indeed', () => {
 		it('should use the locale de', () => {
-			expect(setLocale()).toEqual('des');
+			expect(setLocale()).toEqual('de');
 		});
 	});
 

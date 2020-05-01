@@ -2,6 +2,8 @@ import { resolveImpl } from './resolve-impl';
 import { CatalogCache } from './catalog-cache';
 import { Catalog } from './catalog';
 import { browserEnvironment } from './browser-environment';
+import { gettextImpl } from './gettext-impl';
+import { germanicPlural } from './germanic-plural';
 
 /**
  * A Textdomain is a container for an esgettext configuration and all loaded
@@ -14,6 +16,7 @@ export class Textdomain {
 
 	private domain: string;
 	private format = 'json';
+	private catalog: Catalog;
 
 	private constructor() {
 		/* Prevent instantiation. */
@@ -33,12 +36,19 @@ export class Textdomain {
 		) {
 			throw new Error('Cannot instantiate TextDomain without a textdomain');
 		}
+
 		if (Object.prototype.hasOwnProperty.call(Textdomain.domains, textdomain)) {
 			return Textdomain.domains[textdomain];
 		} else {
 			const domain = new Textdomain();
 			domain.domain = textdomain;
 			Textdomain.domains[textdomain] = domain;
+			domain.catalog = {
+				major: 0,
+				minor: 0,
+				pluralFunction: germanicPlural,
+				entries: {},
+			};
 			return domain;
 		}
 	}
@@ -78,7 +88,12 @@ export class Textdomain {
 			}
 		}
 
-		return resolveImpl(this.domain, Textdomain.cache, path, this.format);
+		return resolveImpl(this.domain, Textdomain.cache, path, this.format).then(
+			(catalog) => {
+				this.catalog = catalog;
+				return new Promise((resolve) => resolve(catalog));
+			},
+		);
 	}
 
 	/**
@@ -110,7 +125,10 @@ export class Textdomain {
 	 * @returns the translated string
 	 */
 	_(msgid: string): string {
-		return msgid;
+		return gettextImpl({
+			msgid,
+			catalog: this.catalog,
+		});
 	}
 
 	/**
