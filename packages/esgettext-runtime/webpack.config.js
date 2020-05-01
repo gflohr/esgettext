@@ -1,6 +1,6 @@
 const path = require('path');
 const TerserPlugin = require('terser-webpack-plugin');
-const { TsConfigPathsPlugin } = require('awesome-typescript-loader');
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
 module.exports = {
 	entry: {
@@ -27,16 +27,13 @@ module.exports = {
 		rules: [
 			{
 				test: /\.tsx?$/,
-				loader: 'awesome-typescript-loader',
+				loader: 'ts-loader',
 				exclude: /node_modules/,
-				query: {
-					declaration: false,
-				},
 			},
 		],
 	},
-	plugins: [new TsConfigPathsPlugin({ configFile: './tsconfig-browser.json' })],
 	resolve: {
+		plugins: [new TsconfigPathsPlugin({ configFile: './tsconfig.json' })],
 		extensions: ['.ts', '.tsx', '.js'],
 	},
 	output: {

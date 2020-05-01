@@ -1,4 +1,5 @@
-import { encodingExists, decode } from 'iconv-lite';
+/* eslint-disable-next-line import/no-unresolved */
+import { CharsetConverter } from '@shims/charset-converter';
 import { Catalog } from '../core/catalog';
 import { germanicPlural } from '../core/germanic-plural';
 
@@ -32,8 +33,10 @@ export function parseMoCatalog(blob: Buffer): Catalog {
 	type Reader = (buf: Buffer, off: number) => number;
 	let reader: Reader;
 	if (magic === 0x950412de) {
+		/* eslint-disable-next-line @typescript-eslint/explicit-function-return-type */
 		reader = (buf, off) => buf.readUInt32LE(off);
 	} else if (magic === 0xde12000495) {
+		/* eslint-disable-next-line @typescript-eslint/explicit-function-return-type */
 		reader = (buf, off) => buf.readUInt32BE(off);
 	} else {
 		throw new Error('mo file corrupted');
@@ -75,6 +78,7 @@ export function parseMoCatalog(blob: Buffer): Catalog {
 	}
 
 	const poHeader: POHeader = {};
+	const conv = new CharsetConverter();
 	for (let i = 0; i < numStrings; ++i) {
 		const orig = origTab[i];
 		let l = orig[0];
@@ -82,17 +86,17 @@ export function parseMoCatalog(blob: Buffer): Catalog {
 
 		// FIXME! Replace this with a stub for the browser. In the browser
 		// there is no need to support other charsets than utf-8.
-		const msgid = decode(blob.slice(offset, offset + l), charset).split(
-			'\u0000',
-		)[0];
+		const msgid = conv
+			.decode(blob.slice(offset, offset + l), charset)
+			.split('\u0000')[0];
 
 		const trans = transTab[i];
 		l = trans[0];
 		offset = trans[1];
 
-		const msgstr = decode(blob.slice(offset, offset + l), charset).split(
-			'\u0000',
-		);
+		const msgstr = conv
+			.decode(blob.slice(offset, offset + l), charset)
+			.split('\u0000');
 
 		let pairs, kv;
 		if (i === 0 && msgid === '') {
@@ -107,7 +111,7 @@ export function parseMoCatalog(blob: Buffer): Catalog {
 			if (poHeader['content-type'] !== undefined) {
 				const enc = poHeader['content-type'].replace(/.*=/, '');
 				if (enc !== poHeader['content-type']) {
-					if (!encodingExists(enc)) {
+					if (!conv.encodingExists(enc)) {
 						throw new Error('encoding');
 					}
 					poHeader.charset = charset = enc;
