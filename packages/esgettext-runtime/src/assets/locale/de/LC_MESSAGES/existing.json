@@ -35,6 +35,9 @@
 			"{num} Ornder wurden gelöscht."
 		],
 		"blue": ["Blau"],
+		"colon\u0004The colors are {color1}, {color2}, and {color3}.": [
+			"Die Farben sind: {color1}, {color2} und {color3}."
+		],
 		"green": ["Grün"],
 		"red": ["Rot"]
 	}
