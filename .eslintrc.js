@@ -29,7 +29,7 @@ module.exports = {
 		'guard-for-in': 'error',
 		'prefer-const': 'error',
 		radix: 'error',
-		'no-bitwise': 'error',
+		'no-bitwise': 'off',
 		'no-caller': 'error',
 		'no-underscore-dangle': 'error',
 		'no-var': 'error',

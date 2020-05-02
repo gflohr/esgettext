@@ -9,5 +9,8 @@ describe('bufferling', () => {
 		it('big-endian at offset 0', () => {
 			expect(dv.readUint32BE(0)).toEqual(0x41424344);
 		});
+		it('little-endian at offset 0', () => {
+			expect(dv.readUint32LE(0)).toEqual(0x44434241);
+		});
 	});
 });
