@@ -5,6 +5,6 @@ export interface CatalogEntries {
 export interface Catalog {
 	major: number;
 	minor: number;
-	pluralFunction: Function;
+	pluralFunction(numItems: number): number;
 	entries: CatalogEntries;
 }

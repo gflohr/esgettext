@@ -88,6 +88,33 @@ describe('existing translations for locale de_AT', () => {
 	});
 });
 
+describe('_n() (plural forms)', () => {
+	const gtx = Textdomain.getInstance('existing');
+
+	beforeAll(() => {
+		setLocale('de_AT');
+		return gtx.resolve();
+	});
+
+	describe('locale should be de indeed', () => {
+		it('should use the locale de_AT', () => {
+			expect(setLocale()).toEqual('de_AT');
+		});
+	});
+
+	describe('tests', () => {
+		it('should select the plural', () => {
+			expect(gtx._n('Singular', 'Plural', 0)).toEqual('Mehrzahl');
+		});
+		it('should select the singular', () => {
+			expect(gtx._n('Singular', 'Plural', 1)).toEqual('Einzahl');
+		});
+		it('should select the plural', () => {
+			expect(gtx._n('Singular', 'Plural', 2)).toEqual('Mehrzahl');
+		});
+	});
+});
+
 describe('_p() (with context)', () => {
 	const gtx = Textdomain.getInstance('existing');
 

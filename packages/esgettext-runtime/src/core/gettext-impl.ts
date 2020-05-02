@@ -1,4 +1,5 @@
 import { Catalog } from './catalog';
+import { germanicPlural } from './germanic-plural';
 
 interface GettextImplArgs {
 	msgid: string;
@@ -16,8 +17,20 @@ export function gettextImpl(args: GettextImplArgs): string {
 	const translations = args.catalog.entries[key];
 
 	if (translations && translations.length) {
-		return translations[0];
+		if (typeof args.msgidPlural === 'undefined') {
+			return translations[0];
+		} else {
+			let pluralForm = args.catalog.pluralFunction(args.numItems);
+			if (pluralForm >= translations.length) {
+				if (translations.length === 1) {
+					return translations[0];
+				} else {
+					pluralForm = germanicPlural(args.numItems);
+				}
+			}
+			return translations[pluralForm];
+		}
 	}
 
-	return args.msgid;
+	return key;
 }

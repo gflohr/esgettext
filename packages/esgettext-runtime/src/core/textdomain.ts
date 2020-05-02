@@ -148,9 +148,57 @@ export class Textdomain {
 	/**
 	 * Translate a string with placeholders.
 	 *
-	 * Placeholder names must begin with an ASCII alphabetic character (a-z, A-Z)
-	 * and can be followed by an arbitrary number of ASCII alphabetic characters
-	 * or ASCII digits (a-z, A-Z).
+	 * A naive approach to translate a string may look like this:
+	 *
+	 * ```
+	 * gtx._(`This is the ${color} ${thing}.`);
+	 * ```
+	 *
+	 * Alas, that would be nice, but it is not possible. Remember that the
+	 * method _() serves both as an operator for translating strings
+	 * *and* as a mark for translatable strings. If the above string would
+	 * get extracted from your JavaScript code, the un-interpolated form would
+	 * end up in the message catalog because when parsing your code it is
+	 * unpredictable what values the variables `thing` and `color` will have
+	 * at run-time (this fact is most probably one of the reasons you have
+	 * written your program for).
+	 *
+	 * However, at run-time, the JavaScript engine will have interpolated the
+	 * values already *before* _() has seen the
+	 * original string. Consequently something like "This is the red
+	 * car.\n" will be looked up in the message catalog, it will not be
+	 * found (because only "This is the ${color} ${thing}.\n" is included in
+	 * the database), and the original, untranslated string will be
+	 * returned. Consequently `esgettext-xgettext` will bail out with an error
+	 * message if it comes across a translation call with an argument that is
+	 * a backtick string.
+	 *
+	 * What you should do instead is to use placeholders:
+	 *
+	 * ```
+	 * 'This is the {color} {thing}.\n';
+	 *
+	 * Placeholders must start with an alphabetic ASCII(!) character ("a" to
+	 * "z" and "A" to "Z") followed by an arbitrary number of alphabetic
+	 * ASCII characters or ASCII decimal digits ("0" to "9"). You cannot
+	 * use special characters inside placehodlers! It is also not possible
+	 * (and not needed) to use arbitrary JavaScript expressions!
+	 *
+	 * The call with interpolation then looks like this:
+	 *
+	 * ```
+	 * console.log('This is the {color} {thing}.\n', {
+	 *                 thing: thang,
+	 *                 color => 'yellow');
+	 *
+	 * The method _x() will take the additional dictionary and replace all
+	 * occurencies of the dictionary keys in curly braces with the corresponding
+	 * values. Simple, readable, understandable to translators, what else
+	 * would you want? And if the translator forgets, misspells or
+	 * otherwise messes up some "variables", the msgfmt(1) program, that is
+	 * used to compile the textual translation file into its binary
+	 * representation will even choke on these errors and refuse to compile
+	 * the translation.
 	 *
 	 * @param msgid - the msgid to translate
 	 * @param placeholders - a dictionary of placeholders
@@ -159,6 +207,15 @@ export class Textdomain {
 	 */
 	_x(msgid: string, placeholders: { [key: string]: string }): string {
 		return this.expand(msgid, placeholders);
+	}
+
+	_n(msgid: string, msgidPlural: string, numItems: number): string {
+		return gettextImpl({
+			msgid,
+			catalog: this.catalog,
+			msgidPlural,
+			numItems,
+		});
 	}
 
 	/**
