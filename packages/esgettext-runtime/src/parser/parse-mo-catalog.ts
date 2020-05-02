@@ -7,7 +7,7 @@ interface POHeader {
 	[key: string]: string;
 }
 
-/**
+/*
  * Parse an MO file.
  *
  * An exception is thrown for invalid data.

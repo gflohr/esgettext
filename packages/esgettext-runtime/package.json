@@ -25,7 +25,7 @@
 		"lint:fix": "eslint --fix './src/**/*.ts'",
 		"lint:fix-dry-run": "eslint --fix './src/**/*.ts'",
 		"lint:staged": "lint-staged",
-		"typedoc": "typedoc --out api-docs --excludeNotExported --excludePrivate --excludeProtected src",
+		"typedoc": "typedoc --out api-docs --mode file --excludeNotDocumented --excludeNotExported --excludePrivate --excludeProtected src",
 		"test": "jest",
 		"test:watch": "jest --watch",
 		"test:cov": "jest --coverage",
@@ -61,6 +61,7 @@
 	"devDependencies": {
 		"axios": "^0.19.2",
 		"eslint": "^6.8.0",
+		"handlebars": "^4.7.6",
 		"jest": "^25.5.2",
 		"null-loader": "^4.0.0",
 		"shx": "^0.3.2",

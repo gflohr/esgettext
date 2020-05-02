@@ -1,11 +1,11 @@
-/**
+/*
  * A minimalistic buffer implementation that can only read 32 bit unsigned
  * integers and strings.
  */
 export class DataViewlet {
 	private readonly decoder: TextDecoder;
 
-	/**
+	/*
 	 * Create a DataViewlet instance. All encodings that are supported by
 	 * the runtime environments `TextDecoder` interface.
 	 *
@@ -16,7 +16,7 @@ export class DataViewlet {
 		this.decoder = new TextDecoder(encoding);
 	}
 
-	/**
+	/*
 	 * Reads an unsigned 32-bit integer from the buffer at
 	 * the specified offset as big-endian.
 	 *
@@ -39,7 +39,7 @@ export class DataViewlet {
 		);
 	}
 
-	/**
+	/*
 	 * Reads an unsigned 32-bit integer from the buffer at
 	 * the specified offset as little-endian.
 	 *
@@ -62,7 +62,7 @@ export class DataViewlet {
 		);
 	}
 
-	/**
+	/*
 	 * Read a string at a specified offset.
 	 *
 	 * @param offset - to beginning of buffer in bytes

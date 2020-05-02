@@ -1,4 +1,4 @@
-/**
+/*
  * Function for germanic plural. Returns singular (0) for 1 item, and
  * 1 for everything else.
  *

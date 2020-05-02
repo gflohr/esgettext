@@ -11,7 +11,7 @@ interface CatalogCacheInterface {
 	};
 }
 
-/**
+/*
  * Caches catalog lookups by path, locale, and textdomain.
  *
  * Failed lookups are stored as null values.

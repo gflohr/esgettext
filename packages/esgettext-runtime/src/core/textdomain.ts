@@ -22,13 +22,13 @@ interface Placeholders {
  * Most of the times you just have to exchange
  *
  * ```
- * doSomething('Hello, world!')
+ * doSomething('Hello, world!');
  * ```
  *
  * with
  *
  * ```
- * doSomething(gtx._('Hello, world!'))
+ * doSomething(gtx._('Hello, world!'));
  * ```
  *
  * Besides, depending on the string extractor you are using, it may be useful
@@ -154,7 +154,7 @@ export class Textdomain {
 	}
 
 	/**
-	 * The basic and most-used function. If your code loooked like this
+	 * The basic and most-used method. If your code loooked like this
 	 * until now:
 	 *
 	 * ```
@@ -212,7 +212,8 @@ export class Textdomain {
 	 * What you should do instead is to use placeholders:
 	 *
 	 * ```
-	 * 'This is the {color} {thing}.\n';
+	 * 'This is the {color} {thing}.';
+	 * ```
 	 *
 	 * Placeholders must start with an alphabetic ASCII(!) character ("a" to
 	 * "z" and "A" to "Z") followed by an arbitrary number of alphabetic
@@ -223,9 +224,11 @@ export class Textdomain {
 	 * The call with interpolation then looks like this:
 	 *
 	 * ```
-	 * console.log('This is the {color} {thing}.\n', {
-	 *                 thing: thang,
-	 *                 color: 'yellow');
+	 * console.log(gtx._x('This is the {color} {thing}.\n', {
+	 *                        thing: thang,
+	 *                        color: 'yellow',
+	 *                    });
+	 * ```
 	 *
 	 * The method _x() will take the additional dictionary and replace all
 	 * occurencies of the dictionary keys in curly braces with the corresponding
@@ -261,6 +264,7 @@ export class Textdomain {
 	 * } else {
 	 *     console.log('All files have been deleted.\n);
 	 * }
+	 * ```
 	 *
 	 * Your intent is clear, you wanted to avoid the cumbersome "1 files
 	 * deleted". This is okay for English, but other languages have more
@@ -278,6 +282,7 @@ export class Textdomain {
 	 * console.log(gtx._n('One file has been deleted.',
 	 *                    'All files have been deleted.',
 	 *                     files_deleted));
+	 * ```
 	 *
 	 * The effect is that `esgettext-runtime` will find out which
 	 * plural form to pick for your user's language, and the output string
@@ -312,7 +317,7 @@ export class Textdomain {
 	 *                  { count: num_files }));
 	 * ```
 	 *
-	 * The function __nx() picks the correct plural form (also for
+	 * The method __nx() picks the correct plural form (also for
 	 * English!) *and* it is capable of interpolating variables into
 	 * strings.
 	 *
@@ -394,7 +399,7 @@ export class Textdomain {
 	}
 
 	/**
-	 * The function `_px()` combines `_p()` with `_x()`.
+	 * The method `_px()` combines `_p()` with `_x()`.
 	 *
 	 * @param msgctxt - the message context
 	 * @param msgid - the message id
@@ -413,7 +418,7 @@ export class Textdomain {
 	}
 
 	/**
-	 * The function `_np()` combines `_n()` with `_p()`. Normally you will
+	 * The method `_np()` combines `_n()` with `_p()`. Normally you will
 	 * want to use `_npx()` instead, so that you can interpolate numbers.
 	 *
 	 * @param msgctxt - the message context
@@ -437,7 +442,7 @@ export class Textdomain {
 	}
 
 	/**
-	 * The function `_npx()` brings it all together. It combines `_n()` and
+	 * The method `_npx()` brings it all together. It combines `_n()` and
 	 * _p()` and `_x()`.
 	 *
 	 * @param msgctxt - the message context
@@ -467,7 +472,7 @@ export class Textdomain {
 	}
 
 	/**
-	 * A no-op function for string marking.
+	 * A no-op method for string marking.
 	 *
 	 * Sometimes you want to mark strings for translation but do not actually
 	 * want to translate them, at least not at the time of their definition.
@@ -499,7 +504,7 @@ export class Textdomain {
 	 *
 	 * Similar methods are available for other cases (with placeholder
 	 * expansion, context, or both). They are *not* available for plural
-	 * functions because that would not make sense.
+	 * methods because that would not make sense.
 	 *
 	 * Note that all of these methods are also available as class methods.
 	 *
