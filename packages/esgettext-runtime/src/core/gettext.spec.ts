@@ -217,23 +217,23 @@ describe('_p() (with context)', () => {
 
 	describe('tests', () => {
 		it('should select no context', () => {
-			expect(
-				gtx._x('The colors are {color1}, {color2}, and {color3}.', {
-					color1: gtx._('red'),
-					color2: gtx._('green'),
-					color3: gtx._('blue'),
-				}),
-			).toEqual('Die Farben sind Rot, Grün und Blau.');
+			expect(gtx._('View')).toEqual('Anzeigen');
 		});
 
-		it("should select the 'colon' context", () => {
+		it('should select the 1st context', () => {
+			expect(gtx._p('Which folder would you like to view?', 'View')).toEqual(
+				'Ansicht',
+			);
+		});
+
+		it('should select the 2nd context', () => {
 			expect(
-				gtx._px('colon', 'The colors are {color1}, {color2}, and {color3}.', {
-					color1: gtx._('red'),
-					color2: gtx._('green'),
-					color3: gtx._('blue'),
-				}),
-			).toEqual('Die Farben sind: Rot, Grün und Blau.');
+				gtx._p('Which folder would you like to view? (2)', 'View'),
+			).toEqual('View 2');
+		});
+
+		it('should use the original string for unknown contexts', () => {
+			expect(gtx._p('gips.net', 'View')).toEqual('View');
 		});
 	});
 });
@@ -254,19 +254,37 @@ describe('_px() (with context and placeholders)', () => {
 
 	describe('tests', () => {
 		it('should select no context', () => {
-			expect(gtx._('View')).toEqual('Anzeigen');
-		});
-
-		it('should select the 1st context', () => {
-			expect(gtx._p('Which folder would you like to view?', 'View')).toEqual(
-				'Ansicht',
-			);
-		});
-
-		it('should select the 2nd context', () => {
 			expect(
-				gtx._p('Which folder would you like to view? (2)', 'View'),
-			).toEqual('View 2');
+				gtx._x('The colors are {color1}, {color2}, and {color3}.', {
+					color1: gtx._('red'),
+					color2: gtx._('green'),
+					color3: gtx._('blue'),
+				}),
+			).toEqual('Die Farben sind Rot, Grün und Blau.');
+		});
+
+		it("should select the 'colon' context", () => {
+			expect(
+				gtx._px('colon', 'The colors are {color1}, {color2}, and {color3}.', {
+					color1: gtx._('red'),
+					color2: gtx._('green'),
+					color3: gtx._('blue'),
+				}),
+			).toEqual('Die Farben sind: Rot, Grün und Blau.');
+		});
+
+		it('should use the original string for unknown contexts', () => {
+			expect(
+				gtx._px(
+					'gips.net',
+					'The colors are {color1}, {color2}, and {color3}.',
+					{
+						color1: gtx._('red'),
+						color2: gtx._('green'),
+						color3: gtx._('blue'),
+					},
+				),
+			).toEqual('The colors are Rot, Grün, and Blau.');
 		});
 	});
 });

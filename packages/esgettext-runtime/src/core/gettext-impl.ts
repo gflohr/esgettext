@@ -32,5 +32,5 @@ export function gettextImpl(args: GettextImplArgs): string {
 		}
 	}
 
-	return key;
+	return args.msgid;
 }
