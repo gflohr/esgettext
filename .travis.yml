@@ -3,14 +3,14 @@ sudo: false
 node_js:
   - "stable"
 script:
-  - npm install
-  - npm run typedoc
-deploy:
-  provider: pages
-  skip_cleanup: true
-  github_token: $GITHUB_TOKEN
-  on:
-    branch: master    
-before_deploy:
-  - touch .nojekyll
-  - sed -i '/api-docs/d' .gitignore
+  - yarn install
+  - yarn bootstrap
+#deploy:
+#  provider: pages
+#  skip_cleanup: true
+#  github_token: $GITHUB_TOKEN
+#  on:
+#    branch: master    
+#before_deploy:
+#  - touch .nojekyll
+#  - sed -i '/api-docs/d' .gitignore
