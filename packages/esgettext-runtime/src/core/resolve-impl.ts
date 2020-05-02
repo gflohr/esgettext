@@ -41,7 +41,7 @@ function loadCatalog(url: string, format: string): Promise<Catalog> {
 		transportInstance = new TransportFs();
 	}
 
-	type Validator = (data: Buffer) => Catalog;
+	type Validator = (data: ArrayBuffer) => Catalog;
 	let validator: Validator;
 	if ('json' === format) {
 		validator = parseJsonCatalog;
