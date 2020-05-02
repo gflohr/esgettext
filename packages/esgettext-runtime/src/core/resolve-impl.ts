@@ -15,6 +15,8 @@ import { CatalogCache } from './catalog-cache';
 
 /* eslint-disable no-console */
 
+type PluralFunction = (numItems: number) => number;
+
 function loadCatalog(url: string, format: string): Promise<Catalog> {
 	let transport;
 
@@ -195,7 +197,7 @@ async function loadDomain(
 	return new Promise((resolve) => resolve(catalog));
 }
 
-function pluralExpression(str: string): Function {
+function pluralExpression(str: string): PluralFunction {
 	const tokens = str
 		.replace(/[ \t\r\013\014]/g, '')
 		.replace(/;$/, '')
@@ -219,7 +221,7 @@ function pluralExpression(str: string): Function {
 	const code = 'var nplurals = 1, plural = 0;' + str + '; return 0 + plural';
 
 	// This may throw an exception!
-	return new Function('n', code);
+	return new Function('n', code) as PluralFunction;
 }
 
 function setPluralFunction(catalog: Catalog): Catalog {
