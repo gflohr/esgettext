@@ -1,5 +1,3 @@
-/* eslint-disable-next-line import/no-unresolved */
-import { CharsetConverter } from '@shims/charset-converter';
 import { Catalog } from '../core/catalog';
 import { germanicPlural } from '../core/germanic-plural';
 
@@ -25,7 +23,6 @@ export function parseMoCatalog(blob: Buffer): Catalog {
 		entries: {},
 		pluralFunction: germanicPlural,
 	};
-	let charset = 'iso-8859-1';
 	let offset = 0;
 
 	const magic = blob.readUInt32LE(offset);
@@ -78,7 +75,6 @@ export function parseMoCatalog(blob: Buffer): Catalog {
 	}
 
 	const poHeader: POHeader = {};
-	const conv = new CharsetConverter();
 	for (let i = 0; i < numStrings; ++i) {
 		const orig = origTab[i];
 		let l = orig[0];
@@ -86,16 +82,18 @@ export function parseMoCatalog(blob: Buffer): Catalog {
 
 		// FIXME! Replace this with a stub for the browser. In the browser
 		// there is no need to support other charsets than utf-8.
-		const msgid = conv
-			.decode(blob.slice(offset, offset + l), charset)
+		const msgid = blob
+			.slice(offset, offset + l)
+			.toString('utf-8')
 			.split('\u0000')[0];
 
 		const trans = transTab[i];
 		l = trans[0];
 		offset = trans[1];
 
-		const msgstr = conv
-			.decode(blob.slice(offset, offset + l), charset)
+		const msgstr = blob
+			.slice(offset, offset + l)
+			.toString('utf-8')
 			.split('\u0000');
 
 		let pairs, kv;
@@ -111,10 +109,9 @@ export function parseMoCatalog(blob: Buffer): Catalog {
 			if (poHeader['content-type'] !== undefined) {
 				const enc = poHeader['content-type'].replace(/.*=/, '');
 				if (enc !== poHeader['content-type']) {
-					if (!conv.encodingExists(enc)) {
-						throw new Error('encoding');
+					if (enc.toLowerCase() !== 'utf-8' && enc.toLowerCase() !== 'UTF-8') {
+						throw new Error(`unsupported mo encoding '${enc}'`);
 					}
-					poHeader.charset = charset = enc;
 				}
 			}
 		}
