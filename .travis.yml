@@ -5,6 +5,7 @@ node_js:
 script:
   - yarn install
   - yarn bootstrap
+  - yarn test
 #deploy:
 #  provider: pages
 #  skip_cleanup: true
