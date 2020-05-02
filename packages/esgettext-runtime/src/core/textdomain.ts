@@ -15,6 +15,24 @@ interface Placeholders {
 /**
  * A Textdomain is a container for an esgettext configuration and all loaded
  * catalogs for the textual domain selected.
+ *
+ * The actual translation methods have quite funny names like `_()` or
+ * `_x()`. The purpose of this naming convention is to make the
+ * internationalization of your programs as little obtrusive as possible.
+ * Most of the times you just have to exchange
+ *
+ * ```
+ * doSomething('Hello, world!')
+ * ```
+ *
+ * with
+ *
+ * ```
+ * doSomething(gtx._('Hello, world!'))
+ * ```
+ *
+ * Besides, depending on the string extractor you are using, it may be useful
+ * that the method names do not collide with method names from other packages.
  */
 export class Textdomain {
 	private static domains: { [key: string]: Textdomain } = {};
@@ -413,11 +431,15 @@ export class Textdomain {
 	 * );
 	 * ```
 	 *
-	 * In other words: The function just marks strings for translation, so that
+	 * In other words: The method just marks strings for translation, so that
 	 * the extractor `esgettext-xgettext` finds them but it does not actually
 	 * translate anything.
 	 *
-	 * Note that the method is also available as a class method.
+	 * Similar methods are available for other cases (with placeholder
+	 * expansion, context, or both). They are *not* available for plural
+	 * functions because that would not make sense.
+	 *
+	 * Note that all of these methods are also available as class methods.
 	 *
 	 * @param msgid - the message id
 	 * @returns the original string
@@ -478,6 +500,34 @@ export class Textdomain {
 	 */
 	static N_p(_msgctxt: string, msgid: string): string {
 		return msgid;
+	}
+
+	/**
+	 * Same as `N_()` but with context and placeholder expansion.
+	 *
+	 * @param msgctxt - the message context
+	 * @param msgid - the message id
+	 * @param placeholders - a dictionary of placeholders
+	 * @returns the original string with placeholders expanded
+	 */
+	N_px(_msgctxt: string, msgid: string, placeholders?: Placeholders): string {
+		return Textdomain.expand(msgid, placeholders);
+	}
+
+	/**
+	 * Does the same as the instance method `N_px()`.
+	 *
+	 * @param msgctxt - the message context
+	 * @param msgid - the message id
+	 * @param placeholders - a dictionary of placeholders
+	 * @returns the original string with placeholders expanded
+	 */
+	static N_px(
+		_msgctxt: string,
+		msgid: string,
+		placeholders?: Placeholders,
+	): string {
+		return Textdomain.expand(msgid, placeholders);
 	}
 
 	private static expand(

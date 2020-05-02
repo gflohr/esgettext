@@ -78,6 +78,11 @@ msgstr[1] "Mehrzahl 3"
 msgid "The colors are {color1}, {color2}, and {color3}."
 msgstr "Die Farben sind {color1}, {color2} und {color3}."
 
+#, perl-brace-format
+msgctxt "colon"
+msgid "The colors are {color1}, {color2}, and {color3}."
+msgstr "Die Farben sind: {color1}, {color2} und {color3}."
+
 msgid "red"
 msgstr "Rot"
 

@@ -234,6 +234,39 @@ describe('_p() (with context)', () => {
 	});
 });
 
+describe('_px() (with context and placeholders)', () => {
+	const gtx = Textdomain.getInstance('existing');
+
+	beforeAll(() => {
+		setLocale('de_AT');
+		return gtx.resolve();
+	});
+
+	describe('locale should be de indeed', () => {
+		it('should use the locale de_AT', () => {
+			expect(setLocale()).toEqual('de_AT');
+		});
+	});
+
+	describe('tests', () => {
+		it('should select no context', () => {
+			expect(gtx._('View')).toEqual('Anzeigen');
+		});
+
+		it('should select the 1st context', () => {
+			expect(gtx._p('Which folder would you like to view?', 'View')).toEqual(
+				'Ansicht',
+			);
+		});
+
+		it('should select the 2nd context', () => {
+			expect(
+				gtx._p('Which folder would you like to view? (2)', 'View'),
+			).toEqual('View 2');
+		});
+	});
+});
+
 describe('no-op methods', () => {
 	const gtx = Textdomain.getInstance('test');
 
@@ -261,6 +294,15 @@ describe('no-op methods', () => {
 		});
 		it('the class method should return the msgid', () => {
 			expect(Textdomain.N_p('whatever', 'one')).toEqual('one');
+		});
+	});
+
+	describe('N_px()', () => {
+		it('the instance method should return the expanded msgid', () => {
+			expect(gtx.N_px('whatever', 'age: {age}', { age: 7 })).toEqual('age: 7');
+		});
+		it('the instance method should return the expanded msgid', () => {
+			expect(gtx.N_px('whatever', 'age: {age}', { age: 7 })).toEqual('age: 7');
 		});
 	});
 });
