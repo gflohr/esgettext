@@ -393,11 +393,73 @@ export class Textdomain {
 		});
 	}
 
+	/**
+	 * The function `_px()` combines `_p()` with `_x()`.
+	 *
+	 * @param msgctxt - the message context
+	 * @param msgid - the message id
+	 * @param placeholders a dictionary with placehoders
+	 * @returns the translated string
+	 */
 	_px(msgctxt: string, msgid: string, placeholders: Placeholders = {}): string {
 		return Textdomain.expand(
 			gettextImpl({
 				msgid,
 				catalog: this.catalog,
+				msgctxt,
+			}),
+			placeholders,
+		);
+	}
+
+	/**
+	 * The function `_np()` combines `_n()` with `_p()`. Normally you will
+	 * want to use `_npx()` instead, so that you can interpolate numbers.
+	 *
+	 * @param msgctxt - the message context
+	 * @param msgid - the message id
+	 * @param placeholders a dictionary with placehoders
+	 * @returns the translated string
+	 */
+	_np(
+		msgctxt: string,
+		msgid: string,
+		msgidPlural: string,
+		numItems: number,
+	): string {
+		return gettextImpl({
+			msgid,
+			catalog: this.catalog,
+			msgctxt,
+			msgidPlural,
+			numItems,
+		});
+	}
+
+	/**
+	 * The function `_npx()` brings it all together. It combines `_n()` and
+	 * _p()` and `_x()`.
+	 *
+	 * @param msgctxt - the message context
+	 * @param msgid - the message id
+	 * @param msgidPlural - the plural string
+	 * @param numItems - the number of items
+	 * @param placeholders a dictionary with placehoders
+	 * @returns the translated string
+	 */
+	_npx(
+		msgctxt: string,
+		msgid: string,
+		msgidPlural: string,
+		numItems: number,
+		placeholders: Placeholders = {},
+	): string {
+		return Textdomain.expand(
+			gettextImpl({
+				msgid,
+				catalog: this.catalog,
+				msgidPlural,
+				numItems,
 				msgctxt,
 			}),
 			placeholders,

@@ -289,6 +289,128 @@ describe('_px() (with context and placeholders)', () => {
 	});
 });
 
+describe('_np() (with context and placeholders)', () => {
+	const gtx = Textdomain.getInstance('existing');
+
+	beforeAll(() => {
+		setLocale('de_AT');
+		return gtx.resolve();
+	});
+
+	describe('locale should be de indeed', () => {
+		it('should use the locale de_AT', () => {
+			expect(setLocale()).toEqual('de_AT');
+		});
+	});
+
+	describe('tests', () => {
+		it('should select the singular without context', () => {
+			expect(gtx._n('Singular', 'Plural', 1)).toEqual('Einzahl');
+		});
+		it('should select the plural without context', () => {
+			expect(gtx._n('Singular', 'Plural', 2)).toEqual('Mehrzahl');
+		});
+		it('should select the singular with context', () => {
+			expect(gtx._np('Context here (2)', 'Singular', 'Plural', 1)).toEqual(
+				'Einzahl 2',
+			);
+		});
+		it('should select the plural with context', () => {
+			expect(gtx._np('Context here (2)', 'Singular', 'Plural', 2)).toEqual(
+				'Mehrzahl 2',
+			);
+		});
+		it('should select the singular with unknown context', () => {
+			expect(gtx._np('gips.net', 'Singular', 'Plural', 1)).toEqual('Singular');
+		});
+		it('should select the plural with unknown context', () => {
+			expect(gtx._np('gips.net', 'Singular', 'Plural', 2)).toEqual('Plural');
+		});
+	});
+});
+
+describe('_npx() (with plural, context and placeholders)', () => {
+	const gtx = Textdomain.getInstance('existing');
+
+	beforeAll(() => {
+		setLocale('de_AT');
+		return gtx.resolve();
+	});
+
+	describe('locale should be de indeed', () => {
+		it('should use the locale de_AT', () => {
+			expect(setLocale()).toEqual('de_AT');
+		});
+	});
+
+	describe('tests', () => {
+		it('should select no context and the singular', () => {
+			expect(
+				gtx._nx(
+					'One directory has been deleted.',
+					'{num} directories have been deleted.',
+					1,
+					{ num: 1 },
+				),
+			).toEqual('Ein Verzeichnis wurde gelöscht.');
+		});
+		it('should select no context and the plural', () => {
+			expect(
+				gtx._nx(
+					'One directory has been deleted.',
+					'{num} directories have been deleted.',
+					2304,
+					{ num: 2304 },
+				),
+			).toEqual('2304 Verzeichnisse wurden gelöscht.');
+		});
+		it('should select windows context and the singular', () => {
+			expect(
+				gtx._npx(
+					'Windows',
+					'One directory has been deleted.',
+					'{num} directories have been deleted.',
+					1,
+					{ num: 1 },
+				),
+			).toEqual('Ein Ordner wurde gelöscht.');
+		});
+		it('should select windows context and the plural', () => {
+			expect(
+				gtx._npx(
+					'Windows',
+					'One directory has been deleted.',
+					'{num} directories have been deleted.',
+					2304,
+					{ num: 2304 },
+				),
+			).toEqual('2304 Ordner wurden gelöscht.');
+		});
+		it('should select unknown context and the singular', () => {
+			expect(
+				gtx._npx(
+					'Linux',
+					'One directory has been deleted.',
+					'{num} directories have been deleted.',
+					1,
+					{ num: 1 },
+				),
+			).toEqual('One directory has been deleted.');
+		});
+		it('should select unknown context and the plural', () => {
+			expect(
+				gtx._npx(
+					'Linux',
+					'One directory has been deleted.',
+					'{num} directories have been deleted.',
+					2304,
+					{ num: 2304 },
+				),
+			).toEqual('2304 directories have been deleted.');
+		});
+	});
+});
+
 describe('no-op methods', () => {
 	const gtx = Textdomain.getInstance('test');
 

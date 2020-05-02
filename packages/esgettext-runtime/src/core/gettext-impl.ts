@@ -30,6 +30,11 @@ export function gettextImpl(args: GettextImplArgs): string {
 			}
 			return translations[pluralForm];
 		}
+	} else if (typeof args.msgidPlural !== 'undefined') {
+		const pluralform = args.catalog.pluralFunction(args.numItems);
+		if (pluralform === 1) {
+			return args.msgidPlural;
+		}
 	}
 
 	return args.msgid;
