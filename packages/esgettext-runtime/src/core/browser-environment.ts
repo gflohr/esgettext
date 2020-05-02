@@ -1,10 +1,6 @@
-// Takent from detect-node.
-let isBrowser =
-	Object.prototype.toString.call(
-		typeof process !== 'undefined' ? process : 0,
-	) === '[object process]'
-		? false
-		: true;
+import isNode from 'detect-node';
+
+let isBrowser = isNode ? false : true;
 
 /**
  * Force an execution environment. By default, the environment (NodeJS or
