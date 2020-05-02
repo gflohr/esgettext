@@ -2,11 +2,12 @@ import { DataViewlet } from './data-viewlet';
 
 // This string has 34 bytes.
 const abc = 'ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÜß';
-const uint8array = new TextEncoder().encode(abc);
-const dv = new DataViewlet(uint8array);
+const uint8Array = new TextEncoder().encode(abc);
 
 describe('bufferling', () => {
 	describe('binary', () => {
+		const dv = new DataViewlet(uint8Array);
+
 		it('big-endian at offset 0', () => {
 			expect(dv.readUint32BE()).toEqual(0x41424344);
 		});
@@ -30,6 +31,20 @@ describe('bufferling', () => {
 		});
 		it('little-endian past end of buffer', () => {
 			expect(() => dv.readUint32LE(31)).toThrow();
+		});
+	});
+
+	describe('utf-8 text', () => {
+		const dv = new DataViewlet(uint8Array);
+
+		it('at offset 0', () => {
+			expect(dv.readString(undefined, 4)).toEqual('ABCD');
+		});
+		it('utf-8 string', () => {
+			expect(dv.readString(26, 8)).toEqual('ÄÖÜß');
+		});
+		it('past end of buffer', () => {
+			expect(() => dv.readString(30, 5)).toThrow();
 		});
 	});
 });

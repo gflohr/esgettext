@@ -3,7 +3,18 @@
  * integers and strings.
  */
 export class DataViewlet {
-	constructor(private readonly array: Uint8Array) {}
+	private readonly decoder: TextDecoder;
+
+	/**
+	 * Create a DataViewlet instance. All encodings that are supported by
+	 * the runtime environments `TextDecoder` interface.
+	 *
+	 * @param array - a `Unit8Array` view on the binary buffer
+	 * @param encoding - encoding of strings, defaults to utf-8
+	 */
+	constructor(private readonly array: Uint8Array, encoding = 'utf-8') {
+		this.decoder = new TextDecoder(encoding);
+	}
 
 	/**
 	 * Reads an unsigned 32-bit integer from the buffer at
@@ -49,5 +60,24 @@ export class DataViewlet {
 				this.array[offset]) >>>
 			0
 		);
+	}
+
+	/**
+	 * Read a string at a specified offset.
+	 *
+	 * @param offset - to beginning of buffer in bytes
+	 * @param length - of the string to read in bytes or to the end of the
+	 *                 buffer if not specified.
+	 */
+	readString(offset = 0, length?: number): string {
+		if (offset + length > this.array.byteLength + this.array.byteOffset) {
+			throw new Error('read past array end');
+		}
+
+		if (typeof length === 'undefined') {
+			length = this.array.byteLength - offset;
+		}
+
+		return this.decoder.decode(this.array.slice(offset, offset + length));
 	}
 }
