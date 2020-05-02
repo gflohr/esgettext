@@ -118,7 +118,21 @@ export class Textdomain {
 	}
 
 	/**
-	 * Translate a simple string.
+	 * The basic and most-used function. If your code loooked like this
+	 * until now:
+	 *
+	 * ```
+	 * console.log('permission denied');
+	 * ```
+	 *
+	 * You will now write:
+	 *
+	 * ```
+	 * console.log(gtx._(permission denied'));
+	 * ```
+	 *
+	 * That's all, the string will be output in the user's preferred
+	 * language, provided that you have installed a translation for it.
 	 *
 	 * @param msgid - the string to translate
 	 *
@@ -145,6 +159,49 @@ export class Textdomain {
 	 */
 	_x(msgid: string, placeholders: { [key: string]: string }): string {
 		return this.expand(msgid, placeholders);
+	}
+
+	/**
+	 * Translate a string with a context.
+	 *
+	 * This is much like __. The "p" stands for "particular", and the
+	 * MSGCTXT is used to provide context to the translator. This may be
+	 * neccessary when your string is short, and could stand for multiple
+	 * things. For example:
+	 *
+	 * ```
+	 * console.log(gtx._p('Verb, to view', 'View'));
+	 * console.log(gtx._p('Noun, a view', 'View'));
+	 *
+	 * The above may be the "View" entries in a menu, where View->Source and
+	 * File->View are different forms of "View", and likely need to be
+	 * translated differently.
+	 *
+	 * A typical usage are GUI programs. Imagine a program with a main menu
+	 * and the notorious "Open" entry in the "File" menu. Now imagine,
+	 * there is another menu entry Preferences->Advanced->Policy where you
+	 * have a choice between the alternatives "Open" and "Closed". In
+	 * English, "Open" is the adequate text at both places. In other
+	 * languages, it is very likely that you need two different
+	 * translations. Therefore, you would now write:
+	 *
+	 * gtx._p('File|', 'Open');
+	 * gtx._p('Preferences|Advanced|Policy', 'Open');
+	 *
+	 * In English, or if no translation can be found, the second argument
+	 * (MSGID) is returned.
+	 *
+	 * @param msgctxt - the message context
+	 * @param msgid - the string to translate
+	 *
+	 * @returns the translated string
+	 */
+	_p(msgctxt: string, msgid: string): string {
+		return gettextImpl({
+			msgid,
+			catalog: this.catalog,
+			msgctxt,
+		});
 	}
 
 	/**

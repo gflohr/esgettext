@@ -87,3 +87,36 @@ describe('existing translations for locale de_AT', () => {
 		});
 	});
 });
+
+describe('_p() (with context)', () => {
+	const gtx = Textdomain.getInstance('existing');
+
+	beforeAll(() => {
+		setLocale('de_AT');
+		return gtx.resolve();
+	});
+
+	describe('locale should be de indeed', () => {
+		it('should use the locale de_AT', () => {
+			expect(setLocale()).toEqual('de_AT');
+		});
+	});
+
+	describe('tests', () => {
+		it('should select no context', () => {
+			expect(gtx._('View')).toEqual('Anzeigen');
+		});
+
+		it('should select the 1st context', () => {
+			expect(gtx._p('Which folder would you like to view?', 'View')).toEqual(
+				'Ansicht',
+			);
+		});
+
+		it('should select the 2nd context', () => {
+			expect(
+				gtx._p('Which folder would you like to view? (2)', 'View'),
+			).toEqual('View 2');
+		});
+	});
+});

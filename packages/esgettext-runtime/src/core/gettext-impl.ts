@@ -5,11 +5,15 @@ interface GettextImplArgs {
 	catalog: Catalog;
 	msgidPlural?: string;
 	numItems?: number;
-	context?: string;
+	msgctxt?: string;
 }
 
 export function gettextImpl(args: GettextImplArgs): string {
-	const translations = args.catalog.entries[args.msgid];
+	const key =
+		typeof args.msgctxt === 'undefined'
+			? args.msgid
+			: args.msgctxt + '\u0004' + args.msgid;
+	const translations = args.catalog.entries[key];
 
 	if (translations && translations.length) {
 		return translations[0];
