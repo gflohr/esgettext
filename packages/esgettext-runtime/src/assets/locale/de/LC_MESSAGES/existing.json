@@ -18,6 +18,10 @@
 		"May": ["Mai"],
 		"November": ["November"],
 		"October": ["Oktober"],
+		"One directory has been deleted.": [
+			"Ein Verzeichnis wurde gelöscht.",
+			"{num} Verzeichnisse wurden gelöscht."
+		],
 		"September": ["September"],
 		"Singular": ["Einzahl", "Mehrzahl"],
 		"The colors are {color1}, {color2}, and {color3}.": [
@@ -26,6 +30,10 @@
 		"View": ["Anzeigen"],
 		"Which folder would you like to view?\u0004View": ["Ansicht"],
 		"Which folder would you like to view? (2)\u0004View": ["View 2"],
+		"Windows\u0004One directory has been deleted.": [
+			"Ein Ordner wurde gelöscht.",
+			"{num} Ornder wurden gelöscht."
+		],
 		"blue": ["Blau"],
 		"green": ["Grün"],
 		"red": ["Rot"]

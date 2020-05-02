@@ -163,6 +163,44 @@ describe('_n() (plural forms)', () => {
 	});
 });
 
+describe('_nx() (plural forms with placeholder expansion)', () => {
+	const gtx = Textdomain.getInstance('existing');
+
+	beforeAll(() => {
+		setLocale('de_AT');
+		return gtx.resolve();
+	});
+
+	describe('locale should be de indeed', () => {
+		it('should use the locale de_AT', () => {
+			expect(setLocale()).toEqual('de_AT');
+		});
+	});
+
+	describe('tests', () => {
+		it('should select the singular', () => {
+			expect(
+				gtx._nx(
+					'One directory has been deleted.',
+					'{num} directories have been deleted.',
+					1,
+					{ num: 1 },
+				),
+			).toEqual('Ein Verzeichnis wurde gelöscht.');
+		});
+		it('should select the singular', () => {
+			expect(
+				gtx._nx(
+					'One directory has been deleted.',
+					'{numDirs} directories have been deleted.',
+					2304,
+					{ num: 2304 },
+				),
+			).toEqual('2304 Verzeichnisse wurden gelöscht.');
+		});
+	});
+});
+
 describe('_p() (with context)', () => {
 	const gtx = Textdomain.getInstance('existing');
 

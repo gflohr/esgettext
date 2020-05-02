@@ -5,6 +5,11 @@ import { browserEnvironment } from './browser-environment';
 import { gettextImpl } from './gettext-impl';
 import { germanicPlural } from './germanic-plural';
 
+interface Placeholders {
+	/* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+	[key: string]: any;
+}
+
 /**
  * A Textdomain is a container for an esgettext configuration and all loaded
  * catalogs for the textual domain selected.
@@ -166,8 +171,8 @@ export class Textdomain {
 	 * However, at run-time, the JavaScript engine will have interpolated the
 	 * values already *before* _() has seen the
 	 * original string. Consequently something like "This is the red
-	 * car.\n" will be looked up in the message catalog, it will not be
-	 * found (because only "This is the ${color} ${thing}.\n" is included in
+	 * car." will be looked up in the message catalog, it will not be
+	 * found (because only "This is the ${color} ${thing}." is included in
 	 * the database), and the original, untranslated string will be
 	 * returned. Consequently `esgettext-xgettext` will bail out with an error
 	 * message if it comes across a translation call with an argument that is
@@ -205,7 +210,7 @@ export class Textdomain {
 	 *
 	 * @returns the translated string with placeholders expanded
 	 */
-	_x(msgid: string, placeholders: { [key: string]: string } = {}): string {
+	_x(msgid: string, placeholders: Placeholders): string {
 		return this.expand(
 			gettextImpl({
 				msgid,
@@ -215,6 +220,48 @@ export class Textdomain {
 		);
 	}
 
+	/**
+	 * This method is complicated and is best explained with an
+	 * example. We'll have another look at your vintage code:
+	 *
+	 * ```
+	 * if (files_deleted === 1) {
+	 *     console.log('One file has been deleted.');
+	 * } else {
+	 *     console.log('All files have been deleted.\n);
+	 * }
+	 *
+	 * Your intent is clear, you wanted to avoid the cumbersome "1 files
+	 * deleted". This is okay for English, but other languages have more
+	 * than one plural form. For example in Russian it makes a difference
+	 * whether you want to say 1 file, 3 files or 6 files. You will use
+	 * three different forms of the noun 'file' in each case. (Note: Yep,
+	 * very smart you are, the Russian word for 'file' is in fact the
+	 * English word, and it is an invariable noun, but if you know that,
+	 * you will also understand the rest despite this little simplification
+	 * ...).
+	 *
+	 * That is the reason for the existance of the method `_n()`.
+	 *
+	 * ```
+	 * console.log(gtx._n('One file has been deleted.',
+	 *                    'All files have been deleted.',
+	 *                     files_deleted));
+	 *
+	 * The effect is that `esgettext-runtime` will find out which
+	 * plural form to pick for your user's language, and the output string
+	 * will always look okay.
+	 *
+	 * It should be mentioned that the method is rarely useful because messages
+	 * with plural forms will almost always require the use of placeholders.
+	 * See `_nx()` below for a solution.
+	 *
+	 * @param msgid - the string in the singular
+	 * @param msgidPlural - the string in the plural
+	 * @param numItems - the number of items
+	 *
+	 * @returns the translated string
+	 */
 	_n(msgid: string, msgidPlural: string, numItems: number): string {
 		return gettextImpl({
 			msgid,
@@ -222,6 +269,53 @@ export class Textdomain {
 			msgidPlural,
 			numItems,
 		});
+	}
+
+	/**
+	 * The method normally used for plural expressions.
+	 *
+	 * ```
+	 * console.log(__nx('One file has been deleted.',
+	 *                  '{count} files have been deleted.',
+	 *                  num_files,
+	 *                  { count: num_files }));
+	 * ```
+	 *
+	 * The function __nx() picks the correct plural form (also for
+	 * English!) *and* it is capable of interpolating variables into
+	 * strings.
+	 *
+	 * Have a close look at the order of arguments: The first argument is
+	 * the string in the singular, the second one is the plural string. The
+	 * third one is an integer indicating the number of items. This third
+	 * argument is *only* used to pick the correct plural form. The
+	 * last argument is used for
+	 * interpolation. In the beginning it is often a little confusing that
+	 * the variable holding the number of items will usually be repeated
+	 * somewhere in the interpolation dictionary.
+	 *
+	 * @param msgid - the string in the singular
+	 * @param msgidPlural - the string in the plural
+	 * @param numItems - the number of items
+	 * @param placeholders - a dictionary of placeholders
+	 *
+	 * @returns the translated string
+	 */
+	_nx(
+		msgid: string,
+		msgidPlural: string,
+		numItems: number,
+		placeholders: Placeholders = {},
+	) {
+		return this.expand(
+			gettextImpl({
+				msgid,
+				catalog: this.catalog,
+				msgidPlural,
+				numItems,
+			}),
+			placeholders,
+		);
 	}
 
 	/**
@@ -265,6 +359,17 @@ export class Textdomain {
 			catalog: this.catalog,
 			msgctxt,
 		});
+	}
+
+	_px(msgctxt: string, msgid: string, placeholders: Placeholders = {}): string {
+		return this.expand(
+			gettextImpl({
+				msgid,
+				catalog: this.catalog,
+				msgctxt,
+			}),
+			placeholders,
+		);
 	}
 
 	/**

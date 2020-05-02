@@ -86,3 +86,16 @@ msgstr "Grün"
 
 msgid "blue"
 msgstr "Blau"
+
+#, perl-brace-format
+msgid "One directory has been deleted."
+msgid_plural "{num} directories have been deleted."
+msgstr[0] "Ein Verzeichnis wurde gelöscht."
+msgstr[1] "{num} Verzeichnisse wurden gelöscht."
+
+#, perl-brace-format
+msgctxt "Windows"
+msgid "One directory has been deleted."
+msgid_plural "{num} directories have been deleted."
+msgstr[0] "Ein Ordner wurde gelöscht."
+msgstr[1] "{num} Ornder wurden gelöscht."
