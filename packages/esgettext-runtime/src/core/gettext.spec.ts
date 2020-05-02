@@ -233,3 +233,25 @@ describe('_p() (with context)', () => {
 		});
 	});
 });
+
+describe('no-op methods', () => {
+	const gtx = Textdomain.getInstance('test');
+
+	describe('N_()', () => {
+		it('the instance method should return the msgid', () => {
+			expect(gtx.N_('one')).toEqual('one');
+		});
+		it('the class method should return the msgid', () => {
+			expect(Textdomain.N_('one')).toEqual('one');
+		});
+	});
+
+	describe('N_x()', () => {
+		it('the instance method should return the expanded msgid', () => {
+			expect(gtx.N_x('age: {age}', { age: 7 })).toEqual('age: 7');
+		});
+		it('the instance method should return the expanded msgid', () => {
+			expect(gtx.N_x('age: {age}', { age: 7 })).toEqual('age: 7');
+		});
+	});
+});

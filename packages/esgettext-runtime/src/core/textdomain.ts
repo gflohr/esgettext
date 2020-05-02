@@ -5,6 +5,8 @@ import { browserEnvironment } from './browser-environment';
 import { gettextImpl } from './gettext-impl';
 import { germanicPlural } from './germanic-plural';
 
+/* eslint-disable @typescript-eslint/camelcase, tsdoc/syntax */
+
 interface Placeholders {
 	/* eslint-disable-next-line @typescript-eslint/no-explicit-any */
 	[key: string]: any;
@@ -183,7 +185,7 @@ export class Textdomain {
 	 * values already *before* _() has seen the
 	 * original string. Consequently something like "This is the red
 	 * car." will be looked up in the message catalog, it will not be
-	 * found (because only "This is the ${color} ${thing}." is included in
+	 * found (because only "This is the \${color} \${thing}." is included in
 	 * the database), and the original, untranslated string will be
 	 * returned. Consequently `esgettext-xgettext` will bail out with an error
 	 * message if it comes across a translation call with an argument that is
@@ -197,7 +199,7 @@ export class Textdomain {
 	 * Placeholders must start with an alphabetic ASCII(!) character ("a" to
 	 * "z" and "A" to "Z") followed by an arbitrary number of alphabetic
 	 * ASCII characters or ASCII decimal digits ("0" to "9"). You cannot
-	 * use special characters inside placehodlers! It is also not possible
+	 * use special characters inside placeholders! It is also not possible
 	 * (and not needed) to use arbitrary JavaScript expressions!
 	 *
 	 * The call with interpolation then looks like this:
@@ -205,7 +207,7 @@ export class Textdomain {
 	 * ```
 	 * console.log('This is the {color} {thing}.\n', {
 	 *                 thing: thang,
-	 *                 color => 'yellow');
+	 *                 color: 'yellow');
 	 *
 	 * The method _x() will take the additional dictionary and replace all
 	 * occurencies of the dictionary keys in curly braces with the corresponding
@@ -317,7 +319,7 @@ export class Textdomain {
 		msgidPlural: string,
 		numItems: number,
 		placeholders: Placeholders = {},
-	) {
+	): string {
 		return Textdomain.expand(
 			gettextImpl({
 				msgid,
@@ -340,14 +342,15 @@ export class Textdomain {
 	 * ```
 	 * console.log(gtx._p('Verb, to view', 'View'));
 	 * console.log(gtx._p('Noun, a view', 'View'));
+	 * ```
 	 *
-	 * The above may be the "View" entries in a menu, where View->Source and
-	 * File->View are different forms of "View", and likely need to be
+	 * The above may be the "View" entries in a menu, where View-\>Source and
+	 * File-\>View are different forms of "View", and likely need to be
 	 * translated differently.
 	 *
 	 * A typical usage are GUI programs. Imagine a program with a main menu
 	 * and the notorious "Open" entry in the "File" menu. Now imagine,
-	 * there is another menu entry Preferences->Advanced->Policy where you
+	 * there is another menu entry Preferences-\>Advanced-\>Policy where you
 	 * have a choice between the alternatives "Open" and "Closed". In
 	 * English, "Open" is the adequate text at both places. In other
 	 * languages, it is very likely that you need two different
@@ -381,6 +384,78 @@ export class Textdomain {
 			}),
 			placeholders,
 		);
+	}
+
+	/**
+	 * A no-op function for string marking.
+	 *
+	 * Sometimes you want to mark strings for translation but do not actually
+	 * want to translate them, at least not at the time of their definition.
+	 * This is often the case, when you have to preserve the original string.
+	 *
+	 * Take this example:
+	 *
+	 * ```
+	 * orangeColors = [gtx.N_('coral'), gtx.N_('tomato'), gtx.N_('orangered'),
+	 *                 gtx.N_('gold'), gtx.N_('orange'), gtx.N_('darkorange')]
+	 * ```
+	 *
+	 * These are standard CSS colors, and you cannot translate them inside
+	 * CSS styles. But for presentation you may want to translate them later:
+	 *
+	 * ```
+	 * console.log(gtx._x("The css color '{color}' is {translated}.",
+	 *                    {
+	 *                        color: orangeColors[2],
+	 *                        translated: gtx._(orangeColors[2]),
+	 *                    }
+	 *            )
+	 * );
+	 * ```
+	 *
+	 * In other words: The function just marks strings for translation, so that
+	 * the extractor `esgettext-xgettext` finds them but it does not actually
+	 * translate anything.
+	 *
+	 * Note that the method is also available as a class method.
+	 *
+	 * @param msgid - the message id
+	 * @returns the original string
+	 */
+	static N_(msgid: string): string {
+		return msgid;
+	}
+
+	/**
+	 * Does the same as the instance method `N_()`.
+	 *
+	 * @param msgid - the message id
+	 * @returns the original string
+	 */
+	N_(msgid: string): string {
+		return msgid;
+	}
+
+	/**
+	 * Same as `N_()` but with placeholder expansion.
+	 *
+	 * @param msgid - the message id
+	 * @param placeholders - a dictionary of placeholders
+	 * @returns the original string with placeholders expanded
+	 */
+	N_x(msgid: string, placeholders?: Placeholders): string {
+		return Textdomain.expand(msgid, placeholders);
+	}
+
+	/**
+	 * Does the same as the instance method `N_x()`.
+	 *
+	 * @param msgid - the message id
+	 * @param placeholders - a dictionary of placeholders
+	 * @returns the original string with placeholders expanded
+	 */
+	static N_x(msgid: string, placeholders?: Placeholders): string {
+		return Textdomain.expand(msgid, placeholders);
 	}
 
 	private static expand(
