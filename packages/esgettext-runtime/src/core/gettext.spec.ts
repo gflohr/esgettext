@@ -54,3 +54,36 @@ describe('existing translations for locale de', () => {
 		});
 	});
 });
+
+describe('existing translations for locale de_AT', () => {
+	const gtx = Textdomain.getInstance('existing');
+
+	beforeAll(() => {
+		setLocale('de_AT');
+		return gtx.resolve();
+	});
+
+	describe('locale should be de indeed', () => {
+		it('should use the locale de_AT', () => {
+			expect(setLocale()).toEqual('de_AT');
+		});
+	});
+
+	describe('normal strings', () => {
+		it('should translate "December"', () => {
+			expect(gtx._('December')).toEqual('Dezember');
+		});
+
+		it('should translate "September" to an identical string', () => {
+			expect(gtx._('September')).toEqual('September');
+		});
+
+		it('should translate "January" to Austrian not German', () => {
+			expect(gtx._('January')).toEqual('Jänner');
+		});
+
+		it('should translate "February" to Austrian not German', () => {
+			expect(gtx._('February')).toEqual('Feber');
+		});
+	});
+});
