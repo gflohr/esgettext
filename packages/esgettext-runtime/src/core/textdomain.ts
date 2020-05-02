@@ -458,6 +458,28 @@ export class Textdomain {
 		return Textdomain.expand(msgid, placeholders);
 	}
 
+	/**
+	 * Same as `N_()` but with context.
+	 *
+	 * @params _msgctxt - the message context
+	 * @param msgid - the message id
+	 * @returns the original string
+	 */
+	N_p(_msgctxt: string, msgid: string): string {
+		return msgid;
+	}
+
+	/**
+	 * Does the same as the instance method `N_p()`.
+	 *
+	 * @param msgid - the message id
+	 * @param placeholders - a dictionary of placeholders
+	 * @returns the original string with placeholders expanded
+	 */
+	static N_p(_msgctxt: string, msgid: string): string {
+		return msgid;
+	}
+
 	private static expand(
 		msg: string,
 		placeholders: { [key: string]: string },

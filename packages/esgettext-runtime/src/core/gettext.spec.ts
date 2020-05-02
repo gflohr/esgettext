@@ -254,4 +254,13 @@ describe('no-op methods', () => {
 			expect(gtx.N_x('age: {age}', { age: 7 })).toEqual('age: 7');
 		});
 	});
+
+	describe('N_p()', () => {
+		it('the instance method should return the msgid', () => {
+			expect(gtx.N_p('whatever', 'one')).toEqual('one');
+		});
+		it('the class method should return the msgid', () => {
+			expect(Textdomain.N_p('whatever', 'one')).toEqual('one');
+		});
+	});
 });
