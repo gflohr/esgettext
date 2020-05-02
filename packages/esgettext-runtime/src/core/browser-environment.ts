@@ -1,6 +1,4 @@
-import isNode from 'detect-node';
-
-let isBrowser = isNode ? false : true;
+let isBrowser = false;
 
 /**
  * Force an execution environment. By default, the environment (NodeJS or

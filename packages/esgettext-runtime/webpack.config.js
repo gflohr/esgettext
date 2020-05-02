@@ -4,8 +4,8 @@ const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
 module.exports = {
 	entry: {
-		'esgettext-runtime': './src/index.ts',
-		'esgettext-runtime.min': './src/index.ts',
+		'esgettext-runtime': './src/index-browser.ts',
+		'esgettext-runtime.min': './src/index-browser.ts',
 	},
 	mode: 'development',
 	devtool: 'source-map',
@@ -13,7 +13,7 @@ module.exports = {
 		fs: 'empty',
 	},
 	optimization: {
-		minimize: false,
+		minimize: true,
 		minimizer: [
 			new TerserPlugin({
 				cache: true,

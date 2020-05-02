@@ -1,4 +1,5 @@
-import { browserEnvironment, setLocale } from './index';
+import { browserEnvironment } from './browser-environment';
+import { setLocale } from './set-locale';
 
 browserEnvironment(false);
 
