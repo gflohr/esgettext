@@ -1,8 +1,0 @@
-{
-	"extends": "./tsconfig.json",
-	"compilerOptions": {},
-	"baseUrl": "./",
-	"paths": {
-		"@shims/*": ["./src/shims/browser/*", "node_modules/*"]
-	}
-}
