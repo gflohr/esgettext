@@ -20,8 +20,14 @@
 		"October": ["Oktober"],
 		"September": ["September"],
 		"Singular": ["Einzahl", "Mehrzahl"],
+		"The colors are {color1}, {color2}, and {color3}.": [
+			"Die Farben sind {color1}, {color2} und {color3}."
+		],
 		"View": ["Anzeigen"],
 		"Which folder would you like to view?\u0004View": ["Ansicht"],
-		"Which folder would you like to view? (2)\u0004View": ["View 2"]
+		"Which folder would you like to view? (2)\u0004View": ["View 2"],
+		"blue": ["Blau"],
+		"green": ["Grün"],
+		"red": ["Rot"]
 	}
 }

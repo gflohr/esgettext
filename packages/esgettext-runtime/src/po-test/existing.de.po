@@ -74,3 +74,15 @@ msgid_plural "Plural 3"
 msgstr[0] "Einzahl 3"
 msgstr[1] "Mehrzahl 3"
 
+#, perl-brace-format
+msgid "The colors are {color1}, {color2}, and {color3}."
+msgstr "Die Farben sind {color1}, {color2} und {color3}."
+
+msgid "red"
+msgstr "Rot"
+
+msgid "green"
+msgstr "Grün"
+
+msgid "blue"
+msgstr "Blau"

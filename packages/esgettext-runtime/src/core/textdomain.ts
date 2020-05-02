@@ -205,8 +205,14 @@ export class Textdomain {
 	 *
 	 * @returns the translated string with placeholders expanded
 	 */
-	_x(msgid: string, placeholders: { [key: string]: string }): string {
-		return this.expand(msgid, placeholders);
+	_x(msgid: string, placeholders: { [key: string]: string } = {}): string {
+		return this.expand(
+			gettextImpl({
+				msgid,
+				catalog: this.catalog,
+			}),
+			placeholders,
+		);
 	}
 
 	_n(msgid: string, msgidPlural: string, numItems: number): string {

@@ -88,6 +88,54 @@ describe('existing translations for locale de_AT', () => {
 	});
 });
 
+describe('_x() (placeholder strings)', () => {
+	const gtx = Textdomain.getInstance('existing');
+
+	beforeAll(() => {
+		setLocale('de_AT');
+		return gtx.resolve();
+	});
+
+	describe('locale should be de indeed', () => {
+		it('should use the locale de_AT', () => {
+			expect(setLocale()).toEqual('de_AT');
+		});
+	});
+
+	describe('tests', () => {
+		it('should expand all placeholders', () => {
+			expect(
+				gtx._x('The colors are {color1}, {color2}, and {color3}.', {
+					color1: gtx._('red'),
+					color2: gtx._('green'),
+					color3: gtx._('blue'),
+				}),
+			).toEqual('Die Farben sind Rot, Grün und Blau.');
+		});
+
+		it('should preserve undefined placeholders', () => {
+			expect(
+				gtx._x('The colors are {color1}, {color2}, and {color3}.', {
+					color1: gtx._('red'),
+					colorTypo: gtx._('green'),
+					color3: gtx._('blue'),
+				}),
+			).toEqual('Die Farben sind Rot, {color2} und Blau.');
+		});
+
+		it('should ignore excess placeholders', () => {
+			expect(
+				gtx._x('The colors are {color1}, {color2}, and {color3}.', {
+					color1: gtx._('red'),
+					color2: gtx._('green'),
+					color3: gtx._('blue'),
+					color4: gtx._('brown'),
+				}),
+			).toEqual('Die Farben sind Rot, Grün und Blau.');
+		});
+	});
+});
+
 describe('_n() (plural forms)', () => {
 	const gtx = Textdomain.getInstance('existing');
 
