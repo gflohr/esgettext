@@ -12,7 +12,7 @@ export class DataViewlet {
 	 * @param offset - Number of bytes to skip before starting to read.
 	 *                 Must satisfy `0 <= offset <= buf.length - 4`.
 	 *                 Default: 0.
-	 * @returns - the 32-bit unsigned integer at position `offset`.s
+	 * @returns the 32-bit unsigned integer at position `offset`.s
 	 */
 	readUint32BE(offset = 0): number {
 		if (offset + 4 > this.array.byteLength + this.array.byteOffset) {
@@ -20,10 +20,11 @@ export class DataViewlet {
 		}
 
 		return (
-			((this.array[offset] << 24) >>> 0) |
-			(this.array[offset + 1] << 16) |
-			(this.array[offset + 2] << 8) |
-			this.array[offset + 3]
+			(((this.array[offset] << 24) >>> 0) |
+				(this.array[offset + 1] << 16) |
+				(this.array[offset + 2] << 8) |
+				this.array[offset + 3]) >>>
+			0
 		);
 	}
 
@@ -34,7 +35,7 @@ export class DataViewlet {
 	 * @param offset - Number of bytes to skip before starting to read.
 	 *                 Must satisfy `0 <= offset <= buf.length - 4`.
 	 *                 Default: 0.
-	 * @returns - the 32-bit unsigned integer at position `offset`.s
+	 * @returns the 32-bit unsigned integer at position `offset`.s
 	 */
 	readUint32LE(offset = 0): number {
 		if (offset + 4 > this.array.byteLength + this.array.byteOffset) {
@@ -42,10 +43,11 @@ export class DataViewlet {
 		}
 
 		return (
-			((this.array[offset + 3] << 24) >>> 0) |
-			(this.array[offset + 2] << 16) |
-			(this.array[offset + 1] << 8) |
-			this.array[offset]
+			(((this.array[offset + 3] << 24) >>> 0) |
+				(this.array[offset + 2] << 16) |
+				(this.array[offset + 1] << 8) |
+				this.array[offset]) >>>
+			0
 		);
 	}
 }
