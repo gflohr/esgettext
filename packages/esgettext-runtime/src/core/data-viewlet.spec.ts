@@ -47,4 +47,18 @@ describe('bufferling', () => {
 			expect(() => dv.readString(30, 5)).toThrow();
 		});
 	});
+
+	describe('windows-1252 text', () => {
+		const dv = new DataViewlet(uint8Array, 'windows-1252');
+
+		it('at offset 0', () => {
+			expect(dv.readString(undefined, 4)).toEqual('ABCD');
+		});
+		it('utf-8 string', () => {
+			expect(dv.readString(26, 8)).toEqual('Ã„Ã–ÃœÃŸ');
+		});
+		it('past end of buffer', () => {
+			expect(() => dv.readString(30, 5)).toThrow();
+		});
+	});
 });
