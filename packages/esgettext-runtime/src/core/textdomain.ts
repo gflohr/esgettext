@@ -59,6 +59,17 @@ export class Textdomain {
 	}
 
 	/**
+	 * A textdomain is an identifier for your application or library. It is
+	 * the basename of your translation files which are either TEXTDOMAIN.json
+	 * or TEXTDOMAIN.mo, depending on the format you have chosen.
+	 *
+	 * @returns the textdomain
+	 */
+	public textdomain(): string {
+		return this.domain;
+	}
+
+	/**
 	 * Bind a textdomain to a certain path or queries the path that a
 	 * textdomain is bound to. The catalog file will be searched
 	 * in `${path}/LOCALE/LC_MESSAGES/${domainname}.EXT`.
@@ -211,7 +222,7 @@ export class Textdomain {
 	 * @returns the translated string with placeholders expanded
 	 */
 	_x(msgid: string, placeholders: Placeholders): string {
-		return this.expand(
+		return Textdomain.expand(
 			gettextImpl({
 				msgid,
 				catalog: this.catalog,
@@ -307,7 +318,7 @@ export class Textdomain {
 		numItems: number,
 		placeholders: Placeholders = {},
 	) {
-		return this.expand(
+		return Textdomain.expand(
 			gettextImpl({
 				msgid,
 				catalog: this.catalog,
@@ -362,7 +373,7 @@ export class Textdomain {
 	}
 
 	_px(msgctxt: string, msgid: string, placeholders: Placeholders = {}): string {
-		return this.expand(
+		return Textdomain.expand(
 			gettextImpl({
 				msgid,
 				catalog: this.catalog,
@@ -372,17 +383,10 @@ export class Textdomain {
 		);
 	}
 
-	/**
-	 * A textdomain is an identifier for your application or library. It is
-	 * the basename of your translation files which are either TEXTDOMAIN.json
-	 * or TEXTDOMAIN.mo, depending on the format you have chosen.
-	 * @returns the textdomain
-	 */
-	public textdomain(): string {
-		return this.domain;
-	}
-
-	private expand(msg: string, placeholders: { [key: string]: string }): string {
+	private static expand(
+		msg: string,
+		placeholders: { [key: string]: string },
+	): string {
 		return msg.replace(/\{([a-zA-Z][0-9a-zA-Z]*)\}/g, (_, match) => {
 			if (Object.prototype.hasOwnProperty.call(placeholders, match)) {
 				return placeholders[match];
