@@ -4,6 +4,7 @@ import { Catalog } from './catalog';
 import { browserEnvironment } from './browser-environment';
 import { gettextImpl } from './gettext-impl';
 import { germanicPlural } from './germanic-plural';
+import { setLocaleImpl } from './set-locale-impl';
 
 /* eslint-disable @typescript-eslint/camelcase, tsdoc/syntax */
 
@@ -79,6 +80,33 @@ export class Textdomain {
 	}
 
 	/**
+	 * Change or query the locale.
+	 *
+	 * For the web you can use all valid language identifier tags that
+	 * [BCP47](https://tools.ietf.org/html/bcp47) allows
+	 * (and actually a lot more). The tag is always used unmodified.
+	 *
+	 * For server environments, the locale identifier has to match the following
+	 * scheme:
+	 *
+	 *   `ll_CC.charset\@modifier`
+	 *
+	 * * `ll` is the two- or three-letter language code.
+	 * * `CC` is the optional two-letter country code.
+	 * * `charset` is an optional character set (letters, digits, and the hyphen).
+	 * * `modifier` is an optional variant (letters and digits).
+	 *
+	 * The language code is always converted to lowercase, the country code is
+	 * converted to uppercase, variant and charset are used as is.
+	 *
+	 * @param locale - the locale identifier
+	 * @returns the locale in use
+	 */
+	static setLocale(locale?: string): string {
+		return setLocaleImpl(locale);
+	}
+
+	/**
 	 * A textdomain is an identifier for your application or library. It is
 	 * the basename of your translation files which are either TEXTDOMAIN.json
 	 * or TEXTDOMAIN.mo, depending on the format you have chosen.
@@ -124,12 +152,16 @@ export class Textdomain {
 			}
 		}
 
-		return resolveImpl(this.domain, Textdomain.cache, path, this.format).then(
-			(catalog) => {
-				this.catalog = catalog;
-				return new Promise((resolve) => resolve(catalog));
-			},
-		);
+		return resolveImpl(
+			this.domain,
+			Textdomain.cache,
+			path,
+			this.format,
+			Textdomain.setLocale(),
+		).then((catalog) => {
+			this.catalog = catalog;
+			return new Promise((resolve) => resolve(catalog));
+		});
 	}
 
 	/**

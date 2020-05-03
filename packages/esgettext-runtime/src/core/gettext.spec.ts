@@ -1,5 +1,4 @@
 import { Textdomain } from './textdomain';
-import { setLocale } from './set-locale';
 
 describe('translation functions without catalog', () => {
 	const gtx = Textdomain.getInstance('test');
@@ -26,13 +25,13 @@ describe('existing translations for locale de', () => {
 	const gtx = Textdomain.getInstance('existing');
 
 	beforeAll(() => {
-		setLocale('de');
+		Textdomain.setLocale('de');
 		return gtx.resolve();
 	});
 
 	describe('locale should be de indeed', () => {
 		it('should use the locale de', () => {
-			expect(setLocale()).toEqual('de');
+			expect(Textdomain.setLocale()).toEqual('de');
 		});
 	});
 
@@ -59,13 +58,13 @@ describe('existing translations for locale de_AT', () => {
 	const gtx = Textdomain.getInstance('existing');
 
 	beforeAll(() => {
-		setLocale('de_AT');
+		Textdomain.setLocale('de_AT');
 		return gtx.resolve();
 	});
 
 	describe('locale should be de indeed', () => {
 		it('should use the locale de_AT', () => {
-			expect(setLocale()).toEqual('de_AT');
+			expect(Textdomain.setLocale()).toEqual('de_AT');
 		});
 	});
 
@@ -92,13 +91,13 @@ describe('_x() (placeholder strings)', () => {
 	const gtx = Textdomain.getInstance('existing');
 
 	beforeAll(() => {
-		setLocale('de_AT');
+		Textdomain.setLocale('de_AT');
 		return gtx.resolve();
 	});
 
 	describe('locale should be de indeed', () => {
 		it('should use the locale de_AT', () => {
-			expect(setLocale()).toEqual('de_AT');
+			expect(Textdomain.setLocale()).toEqual('de_AT');
 		});
 	});
 
@@ -140,13 +139,13 @@ describe('_n() (plural forms)', () => {
 	const gtx = Textdomain.getInstance('existing');
 
 	beforeAll(() => {
-		setLocale('de_AT');
+		Textdomain.setLocale('de_AT');
 		return gtx.resolve();
 	});
 
 	describe('locale should be de indeed', () => {
 		it('should use the locale de_AT', () => {
-			expect(setLocale()).toEqual('de_AT');
+			expect(Textdomain.setLocale()).toEqual('de_AT');
 		});
 	});
 
@@ -167,13 +166,13 @@ describe('_nx() (plural forms with placeholder expansion)', () => {
 	const gtx = Textdomain.getInstance('existing');
 
 	beforeAll(() => {
-		setLocale('de_AT');
+		Textdomain.setLocale('de_AT');
 		return gtx.resolve();
 	});
 
 	describe('locale should be de indeed', () => {
 		it('should use the locale de_AT', () => {
-			expect(setLocale()).toEqual('de_AT');
+			expect(Textdomain.setLocale()).toEqual('de_AT');
 		});
 	});
 
@@ -205,13 +204,13 @@ describe('_p() (with context)', () => {
 	const gtx = Textdomain.getInstance('existing');
 
 	beforeAll(() => {
-		setLocale('de_AT');
+		Textdomain.setLocale('de_AT');
 		return gtx.resolve();
 	});
 
 	describe('locale should be de indeed', () => {
 		it('should use the locale de_AT', () => {
-			expect(setLocale()).toEqual('de_AT');
+			expect(Textdomain.setLocale()).toEqual('de_AT');
 		});
 	});
 
@@ -242,13 +241,13 @@ describe('_px() (with context and placeholders)', () => {
 	const gtx = Textdomain.getInstance('existing');
 
 	beforeAll(() => {
-		setLocale('de_AT');
+		Textdomain.setLocale('de_AT');
 		return gtx.resolve();
 	});
 
 	describe('locale should be de indeed', () => {
 		it('should use the locale de_AT', () => {
-			expect(setLocale()).toEqual('de_AT');
+			expect(Textdomain.setLocale()).toEqual('de_AT');
 		});
 	});
 
@@ -293,13 +292,13 @@ describe('_np() (with context and placeholders)', () => {
 	const gtx = Textdomain.getInstance('existing');
 
 	beforeAll(() => {
-		setLocale('de_AT');
+		Textdomain.setLocale('de_AT');
 		return gtx.resolve();
 	});
 
 	describe('locale should be de indeed', () => {
 		it('should use the locale de_AT', () => {
-			expect(setLocale()).toEqual('de_AT');
+			expect(Textdomain.setLocale()).toEqual('de_AT');
 		});
 	});
 
@@ -333,13 +332,13 @@ describe('_npx() (with plural, context and placeholders)', () => {
 	const gtx = Textdomain.getInstance('existing');
 
 	beforeAll(() => {
-		setLocale('de_AT');
+		Textdomain.setLocale('de_AT');
 		return gtx.resolve();
 	});
 
 	describe('locale should be de indeed', () => {
 		it('should use the locale de_AT', () => {
-			expect(setLocale()).toEqual('de_AT');
+			expect(Textdomain.setLocale()).toEqual('de_AT');
 		});
 	});
 

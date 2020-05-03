@@ -8,7 +8,6 @@ import {
 } from '../parser';
 import { browserEnvironment } from './browser-environment';
 import { Catalog, CatalogEntries } from './catalog';
-import { setLocale } from './set-locale';
 import { splitLocale, SplitLocale } from './split-locale';
 import { germanicPlural } from './germanic-plural';
 import { CatalogCache } from './catalog-cache';
@@ -122,6 +121,7 @@ async function loadCatalogWithCharset(
 
 async function loadDomain(
 	locale: SplitLocale,
+	localeKey: string,
 	base: string,
 	domainname: string,
 	format: string,
@@ -136,7 +136,6 @@ async function loadDomain(
 		entries,
 	};
 
-	const localeKey = setLocale();
 	const cacheHit = cache.lookup(base, localeKey, domainname);
 	if (cacheHit !== null) {
 		// Promise?
@@ -254,6 +253,7 @@ export function resolveImpl(
 	cache: CatalogCache,
 	path: string,
 	format: string,
+	localeKey: string,
 ): Promise<Catalog> {
 	const defaultCatalog: Catalog = {
 		major: 0,
@@ -262,14 +262,13 @@ export function resolveImpl(
 		entries: {},
 	};
 
-	const localeIdentifier = setLocale();
-	if (localeIdentifier === 'C' || localeIdentifier === 'POSIX') {
+	if (localeKey === 'C' || localeKey === 'POSIX') {
 		return new Promise((resolve) => resolve(defaultCatalog));
 	}
 
 	return new Promise((resolve) => {
-		const locale = splitLocale(localeIdentifier);
-		loadDomain(locale, path, domainname, format, cache)
+		const locale = splitLocale(localeKey);
+		loadDomain(locale, localeKey, path, domainname, format, cache)
 			.then((catalog) => {
 				resolve(setPluralFunction(catalog));
 			})

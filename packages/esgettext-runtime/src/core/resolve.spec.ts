@@ -1,10 +1,9 @@
-import { setLocale } from './set-locale';
 import { Textdomain } from './textdomain';
 import { CatalogCache } from './catalog-cache';
 
 // FIXME! Use the method, not the function!
 describe('resolve', () => {
-	setLocale('de');
+	Textdomain.setLocale('de');
 	beforeAll(() => CatalogCache.clear());
 
 	describe('simple test', () => {
