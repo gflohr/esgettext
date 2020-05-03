@@ -6,12 +6,5 @@ script:
   - yarn install
   - yarn bootstrap
   - yarn test
-#deploy:
-#  provider: pages
-#  skip_cleanup: true
-#  github_token: $GITHUB_TOKEN
-#  on:
-#    branch: master    
-#before_deploy:
-#  - touch .nojekyll
-#  - sed -i '/api-docs/d' .gitignore
+after_success:
+  - yarn run test:cov && node node_modules/.bin/coveralls <coverage/lcov.info
