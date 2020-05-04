@@ -25,12 +25,19 @@ export interface OptionGroup {
 	options: Array<Option>;
 }
 
+type ErrorFunction = (message: string) => void;
+
+export interface GetoptOptions {
+	errorFunction?: ErrorFunction;
+}
+
 export class Getopt {
-	progName: string;
-	cli = yargs;
-	allowedKeys = new Map<string, OptionFlags>();
-	defaultFlags: OptionFlags = {};
-	options = yargs.option({});
+	private readonly progName: string;
+	private cli = yargs;
+	private readonly allowedKeys = new Map<string, OptionFlags>();
+	private readonly defaultFlags: OptionFlags = {};
+	private readonly errorFunction: ErrorFunction;
+
 	/**
 	 * Create a yargs option parser.
 	 *
@@ -40,10 +47,21 @@ export class Getopt {
 	 *
 	 * The strings should not end in a newline!
 	 */
-	constructor(usage: string, description: string, optionGroups: OptionGroup[]) {
+	constructor(
+		usage: string,
+		description: string,
+		optionGroups: OptionGroup[],
+		options?: GetoptOptions,
+	) {
 		this.progName = process.argv[1].split(/[\\/]/).pop();
-		//this.cli = yargs;
 		this.buildUsage(usage, description);
+
+		if (!options) {
+			options = {};
+		}
+
+		// eslint-disable-next-line @typescript-eslint/unbound-method
+		this.errorFunction = options.errorFunction || this.errorExit;
 
 		this.allowedKeys.set('help', this.defaultFlags);
 		this.allowedKeys.set('h', this.defaultFlags);
@@ -85,23 +103,25 @@ export class Getopt {
 	 *
 	 * @returns a dictionary with all options passed and their values.
 	 */
-	argv(): Options {
-		const argv = this.cli.argv;
-		const keys = Object.keys(argv);
+	argv(args?: { [x: string]: unknown; _: string[]; $0: string }): Options {
+		if (typeof args === 'undefined') {
+			args = this.cli.argv;
+		}
+		const keys = Object.keys(args);
 
 		// TODO! Check for invalid usage!
 		for (let i = 0; i < keys.length; ++i) {
 			const key = keys[i];
 			if (!this.allowedKeys.has(key)) {
 				if (key.length) {
-					this.errorExit(
+					this.errorFunction(
 						gtx._x("'{progName}': unrecognized option '--{option}'", {
 							progName: this.progName,
 							option: key,
 						}),
 					);
 				} else {
-					this.errorExit(
+					this.errorFunction(
 						gtx._x("'{progName}': invalid option -- '{option}'", {
 							progName: this.progName,
 							option: key,
@@ -110,10 +130,10 @@ export class Getopt {
 				}
 			}
 			const flags = this.allowedKeys.get(key);
-			const value = argv[key];
+			const value = args[key];
 			if (Array.isArray(value) && value.length > 1) {
 				if (!flags.multiple) {
-					this.errorExit(
+					this.errorFunction(
 						gtx._x("The option '{option}' can be given only once.", {
 							option: key,
 						}),
@@ -122,7 +142,7 @@ export class Getopt {
 			}
 		}
 
-		return argv;
+		return args;
 	}
 
 	private errorExit(message: string): void {

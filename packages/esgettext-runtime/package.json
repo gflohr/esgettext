@@ -44,9 +44,6 @@
 			"json",
 			"ts"
 		],
-		"moduleNameMapper": {
-			"@shims/(.*)": "<rootDir>/shims/node/$1.ts"
-		},
 		"rootDir": "src",
 		"testRegex": ".spec.ts$",
 		"transform": {

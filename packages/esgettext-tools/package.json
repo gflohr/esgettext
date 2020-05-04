@@ -25,13 +25,27 @@
 		"lint:fix": "eslint --fix './src/**/*.ts'",
 		"lint:fix-dry-run": "eslint --fix './src/**/*.ts'",
 		"lint:staged": "lint-staged",
-		"test": "jest --passWithNoTests",
-		"test:watch": "jest --passWithNoTests --watch",
-		"test:cov": "jest --passWithNoTests --coverage",
+		"test": "jest",
+		"test:watch": "jest --watch",
+		"test:cov": "jest --coverage",
 		"test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand"
 	},
 	"author": "Guido Flohr <guido.flohr@cantanea.com> (http://www.guido.flohr.net/)",
 	"license": "WTFPL",
+	"jest": {
+		"moduleFileExtensions": [
+			"js",
+			"json",
+			"ts"
+		],
+		"rootDir": "src",
+		"testRegex": ".spec.ts$",
+		"transform": {
+			"^.+\\.ts$": "ts-jest"
+		},
+		"coverageDirectory": "../coverage",
+		"testEnvironment": "node"
+	},
 	"dependencies": {
 		"esgettext-runtime": "^0.0.1",
 		"@types/node": "^13.13.2",
