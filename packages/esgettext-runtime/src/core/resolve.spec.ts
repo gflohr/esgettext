@@ -3,7 +3,7 @@ import { CatalogCache } from './catalog-cache';
 
 // FIXME! Use the method, not the function!
 describe('resolve', () => {
-	Textdomain.setLocale('de');
+	Textdomain.locale = 'de';
 	beforeAll(() => CatalogCache.clear());
 
 	describe('simple test', () => {

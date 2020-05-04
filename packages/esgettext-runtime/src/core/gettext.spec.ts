@@ -25,13 +25,13 @@ describe('existing translations for locale de', () => {
 	const gtx = Textdomain.getInstance('existing');
 
 	beforeAll(() => {
-		Textdomain.setLocale('de');
+		Textdomain.locale = 'de';
 		return gtx.resolve();
 	});
 
 	describe('locale should be de indeed', () => {
 		it('should use the locale de', () => {
-			expect(Textdomain.setLocale()).toEqual('de');
+			expect(Textdomain.locale).toEqual('de');
 		});
 	});
 
@@ -58,13 +58,13 @@ describe('existing translations for locale de_AT', () => {
 	const gtx = Textdomain.getInstance('existing');
 
 	beforeAll(() => {
-		Textdomain.setLocale('de_AT');
+		Textdomain.locale = 'de_AT';
 		return gtx.resolve();
 	});
 
 	describe('locale should be de indeed', () => {
 		it('should use the locale de_AT', () => {
-			expect(Textdomain.setLocale()).toEqual('de_AT');
+			expect(Textdomain.locale).toEqual('de_AT');
 		});
 	});
 
@@ -91,13 +91,13 @@ describe('_x() (placeholder strings)', () => {
 	const gtx = Textdomain.getInstance('existing');
 
 	beforeAll(() => {
-		Textdomain.setLocale('de_AT');
+		Textdomain.locale = 'de_AT';
 		return gtx.resolve();
 	});
 
 	describe('locale should be de indeed', () => {
 		it('should use the locale de_AT', () => {
-			expect(Textdomain.setLocale()).toEqual('de_AT');
+			expect(Textdomain.locale).toEqual('de_AT');
 		});
 	});
 
@@ -139,13 +139,13 @@ describe('_n() (plural forms)', () => {
 	const gtx = Textdomain.getInstance('existing');
 
 	beforeAll(() => {
-		Textdomain.setLocale('de_AT');
+		Textdomain.locale = 'de_AT';
 		return gtx.resolve();
 	});
 
 	describe('locale should be de indeed', () => {
 		it('should use the locale de_AT', () => {
-			expect(Textdomain.setLocale()).toEqual('de_AT');
+			expect(Textdomain.locale).toEqual('de_AT');
 		});
 	});
 
@@ -166,13 +166,13 @@ describe('_nx() (plural forms with placeholder expansion)', () => {
 	const gtx = Textdomain.getInstance('existing');
 
 	beforeAll(() => {
-		Textdomain.setLocale('de_AT');
+		Textdomain.locale = 'de_AT';
 		return gtx.resolve();
 	});
 
 	describe('locale should be de indeed', () => {
 		it('should use the locale de_AT', () => {
-			expect(Textdomain.setLocale()).toEqual('de_AT');
+			expect(Textdomain.locale).toEqual('de_AT');
 		});
 	});
 
@@ -204,13 +204,13 @@ describe('_p() (with context)', () => {
 	const gtx = Textdomain.getInstance('existing');
 
 	beforeAll(() => {
-		Textdomain.setLocale('de_AT');
+		Textdomain.locale = 'de_AT';
 		return gtx.resolve();
 	});
 
 	describe('locale should be de indeed', () => {
 		it('should use the locale de_AT', () => {
-			expect(Textdomain.setLocale()).toEqual('de_AT');
+			expect(Textdomain.locale).toEqual('de_AT');
 		});
 	});
 
@@ -241,13 +241,13 @@ describe('_px() (with context and placeholders)', () => {
 	const gtx = Textdomain.getInstance('existing');
 
 	beforeAll(() => {
-		Textdomain.setLocale('de_AT');
+		Textdomain.locale = 'de_AT';
 		return gtx.resolve();
 	});
 
 	describe('locale should be de indeed', () => {
 		it('should use the locale de_AT', () => {
-			expect(Textdomain.setLocale()).toEqual('de_AT');
+			expect(Textdomain.locale).toEqual('de_AT');
 		});
 	});
 
@@ -292,13 +292,13 @@ describe('_np() (with context and placeholders)', () => {
 	const gtx = Textdomain.getInstance('existing');
 
 	beforeAll(() => {
-		Textdomain.setLocale('de_AT');
+		Textdomain.locale = 'de_AT';
 		return gtx.resolve();
 	});
 
 	describe('locale should be de indeed', () => {
 		it('should use the locale de_AT', () => {
-			expect(Textdomain.setLocale()).toEqual('de_AT');
+			expect(Textdomain.locale).toEqual('de_AT');
 		});
 	});
 
@@ -332,13 +332,13 @@ describe('_npx() (with plural, context and placeholders)', () => {
 	const gtx = Textdomain.getInstance('existing');
 
 	beforeAll(() => {
-		Textdomain.setLocale('de_AT');
+		Textdomain.locale = 'de_AT';
 		return gtx.resolve();
 	});
 
 	describe('locale should be de indeed', () => {
 		it('should use the locale de_AT', () => {
-			expect(Textdomain.setLocale()).toEqual('de_AT');
+			expect(Textdomain.locale).toEqual('de_AT');
 		});
 	});
 

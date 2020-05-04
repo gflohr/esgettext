@@ -6,10 +6,11 @@ browserEnvironment(true);
 describe('configuration functions', () => {
 	describe('setLocale', () => {
 		it('should accept dE-aT for the web and return it unmodified', () => {
-			expect(Textdomain.setLocale('dE-aT')).toEqual('dE-aT');
+			Textdomain.locale = 'dE-aT';
+			expect(Textdomain.locale).toEqual('dE-aT');
 		});
-		it('should recect -fR-fR for the web and return it unmodified', () => {
-			expect(Textdomain.setLocale('-fR-fR')).toEqual('dE-aT');
+		it('should reject -fR-fR', () => {
+			expect(() => (Textdomain.locale = '-fR-fR')).toThrow();
 		});
 	});
 });

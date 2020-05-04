@@ -4,7 +4,7 @@ import { Catalog } from './catalog';
 import { browserEnvironment } from './browser-environment';
 import { gettextImpl } from './gettext-impl';
 import { germanicPlural } from './germanic-plural';
-import { setLocaleImpl } from './set-locale-impl';
+import { splitLocale } from './split-locale';
 
 /* eslint-disable @typescript-eslint/camelcase, tsdoc/syntax */
 
@@ -39,6 +39,7 @@ export class Textdomain {
 	private static domains: { [key: string]: Textdomain } = {};
 	private static readonly cache = CatalogCache.getInstance();
 	private static boundDomains: { [key: string]: string } = {};
+	private static _locale = 'C';
 
 	private domain: string;
 	private _catalogFormat = 'json';
@@ -80,7 +81,14 @@ export class Textdomain {
 	}
 
 	/**
-	 * Change or query the locale.
+	 * Query the locale in use.
+	 */
+	static get locale(): string {
+		return Textdomain._locale;
+	}
+
+	/**
+	 * Change the locale.
 	 *
 	 * For the web you can use all valid language identifier tags that
 	 * [BCP47](https://tools.ietf.org/html/bcp47) allows
@@ -102,8 +110,41 @@ export class Textdomain {
 	 * @param locale - the locale identifier
 	 * @returns the locale in use
 	 */
-	static setLocale(locale?: string): string {
-		return setLocaleImpl(locale);
+	static set locale(locale: string) {
+		const ucLocale = locale.toUpperCase();
+
+		if (ucLocale === 'POSIX' || ucLocale === 'C') {
+			this._locale = 'POSIX';
+			return;
+		}
+
+		const split = splitLocale(locale);
+		if (!split) {
+			throw new Error('invalid locale identifier');
+		}
+
+		// The check from splitLocale() is sufficient.
+		if (browserEnvironment()) {
+			this._locale = locale;
+			return;
+		}
+
+		// Node.
+		split.tags[0] = split.tags[0].toLowerCase();
+		if (split.tags.length > 1) {
+			split.tags[1] = split.tags[1].toUpperCase();
+		}
+
+		const separator = split.underscoreSeparator ? '_' : '-';
+		this._locale = split.tags.join(separator);
+
+		if (typeof split.charset !== 'undefined') {
+			this._locale += '.' + split.charset;
+		}
+
+		if (typeof split.modifier !== 'undefined') {
+			this._locale += '@' + split.modifier;
+		}
 	}
 
 	/**
@@ -157,7 +198,7 @@ export class Textdomain {
 			Textdomain.cache,
 			path,
 			this.catalogFormat,
-			Textdomain.setLocale(),
+			Textdomain.locale,
 		).then((catalog) => {
 			this.catalog = catalog;
 			return new Promise((resolve) => resolve(catalog));
