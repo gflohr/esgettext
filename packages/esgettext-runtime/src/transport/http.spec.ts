@@ -18,4 +18,18 @@ describe('XMLHttpRequest', () => {
 		const data = await transport.loadFile('/success');
 		expect(data).toEqual(success);
 	});
+
+	it('should fail on server errors', async () => {
+		mock.get('/not-there', {
+			status: 404,
+			reason: 'not found',
+			body: 'not found',
+		});
+
+		try {
+			await transport.loadFile('/not-there');
+		} catch (e) {
+			expect(e).toBeDefined();
+		}
+	});
 });
