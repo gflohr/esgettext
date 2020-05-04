@@ -1,4 +1,4 @@
-import { CatalogCache } from '../../lib';
+import { CatalogCache } from './catalog-cache';
 
 describe('catalog-cache', () => {
 	const cache = CatalogCache.getInstance();
