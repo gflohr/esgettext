@@ -6,6 +6,6 @@ script:
   - yarn install
   - yarn bootstrap
   - yarn build
-  - yarn test
+  - yarn test:cov
 after_success:
-  - yarn run test:cov && node node_modules/.bin/coveralls <coverage/lcov.info
+  - node node_modules/.bin/coveralls <coverage/lcov.info
