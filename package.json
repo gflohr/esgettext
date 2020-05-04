@@ -15,6 +15,7 @@
 		"publish": "lerna publish",
 		"build": "lerna run build --stream",
 		"start": "lerna run build --scope @esgettext/esgettext-runtime && lerna run start --parallel --scope @magic-invoice/esgettext-tools",
+		"clean": "lerna run clean --stream",
 		"format": "lerna run format --stream",
 		"lint": "lerna run lint --stream",
 		"lint:fix": "lerna run lint:fix --stream",
