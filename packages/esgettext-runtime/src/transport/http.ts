@@ -15,6 +15,8 @@ export class TransportHttp implements Transport {
 				}
 			};
 			xhr.onerror = (err) => reject(err);
+			xhr.responseType = 'arraybuffer';
+			xhr.send();
 		});
 	}
 }
