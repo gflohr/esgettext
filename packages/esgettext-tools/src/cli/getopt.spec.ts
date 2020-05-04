@@ -12,16 +12,42 @@ function errorFunction(message: string): void {
 }
 
 describe('getting command line options', () => {
+	let optionGroups: Array<OptionGroup>;
+	let getopt: Getopt;
+
 	describe('bare minimimum', () => {
-		const optionGroups: Array<OptionGroup> = [];
-		const getopt = new Getopt('usage', 'description', optionGroups, {
-			errorFunction,
+		beforeAll(() => {
+			optionGroups = [
+				{
+					description: 'File locations',
+					options: [
+						{
+							name: 'input',
+							yargsOptions: {
+								alias: 'i',
+								type: 'string',
+								describe: 'location of the input file',
+								demandOption: '--input is required',
+							},
+						},
+					],
+				},
+			];
+
+			getopt = new Getopt('usage', 'description', optionGroups, {
+				errorFunction,
+			});
+		});
+
+		it('succeed with option --input', () => {
+			const args = getArgv();
+			expect(getopt.argv(args)).toBeDefined();
 		});
 
 		it('to fail for unknown options', () => {
-			const argv = getArgv();
-			argv['foobar'] = true;
-			expect(() => getopt.argv(argv)).toThrow();
+			const args = getArgv();
+			args['foobar'] = true;
+			expect(() => getopt.argv(args)).toThrow();
 		});
 	});
 });
