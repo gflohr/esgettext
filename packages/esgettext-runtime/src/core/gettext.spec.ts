@@ -1,4 +1,6 @@
 import { Textdomain } from './textdomain';
+import { Catalog } from './catalog';
+import { gettextImpl } from './gettext-impl';
 
 describe('translation functions without catalog', () => {
 	const gtx = Textdomain.getInstance('test');
@@ -447,5 +449,37 @@ describe('no-op methods', () => {
 		it('the instance method should return the expanded msgid', () => {
 			expect(gtx.N_px('whatever', 'age: {age}', { age: 7 })).toEqual('age: 7');
 		});
+	});
+});
+
+describe('plural inconsistencies', () => {
+	const catalog: Catalog = {
+		major: 0,
+		minor: 0,
+		pluralFunction: () => 42,
+		entries: {
+			one: ['yksi'],
+			two: ['yksi', 'kaksi'],
+		},
+	};
+
+	it('should pick the only translation', () => {
+		const trans = gettextImpl({
+			catalog,
+			msgid: 'one',
+			msgidPlural: 'two',
+			numItems: 1,
+		});
+		expect(trans).toEqual('yksi');
+	});
+
+	it('should use germanic plural', () => {
+		const trans = gettextImpl({
+			catalog,
+			msgid: 'two',
+			msgidPlural: 'twos',
+			numItems: 2,
+		});
+		expect(trans).toEqual('kaksi');
 	});
 });

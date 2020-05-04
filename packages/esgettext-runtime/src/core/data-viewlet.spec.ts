@@ -43,6 +43,9 @@ describe('bufferling', () => {
 		it('utf-8 string', () => {
 			expect(dv.readString(26, 8)).toEqual('ÄÖÜß');
 		});
+		it('utf-8 string to end of buffer', () => {
+			expect(dv.readString(26)).toEqual('ÄÖÜß');
+		});
 		it('past end of buffer', () => {
 			expect(() => dv.readString(30, 5)).toThrow();
 		});
