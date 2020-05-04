@@ -60,12 +60,25 @@ describe('getting command line options', () => {
 
 		it('succeed with option --input', () => {
 			const args = getArgv();
+			args.input = 'something';
 			expect(getopt.argv(args)).toBeDefined();
 		});
 
-		it('to fail for unknown options', () => {
+		it('fail with multiple options --input', () => {
+			const args = getArgv();
+			args.input = ['something', 'else'];
+			expect(() => getopt.argv(args)).toThrow();
+		});
+
+		it('to fail for unknown long options', () => {
 			const args = getArgv();
 			args['foobar'] = true;
+			expect(() => getopt.argv(args)).toThrow();
+		});
+
+		it('to fail for unknown short options', () => {
+			const args = getArgv();
+			args['f'] = true;
 			expect(() => getopt.argv(args)).toThrow();
 		});
 	});

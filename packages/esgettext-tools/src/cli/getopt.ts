@@ -113,7 +113,7 @@ export class Getopt {
 		for (let i = 0; i < keys.length; ++i) {
 			const key = keys[i];
 			if (!this.allowedKeys.has(key)) {
-				if (key.length) {
+				if (key.length > 1) {
 					this.errorFunction(
 						gtx._x("'{progName}': unrecognized option '--{option}'", {
 							progName: this.progName,
