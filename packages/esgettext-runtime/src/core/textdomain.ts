@@ -41,7 +41,7 @@ export class Textdomain {
 	private static boundDomains: { [key: string]: string } = {};
 
 	private domain: string;
-	private format = 'json';
+	private _catalogFormat = 'json';
 	private catalog: Catalog;
 
 	private constructor() {
@@ -156,7 +156,7 @@ export class Textdomain {
 			this.domain,
 			Textdomain.cache,
 			path,
-			this.format,
+			this.catalogFormat,
 			Textdomain.setLocale(),
 		).then((catalog) => {
 			this.catalog = catalog;
@@ -165,24 +165,28 @@ export class Textdomain {
 	}
 
 	/**
-	 * Query or set the format to use.
+	 * Get the catalog format in use.
+	 *
+	 * @returns one of 'json' or 'mo' (default is 'json')
+	 */
+	get catalogFormat(): string {
+		return this._catalogFormat;
+	}
+
+	/**
+	 * Set the catalog format to use.
 	 *
 	 * @param format - one of 'json' or 'mo'
-	 * @returns the format selected
 	 */
-	public catalogFormat(format?: string): string {
-		if (typeof format !== 'undefined') {
-			format = format.toLowerCase();
-			if (format === 'json') {
-				this.format = 'json';
-			} else if (format === 'mo') {
-				this.format = 'mo';
-			} else {
-				throw new Error(`unsupported format ${format}`);
-			}
+	set catalogFormat(format: string) {
+		format = format.toLowerCase();
+		if (format === 'json') {
+			this._catalogFormat = 'json';
+		} else if (format === 'mo') {
+			this._catalogFormat = 'mo';
+		} else {
+			throw new Error(`unsupported format ${format}`);
 		}
-
-		return this.format;
 	}
 
 	/**
