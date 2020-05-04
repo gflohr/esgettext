@@ -270,9 +270,12 @@ export function resolveImpl(
 		const locale = splitLocale(localeKey);
 		loadDomain(locale, localeKey, path, domainname, format, cache)
 			.then((catalog) => {
-				resolve(setPluralFunction(catalog));
+				setPluralFunction(catalog);
+				cache.store(path, localeKey, domainname, catalog);
+				resolve(catalog);
 			})
 			.catch(() => {
+				cache.store(path, localeKey, domainname, null);
 				resolve(defaultCatalog);
 			});
 	});
