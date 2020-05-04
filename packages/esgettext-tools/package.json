@@ -38,6 +38,9 @@
 			"json",
 			"ts"
 		],
+		"moduleNameMapper": {
+			"^esgettext-runtime$": "<rootDir>/../../esgettext-runtime/src"
+		},
 		"rootDir": "src",
 		"testRegex": ".spec.ts$",
 		"transform": {
