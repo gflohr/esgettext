@@ -5,6 +5,7 @@ node_js:
 script:
   - yarn install
   - yarn bootstrap
+  - yarn build
   - yarn test
 after_success:
   - yarn run test:cov && node node_modules/.bin/coveralls <coverage/lcov.info
