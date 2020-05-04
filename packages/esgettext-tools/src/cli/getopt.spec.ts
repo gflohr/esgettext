@@ -15,7 +15,26 @@ describe('getting command line options', () => {
 	let optionGroups: Array<OptionGroup>;
 	let getopt: Getopt;
 
-	describe('bare minimimum', () => {
+	describe('bare minimum', () => {
+		beforeAll(() => {
+			optionGroups = [];
+			getopt = new Getopt('usage', 'description', optionGroups);
+		});
+
+		it('to accept option --help', () => {
+			const args = getArgv();
+			args['help'] = true;
+			expect(getopt.argv(args)).toBeDefined();
+		});
+
+		it('to accept option --version', () => {
+			const args = getArgv();
+			args['version'] = true;
+			expect(getopt.argv(args)).toBeDefined();
+		});
+	});
+
+	describe('simple option', () => {
 		beforeAll(() => {
 			optionGroups = [
 				{
