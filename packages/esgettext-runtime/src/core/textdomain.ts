@@ -166,7 +166,7 @@ export class Textdomain {
 	 * @param path - the base path for this textdomain
 	 */
 	bindtextdomain(path?: string): string {
-		if (typeof path === 'undefined') {
+		if (typeof path !== 'undefined') {
 			Textdomain.boundDomains[this.domain] = path;
 		}
 
@@ -183,7 +183,7 @@ export class Textdomain {
 	 * @returns a promise for a Catalog that will always resolve.
 	 */
 	resolve(): Promise<Catalog> {
-		let path = this.bindtextdomain(this.domain);
+		let path = this.bindtextdomain();
 
 		if (typeof path === 'undefined' || path === null) {
 			if (browserEnvironment()) {

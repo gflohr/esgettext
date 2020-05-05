@@ -6,6 +6,7 @@ export class TransportHttp implements Transport {
 	loadFile(url: string): Promise<ArrayBuffer> {
 		return new Promise((resolve, reject) => {
 			const xhr = new XMLHttpRequest();
+			xhr.responseType = 'arraybuffer';
 			xhr.open('GET', url, true);
 			xhr.onload = () => {
 				if (xhr.readyState === 4 && xhr.status === 200) {
@@ -15,7 +16,6 @@ export class TransportHttp implements Transport {
 				}
 			};
 			xhr.onerror = (err) => reject(err);
-			xhr.responseType = 'arraybuffer';
 			xhr.send();
 		});
 	}

@@ -32,4 +32,24 @@ describe('XMLHttpRequest', () => {
 			expect(e).toBeDefined();
 		}
 	});
+
+	// FIXME! This test succeeds but prints an ugly error message from
+	// xhr-mock on console.error. So we temporarily mock console.error.
+	it('should fail on xhr errors', async () => {
+		mock.get('/error', () => Promise.reject(new Error()));
+
+		// eslint-disable-next-line no-console
+		const log = console.error;
+		// eslint-disable-next-line no-console
+		console.error = jest.fn();
+		try {
+			await transport.loadFile('/error').catch((e) => {
+				throw new Error(e);
+			});
+		} catch (e) {
+			expect(e).toBeDefined();
+		}
+		// eslint-disable-next-line no-console
+		console.error = log;
+	});
 });
