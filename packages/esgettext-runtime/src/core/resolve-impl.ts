@@ -22,10 +22,12 @@ function loadCatalog(url: string, format: string): Promise<Catalog> {
 	// Check whether this is a valid URL.
 	try {
 		const parsedURL = new URL(url);
-		if (parsedURL.protocol === 'https:' || parsedURL.protocol === 'http:') {
+		if (
+			parsedURL.protocol === 'https:' ||
+			parsedURL.protocol === 'http:' ||
+			parsedURL.protocol === 'file:'
+		) {
 			transport = 'http';
-		} else if (parsedURL.protocol === 'file:') {
-			transport = 'fs';
 		}
 	} catch (e) {
 		if (browserEnvironment()) {

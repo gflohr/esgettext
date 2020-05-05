@@ -37,7 +37,7 @@ describe('resolve', () => {
 		});
 	});
 
-	describe('load catalog via http', () => {
+	describe('load catalog via URLs', () => {
 		const gtx = Textdomain.getInstance('http');
 		const catalog = {
 			major: 0,
@@ -99,6 +99,23 @@ describe('resolve', () => {
 
 			const body = JSON.stringify(catalog);
 			mock.get('https://example.com/assets/locale/de/LC_MESSAGES/http.json', {
+				status: 200,
+				body: body,
+			});
+
+			return gtx.resolve().then((data) => {
+				// FIXME! xhr-mock does not implement arraybuffer response types
+				// correctly, see https://github.com/jameslnewell/xhr-mock/issues/104
+				// expect(data).toEqual(catalog);
+				expect(data).toBeDefined();
+			});
+		});
+
+		it('should use http transport for file URLs', async () => {
+			gtx.bindtextdomain('file:///app/assets/locale');
+
+			const body = JSON.stringify(catalog);
+			mock.get('file:///app/assets/locale/de/LC_MESSAGES/http.json', {
 				status: 200,
 				body: body,
 			});
