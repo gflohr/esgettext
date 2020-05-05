@@ -5,6 +5,7 @@ import { browserEnvironment } from './browser-environment';
 import { gettextImpl } from './gettext-impl';
 import { germanicPlural } from './germanic-plural';
 import { splitLocale } from './split-locale';
+import { pathSeparator } from './path-separator';
 
 /* eslint-disable @typescript-eslint/camelcase, tsdoc/syntax */
 
@@ -186,11 +187,10 @@ export class Textdomain {
 		let path = this.bindtextdomain();
 
 		if (typeof path === 'undefined' || path === null) {
-			if (browserEnvironment()) {
-				path = '/assets/locale';
-			} else {
-				path = 'src/assets/locale';
-			}
+			const parts = browserEnvironment()
+				? ['', 'assets', 'locale']
+				: ['src', 'assets', 'locale'];
+			path = parts.join(pathSeparator());
 		}
 
 		return resolveImpl(
