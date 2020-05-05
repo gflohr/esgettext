@@ -28,6 +28,8 @@ function loadCatalog(url: string, format: string): Promise<Catalog> {
 			parsedURL.protocol === 'file:'
 		) {
 			transport = 'http';
+		} else {
+			throw new Error(`unsupported scheme ${parsedURL.protocol}`);
 		}
 	} catch (e) {
 		if (browserEnvironment()) {

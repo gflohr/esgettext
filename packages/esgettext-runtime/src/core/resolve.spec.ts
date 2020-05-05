@@ -7,10 +7,11 @@ import { germanicPlural } from './germanic-plural';
 // FIXME! Use the method, not the function!
 describe('resolve', () => {
 	Textdomain.locale = 'de';
-	beforeAll(() => CatalogCache.clear());
 
 	describe('simple test', () => {
 		const gtx = Textdomain.getInstance('mytest');
+
+		beforeEach(() => CatalogCache.clear());
 
 		it('should return something for mytest.json', () => {
 			gtx.catalogFormat = 'json';
@@ -19,7 +20,7 @@ describe('resolve', () => {
 			});
 		});
 
-		it('should return something for mytestt.mo', () => {
+		it('should return something for mytest.mo', () => {
 			const gtx = Textdomain.getInstance('mytest');
 
 			gtx.catalogFormat = 'mo';
