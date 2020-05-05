@@ -1,8 +1,10 @@
 import mock from 'xhr-mock';
+import { TransportFs } from '../transport';
 import { Textdomain } from './textdomain';
 import { CatalogCache } from './catalog-cache';
 import { browserEnvironment } from './browser-environment';
 import { germanicPlural } from './germanic-plural';
+import { pathSeparator } from './path-separator';
 
 // FIXME! Use the method, not the function!
 describe('resolve', () => {
@@ -126,6 +128,32 @@ describe('resolve', () => {
 				// correctly, see https://github.com/jameslnewell/xhr-mock/issues/104
 				// expect(data).toEqual(catalog);
 				expect(data).toBeDefined();
+			});
+		});
+	});
+});
+
+describe('special cases', () => {
+	describe('unsupported URL protocols', () => {
+		const gtx = Textdomain.getInstance('mailto');
+		Textdomain.locale = 'de';
+
+		const url = 'mailto:guido.flohr@cantanea.com';
+		gtx.bindtextdomain('mailto:guido.flohr@cantanea.com');
+
+		const path = [url, 'de', 'LC_MESSAGES', 'mailto.json'].join(
+			pathSeparator(),
+		);
+
+		it('should use the fs transport', async () => {
+			const loadFile = jest.fn();
+			const oldLoadFile = TransportFs.prototype.loadFile;
+			TransportFs.prototype.loadFile = loadFile;
+
+			return gtx.resolve().then(() => {
+				TransportFs.prototype.loadFile = oldLoadFile;
+				expect(loadFile).toHaveBeenCalledTimes(1);
+				expect(loadFile).toHaveBeenCalledWith(path);
 			});
 		});
 	});
