@@ -1,13 +1,10 @@
 import { Catalog } from './catalog';
 
 interface CatalogCacheInterface {
-	// Path.
+	// Locale Key.
 	[key: string]: {
-		// Locale Key.
-		[key: string]: {
-			// Textdomain.
-			[key: string]: Catalog | Promise<Catalog> | null;
-		};
+		// Textdomain.
+		[key: string]: Catalog | Promise<Catalog> | null;
 	};
 }
 
@@ -44,14 +41,10 @@ export class CatalogCache {
 	/**
 	 * Lookup a Catalog for a given base path, locale, and textdomain.
 	 *
-	 * The base path is the path without the part LOCALE/LC_MESSAGES/, for
-	 * example something like /usr/share/locale or /assets/locale.
-	 *
 	 * The locale key is usually the locale identifier (e.g. de-DE or sr\@latin).
 	 * But it can also be a colon separated list of such locale identifiers.
 	 *
 	 *
-	 * @param path - the base(!) path that the domain is bound to
 	 * @param localeKey - the locale key
 	 * @param textdomain - the textdomain
 	 * @returns the cached Catalog, a Promise or null for failure
@@ -61,8 +54,8 @@ export class CatalogCache {
 		localeKey: string,
 		textdomain: string,
 	): Catalog | Promise<Catalog> | null {
-		if (CatalogCache.cache[path] && CatalogCache.cache[path][localeKey]) {
-			const ptr = CatalogCache.cache[path][localeKey];
+		if (CatalogCache.cache[localeKey]) {
+			const ptr = CatalogCache.cache[localeKey];
 			if (Object.prototype.hasOwnProperty.call(ptr, textdomain)) {
 				return ptr[textdomain];
 			}
@@ -72,17 +65,13 @@ export class CatalogCache {
 	}
 
 	public static store(
-		path: string,
 		localeKey: string,
 		textdomain: string,
 		entry: Catalog | Promise<Catalog> | null,
 	): void {
-		if (!CatalogCache.cache[path]) {
-			CatalogCache.cache[path] = {};
+		if (!CatalogCache.cache[localeKey]) {
+			CatalogCache.cache[localeKey] = {};
 		}
-		if (!CatalogCache.cache[path][localeKey]) {
-			CatalogCache.cache[path][localeKey] = {};
-		}
-		CatalogCache.cache[path][localeKey][textdomain] = entry;
+		CatalogCache.cache[localeKey][textdomain] = entry;
 	}
 }

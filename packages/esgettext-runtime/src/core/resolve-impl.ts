@@ -133,7 +133,7 @@ async function loadDomain(
 						resolve(valid);
 					} catch (e) {
 						// Store the default catalog.
-						CatalogCache.store(base, localeKey, domainname, catalog);
+						CatalogCache.store(localeKey, domainname, catalog);
 						reject(e);
 					}
 				});
@@ -245,11 +245,11 @@ export function resolveImpl(
 		loadDomain(exploded, localeKey, path, domainname, format)
 			.then((catalog) => {
 				setPluralFunction(catalog);
-				CatalogCache.store(path, localeKey, domainname, catalog);
+				CatalogCache.store(localeKey, domainname, catalog);
 				resolve(catalog);
 			})
 			.catch(() => {
-				CatalogCache.store(path, localeKey, domainname, null);
+				CatalogCache.store(localeKey, domainname, defaultCatalog);
 				resolve(defaultCatalog);
 			});
 	});
