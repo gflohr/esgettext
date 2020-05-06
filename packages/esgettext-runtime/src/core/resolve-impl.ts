@@ -121,7 +121,7 @@ async function loadDomain(
 		entries,
 	};
 
-	const cacheHit = CatalogCache.lookup(base, localeKey, domainname);
+	const cacheHit = CatalogCache.lookup(localeKey, domainname);
 	if (cacheHit !== null) {
 		// Promise?
 		if (cacheHit === Object(cacheHit) && typeof cacheHit === 'function') {
@@ -199,6 +199,10 @@ function pluralExpression(str: string): PluralFunction {
 }
 
 function setPluralFunction(catalog: Catalog): Catalog {
+	if (!Object.prototype.hasOwnProperty.call(catalog.entries, '')) {
+		return catalog;
+	}
+
 	const headersRaw = catalog.entries[''][0];
 	if (!headersRaw.length) {
 		return catalog;

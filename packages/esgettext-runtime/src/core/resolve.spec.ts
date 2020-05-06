@@ -5,6 +5,7 @@ import { CatalogCache } from './catalog-cache';
 import { browserEnvironment } from './browser-environment';
 import { germanicPlural } from './germanic-plural';
 import { pathSeparator } from './path-separator';
+import { Catalog } from './catalog';
 
 // FIXME! Use the method, not the function!
 describe('resolve', () => {
@@ -12,8 +13,6 @@ describe('resolve', () => {
 
 	describe('simple test', () => {
 		const gtx = Textdomain.getInstance('mytest');
-
-		beforeEach(() => CatalogCache.clear());
 
 		it('should return something for mytest.json', () => {
 			gtx.catalogFormat = 'json';
@@ -129,6 +128,31 @@ describe('resolve', () => {
 				// expect(data).toEqual(catalog);
 				expect(data).toBeDefined();
 			});
+		});
+	});
+});
+
+describe('preload cache', () => {
+	it('should load', async () => {
+		Textdomain.locale = 'de';
+		const gtx = Textdomain.getInstance('precached');
+		const catalog: Catalog = {
+			major: 0,
+			minor: 0,
+			pluralFunction: germanicPlural,
+			entries: {
+				something: ['jotain'],
+			},
+		};
+
+		CatalogCache.store(
+			'de',
+			'precached',
+			new Promise((resolve) => resolve(catalog)),
+		);
+
+		return gtx.resolve().then((loaded) => {
+			expect(loaded).toEqual(catalog);
 		});
 	});
 });

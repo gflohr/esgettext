@@ -50,10 +50,9 @@ export class CatalogCache {
 	 * @returns the cached Catalog, a Promise or null for failure
 	 */
 	public static lookup(
-		path: string,
 		localeKey: string,
 		textdomain: string,
-	): Catalog | Promise<Catalog> | null {
+	): Catalog | Promise<Catalog> {
 		if (CatalogCache.cache[localeKey]) {
 			const ptr = CatalogCache.cache[localeKey];
 			if (Object.prototype.hasOwnProperty.call(ptr, textdomain)) {
@@ -64,10 +63,11 @@ export class CatalogCache {
 		return null;
 	}
 
+	// FIXME! Validate the catalog!
 	public static store(
 		localeKey: string,
 		textdomain: string,
-		entry: Catalog | Promise<Catalog> | null,
+		entry: Catalog | Promise<Catalog>,
 	): void {
 		if (!CatalogCache.cache[localeKey]) {
 			CatalogCache.cache[localeKey] = {};
