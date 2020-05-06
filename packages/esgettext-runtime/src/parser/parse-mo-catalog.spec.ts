@@ -33,4 +33,11 @@ describe('MO catalogs', () => {
 				expect(() => parseMoCatalog(Buffer.from(buffer))).toThrow();
 			});
 	});
+	it('should reject catalogs with major > 0', async () => {
+		return transport
+			.loadFile('src/assets/locale/xy/LC_MESSAGES/major1.mo')
+			.then((buffer) => {
+				expect(() => parseMoCatalog(Buffer.from(buffer))).toThrow();
+			});
+	});
 });
