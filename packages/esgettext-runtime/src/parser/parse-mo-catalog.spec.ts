@@ -47,4 +47,11 @@ describe('MO catalogs', () => {
 				expect(() => parseMoCatalog(Buffer.from(buffer))).toThrow();
 			});
 	});
+	it('should accept catalogs without content-type', async () => {
+		return transport
+			.loadFile('src/assets/locale/xy/LC_MESSAGES/no-content-type.mo')
+			.then((buffer) => {
+				expect(() => parseMoCatalog(Buffer.from(buffer))).toThrow();
+			});
+	});
 });
