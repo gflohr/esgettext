@@ -32,11 +32,11 @@ export function parseMoCatalog(blob: Buffer): Catalog {
 	if (magic === 0x950412de) {
 		/* eslint-disable-next-line @typescript-eslint/explicit-function-return-type */
 		reader = (buf, off) => buf.readUInt32LE(off);
-	} else if (magic === 0xde12000495) {
+	} else if (magic === 0xde120495) {
 		/* eslint-disable-next-line @typescript-eslint/explicit-function-return-type */
 		reader = (buf, off) => buf.readUInt32BE(off);
 	} else {
-		throw new Error('mo file corrupted');
+		throw new Error(`invalid MO magic 0x${magic.toString(16)}`);
 	}
 
 	offset += 4;
