@@ -26,4 +26,11 @@ describe('MO catalogs', () => {
 				expect(catalog.entries['Saturday']).toEqual(['Sonnabend']);
 			});
 	});
+	it('should reject catalogs with wrong magic', async () => {
+		return transport
+			.loadFile('src/assets/locale/xy/LC_MESSAGES/wrong-magic.mo')
+			.then((buffer) => {
+				expect(() => parseMoCatalog(Buffer.from(buffer))).toThrow();
+			});
+	});
 });
