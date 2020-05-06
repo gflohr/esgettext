@@ -48,4 +48,10 @@ describe('split locale', () => {
 			});
 		});
 	});
+
+	describe('broken', () => {
+		it('invalid characters', () => {
+			expect(splitLocale('de_DE[1]')).toBeNull();
+		});
+	});
 });
