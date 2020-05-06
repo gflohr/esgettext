@@ -7,7 +7,10 @@ export function explodeLocale(locale: SplitLocale): ExplodedLocale {
 	const lsep = locale.underscoreSeparator ? '_' : '-';
 
 	for (let i = 0; i < locale.tags.length; ++i) {
-		const lingua = locale.tags.slice(0, i + 1).join(lsep);
+		let lingua = locale.tags.slice(0, i + 1).join(lsep);
+		if (typeof locale.modifier !== 'undefined') {
+			lingua += '@' + locale.modifier;
+		}
 		retval.push([lingua]);
 	}
 

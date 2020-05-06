@@ -10,9 +10,13 @@ describe('explode locale', () => {
 	});
 
 	describe('server', () => {
-		it('de_AT', () => {
-			const paths = explodeLocale(splitLocale('de_AT'));
-			expect(paths).toEqual([['de'], ['de_AT']]);
+		it('de_DE', () => {
+			const paths = explodeLocale(splitLocale('de_DE'));
+			expect(paths).toEqual([['de'], ['de_DE']]);
+		});
+		it('de_DE@ksh', () => {
+			const paths = explodeLocale(splitLocale('de_DE@ksh'));
+			expect(paths).toEqual([['de@ksh'], ['de_DE@ksh']]);
 		});
 	});
 });
