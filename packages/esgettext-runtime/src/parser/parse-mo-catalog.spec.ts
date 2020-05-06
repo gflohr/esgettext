@@ -51,7 +51,14 @@ describe('MO catalogs', () => {
 		return transport
 			.loadFile('src/assets/locale/xy/LC_MESSAGES/no-content-type.mo')
 			.then((buffer) => {
-				expect(() => parseMoCatalog(Buffer.from(buffer))).toThrow();
+				expect(parseMoCatalog(Buffer.from(buffer))).toBeDefined();
+			});
+	});
+	it('should accept catalogs without charset', async () => {
+		return transport
+			.loadFile('src/assets/locale/xy/LC_MESSAGES/no-charset.mo')
+			.then((buffer) => {
+				expect(parseMoCatalog(Buffer.from(buffer))).toBeDefined();
 			});
 	});
 });
