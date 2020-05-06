@@ -17,6 +17,8 @@ interface POHeader {
  * @returns a Catalog
  */
 export function parseMoCatalog(blob: Buffer): Catalog {
+	let decoder = new TextDecoder('utf-8');
+
 	const catalog: Catalog = {
 		major: 0,
 		minor: 0,
@@ -80,20 +82,16 @@ export function parseMoCatalog(blob: Buffer): Catalog {
 		let l = orig[0];
 		offset = orig[1];
 
-		// FIXME! Replace this with a stub for the browser. In the browser
-		// there is no need to support other charsets than utf-8.
-		const msgid = blob
-			.slice(offset, offset + l)
-			.toString('utf-8')
+		const msgid = decoder
+			.decode(blob.slice(offset, offset + l))
 			.split('\u0000')[0];
 
 		const trans = transTab[i];
 		l = trans[0];
 		offset = trans[1];
 
-		const msgstr = blob
-			.slice(offset, offset + l)
-			.toString('utf-8')
+		const msgstr = decoder
+			.decode(blob.slice(offset, offset + l))
 			.split('\u0000');
 
 		let pairs, kv;
@@ -109,9 +107,7 @@ export function parseMoCatalog(blob: Buffer): Catalog {
 			if (poHeader['content-type'] !== undefined) {
 				const enc = poHeader['content-type'].replace(/.*=/, '');
 				if (enc !== poHeader['content-type']) {
-					if (enc.toLowerCase() !== 'utf-8' && enc.toLowerCase() !== 'UTF-8') {
-						throw new Error(`unsupported mo encoding '${enc}'`);
-					}
+					decoder = new TextDecoder(enc);
 				}
 			}
 		}
