@@ -9,14 +9,12 @@ import { Catalog } from './catalog';
 
 // FIXME! Use the method, not the function!
 describe('resolve', () => {
-	Textdomain.locale = 'de';
-
 	beforeEach(() => CatalogCache.clear());
 
 	describe('simple test', () => {
-		const gtx = Textdomain.getInstance('mytest');
-
 		it('should return something for mytest.json', () => {
+			const gtx = Textdomain.getInstance('mytest');
+
 			gtx.catalogFormat = 'json';
 			return gtx.resolve().then((catalog) => {
 				expect(catalog).toBeTruthy();
@@ -210,6 +208,25 @@ describe('special cases', () => {
 
 			const gtx = Textdomain.getInstance('invalid-plural');
 			Textdomain.locale = 'de';
+
+			return gtx.resolve().then((catalog) => {
+				expect(catalog.pluralFunction).toEqual(germanicPlural);
+			});
+		});
+	});
+
+	describe('C and POSIX locale', () => {
+		it('should return a catalog for the C locale', async () => {
+			Textdomain.locale = 'C';
+			const gtx = Textdomain.getInstance('c-locale');
+
+			return gtx.resolve().then((catalog) => {
+				expect(catalog.pluralFunction).toEqual(germanicPlural);
+			});
+		});
+		it('should return a catalog for the POSIX locale', async () => {
+			Textdomain.locale = 'POSIX';
+			const gtx = Textdomain.getInstance('posix-locale');
 
 			return gtx.resolve().then((catalog) => {
 				expect(catalog.pluralFunction).toEqual(germanicPlural);

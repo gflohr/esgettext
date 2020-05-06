@@ -187,12 +187,7 @@ function setPluralFunction(catalog: Catalog): Catalog {
 		return catalog;
 	}
 
-	const headersRaw = catalog.entries[''][0];
-	if (!headersRaw.length) {
-		return catalog;
-	}
-
-	const headers = headersRaw.split('\n');
+	const headers = catalog.entries[''][0].split('\n');
 	headers.forEach((header) => {
 		const tokens = header.split(':');
 		if ('plural-forms' === tokens.shift().toLowerCase()) {
