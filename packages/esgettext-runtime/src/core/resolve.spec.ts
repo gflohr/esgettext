@@ -11,6 +11,8 @@ import { Catalog } from './catalog';
 describe('resolve', () => {
 	Textdomain.locale = 'de';
 
+	beforeEach(() => CatalogCache.clear());
+
 	describe('simple test', () => {
 		const gtx = Textdomain.getInstance('mytest');
 
@@ -133,6 +135,8 @@ describe('resolve', () => {
 });
 
 describe('preload cache', () => {
+	beforeEach(() => CatalogCache.clear());
+
 	it('should load', async () => {
 		Textdomain.locale = 'de';
 		const gtx = Textdomain.getInstance('precached');
@@ -158,6 +162,8 @@ describe('preload cache', () => {
 });
 
 describe('special cases', () => {
+	beforeEach(() => CatalogCache.clear());
+
 	describe('unsupported URL protocols', () => {
 		const gtx = Textdomain.getInstance('mailto');
 		Textdomain.locale = 'de';

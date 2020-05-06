@@ -197,7 +197,7 @@ function setPluralFunction(catalog: Catalog): Catalog {
 	const headers = headersRaw.split('\n');
 	headers.forEach((header) => {
 		const tokens = header.split(':');
-		if ('plural-forms' === tokens.shift()) {
+		if ('plural-forms' === tokens.shift().toLowerCase()) {
 			const code = tokens.join(':');
 			try {
 				catalog.pluralFunction = pluralExpression(code);
