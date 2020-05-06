@@ -233,4 +233,15 @@ describe('special cases', () => {
 			});
 		});
 	});
+
+	describe('missing locale', () => {
+		it('should return a catalog a missing locale', async () => {
+			Textdomain.locale = 'de_DE.utf-8@ksh';
+			const gtx = Textdomain.getInstance('missing');
+
+			return gtx.resolve().then((catalog) => {
+				expect(catalog.pluralFunction).toEqual(germanicPlural);
+			});
+		});
+	});
 });
