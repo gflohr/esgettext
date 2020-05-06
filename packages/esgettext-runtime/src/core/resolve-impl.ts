@@ -143,11 +143,9 @@ async function loadDomain(
 	await Promise.all(promises);
 
 	results.forEach((result) => {
-		if (typeof result !== 'undefined') {
-			catalog.major = result.major;
-			catalog.minor = result.minor;
-			catalog.entries = { ...catalog.entries, ...result.entries };
-		}
+		catalog.major = result.major;
+		catalog.minor = result.minor;
+		catalog.entries = { ...catalog.entries, ...result.entries };
 	});
 
 	return new Promise((resolve) => {
