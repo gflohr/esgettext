@@ -40,4 +40,11 @@ describe('MO catalogs', () => {
 				expect(() => parseMoCatalog(Buffer.from(buffer))).toThrow();
 			});
 	});
+	it('should reject catalogs with invalid charsets', async () => {
+		return transport
+			.loadFile('src/assets/locale/xy/LC_MESSAGES/invalid-charset.mo')
+			.then((buffer) => {
+				expect(() => parseMoCatalog(Buffer.from(buffer))).toThrow();
+			});
+	});
 });
