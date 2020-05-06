@@ -172,7 +172,7 @@ function pluralExpression(str: string): PluralFunction {
 			// takes care of that.
 			null === /^[0-9]+$/.exec(token)
 		) {
-			return germanicPlural;
+			throw new Error('invalid plural function');
 		}
 	}
 
@@ -184,13 +184,11 @@ function pluralExpression(str: string): PluralFunction {
 
 function setPluralFunction(catalog: Catalog): Catalog {
 	if (!Object.prototype.hasOwnProperty.call(catalog.entries, '')) {
-		catalog.pluralFunction = germanicPlural;
 		return catalog;
 	}
 
 	const headersRaw = catalog.entries[''][0];
 	if (!headersRaw.length) {
-		catalog.pluralFunction = germanicPlural;
 		return catalog;
 	}
 
@@ -199,14 +197,7 @@ function setPluralFunction(catalog: Catalog): Catalog {
 		const tokens = header.split(':');
 		if ('plural-forms' === tokens.shift().toLowerCase()) {
 			const code = tokens.join(':');
-			try {
-				catalog.pluralFunction = pluralExpression(code);
-			} catch (e) {
-				// If the plural function was invalid,
-				catalog.major = catalog.minor = 0;
-				catalog.pluralFunction = germanicPlural;
-				catalog.entries = {};
-			}
+			catalog.pluralFunction = pluralExpression(code);
 		}
 	});
 

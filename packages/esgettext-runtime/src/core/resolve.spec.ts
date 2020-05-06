@@ -187,4 +187,33 @@ describe('special cases', () => {
 			});
 		});
 	});
+
+	describe('invalid plural function', () => {
+		it('should fall back to germanic plural', async () => {
+			const catalog: Catalog = {
+				major: 0,
+				minor: 0,
+				pluralFunction: () => 0,
+				entries: {
+					'': [
+						// Square brackets are not allowed.
+						'Plural-Forms: nplurals = [42]; plural = nplurals[0]',
+					],
+				},
+			};
+
+			CatalogCache.store(
+				'de',
+				'invalid-plural',
+				new Promise((resolve) => resolve(catalog)),
+			);
+
+			const gtx = Textdomain.getInstance('invalid-plural');
+			Textdomain.locale = 'de';
+
+			return gtx.resolve().then((catalog) => {
+				expect(catalog.pluralFunction).toEqual(germanicPlural);
+			});
+		});
+	});
 });
