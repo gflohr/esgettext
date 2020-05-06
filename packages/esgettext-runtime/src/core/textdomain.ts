@@ -203,7 +203,6 @@ export class Textdomain {
 
 		return resolveImpl(
 			this.domain,
-			Textdomain.cache,
 			path,
 			this.catalogFormat,
 			Textdomain.locale,

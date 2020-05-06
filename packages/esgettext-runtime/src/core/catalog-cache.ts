@@ -56,7 +56,7 @@ export class CatalogCache {
 	 * @param textdomain - the textdomain
 	 * @returns the cached Catalog, a Promise or null for failure
 	 */
-	public lookup(
+	public static lookup(
 		path: string,
 		localeKey: string,
 		textdomain: string,
@@ -71,7 +71,7 @@ export class CatalogCache {
 		return null;
 	}
 
-	public store(
+	public static store(
 		path: string,
 		localeKey: string,
 		textdomain: string,

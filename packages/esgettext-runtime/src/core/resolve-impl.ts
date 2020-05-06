@@ -111,7 +111,6 @@ async function loadDomain(
 	base: string,
 	domainname: string,
 	format: string,
-	cache: CatalogCache,
 ): Promise<Catalog> {
 	const entries: CatalogEntries = {};
 
@@ -122,7 +121,7 @@ async function loadDomain(
 		entries,
 	};
 
-	const cacheHit = cache.lookup(base, localeKey, domainname);
+	const cacheHit = CatalogCache.lookup(base, localeKey, domainname);
 	if (cacheHit !== null) {
 		// Promise?
 		if (cacheHit === Object(cacheHit) && typeof cacheHit === 'function') {
@@ -131,9 +130,10 @@ async function loadDomain(
 				p.then((result) => {
 					try {
 						const valid = validateJsonCatalog(result);
-						cache.store(base, localeKey, domainname, valid);
+						resolve(valid);
 					} catch (e) {
-						cache.store(base, localeKey, domainname, catalog);
+						// Store the default catalog.
+						CatalogCache.store(base, localeKey, domainname, catalog);
 						reject(e);
 					}
 				});
@@ -225,7 +225,6 @@ function setPluralFunction(catalog: Catalog): Catalog {
 
 export function resolveImpl(
 	domainname: string,
-	cache: CatalogCache,
 	path: string,
 	format: string,
 	localeKey: string,
@@ -243,14 +242,14 @@ export function resolveImpl(
 
 	return new Promise((resolve) => {
 		const exploded = explodeLocale(splitLocale(localeKey), true);
-		loadDomain(exploded, localeKey, path, domainname, format, cache)
+		loadDomain(exploded, localeKey, path, domainname, format)
 			.then((catalog) => {
 				setPluralFunction(catalog);
-				cache.store(path, localeKey, domainname, catalog);
+				CatalogCache.store(path, localeKey, domainname, catalog);
 				resolve(catalog);
 			})
 			.catch(() => {
-				cache.store(path, localeKey, domainname, null);
+				CatalogCache.store(path, localeKey, domainname, null);
 				resolve(defaultCatalog);
 			});
 	});
