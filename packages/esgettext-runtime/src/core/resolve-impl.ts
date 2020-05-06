@@ -1,11 +1,7 @@
 import { TransportHttp } from '../transport/http';
 import { TransportFs } from '../transport/fs';
 import { Transport } from '../transport/transport.interface';
-import {
-	parseJsonCatalog,
-	parseMoCatalog,
-	validateJsonCatalog,
-} from '../parser';
+import { parseJsonCatalog, parseMoCatalog } from '../parser';
 import { browserEnvironment } from './browser-environment';
 import { Catalog, CatalogEntries } from './catalog';
 import { splitLocale } from './split-locale';
@@ -124,20 +120,8 @@ async function loadDomain(
 	const cacheHit = CatalogCache.lookup(localeKey, domainname);
 	if (cacheHit !== null) {
 		// Promise?
-		if (cacheHit === Object(cacheHit) && typeof cacheHit === 'function') {
-			const p = cacheHit as Promise<Catalog>;
-			return new Promise((resolve, reject) => {
-				p.then((result) => {
-					try {
-						const valid = validateJsonCatalog(result);
-						resolve(valid);
-					} catch (e) {
-						// Store the default catalog.
-						CatalogCache.store(localeKey, domainname, catalog);
-						reject(e);
-					}
-				});
-			});
+		if (Promise.resolve(cacheHit) === cacheHit) {
+			return cacheHit;
 		} else {
 			// Normal cache hit.
 			return new Promise((resolve) => resolve(cacheHit));
@@ -200,11 +184,13 @@ function pluralExpression(str: string): PluralFunction {
 
 function setPluralFunction(catalog: Catalog): Catalog {
 	if (!Object.prototype.hasOwnProperty.call(catalog.entries, '')) {
+		catalog.pluralFunction = germanicPlural;
 		return catalog;
 	}
 
 	const headersRaw = catalog.entries[''][0];
 	if (!headersRaw.length) {
+		catalog.pluralFunction = germanicPlural;
 		return catalog;
 	}
 

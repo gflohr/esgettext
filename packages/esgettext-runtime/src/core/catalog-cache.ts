@@ -1,3 +1,4 @@
+import { validateJsonCatalog } from '../parser';
 import { Catalog } from './catalog';
 
 interface CatalogCacheInterface {
@@ -63,12 +64,16 @@ export class CatalogCache {
 		return null;
 	}
 
-	// FIXME! Validate the catalog!
 	public static store(
 		localeKey: string,
 		textdomain: string,
 		entry: Catalog | Promise<Catalog>,
 	): void {
+		if (Promise.resolve(entry) !== entry) {
+			// Object.
+			entry = validateJsonCatalog(entry as Catalog);
+		}
+
 		if (!CatalogCache.cache[localeKey]) {
 			CatalogCache.cache[localeKey] = {};
 		}
