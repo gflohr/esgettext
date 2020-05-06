@@ -1,6 +1,6 @@
 import { SplitLocale } from './split-locale';
 
-type ExplodedLocale = Array<Array<string>>;
+export type ExplodedLocale = Array<Array<string>>;
 
 export function explodeLocale(
 	locale: SplitLocale,

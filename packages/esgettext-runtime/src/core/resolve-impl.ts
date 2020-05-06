@@ -8,9 +8,10 @@ import {
 } from '../parser';
 import { browserEnvironment } from './browser-environment';
 import { Catalog, CatalogEntries } from './catalog';
-import { splitLocale, SplitLocale } from './split-locale';
+import { splitLocale } from './split-locale';
 import { germanicPlural } from './germanic-plural';
 import { CatalogCache } from './catalog-cache';
+import { explodeLocale, ExplodedLocale } from './explode-locale';
 
 /* eslint-disable no-console */
 
@@ -65,23 +66,11 @@ function loadCatalog(url: string, format: string): Promise<Catalog> {
 
 function assemblePath(
 	base: string,
-	locale: SplitLocale,
+	id: string,
 	domainname: string,
 	extender: string,
-	charset?: string,
 ): string {
-	const separator = locale.underscoreSeparator ? '_' : '-';
-	base += '/' + locale.tags.join(separator);
-	if (typeof charset !== 'undefined') {
-		base += '.' + charset;
-	}
-	if (typeof locale.modifier !== 'undefined') {
-		base += '@' + locale.modifier;
-	}
-
-	base += `/LC_MESSAGES/${domainname}.${extender}`;
-
-	return base;
+	return `${base}/${id}/LC_MESSAGES/${domainname}.${extender}`;
 }
 
 /*
@@ -89,29 +78,22 @@ function assemblePath(
  * charset converted to uppercase (if it differs from the origina charset),
  * and finally without a charset.
  */
-async function loadCatalogWithCharset(
-	locale: SplitLocale,
+async function loadLanguage(
+	ids: Array<string>,
 	base: string,
 	domainname: string,
 	format: string,
 ): Promise<Catalog> {
 	return new Promise((resolve, reject) => {
 		type CatalogLoader = (url: string) => Promise<Catalog>;
+
 		const tries = new Array<CatalogLoader>();
-		let path: string;
 
-		if (typeof locale.charset !== 'undefined') {
-			path = assemblePath(base, locale, domainname, format, locale.charset);
-			tries.push(() => loadCatalog(path, format));
-			const ucCharset = locale.charset.toUpperCase();
-			if (ucCharset !== locale.charset) {
-				path = assemblePath(base, locale, domainname, format, locale.charset);
-				tries.push(() => loadCatalog(path, format));
-			}
-		}
-
-		path = assemblePath(base, locale, domainname, format);
-		tries.push(() => loadCatalog(path, format));
+		ids.forEach((id) => {
+			tries.push(() =>
+				loadCatalog(assemblePath(base, id, domainname, format), format),
+			);
+		});
 
 		tries
 			.reduce(
@@ -119,12 +101,12 @@ async function loadCatalogWithCharset(
 				Promise.reject(),
 			)
 			.then((value) => resolve(value))
-			.catch(() => reject());
+			.catch((e) => reject(e));
 	});
 }
 
 async function loadDomain(
-	locale: SplitLocale,
+	exploded: ExplodedLocale,
 	localeKey: string,
 	base: string,
 	domainname: string,
@@ -164,40 +146,29 @@ async function loadDomain(
 
 	const promises = new Array<Promise<void | Catalog>>();
 	const results = new Array<Catalog>();
-	for (let i = 0; i < locale.tags.length; ++i) {
-		const partialLocale: SplitLocale = {
-			tags: locale.tags.slice(0, i + 1),
-			underscoreSeparator: locale.underscoreSeparator,
-		};
-		if (typeof locale.charset !== 'undefined') {
-			partialLocale.charset = locale.charset;
-		}
-		if (typeof locale.modifier !== 'undefined') {
-			partialLocale.modifier = locale.modifier;
-		}
 
-		const p = loadCatalogWithCharset(partialLocale, base, domainname, format)
-			.then((result) => (results[i] = result))
+	exploded.forEach((tries, i) => {
+		const p = loadLanguage(tries, base, domainname, format)
+			.then((catalog) => (results[i] = catalog))
 			.catch(() => {
-				/* ignored */
+				/* ignore */
 			});
 		promises.push(p);
-	}
+	});
 
 	await Promise.all(promises);
 
-	for (let i = 0; i < locale.tags.length; ++i) {
-		const result = results[i];
-		if (!result) {
-			continue;
+	results.forEach((result) => {
+		if (typeof result !== 'undefined') {
+			catalog.major = result.major;
+			catalog.minor = result.minor;
+			catalog.entries = { ...catalog.entries, ...result.entries };
 		}
+	});
 
-		catalog.major = result.major;
-		catalog.minor = result.minor;
-		catalog.entries = { ...catalog.entries, ...result.entries };
-	}
-
-	return new Promise((resolve) => resolve(catalog));
+	return new Promise((resolve) => {
+		resolve(catalog);
+	});
 }
 
 function pluralExpression(str: string): PluralFunction {
@@ -271,8 +242,8 @@ export function resolveImpl(
 	}
 
 	return new Promise((resolve) => {
-		const locale = splitLocale(localeKey);
-		loadDomain(locale, localeKey, path, domainname, format, cache)
+		const exploded = explodeLocale(splitLocale(localeKey), true);
+		loadDomain(exploded, localeKey, path, domainname, format, cache)
 			.then((catalog) => {
 				setPluralFunction(catalog);
 				cache.store(path, localeKey, domainname, catalog);
