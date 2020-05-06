@@ -1,0 +1,37 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: libintl-perl-text 0.01\n"
+"POT-Creation-Date: 2002-07-13 11:47+02:00\n"
+"PO-Revision-Date: 1999-02-16 21:14+01:00\n"
+"Last-Translator: Guido Flohr <guido.flohr@cantanea.com>\n"
+"Language-Team: German <de@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8-bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+msgid "Singular"
+msgid_plural "Plural"
+msgstr[0] "Yksikkö"
+msgstr[1] "Monikko"
+
+msgid "Sunday"
+msgstr "Sunnuntai"
+
+msgid "Monday"
+msgstr "Maanantai"
+
+msgid "Tuesday"
+msgstr "Tiistai"
+
+msgid "Wednesday"
+msgstr "Keskiviikko"
+
+msgid "Thursday"
+msgstr "Torstai"
+
+msgid "Friday"
+msgstr "Perjantai"
+
+msgid "Saturday"
+msgstr "Lauantai"

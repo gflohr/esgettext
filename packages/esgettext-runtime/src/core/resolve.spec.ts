@@ -244,4 +244,16 @@ describe('special cases', () => {
 			});
 		});
 	});
+
+	describe('partly missing locale', () => {
+		it('should return a catalog for fi_FI', async () => {
+			Textdomain.locale = 'fi_FI';
+			const gtx = Textdomain.getInstance('existing');
+
+			return gtx.resolve().then((catalog) => {
+				expect(catalog.entries).toBeDefined();
+				expect(catalog.entries['January']).toEqual(['Tammikuu']);
+			});
+		});
+	});
 });
