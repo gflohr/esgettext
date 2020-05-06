@@ -199,6 +199,15 @@ describe('_nx() (plural forms with placeholder expansion)', () => {
 				),
 			).toEqual('2304 Verzeichnisse wurden gelöscht.');
 		});
+		it('should work without placeholders', () => {
+			expect(
+				gtx._nx(
+					'One directory has been deleted.',
+					'{numDirs} directories have been deleted.',
+					2304,
+				),
+			).toEqual('{num} Verzeichnisse wurden gelöscht.');
+		});
 	});
 });
 
@@ -286,6 +295,12 @@ describe('_px() (with context and placeholders)', () => {
 					},
 				),
 			).toEqual('The colors are Rot, Grün, and Blau.');
+		});
+
+		it('should work without placeholders', () => {
+			expect(
+				gtx._px('gips.net', 'The colors are {color1}, {color2}, and {color3}.'),
+			).toEqual('The colors are {color1}, {color2}, and {color3}.');
 		});
 	});
 });
@@ -409,6 +424,16 @@ describe('_npx() (with plural, context and placeholders)', () => {
 				),
 			).toEqual('2304 directories have been deleted.');
 		});
+		it('should work without placeholders', () => {
+			expect(
+				gtx._npx(
+					'Linux',
+					'One directory has been deleted.',
+					'{num} directories have been deleted.',
+					2304,
+				),
+			).toEqual('{num} directories have been deleted.');
+		});
 	});
 });
 
@@ -428,8 +453,8 @@ describe('no-op methods', () => {
 		it('the instance method should return the expanded msgid', () => {
 			expect(gtx.N_x('age: {age}', { age: 7 })).toEqual('age: 7');
 		});
-		it('the instance method should return the expanded msgid', () => {
-			expect(gtx.N_x('age: {age}', { age: 7 })).toEqual('age: 7');
+		it('the class method should return the expanded msgid', () => {
+			expect(Textdomain.N_x('age: {age}', { age: 7 })).toEqual('age: 7');
 		});
 	});
 
@@ -446,8 +471,10 @@ describe('no-op methods', () => {
 		it('the instance method should return the expanded msgid', () => {
 			expect(gtx.N_px('whatever', 'age: {age}', { age: 7 })).toEqual('age: 7');
 		});
-		it('the instance method should return the expanded msgid', () => {
-			expect(gtx.N_px('whatever', 'age: {age}', { age: 7 })).toEqual('age: 7');
+		it('the class method should return the expanded msgid', () => {
+			expect(Textdomain.N_px('whatever', 'age: {age}', { age: 7 })).toEqual(
+				'age: 7',
+			);
 		});
 	});
 });
