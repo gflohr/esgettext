@@ -82,6 +82,14 @@ export class Textdomain {
 	}
 
 	/**
+	 * Delete all existing singletons. This method should usually be called
+	 * only, when you want to free memory.
+	 */
+	static clearInstances(): void {
+		Textdomain.boundDomains = {};
+	}
+
+	/**
 	 * Query the locale in use.
 	 */
 	static get locale(): string {
