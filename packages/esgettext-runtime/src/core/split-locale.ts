@@ -35,10 +35,6 @@ export function splitLocale(locale: string): SplitLocale | null {
 
 	const separator = underscoreSeparator ? '_' : '-';
 	const tags = locale.split(separator);
-	const empty = tags.filter((value) => value === '');
-	if (empty.length) {
-		return null;
-	}
 
 	const split: SplitLocale = { tags: tags, underscoreSeparator };
 

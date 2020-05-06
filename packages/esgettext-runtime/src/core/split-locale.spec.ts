@@ -53,5 +53,8 @@ describe('split locale', () => {
 		it('invalid characters', () => {
 			expect(splitLocale('de_DE[1]')).toBeNull();
 		});
+		it('empty tags', () => {
+			expect(splitLocale('de--de-ksh')).toBeNull();
+		});
 	});
 });
