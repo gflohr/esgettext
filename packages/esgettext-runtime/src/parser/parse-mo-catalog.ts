@@ -1,5 +1,6 @@
 import { Catalog } from '../core/catalog';
 import { germanicPlural } from '../core/germanic-plural';
+import { DataViewlet } from '../core/data-viewlet';
 
 /* eslint-disable @typescript-eslint/no-explicit-any, no-control-regex, no-bitwise */
 
@@ -16,9 +17,7 @@ interface POHeader {
  *              storage (`Array`, `Uint8Array`, `Arguments`, `jQuery(Array)`, ...)
  * @returns a Catalog
  */
-export function parseMoCatalog(blob: Buffer): Catalog {
-	let decoder = new TextDecoder('utf-8');
-
+export function parseMoCatalog(raw: ArrayBuffer): Catalog {
 	const catalog: Catalog = {
 		major: 0,
 		minor: 0,
@@ -27,9 +26,11 @@ export function parseMoCatalog(blob: Buffer): Catalog {
 	};
 	let offset = 0;
 
+	const blob = new DataViewlet(new Uint8Array(raw), 'ascii');
+
 	const magic = blob.readUInt32LE(offset);
 
-	type Reader = (buf: Buffer, off: number) => number;
+	type Reader = (buf: DataViewlet, off: number) => number;
 	let reader: Reader;
 	if (magic === 0x950412de) {
 		/* eslint-disable-next-line @typescript-eslint/explicit-function-return-type */
@@ -82,17 +83,13 @@ export function parseMoCatalog(blob: Buffer): Catalog {
 		let l = orig[0];
 		offset = orig[1];
 
-		const msgid = decoder
-			.decode(blob.slice(offset, offset + l))
-			.split('\u0000')[0];
+		const msgid = blob.readString(offset, l).split('\u0000')[0];
 
 		const trans = transTab[i];
 		l = trans[0];
 		offset = trans[1];
 
-		const msgstr = decoder
-			.decode(blob.slice(offset, offset + l))
-			.split('\u0000');
+		const msgstr = blob.readString(offset, l).split('\u0000');
 
 		let pairs, kv;
 		if (i === 0 && msgid === '') {
@@ -107,7 +104,7 @@ export function parseMoCatalog(blob: Buffer): Catalog {
 			if (poHeader['content-type'] !== undefined) {
 				const enc = poHeader['content-type'].replace(/.*=/, '');
 				if (enc !== poHeader['content-type']) {
-					decoder = new TextDecoder(enc);
+					blob.encoding = enc;
 				}
 			}
 		}

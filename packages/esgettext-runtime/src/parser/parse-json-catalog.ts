@@ -35,8 +35,8 @@ export function validateJsonCatalog(data: Catalog): Catalog {
 	return data;
 }
 
-export function parseJsonCatalog(json: Buffer): Catalog {
-	const data = JSON.parse(json.toString('utf-8'));
+export function parseJsonCatalog(json: ArrayBuffer): Catalog {
+	const data = JSON.parse(json.toString());
 
 	return validateJsonCatalog(data);
 }
