@@ -101,7 +101,7 @@ export class POTEntry {
 	}
 
 	private escape(input: string): string {
-		if (/[\u0000-\u0006\u000e-\u000f]/.exec(input)) {
+		if (/[\u0000-\u0006\u000e-\u001f]/.exec(input)) {
 			throw new Error(this.gtx._('binary data encountered'));
 		}
 
