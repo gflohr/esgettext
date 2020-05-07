@@ -30,6 +30,7 @@ module.exports = {
 		'prefer-const': 'error',
 		radix: 'error',
 		'no-bitwise': 'off',
+                'no-control-regex': 'off',
 		'no-caller': 'error',
 		'no-underscore-dangle': 'error',
 		'no-var': 'error',
