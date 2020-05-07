@@ -26,6 +26,17 @@ export class POTEntry {
 		private readonly properties: POTEntryProperties,
 		private readonly options: POTEntryOptions = {},
 	) {
+		if (/[\u0000-\u0006\u000e-\u001f]/.exec(properties.msgid)) {
+			throw new Error(this.gtx._('msgid must not contain control characters'));
+		}
+		if (typeof this.properties.msgidPlural !== 'undefined') {
+			if (/[\u0000-\u0006\u000e-\u001f]/.exec(properties.msgidPlural)) {
+				throw new Error(
+					this.gtx._('msgid_plural must not contain control characters'),
+				);
+			}
+		}
+
 		if (typeof this.options.width === 'undefined') {
 			this.options.width = 76;
 		}
@@ -101,10 +112,6 @@ export class POTEntry {
 	}
 
 	private escape(input: string): string {
-		if (/[\u0000-\u0006\u000e-\u001f]/.exec(input)) {
-			throw new Error(this.gtx._('binary data encountered'));
-		}
-
 		const escapes: { [key: string]: string } = {
 			'\u0007': '\\a',
 			'\b': '\\b',

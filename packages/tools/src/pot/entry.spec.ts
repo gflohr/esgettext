@@ -62,12 +62,18 @@ msgstr ""
 		});
 		it('should throw an exception for all other controls', () => {
 			for (let i = 0; i < 0x7; ++i) {
-				const entry = new POTEntry({ msgid: String.fromCharCode(i) });
-				expect(() => entry.serialize()).toThrow();
+				expect(() => new POTEntry({ msgid: String.fromCharCode(i) })).toThrow();
+				expect(
+					() =>
+						new POTEntry({ msgid: 'x', msgidPlural: String.fromCharCode(i) }),
+				).toThrow();
 			}
 			for (let i = 0xe; i < 0x20; ++i) {
-				const entry = new POTEntry({ msgid: String.fromCharCode(i) });
-				expect(() => entry.serialize()).toThrow();
+				expect(() => new POTEntry({ msgid: String.fromCharCode(i) })).toThrow();
+				expect(
+					() =>
+						new POTEntry({ msgid: 'x', msgidPlural: String.fromCharCode(i) }),
+				).toThrow();
 			}
 		});
 	});
