@@ -1,5 +1,5 @@
 {
-	"name": "esgettext-tools",
+	"name": "@esgettext/tools",
 	"version": "0.0.1",
 	"description": "Gettext-like po creation and manipulation",
 	"main": "dist/index.js",
@@ -39,7 +39,7 @@
 			"ts"
 		],
 		"moduleNameMapper": {
-			"^esgettext-runtime$": "<rootDir>/../../esgettext-runtime/src"
+			"^@esgettext/runtime$": "<rootDir>/../../runtime/src"
 		},
 		"rootDir": "src",
 		"testRegex": ".spec.ts$",
@@ -53,7 +53,7 @@
 		"@types/node": "^13.13.2",
 		"@types/yargs": "^15.0.4",
 		"camelcase": "^6.0.0",
-		"esgettext-runtime": "file:../esgettext-runtime",
+		"@esgettext/runtime": "file:../runtime",
 		"typescript": "^3.8.3",
 		"yargs": "^15.3.1"
 	},

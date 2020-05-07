@@ -9,8 +9,8 @@ GNU gettext-alike runtime and tools for EcmaScript/JavaScript.
 
 This mono-repo contains the following packages:
 
-* [esgettext-runtime](packages/esgettext-runtime/README.md)
-* [esgettext-tools](packages/esgettext-tools/README.md)
+* [runtime](packages/runtime/README.md)
+* [tools](packages/tools/README.md)
 
 ## Status
 

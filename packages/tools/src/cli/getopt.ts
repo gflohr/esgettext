@@ -1,7 +1,7 @@
 import yargs from 'yargs';
 /* eslint-disable-next-line import/default */
 import camelCase from 'camelcase';
-import { Textdomain } from 'esgettext-runtime';
+import { Textdomain } from '@esgettext/runtime';
 
 const gtx = Textdomain.getInstance('esgettext-tools');
 

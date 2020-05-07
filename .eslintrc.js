@@ -42,7 +42,7 @@ module.exports = {
 			'error',
 			{
 				paths: [''],
-				patterns: ['@magic-invoice/*/src', '**/../dist'],
+				patterns: ['@esgettext/*/src', '**/../dist'],
 			},
 		],
 		'no-console': [
@@ -56,6 +56,12 @@ module.exports = {
 		'import/no-self-import': 'error',
 		'import/no-default-export': 'error',
 		'tsdoc/syntax': 'warn',
+		'import/no-unresolved': [
+			'error',
+			{
+				ignore: [ '^@esgettext/' ],
+			},
+		],
 	},
 	overrides: [
 		{

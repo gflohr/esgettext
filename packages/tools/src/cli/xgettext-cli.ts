@@ -1,4 +1,4 @@
-import { Textdomain } from 'esgettext-runtime';
+import { Textdomain } from '@esgettext/runtime';
 import { OptionGroup, Getopt } from './getopt';
 
 const gtx = Textdomain.getInstance('esgettext-tools');

@@ -13,11 +13,7 @@
 		"sourceMap": true,
 		"typeRoots": ["node_modules/@types"],
 		"esModuleInterop": true,
-		"moduleResolution": "node",
-		"baseUrl": "./",
-		"paths": {
-			"@shims/*": [ "./packages/esgettext-runtime/src/shims/node/*", "node_modules/*" ]
-		}
+		"moduleResolution": "node"
 	},
 	"exclude": [
 		"node_modules",
