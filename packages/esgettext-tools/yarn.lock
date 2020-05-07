@@ -1223,6 +1223,11 @@ escodegen@^1.11.1:
   optionalDependencies:
     source-map "~0.6.1"
 
+"esgettext-runtime@file:../esgettext-runtime":
+  version "0.0.1"
+  dependencies:
+    "@types/node" "^13.13.2"
+
 eslint-scope@^5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/eslint-scope/-/eslint-scope-5.0.0.tgz#e87c8887c73e8d1ec84f1ca591645c358bfc8fb9"
