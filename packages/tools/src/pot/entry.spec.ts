@@ -184,5 +184,39 @@ msgstr ""
 `;
 			expect(entry.toString()).toEqual(expected);
 		});
+		it('should output flags', () => {
+			const entry = new POTEntry(
+				{
+					msgid: 'hello',
+					flags: ['no-perl-format', 'no-perl-brace-format'],
+				},
+				{
+					// Should be ignored for flags!
+					width: 20,
+				},
+			);
+			const expected = `#, no-perl-format, no-perl-brace-format
+msgid "hello"
+msgstr ""
+`;
+			expect(entry.toString()).toEqual(expected);
+		});
+		it('should make flags unique', () => {
+			const entry = new POTEntry(
+				{
+					msgid: 'hello',
+					flags: ['no-perl-format', 'no-perl-format'],
+				},
+				{
+					// Should be ignored for flags!
+					width: 20,
+				},
+			);
+			const expected = `#, no-perl-format
+msgid "hello"
+msgstr ""
+`;
+			expect(entry.toString()).toEqual(expected);
+		});
 	});
 });

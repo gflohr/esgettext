@@ -9,9 +9,7 @@ export interface POTEntryProperties {
 	msgid: string;
 	msgidPlural?: string;
 	automatic?: Array<string>;
-	flags?: {
-		[key: string]: string;
-	};
+	flags?: Array<string>;
 	references?: Array<POTEntryLocation>;
 }
 
@@ -52,6 +50,14 @@ export class POTEntry {
 				out += `#. ${comment}\n`;
 			}
 		}
+
+		if (typeof this.properties.flags !== 'undefined') {
+			const flags = Array.from(new Set(this.properties.flags))
+				.map((flag) => flag.replace(/\n/g, '\n#, '))
+				.join(', ');
+			out += `#, ${flags}\n`;
+		}
+
 		out += this.serializeMsgId(this.properties.msgid) + '\n';
 
 		if (typeof this.properties.msgidPlural === 'undefined') {
