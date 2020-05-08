@@ -18,6 +18,14 @@ msgstr[1] ""
 `;
 			expect(entry.toString()).toEqual(expected);
 		});
+		it('should output message contexts', () => {
+			const entry = new POTEntry({ msgid: 'Open', msgctxt: 'Menu' });
+			const expected = `msgctxt "Menu"
+msgid "Open"
+msgstr ""
+`;
+			expect(entry.toString()).toEqual(expected);
+		});
 	});
 
 	describe('escaping', () => {

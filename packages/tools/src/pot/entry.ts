@@ -3,6 +3,7 @@ import { Textdomain } from '@esgettext/runtime';
 export interface POTEntryProperties {
 	msgid: string;
 	msgidPlural?: string;
+	msgctxt?: string;
 	translatorComments?: Array<string>;
 	flags?: Array<string>;
 	automatic?: Array<string>;
@@ -85,6 +86,10 @@ export class POTEntry {
 			out += `#, ${flags}\n`;
 		}
 
+		if (typeof this.properties.msgctxt !== 'undefined') {
+			out +=
+				this.serializeMsgId(this.properties.msgctxt, width, 'msgctxt') + '\n';
+		}
 		out += this.serializeMsgId(this.properties.msgid, width) + '\n';
 
 		if (typeof this.properties.msgidPlural === 'undefined') {
