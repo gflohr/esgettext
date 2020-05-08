@@ -132,5 +132,18 @@ msgstr ""
 `;
 			expect(entry.serialize()).toEqual(expected);
 		});
+		it('should not exceed the requested width', () => {
+			const entry = new POTEntry(
+				{ msgid: 'At the Height of the Fighting' },
+				{ width: 16 },
+			);
+			const expected = `msgid ""
+"At the Height "
+"of the "
+"Fighting."
+msgstr ""
+`;
+			expect(entry.serialize()).toEqual(expected);
+		});
 	});
 });

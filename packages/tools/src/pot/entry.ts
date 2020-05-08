@@ -104,9 +104,7 @@ export class POTEntry {
 			input = input.substr(i + 1);
 		}
 
-		if (input.length) {
-			output.push(input);
-		}
+		output.push(input);
 
 		return output;
 	}
