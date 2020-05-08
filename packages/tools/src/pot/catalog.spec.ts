@@ -1,45 +1,135 @@
 import { Catalog } from './catalog';
+import { POTEntry } from './entry';
 
 const date = '2020-04-23 08:50+0300';
 
 describe('translation catalog', () => {
 	describe('initialization', () => {
 		it('should be initialized with zero configuration', () => {
-			const defaultCatalog = new Catalog();
-			expect(defaultCatalog.toString()).toMatch(/Content-Type/);
+			const catalog = new Catalog();
+			expect(catalog.toString()).toMatch(/Content-Type/);
 		});
 
 		it('should be initialized with default values', () => {
-			const defaultCatalog = new Catalog({ date });
-			expect(defaultCatalog.toString()).toMatchSnapshot();
+			const catalog = new Catalog({ date });
+			expect(catalog.toString()).toMatchSnapshot();
 		});
 
 		it('should honor the foreign-user option', () => {
-			const defaultCatalog = new Catalog({ date, foreignUser: true });
-			expect(defaultCatalog.toString()).toMatchSnapshot();
+			const catalog = new Catalog({ date, foreignUser: true });
+			expect(catalog.toString()).toMatchSnapshot();
 		});
 
 		it('should honor the package option', () => {
-			const defaultCatalog = new Catalog({ date, package: 'foobar' });
-			expect(defaultCatalog.toString()).toMatchSnapshot();
+			const catalog = new Catalog({ date, package: 'foobar' });
+			expect(catalog.toString()).toMatchSnapshot();
 		});
 
 		it('should honor the version option', () => {
-			const defaultCatalog = new Catalog({ date, version: '23.4.89' });
-			expect(defaultCatalog.toString()).toMatchSnapshot();
+			const catalog = new Catalog({ date, version: '23.4.89' });
+			expect(catalog.toString()).toMatchSnapshot();
 		});
 
 		it('should honor the msgid-bugs-address option', () => {
-			const defaultCatalog = new Catalog({
+			const catalog = new Catalog({
 				date,
 				msgidBugsAddress: 'me@example.com',
 			});
-			expect(defaultCatalog.toString()).toMatchSnapshot();
+			expect(catalog.toString()).toMatchSnapshot();
 		});
 
 		it('should honor the from-code option', () => {
-			const defaultCatalog = new Catalog({ date, fromCode: 'utf-8' });
-			expect(defaultCatalog.toString()).toMatchSnapshot();
+			const catalog = new Catalog({ date, fromCode: 'utf-8' });
+			expect(catalog.toString()).toMatchSnapshot();
+		});
+	});
+
+	describe('continuous filling', () => {
+		const catalog = new Catalog({ date });
+
+		it('should add an entry', () => {
+			catalog.addEntry(
+				new POTEntry({
+					msgid: 'Mike',
+					references: ['src/zulu.ts:2304'],
+				}),
+			);
+			expect(catalog.toString()).toMatchSnapshot();
+		});
+
+		it('should add a second entry', () => {
+			catalog.addEntry(
+				new POTEntry({
+					msgid: 'November',
+					references: ['src/yankee.ts:42'],
+				}),
+			);
+			expect(catalog.toString()).toMatchSnapshot();
+		});
+
+		it('should merge the third entry', () => {
+			catalog.addEntry(
+				new POTEntry({
+					msgid: 'Mike',
+					references: ['src/xray.ts:1303'],
+				}),
+			);
+			expect(catalog.toString()).toMatchSnapshot();
+		});
+
+		// This can later be used to test sorting by file.
+		it('should support a string at many locations', () => {
+			catalog.addEntry(
+				new POTEntry({
+					msgid: 'Lima',
+					references: ['whiskey.ts:2'],
+				}),
+			);
+			catalog.addEntry(
+				new POTEntry({
+					msgid: 'Oscar',
+					references: ['whiskey.ts:2'],
+				}),
+			);
+			catalog.addEntry(
+				new POTEntry({
+					msgid: 'Lima',
+					references: ['victor.ts:3'],
+				}),
+			);
+			catalog.addEntry(
+				new POTEntry({
+					msgid: 'Oscar',
+					references: ['victor.ts:3'],
+				}),
+			);
+			// When sorting by file, the Oscar entry should appear before
+			// the Lima entry. Actually that case could not happen but ...
+			catalog.addEntry(
+				new POTEntry({
+					msgid: 'Lima',
+					references: ['uniform.ts:4'],
+				}),
+			);
+			catalog.addEntry(
+				new POTEntry({
+					msgid: 'Oscar',
+					references: ['uniform.ts:3'],
+				}),
+			);
+			catalog.addEntry(
+				new POTEntry({
+					msgid: 'Lima',
+					references: ['tango.ts:5'],
+				}),
+			);
+			catalog.addEntry(
+				new POTEntry({
+					msgid: 'Oscar',
+					references: ['tango.ts:5'],
+				}),
+			);
+			expect(catalog.toString()).toMatchSnapshot();
 		});
 	});
 });
