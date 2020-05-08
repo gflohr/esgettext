@@ -42,7 +42,7 @@ export class POTEntry {
 		}
 	}
 
-	serialize(): string {
+	toString(): string {
 		let out = this.serializeMsgId(this.properties.msgid) + '\n';
 
 		if (typeof this.properties.msgidPlural === 'undefined') {

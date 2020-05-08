@@ -7,7 +7,7 @@ describe('POT entries', () => {
 			const expected = `msgid "foobar"
 msgstr ""
 `;
-			expect(entry.serialize()).toEqual(expected);
+			expect(entry.toString()).toEqual(expected);
 		});
 		it('should output plural entries', () => {
 			const entry = new POTEntry({ msgid: 'foobar', msgidPlural: 'foobars' });
@@ -16,7 +16,7 @@ msgid_plural "foobars"
 msgstr[0] ""
 msgstr[1] ""
 `;
-			expect(entry.serialize()).toEqual(expected);
+			expect(entry.toString()).toEqual(expected);
 		});
 	});
 
@@ -24,17 +24,17 @@ msgstr[1] ""
 		it('should escape a bell character', () => {
 			const entry = new POTEntry({ msgid: '\u0007' });
 			const expected = `msgid "\\a"\nmsgstr ""\n`;
-			expect(entry.serialize()).toEqual(expected);
+			expect(entry.toString()).toEqual(expected);
 		});
 		it('should escape a backspace character', () => {
 			const entry = new POTEntry({ msgid: '\b' });
 			const expected = `msgid "\\b"\nmsgstr ""\n`;
-			expect(entry.serialize()).toEqual(expected);
+			expect(entry.toString()).toEqual(expected);
 		});
 		it('should escape a horizontal tab', () => {
 			const entry = new POTEntry({ msgid: '\t' });
 			const expected = `msgid "\\t"\nmsgstr ""\n`;
-			expect(entry.serialize()).toEqual(expected);
+			expect(entry.toString()).toEqual(expected);
 		});
 		it('should escape newlines', () => {
 			const entry = new POTEntry({ msgid: '\n\n' });
@@ -43,22 +43,22 @@ msgstr[1] ""
 "\\n"
 msgstr ""
 `;
-			expect(entry.serialize()).toEqual(expected);
+			expect(entry.toString()).toEqual(expected);
 		});
 		it('should escape a vertical tab', () => {
 			const entry = new POTEntry({ msgid: '\v' });
 			const expected = `msgid "\\v"\nmsgstr ""\n`;
-			expect(entry.serialize()).toEqual(expected);
+			expect(entry.toString()).toEqual(expected);
 		});
 		it('should escape a form feed', () => {
 			const entry = new POTEntry({ msgid: '\f' });
 			const expected = `msgid "\\f"\nmsgstr ""\n`;
-			expect(entry.serialize()).toEqual(expected);
+			expect(entry.toString()).toEqual(expected);
 		});
 		it('should escape a carriage return', () => {
 			const entry = new POTEntry({ msgid: '\r' });
 			const expected = `msgid "\\r"\nmsgstr ""\n`;
-			expect(entry.serialize()).toEqual(expected);
+			expect(entry.toString()).toEqual(expected);
 		});
 		it('should throw an exception for all other controls', () => {
 			for (let i = 0; i < 0x7; ++i) {
@@ -89,7 +89,7 @@ msgstr ""
 "time."
 msgstr ""
 `;
-			expect(entry.serialize()).toEqual(expected);
+			expect(entry.toString()).toEqual(expected);
 		});
 		it('should not wrap long lines, when requested', () => {
 			const entry = new POTEntry(
@@ -99,7 +99,7 @@ msgstr ""
 			const expected = `msgid "For a very long time."
 msgstr ""
 `;
-			expect(entry.serialize()).toEqual(expected);
+			expect(entry.toString()).toEqual(expected);
 		});
 		it('should always wrap at newline characters', () => {
 			const entry = new POTEntry({ msgid: 'line 1\nline 2\nline 3\n' });
@@ -109,7 +109,7 @@ msgstr ""
 "line 3\\n"
 msgstr ""
 `;
-			expect(entry.serialize()).toEqual(expected);
+			expect(entry.toString()).toEqual(expected);
 		});
 		it('should never wrap inside words', () => {
 			const entry = new POTEntry({ msgid: 'ForAVeryLongTime' }, { width: 10 });
@@ -117,7 +117,7 @@ msgstr ""
 "ForAVeryLongTime"
 msgstr ""
 `;
-			expect(entry.serialize()).toEqual(expected);
+			expect(entry.toString()).toEqual(expected);
 		});
 		it('should never wrap inside words with prefix and postfix', () => {
 			const entry = new POTEntry(
@@ -130,7 +130,7 @@ msgstr ""
 "after"
 msgstr ""
 `;
-			expect(entry.serialize()).toEqual(expected);
+			expect(entry.toString()).toEqual(expected);
 		});
 		it('should not exceed the requested width', () => {
 			const entry = new POTEntry(
@@ -140,10 +140,10 @@ msgstr ""
 			const expected = `msgid ""
 "At the Height "
 "of the "
-"Fighting."
+"Fighting"
 msgstr ""
 `;
-			expect(entry.serialize()).toEqual(expected);
+			expect(entry.toString()).toEqual(expected);
 		});
 	});
 });
