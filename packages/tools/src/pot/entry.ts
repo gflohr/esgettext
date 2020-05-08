@@ -46,13 +46,6 @@ export class POTEntry {
 			}
 		}
 
-		if (typeof this.properties.flags !== 'undefined') {
-			const flags = Array.from(new Set(this.properties.flags))
-				.map((flag) => flag.replace(/\n/g, '\n#, '))
-				.join(', ');
-			out += `#, ${flags}\n`;
-		}
-
 		if (typeof this.properties.references !== 'undefined') {
 			const references = Array.from(new Set(this.properties.references))
 				.map((reference) => reference.replace(/\n/g, '\\n#, '))
@@ -61,6 +54,13 @@ export class POTEntry {
 			for (const line of wrapped) {
 				out += `#: ${line.trimRight().replace(/,$/, '')}\n`;
 			}
+		}
+
+		if (typeof this.properties.flags !== 'undefined') {
+			const flags = Array.from(new Set(this.properties.flags))
+				.map((flag) => flag.replace(/\n/g, '\n#, '))
+				.join(', ');
+			out += `#, ${flags}\n`;
 		}
 
 		out += this.serializeMsgId(this.properties.msgid) + '\n';

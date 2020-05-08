@@ -246,5 +246,20 @@ msgstr ""
 `;
 			expect(entry.toString()).toEqual(expected);
 		});
+		it('should handle everything together in the right order', () => {
+			const entry = new POTEntry({
+				msgid: 'hello',
+				automatic: ['TRANSLATORS: Send me a postcard!'],
+				flags: ['no-c-format'],
+				references: ['src/hello.ts:2304'],
+			});
+			const expected = `#. TRANSLATORS: Send me a postcard!
+#: src/hello.ts:2304
+#, no-c-format
+msgid "hello"
+msgstr ""
+`;
+			expect(entry.toString()).toEqual(expected);
+		});
 	});
 });
