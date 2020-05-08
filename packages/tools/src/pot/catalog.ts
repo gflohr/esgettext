@@ -115,6 +115,7 @@ FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 			msgstr: header,
 			flags: ['fuzzy'],
 			translatorComments: [comment],
+			noWarnings: true,
 		});
 		this.addEntry(headerEntry);
 	}
@@ -122,7 +123,7 @@ FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 	/**
 	 * Render the entire catalog.
 	 *
-	 * @param renderOptions = options for rendering
+	 * @param renderOptions - options for rendering
 	 *
 	 * The following options are supported:
 	 *
@@ -130,7 +131,7 @@ FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 	 *
 	 * @returns the catalog rendered as a po(t) file
 	 */
-	toString(options?: RenderOptions) {
+	toString(options?: RenderOptions): string {
 		const width =
 			options && typeof options.width !== 'undefined' ? options.width : 76;
 		return this.entries.map((entry) => entry.toString(width)).join('\n');

@@ -9,7 +9,7 @@ describe('translation catalog', () => {
 			expect(defaultCatalog.toString()).toMatchSnapshot();
 		});
 
-		it('should honor the foreignUser flag', () => {
+		it('should honor the foreign-user option', () => {
 			const defaultCatalog = new Catalog({ date, foreignUser: true });
 			expect(defaultCatalog.toString()).toMatchSnapshot();
 		});

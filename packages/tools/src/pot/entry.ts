@@ -1,5 +1,7 @@
 import { Textdomain } from '@esgettext/runtime';
 
+const gtx = Textdomain.getInstance('esgettext-tools');
+
 export interface POTEntryProperties {
 	msgid: string;
 	msgidPlural?: string;
@@ -9,6 +11,7 @@ export interface POTEntryProperties {
 	flags?: Array<string>;
 	automatic?: Array<string>;
 	references?: Array<string>;
+	noWarnings?: boolean;
 }
 
 /**
@@ -20,8 +23,6 @@ export interface POTEntryProperties {
  * - no previous translations
  */
 export class POTEntry {
-	private readonly gtx = Textdomain.getInstance('esgettext-runtime');
-
 	/**
 	 * Create an entry.
 	 *
@@ -30,14 +31,32 @@ export class POTEntry {
 	 */
 	constructor(readonly properties: POTEntryProperties) {
 		if (/[\u0000-\u0006\u000e-\u001f]/.exec(properties.msgid)) {
-			throw new Error(this.gtx._('msgid must not contain control characters'));
+			throw new Error(gtx._('msgid must not contain control characters.'));
 		}
+
 		if (typeof this.properties.msgidPlural !== 'undefined') {
 			if (/[\u0000-\u0006\u000e-\u001f]/.exec(properties.msgidPlural)) {
 				throw new Error(
-					this.gtx._('msgid_plural must not contain control characters'),
+					gtx._('msgid_plural must not contain control characters.'),
 				);
 			}
+		}
+
+		if (
+			this.properties.msgid === '' &&
+			(typeof this.properties.msgctxt === 'undefined' ||
+				this.properties.msgctxt === '')
+		) {
+			this.warning(
+				gtx._(
+					'Empty msgid.  It is reserved by esgettext.\n' +
+						"Calling gettext('') returns the header " +
+						'entry with meta information, not the empty ' +
+						'string.\n' +
+						'Consider adding a message context, if this ' +
+						'is done intentionally.',
+				),
+			);
 		}
 	}
 
@@ -220,5 +239,17 @@ export class POTEntry {
 		return input.replace(/([\u0007-\u000d"])/gs, (m) => {
 			return escapes[m[0]];
 		});
+	}
+
+	private warning(msg: string): void {
+		if (!this.properties.noWarnings) {
+			let location = gtx._('[in memory]');
+			if (typeof this.properties.references !== 'undefined') {
+				location = this.properties.references[0];
+			}
+
+			// eslint-disable-next-line no-console
+			console.warn(gtx._x('{location}: warning: {msg}', { location, msg }));
+		}
 	}
 }

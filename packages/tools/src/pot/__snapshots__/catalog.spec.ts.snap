@@ -22,7 +22,7 @@ msgstr \\"\\"
 "
 `;
 
-exports[`translation catalog initialization should honor the foreignUser flag 1`] = `
+exports[`translation catalog initialization should honor the foreign-user option 1`] = `
 "# SOME DESCRIPTIVE TITLE
 # This file is put in the public domain.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.

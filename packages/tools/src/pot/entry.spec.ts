@@ -395,4 +395,27 @@ msgstr ""
 `;
 		expect(entry.toString()).toEqual(expected);
 	});
+
+	describe('warnings', () => {
+		it('should print a warning, when a msgid is the empty string', () => {
+			const warner = jest
+				.spyOn(global.console, 'warn')
+				.mockImplementation(() => {
+					/* ignore */
+				});
+
+			new POTEntry({ msgid: '' });
+			expect(warner).toHaveBeenCalled();
+			warner.mockClear();
+
+			new POTEntry({ msgid: '', msgidPlural: 'spaces' });
+			expect(warner).toHaveBeenCalled();
+			warner.mockClear();
+
+			new POTEntry({ msgid: '', msgctxt: 'spaces' });
+			expect(warner).not.toHaveBeenCalled();
+
+			jest.restoreAllMocks();
+		});
+	});
 });
