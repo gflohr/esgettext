@@ -8,6 +8,7 @@ export interface POTEntryLocation {
 export interface POTEntryProperties {
 	msgid: string;
 	msgidPlural?: string;
+	automatic?: Array<string>;
 	flags?: {
 		[key: string]: string;
 	};
@@ -43,7 +44,15 @@ export class POTEntry {
 	}
 
 	toString(): string {
-		let out = this.serializeMsgId(this.properties.msgid) + '\n';
+		let out = '';
+
+		if (typeof this.properties.automatic !== 'undefined') {
+			for (let comment of this.properties.automatic) {
+				comment = comment.replace(/\n/g, '\n#. ');
+				out += `#. ${comment}\n`;
+			}
+		}
+		out += this.serializeMsgId(this.properties.msgid) + '\n';
 
 		if (typeof this.properties.msgidPlural === 'undefined') {
 			out += 'msgstr ""\n';

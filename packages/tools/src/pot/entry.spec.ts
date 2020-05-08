@@ -146,4 +146,43 @@ msgstr ""
 			expect(entry.toString()).toEqual(expected);
 		});
 	});
+
+	describe('meta information', () => {
+		it('should output automatic comments', () => {
+			const entry = new POTEntry(
+				{
+					msgid: 'Sun',
+					automatic: ['TRANSLATORS: The weekday, not our star!'],
+				},
+				{
+					// Should be ignored for comments!
+					width: 20,
+				},
+			);
+			const expected = `#. TRANSLATORS: The weekday, not our star!
+msgid "Sun"
+msgstr ""
+`;
+			expect(entry.toString()).toEqual(expected);
+		});
+		it('should handle newlines inside automatic comments', () => {
+			const entry = new POTEntry(
+				{
+					msgid: 'Sun',
+					automatic: ['TRANSLATORS:\nThe weekday,\nnot our star!'],
+				},
+				{
+					// Should be ignored for comments!
+					width: 20,
+				},
+			);
+			const expected = `#. TRANSLATORS:
+#. The weekday,
+#. not our star!
+msgid "Sun"
+msgstr ""
+`;
+			expect(entry.toString()).toEqual(expected);
+		});
+	});
 });
