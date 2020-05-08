@@ -9,11 +9,6 @@ export interface POTEntryProperties {
 	references?: Array<string>;
 }
 
-export interface POTEntryOptions {
-	width?: number;
-	noWrap?: boolean;
-}
-
 /**
  * Class representing one entry in a POT file. This is simpler than a PO
  * entry because a couple of things can be ignored:
@@ -31,10 +26,7 @@ export class POTEntry {
 	 * @param properties - the properties of the entry
 	 * @param options - options for wrapping
 	 */
-	constructor(
-		private readonly properties: POTEntryProperties,
-		private readonly options: POTEntryOptions = {},
-	) {
+	constructor(private readonly properties: POTEntryProperties) {
 		if (/[\u0000-\u0006\u000e-\u001f]/.exec(properties.msgid)) {
 			throw new Error(this.gtx._('msgid must not contain control characters'));
 		}
@@ -45,16 +37,17 @@ export class POTEntry {
 				);
 			}
 		}
-
-		if (typeof this.options.width === 'undefined') {
-			this.options.width = 76;
-		}
 	}
 
 	/**
 	 * Serialize the entry to a string that can be put into a POT file.
+	 *
+	 * (Some) long lines are wrapped to `width` characters. If `width` is
+	 * less or equal to zero, lines are not wrapped
+	 *
+	 * @param width - the requested page width
 	 */
-	toString(): string {
+	toString(width = 76): string {
 		let out = '';
 
 		if (typeof this.properties.translatorComments !== 'undefined') {
@@ -75,9 +68,13 @@ export class POTEntry {
 			const references = Array.from(new Set(this.properties.references))
 				.map((reference) => reference.replace(/\n/g, '\\n#, '))
 				.join(', ');
-			const wrapped = this.wrap(references, this.options.width - 3);
-			for (const line of wrapped) {
-				out += `#: ${line.trimRight().replace(/,$/, '')}\n`;
+			if (width > 0) {
+				const wrapped = this.wrap(references, width - 3);
+				for (const line of wrapped) {
+					out += `#: ${line.trimRight().replace(/,$/, '')}\n`;
+				}
+			} else {
+				out += `#: ${references}\n`;
 			}
 		}
 
@@ -88,13 +85,17 @@ export class POTEntry {
 			out += `#, ${flags}\n`;
 		}
 
-		out += this.serializeMsgId(this.properties.msgid) + '\n';
+		out += this.serializeMsgId(this.properties.msgid, width) + '\n';
 
 		if (typeof this.properties.msgidPlural === 'undefined') {
 			out += 'msgstr ""\n';
 		} else {
 			out +=
-				this.serializeMsgId(this.properties.msgidPlural, 'msgid_plural') + '\n';
+				this.serializeMsgId(
+					this.properties.msgidPlural,
+					width,
+					'msgid_plural',
+				) + '\n';
 			out += 'msgstr[0] ""\nmsgstr[1] ""\n';
 		}
 
@@ -136,8 +137,12 @@ export class POTEntry {
 		}
 	}
 
-	private serializeMsgId(input: string, prefix = 'msgid'): string {
-		if (this.options.noWrap) {
+	private serializeMsgId(
+		input: string,
+		width: number,
+		prefix = 'msgid',
+	): string {
+		if (width <= 0) {
 			const escaped = this.escape(input);
 			return `${prefix} "${escaped}"`;
 		}
@@ -146,7 +151,7 @@ export class POTEntry {
 		const preWrapped = input.split('\n').map((str) => this.escape(str));
 		if (
 			preWrapped.length > 1 ||
-			preWrapped[0].length > this.options.width - prefix.length - 3
+			preWrapped[0].length > width - prefix.length - 3
 		) {
 			output.push(`${prefix} ""`);
 		} else {
@@ -159,7 +164,7 @@ export class POTEntry {
 				line += '\\n';
 			}
 			if (line.length) {
-				const wrapped = this.wrap(line, this.options.width - 2);
+				const wrapped = this.wrap(line, width - 2);
 				wrapped.forEach((inner) => {
 					output.push(`"${inner}"`);
 				});
