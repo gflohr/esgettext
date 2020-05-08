@@ -120,16 +120,40 @@ describe('translation catalog', () => {
 			catalog.addEntry(
 				new POTEntry({
 					msgid: 'Lima',
-					references: ['tango.ts:5'],
+					references: ['tango.ts:25'],
 				}),
 			);
 			catalog.addEntry(
 				new POTEntry({
 					msgid: 'Oscar',
-					references: ['tango.ts:5'],
+					references: ['tango.ts:25'],
 				}),
 			);
 			expect(catalog.toString()).toMatchSnapshot();
+		});
+		it('should also merge flags and comments', () => {
+			catalog.addEntry(
+				new POTEntry({
+					msgid: 'Mike',
+					translatorComments: ['This is difficult.'],
+					automatic: ['TRANSLATORS: Buy me a milk shake!'],
+					flags: ['no-c-format'],
+					references: ['sierra.ts:27'],
+				}),
+			);
+			expect(catalog.toString()).toMatchSnapshot();
+			catalog.addEntry(
+				new POTEntry({
+					msgid: 'Mike',
+					translatorComments: ['Not really.'],
+					automatic: ['TRANSLATORS: Drop me a line!'],
+					flags: ['perl-brace-format'],
+					references: ['romeo.ts:85'],
+				}),
+			);
+			expect(catalog.toString()).toMatchSnapshot();
+			// TODO! Check that conflicting flags are resolved with a
+			// warning!
 		});
 	});
 });
