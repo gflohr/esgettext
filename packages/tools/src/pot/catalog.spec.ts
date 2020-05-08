@@ -6,7 +6,11 @@ describe('translation catalog', () => {
 	describe('initialization', () => {
 		it('should be initialized with zero configuration', () => {
 			const defaultCatalog = new Catalog({ date });
+			expect(defaultCatalog.toString()).toMatchSnapshot();
+		});
 
+		it('should honor the foreignUser flag', () => {
+			const defaultCatalog = new Catalog({ date, foreignUser: true });
 			expect(defaultCatalog.toString()).toMatchSnapshot();
 		});
 	});
