@@ -29,6 +29,14 @@ msgstr ""
 	});
 
 	describe('escaping', () => {
+		beforeAll(() => {
+			jest.spyOn(global.console, 'warn').mockImplementation(() => {
+				/* ignore */
+			});
+		});
+
+		afterAll(() => jest.restoreAllMocks());
+
 		it('should escape a bell character', () => {
 			const entry = new POTEntry({ msgid: '\u0007' });
 			const expected = `msgid "\\a"\nmsgstr ""\n`;
@@ -397,13 +405,18 @@ msgstr ""
 	});
 
 	describe('warnings', () => {
-		it('should print a warning, when a msgid is the empty string', () => {
-			const warner = jest
-				.spyOn(global.console, 'warn')
-				.mockImplementation(() => {
-					/* ignore */
-				});
+		/* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+		let warner: jest.SpyInstance<void, [any?, ...any[]]>;
 
+		beforeEach(() => {
+			warner = jest.spyOn(global.console, 'warn').mockImplementation(() => {
+				/* ignore */
+			});
+		});
+
+		afterEach(() => jest.restoreAllMocks());
+
+		it('should print a warning, when a msgid is the empty string', () => {
 			new POTEntry({ msgid: '' });
 			expect(warner).toHaveBeenCalled();
 			warner.mockClear();
@@ -414,8 +427,27 @@ msgstr ""
 
 			new POTEntry({ msgid: '', msgctxt: 'spaces' });
 			expect(warner).not.toHaveBeenCalled();
+		});
 
-			jest.restoreAllMocks();
+		it('should print one warning for each deprecated control in a msgid', () => {
+			new POTEntry({ msgid: '\u0007\u0007\b\b\v\v\f\f\r\r' });
+			expect(warner).toHaveBeenCalledTimes(5);
+		});
+
+		it('should print one warning for each deprecated control in a msgidPlural', () => {
+			new POTEntry({
+				msgid: 'foobar',
+				msgidPlural: '\u0007\u0007\b\b\v\v\f\f\r\r',
+			});
+			expect(warner).toHaveBeenCalledTimes(5);
+		});
+
+		it('should print one warning for each deprecated control in a msgctxt', () => {
+			new POTEntry({
+				msgid: 'foobar',
+				msgctxt: '\u0007\u0007\b\b\v\v\f\f\r\r',
+			});
+			expect(warner).toHaveBeenCalledTimes(5);
 		});
 	});
 });

@@ -58,6 +58,12 @@ export class POTEntry {
 				),
 			);
 		}
+
+		// Order matters here. This is most likely the order of appearance
+		// in the source file.
+		this.checkDeprecatedControls(this.properties.msgctxt);
+		this.checkDeprecatedControls(this.properties.msgid);
+		this.checkDeprecatedControls(this.properties.msgidPlural);
 	}
 
 	/**
@@ -239,6 +245,37 @@ export class POTEntry {
 		return input.replace(/([\u0007-\u000d"])/gs, (m) => {
 			return escapes[m[0]];
 		});
+	}
+
+	private checkDeprecatedControls(str: string): void {
+		if (typeof str === 'undefined') {
+			return;
+		}
+
+		const deprecated = RegExp('[\u0007\u0008\u000b-\u000e]', 'gs');
+		const escapes: { [key: string]: string } = {
+			'\u0007': '\\a',
+			'\b': '\\b',
+			'\v': '\\v',
+			'\f': '\\f',
+			'\r': '\\r',
+		};
+		let matches: Array<string>;
+
+		while ((matches = deprecated.exec(str)) !== null) {
+			const escape = escapes[matches[0]];
+			if (!escape) {
+				continue;
+			}
+			delete escapes[matches[0]];
+			this.warning(
+				gtx._x(
+					'internationalized messages should not ' +
+						"contain the '{escape}' escape sequence",
+					{ escape },
+				),
+			);
+		}
 	}
 
 	private warning(msg: string): void {
