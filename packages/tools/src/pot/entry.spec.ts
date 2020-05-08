@@ -279,4 +279,148 @@ msgstr ""
 			expect(entry.toString()).toEqual(expected);
 		});
 	});
+
+	describe('merge entries', () => {
+		const entry = new POTEntry({ msgid: 'hello' });
+		let expected = `msgid "hello"
+msgstr ""
+`;
+		expect(entry.toString()).toEqual(expected);
+
+		entry.merge(
+			new POTEntry({
+				msgid: 'hello',
+				translatorComments: ['Copyright (C) 2020 myself.'],
+			}),
+		);
+		expected = `# Copyright (C) 2020 myself.
+msgid "hello"
+msgstr ""
+`;
+		expect(entry.toString()).toEqual(expected);
+
+		entry.merge(
+			new POTEntry({
+				msgid: 'hello',
+				translatorComments: ['Written by myself.'],
+			}),
+		);
+		expected = `# Copyright (C) 2020 myself.
+# Written by myself.
+msgid "hello"
+msgstr ""
+`;
+		expect(entry.toString()).toEqual(expected);
+
+		entry.merge(
+			new POTEntry({
+				msgid: 'hello',
+				automatic: ['TRANSLATORS: Send me a postcard!'],
+			}),
+		);
+		expected = `# Copyright (C) 2020 myself.
+# Written by myself.
+#. TRANSLATORS: Send me a postcard!
+msgid "hello"
+msgstr ""
+`;
+		expect(entry.toString()).toEqual(expected);
+
+		entry.merge(
+			new POTEntry({
+				msgid: 'hello',
+				automatic: ['TRANSLATORS: I will write you back!'],
+			}),
+		);
+		expected = `# Copyright (C) 2020 myself.
+# Written by myself.
+#. TRANSLATORS: Send me a postcard!
+#. TRANSLATORS: I will write you back!
+msgid "hello"
+msgstr ""
+`;
+		expect(entry.toString()).toEqual(expected);
+
+		entry.merge(
+			new POTEntry({
+				msgid: 'hello',
+				references: ['src/hello.ts:2304'],
+			}),
+		);
+		expected = `# Copyright (C) 2020 myself.
+# Written by myself.
+#. TRANSLATORS: Send me a postcard!
+#. TRANSLATORS: I will write you back!
+#: src/hello.ts:2304
+msgid "hello"
+msgstr ""
+`;
+		expect(entry.toString()).toEqual(expected);
+
+		entry.merge(
+			new POTEntry({
+				msgid: 'hello',
+				references: ['src/goodbye.ts:2304'],
+			}),
+		);
+		expected = `# Copyright (C) 2020 myself.
+# Written by myself.
+#. TRANSLATORS: Send me a postcard!
+#. TRANSLATORS: I will write you back!
+#: src/hello.ts:2304, src/goodbye.ts:2304
+msgid "hello"
+msgstr ""
+`;
+		expect(entry.toString()).toEqual(expected);
+
+		entry.merge(
+			new POTEntry({
+				msgid: 'hello',
+				references: ['src/goodbye.ts:2304'],
+			}),
+		);
+		expected = `# Copyright (C) 2020 myself.
+# Written by myself.
+#. TRANSLATORS: Send me a postcard!
+#. TRANSLATORS: I will write you back!
+#: src/hello.ts:2304, src/goodbye.ts:2304
+msgid "hello"
+msgstr ""
+`;
+		expect(entry.toString()).toEqual(expected);
+
+		entry.merge(
+			new POTEntry({
+				msgid: 'hello',
+				flags: ['no-perl-format'],
+			}),
+		);
+		expected = `# Copyright (C) 2020 myself.
+# Written by myself.
+#. TRANSLATORS: Send me a postcard!
+#. TRANSLATORS: I will write you back!
+#: src/hello.ts:2304, src/goodbye.ts:2304
+#, no-perl-format
+msgid "hello"
+msgstr ""
+`;
+		expect(entry.toString()).toEqual(expected);
+
+		entry.merge(
+			new POTEntry({
+				msgid: 'hello',
+				flags: ['no-c-format'],
+			}),
+		);
+		expected = `# Copyright (C) 2020 myself.
+# Written by myself.
+#. TRANSLATORS: Send me a postcard!
+#. TRANSLATORS: I will write you back!
+#: src/hello.ts:2304, src/goodbye.ts:2304
+#, no-perl-format, no-c-format
+msgid "hello"
+msgstr ""
+`;
+		expect(entry.toString()).toEqual(expected);
+	});
 });

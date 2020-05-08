@@ -25,6 +25,12 @@ export interface POTEntryOptions {
 export class POTEntry {
 	private readonly gtx = Textdomain.getInstance('esgettext-runtime');
 
+	/**
+	 * Create an entry.
+	 *
+	 * @param properties - the properties of the entry
+	 * @param options - options for wrapping
+	 */
 	constructor(
 		private readonly properties: POTEntryProperties,
 		private readonly options: POTEntryOptions = {},
@@ -45,6 +51,9 @@ export class POTEntry {
 		}
 	}
 
+	/**
+	 * Serialize the entry to a string that can be put into a POT file.
+	 */
 	toString(): string {
 		let out = '';
 
@@ -90,6 +99,41 @@ export class POTEntry {
 		}
 
 		return out;
+	}
+
+	/**
+	 * Merge to POT entries into one. It is a assumed that both entries share
+	 * the same `msgid`, `msgidPlural`, and `msgContext`.
+	 *
+	 * @param other - the other POT entry
+	 */
+	public merge(other: POTEntry): void {
+		if (other.properties.translatorComments) {
+			if (!this.properties.translatorComments) {
+				this.properties.translatorComments = new Array<string>();
+			}
+			this.properties.translatorComments.push(
+				...other.properties.translatorComments,
+			);
+		}
+		if (other.properties.automatic) {
+			if (!this.properties.automatic) {
+				this.properties.automatic = new Array<string>();
+			}
+			this.properties.automatic.push(...other.properties.automatic);
+		}
+		if (other.properties.references) {
+			if (!this.properties.references) {
+				this.properties.references = new Array<string>();
+			}
+			this.properties.references.push(...other.properties.references);
+		}
+		if (other.properties.flags) {
+			if (!this.properties.flags) {
+				this.properties.flags = new Array<string>();
+			}
+			this.properties.flags.push(...other.properties.flags);
+		}
 	}
 
 	private serializeMsgId(input: string, prefix = 'msgid'): string {
