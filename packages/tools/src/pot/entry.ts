@@ -1,16 +1,11 @@
 import { Textdomain } from '@esgettext/runtime';
 
-export interface POTEntryLocation {
-	filename: string;
-	lineno: number;
-}
-
 export interface POTEntryProperties {
 	msgid: string;
 	msgidPlural?: string;
 	automatic?: Array<string>;
 	flags?: Array<string>;
-	references?: Array<POTEntryLocation>;
+	references?: Array<string>;
 }
 
 export interface POTEntryOptions {
@@ -56,6 +51,16 @@ export class POTEntry {
 				.map((flag) => flag.replace(/\n/g, '\n#, '))
 				.join(', ');
 			out += `#, ${flags}\n`;
+		}
+
+		if (typeof this.properties.references !== 'undefined') {
+			const references = Array.from(new Set(this.properties.references))
+				.map((reference) => reference.replace(/\n/g, '\\n#, '))
+				.join(', ');
+			const wrapped = this.wrap(references, this.options.width - 3);
+			for (const line of wrapped) {
+				out += `#: ${line.trimRight().replace(/,$/, '')}\n`;
+			}
 		}
 
 		out += this.serializeMsgId(this.properties.msgid) + '\n';

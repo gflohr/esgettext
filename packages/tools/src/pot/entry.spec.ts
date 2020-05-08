@@ -218,5 +218,33 @@ msgstr ""
 `;
 			expect(entry.toString()).toEqual(expected);
 		});
+		it('should output references', () => {
+			const entry = new POTEntry({
+				msgid: 'hello',
+				references: ['src/hello.ts:2304', 'src/goodbye.ts:2304'],
+			});
+			const expected = `#: src/hello.ts:2304, src/goodbye.ts:2304
+msgid "hello"
+msgstr ""
+`;
+			expect(entry.toString()).toEqual(expected);
+		});
+		it('should wrap references', () => {
+			const entry = new POTEntry(
+				{
+					msgid: 'hello',
+					references: ['src/hello.ts:2304', 'src/goodbye.ts:2304'],
+				},
+				{
+					width: 25,
+				},
+			);
+			const expected = `#: src/hello.ts:2304
+#: src/goodbye.ts:2304
+msgid "hello"
+msgstr ""
+`;
+			expect(entry.toString()).toEqual(expected);
+		});
 	});
 });
