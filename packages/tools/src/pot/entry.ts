@@ -3,8 +3,9 @@ import { Textdomain } from '@esgettext/runtime';
 export interface POTEntryProperties {
 	msgid: string;
 	msgidPlural?: string;
-	automatic?: Array<string>;
+	translatorComments?: Array<string>;
 	flags?: Array<string>;
+	automatic?: Array<string>;
 	references?: Array<string>;
 }
 
@@ -13,6 +14,14 @@ export interface POTEntryOptions {
 	noWrap?: boolean;
 }
 
+/**
+ * Class representing one entry in a POT file. This is simpler than a PO
+ * entry because a couple of things can be ignored:
+ *
+ * - no translations
+ * - no obsolete entries
+ * - no previous translations
+ */
 export class POTEntry {
 	private readonly gtx = Textdomain.getInstance('esgettext-runtime');
 
@@ -38,6 +47,13 @@ export class POTEntry {
 
 	toString(): string {
 		let out = '';
+
+		if (typeof this.properties.translatorComments !== 'undefined') {
+			for (let comment of this.properties.translatorComments) {
+				comment = comment.replace(/\n/g, '\n# ');
+				out += `# ${comment}\n`;
+			}
+		}
 
 		if (typeof this.properties.automatic !== 'undefined') {
 			for (let comment of this.properties.automatic) {

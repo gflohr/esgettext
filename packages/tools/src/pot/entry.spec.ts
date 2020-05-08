@@ -148,6 +148,23 @@ msgstr ""
 	});
 
 	describe('meta information', () => {
+		it('should output translator comments', () => {
+			const entry = new POTEntry(
+				{
+					msgid: 'Sun',
+					translatorComments: ['Copyright (C) 2020 my@self.net!'],
+				},
+				{
+					// Should be ignored for comments!
+					width: 20,
+				},
+			);
+			const expected = `# Copyright (C) 2020 my@self.net!
+msgid "Sun"
+msgstr ""
+`;
+			expect(entry.toString()).toEqual(expected);
+		});
 		it('should output automatic comments', () => {
 			const entry = new POTEntry(
 				{
