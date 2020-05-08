@@ -111,5 +111,26 @@ msgstr ""
 `;
 			expect(entry.serialize()).toEqual(expected);
 		});
+		it('should never wrap inside words', () => {
+			const entry = new POTEntry({ msgid: 'ForAVeryLongTime' }, { width: 10 });
+			const expected = `msgid ""
+"ForAVeryLongTime"
+msgstr ""
+`;
+			expect(entry.serialize()).toEqual(expected);
+		});
+		it('should never wrap inside words with prefix and postfix', () => {
+			const entry = new POTEntry(
+				{ msgid: 'before ForAVeryLongTime after' },
+				{ width: 10 },
+			);
+			const expected = `msgid ""
+"before "
+"ForAVeryLongTime "
+"after"
+msgstr ""
+`;
+			expect(entry.serialize()).toEqual(expected);
+		});
 	});
 });
