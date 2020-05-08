@@ -4,6 +4,7 @@ export interface POTEntryProperties {
 	msgid: string;
 	msgidPlural?: string;
 	msgctxt?: string;
+	msgstr?: string;
 	translatorComments?: Array<string>;
 	flags?: Array<string>;
 	automatic?: Array<string>;
@@ -27,7 +28,7 @@ export class POTEntry {
 	 * @param properties - the properties of the entry
 	 * @param options - options for wrapping
 	 */
-	constructor(private readonly properties: POTEntryProperties) {
+	constructor(readonly properties: POTEntryProperties) {
 		if (/[\u0000-\u0006\u000e-\u001f]/.exec(properties.msgid)) {
 			throw new Error(this.gtx._('msgid must not contain control characters'));
 		}
@@ -93,7 +94,12 @@ export class POTEntry {
 		out += this.serializeMsgId(this.properties.msgid, width) + '\n';
 
 		if (typeof this.properties.msgidPlural === 'undefined') {
-			out += 'msgstr ""\n';
+			if (typeof this.properties.msgstr !== 'undefined') {
+				out +=
+					this.serializeMsgId(this.properties.msgstr, width, 'msgstr') + '\n';
+			} else {
+				out += 'msgstr ""\n';
+			}
 		} else {
 			out +=
 				this.serializeMsgId(
