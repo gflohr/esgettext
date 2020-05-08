@@ -101,5 +101,15 @@ msgstr ""
 `;
 			expect(entry.serialize()).toEqual(expected);
 		});
+		it('should always wrap at newline characters', () => {
+			const entry = new POTEntry({ msgid: 'line 1\nline 2\nline 3\n' });
+			const expected = `msgid ""
+"line 1\\n"
+"line 2\\n"
+"line 3\\n"
+msgstr ""
+`;
+			expect(entry.serialize()).toEqual(expected);
+		});
 	});
 });
