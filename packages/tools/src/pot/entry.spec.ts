@@ -77,4 +77,29 @@ msgstr ""
 			}
 		});
 	});
+
+	describe('line wrapping', () => {
+		it('should wrap long lines by default', () => {
+			const entry = new POTEntry(
+				{ msgid: 'For a very long time.' },
+				{ width: 20 },
+			);
+			const expected = `msgid ""
+"For a very long "
+"time."
+msgstr ""
+`;
+			expect(entry.serialize()).toEqual(expected);
+		});
+		it('should not wrap long lines, when requested', () => {
+			const entry = new POTEntry(
+				{ msgid: 'For a very long time.' },
+				{ width: 20, noWrap: true },
+			);
+			const expected = `msgid "For a very long time."
+msgstr ""
+`;
+			expect(entry.serialize()).toEqual(expected);
+		});
+	});
 });

@@ -59,7 +59,7 @@ export class POTEntry {
 	private serializeMsgId(input: string, prefix = 'msgid'): string {
 		if (this.options.noWrap) {
 			const escaped = this.escape(input);
-			return `${prefix} "${escaped}"\n`;
+			return `${prefix} "${escaped}"`;
 		}
 
 		const output = new Array<string>();
