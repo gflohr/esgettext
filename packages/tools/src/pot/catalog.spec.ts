@@ -142,6 +142,7 @@ describe('translation catalog', () => {
 				}),
 			);
 			expect(catalog.toString()).toMatchSnapshot();
+
 			catalog.addEntry(
 				new POTEntry({
 					msgid: 'Mike',
@@ -152,8 +153,31 @@ describe('translation catalog', () => {
 				}),
 			);
 			expect(catalog.toString()).toMatchSnapshot();
+
+			// We need entries with a message context.
+			catalog.addEntry(
+				new POTEntry({
+					msgid: 'Mike',
+					msgctxt: 'phonetic alphabet',
+					references: ['juliet.ts:85'],
+				}),
+			);
+			catalog.addEntry(
+				new POTEntry({
+					msgid: 'Mike',
+					msgctxt: 'audio',
+					references: ['golf.ts:85'],
+				}),
+			);
+
 			// TODO! Check that conflicting flags are resolved with a
 			// warning!
+		});
+
+		it('should sort output on demand', () => {
+			const copy = catalog.copy({ sortOutput: true, date });
+
+			expect(copy.toString()).toMatchSnapshot();
 		});
 	});
 });

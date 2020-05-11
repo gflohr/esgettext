@@ -170,6 +170,64 @@ msgstr \\"\\"
 "
 `;
 
+exports[`translation catalog continuous filling should sort output on demand 1`] = `
+"# SOME DESCRIPTIVE TITLE
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+# SOME DESCRIPTIVE TITLE
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+#, fuzzy
+msgid \\"\\"
+msgstr \\"\\"
+\\"Project-Id-Version: PACKAGE VERSION\\\\n\\"
+\\"Report-Msgid-Bugs-To: MSGID_BUGS_ADDRESS\\\\n\\"
+\\"POT-Creation-Date: 2020-04-23 08:50+0300\\\\n\\"
+\\"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\\\\n\\"
+\\"Last-Translator: FULL NAME <EMAIL@ADDRESS>\\\\n\\"
+\\"Language-Team: LANGUAGE <LL@li.org>\\\\n\\"
+\\"Language:\\\\n\\"
+\\"MIME-Version: 1.0\\\\n\\"
+\\"Content-Type: text/plain; charset=CHARSET\\\\n\\"
+\\"Content-Transfer-Encoding: 8bit\\\\n\\"
+
+#: whiskey.ts:2, victor.ts:3, uniform.ts:4, tango.ts:25
+msgid \\"Lima\\"
+msgstr \\"\\"
+
+# This is difficult.
+# Not really.
+#. TRANSLATORS: Buy me a milk shake!
+#. TRANSLATORS: Drop me a line!
+#: src/zulu.ts:2304, src/xray.ts:1303, sierra.ts:27, romeo.ts:85
+#, no-c-format, perl-brace-format
+msgid \\"Mike\\"
+msgstr \\"\\"
+
+#: golf.ts:85
+msgctxt \\"audio\\"
+msgid \\"Mike\\"
+msgstr \\"\\"
+
+#: juliet.ts:85
+msgctxt \\"phonetic alphabet\\"
+msgid \\"Mike\\"
+msgstr \\"\\"
+
+#: src/yankee.ts:42
+msgid \\"November\\"
+msgstr \\"\\"
+
+#: whiskey.ts:2, victor.ts:3, uniform.ts:3, tango.ts:25
+msgid \\"Oscar\\"
+msgstr \\"\\"
+"
+`;
+
 exports[`translation catalog continuous filling should support a string at many locations 1`] = `
 "# SOME DESCRIPTIVE TITLE
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER

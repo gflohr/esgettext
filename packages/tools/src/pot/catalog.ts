@@ -15,6 +15,7 @@ interface CatalogProperties {
 	foreignUser?: boolean;
 	date?: string;
 	fromCode?: string;
+	sortOutput?: boolean;
 }
 
 interface RenderOptions {
@@ -28,10 +29,7 @@ export class Catalog {
 	private readonly cache: Cache = {};
 	private readonly entries: Array<POTEntry>;
 
-	constructor(private readonly properties?: CatalogProperties) {
-		if (typeof properties === 'undefined') {
-			properties = {};
-		}
+	constructor(private readonly properties: CatalogProperties = {}) {
 		if (typeof properties.package === 'undefined') {
 			properties.package = 'PACKAGE';
 		}
@@ -131,7 +129,36 @@ FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 	toString(options?: RenderOptions): string {
 		const width =
 			options && typeof options.width !== 'undefined' ? options.width : 76;
-		return this.entries.map((entry) => entry.toString(width)).join('\n');
+
+		if (this.properties.sortOutput) {
+			return this.entries
+				.sort((a, b) => {
+					const cmp = a.properties.msgid.localeCompare(b.properties.msgid);
+					if (cmp) {
+						return cmp;
+					}
+					const actx = a.properties.msgctxt;
+					const bctx = b.properties.msgctxt;
+
+					if (typeof actx === 'undefined') {
+						if (typeof bctx === 'undefined') {
+							return 0;
+						} else {
+							return -1;
+						}
+					} else {
+						if (typeof bctx === 'undefined') {
+							return +1;
+						} else {
+							return actx.localeCompare(bctx);
+						}
+					}
+				})
+				.map((entry) => entry.toString(width))
+				.join('\n');
+		} else {
+			return this.entries.map((entry) => entry.toString(width)).join('\n');
+		}
 	}
 
 	/**
@@ -154,5 +181,18 @@ FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 		} else {
 			this.cache[msgid][msgctxt].merge(entry);
 		}
+	}
+
+	/**
+	 * Copy a catalog with other options. This is for testing only.
+	 *
+	 * @returns a deep copy of the catalog.
+	 */
+	copy(properties?: CatalogProperties): Catalog {
+		const other = new Catalog(properties);
+
+		this.entries.forEach((entry) => other.addEntry(entry));
+
+		return other;
 	}
 }
