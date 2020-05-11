@@ -142,14 +142,8 @@ FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 	 * @param entry - the `POTEntry` to add
 	 */
 	addEntry(entry: POTEntry): void {
-		const msgid =
-			typeof entry.properties.msgid !== 'undefined'
-				? entry.properties.msgid
-				: '';
-		const msgctxt =
-			typeof entry.properties.msgctxt !== 'undefined'
-				? entry.properties.msgidPlural
-				: '';
+		const msgid = entry.properties.msgid;
+		const msgctxt = entry.properties.msgctxt;
 
 		if (!Object.prototype.hasOwnProperty.call(this.cache, msgid)) {
 			this.cache[msgid] = {};
