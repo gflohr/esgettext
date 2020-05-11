@@ -3,11 +3,8 @@ import { POTEntry } from './entry';
 interface Cache {
 	// msgid
 	[key: string]: {
-		// msgidPlurl
-		[key: string]: {
-			// msgctxt
-			[key: string]: POTEntry;
-		};
+		// msgctxt
+		[key: string]: POTEntry;
 	};
 }
 
@@ -138,8 +135,8 @@ FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 	}
 
 	/**
-	 * Add an entry to the catalog. If an entry with the same msgid,
-	 * msgidPlural, and msgctxt already exists, the entry is merged into
+	 * Add an entry to the catalog. If an entry with the same msgid
+	 * and msgctxt already exists, the entry is merged into
 	 * the existing one instead.
 	 *
 	 * @param entry - the `POTEntry` to add
@@ -149,10 +146,6 @@ FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 			typeof entry.properties.msgid !== 'undefined'
 				? entry.properties.msgid
 				: '';
-		const msgidPlural =
-			typeof entry.properties.msgidPlural !== 'undefined'
-				? entry.properties.msgidPlural
-				: '';
 		const msgctxt =
 			typeof entry.properties.msgctxt !== 'undefined'
 				? entry.properties.msgidPlural
@@ -161,19 +154,11 @@ FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 		if (!Object.prototype.hasOwnProperty.call(this.cache, msgid)) {
 			this.cache[msgid] = {};
 		}
-		if (!Object.prototype.hasOwnProperty.call(this.cache[msgid], msgidPlural)) {
-			this.cache[msgid][msgidPlural] = {};
-		}
-		if (
-			!Object.prototype.hasOwnProperty.call(
-				this.cache[msgid][msgidPlural],
-				msgctxt,
-			)
-		) {
-			this.cache[msgid][msgidPlural][msgctxt] = entry;
+		if (!Object.prototype.hasOwnProperty.call(this.cache[msgid], msgctxt)) {
+			this.cache[msgid][msgctxt] = entry;
 			this.entries.push(entry);
 		} else {
-			this.cache[msgid][msgidPlural][msgctxt].merge(entry);
+			this.cache[msgid][msgctxt].merge(entry);
 		}
 	}
 }
