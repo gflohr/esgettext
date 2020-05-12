@@ -4,9 +4,16 @@ export class Reference {
 		private readonly lineNumber: number,
 	) {}
 
-	toString() {
+	toString(): string {
 		const filename = this.filename.replace('\n', '\\n');
 
 		return `${filename}:${this.lineNumber}`;
+	}
+
+	compare(other: Reference): number {
+		return (
+			this.filename.localeCompare(other.filename) ||
+			Math.sign(this.lineNumber - other.lineNumber)
+		);
 	}
 }
