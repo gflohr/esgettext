@@ -1,13 +1,8 @@
 export class Reference {
-	constructor(
-		private readonly filename: string,
-		private readonly lineNumber: number,
-	) {}
+	constructor(readonly filename: string, readonly lineNumber: number) {}
 
 	toString(): string {
-		const filename = this.filename.replace('\n', '\\n');
-
-		return `${filename}:${this.lineNumber}`;
+		return `${this.filename}:${this.lineNumber}`;
 	}
 
 	compare(other: Reference): number {

@@ -13,12 +13,6 @@ describe('reference', () => {
 
 			expect(ref.toString()).toEqual('bravo.js:2304');
 		});
-
-		it('should escape newlines', () => {
-			const ref = new Reference('two\nlines.js', 2304);
-
-			expect(ref.toString()).toEqual('two\\nlines.js:2304');
-		});
 	});
 
 	describe('compare()', () => {

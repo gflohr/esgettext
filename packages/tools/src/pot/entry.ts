@@ -65,6 +65,10 @@ export class POTEntry {
 		this.checkDeprecatedControls(this.properties.msgctxt);
 		this.checkDeprecatedControls(this.properties.msgid);
 		this.checkDeprecatedControls(this.properties.msgidPlural);
+
+		// See https://savannah.gnu.org/bugs/index.php?58356
+		this.checkReferences();
+		this.checkFlags();
 	}
 
 	/**
@@ -277,6 +281,39 @@ export class POTEntry {
 				),
 			);
 		}
+	}
+
+	private checkReferences(): void {
+		if (typeof this.properties.references === 'undefined') {
+			return;
+		}
+
+		this.properties.references.forEach((ref) => {
+			if (/[,\n]/.exec(ref.filename)) {
+				this.error(gtx._('filenames must not contain commas or newlines'));
+			}
+		});
+	}
+
+	private checkFlags(): void {
+		if (typeof this.properties.flags === 'undefined') {
+			return;
+		}
+
+		this.properties.flags.forEach((flag) => {
+			if (/[,\n]/.exec(flag)) {
+				this.error(gtx._('flags must not contain commas or newlines'));
+			}
+		});
+	}
+
+	private error(msg: string): void {
+		let location = gtx._('[in memory]');
+		if (typeof this.properties.references !== 'undefined') {
+			location = this.properties.references[0].toString();
+		}
+
+		throw new Error(gtx._x('{location}: error: {msg}', { location, msg }));
 	}
 
 	private warning(msg: string): void {
