@@ -16,6 +16,7 @@ interface CatalogProperties {
 	date?: string;
 	fromCode?: string;
 	sortOutput?: boolean;
+	sortByFile?: boolean;
 }
 
 interface RenderOptions {

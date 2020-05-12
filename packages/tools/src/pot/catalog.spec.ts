@@ -227,5 +227,12 @@ describe('translation catalog', () => {
 
 			expect(copy.toString()).toMatchSnapshot();
 		});
+
+		it('should sort by file on demand', () => {
+			const copy = catalog.copy({ sortByFile: true, date });
+
+			//console.log(copy.toString());
+			//expect(copy.toString()).toMatchSnapshot();
+		});
 	});
 });
