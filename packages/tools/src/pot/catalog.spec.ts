@@ -44,6 +44,57 @@ describe('translation catalog', () => {
 		});
 	});
 
+	describe('conflicting flags', () => {
+		/* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+		let warner: jest.SpyInstance<void, [any?, ...any[]]>;
+
+		beforeEach(() => {
+			warner = jest.spyOn(global.console, 'warn').mockImplementation(() => {
+				/* ignore */
+			});
+		});
+
+		afterEach(() => jest.restoreAllMocks());
+
+		it('should warn about conflicting flags', () => {
+			const catalog = new Catalog();
+
+			catalog.addEntry(
+				new POTEntry({
+					msgid: 'hello',
+					flags: ['no-mercy', 'perl-brace-format'],
+					references: ['first.js: 10'],
+				}),
+			);
+
+			catalog.addEntry(
+				new POTEntry({
+					msgid: 'hello',
+					flags: ['no-mercy'],
+					references: ['second.js: 10'],
+				}),
+			);
+
+			catalog.addEntry(
+				new POTEntry({
+					msgid: 'hello',
+					flags: ['mercy'],
+					references: ['third.js: 10'],
+				}),
+			);
+			expect(warner).toHaveBeenCalledTimes(4);
+
+			catalog.addEntry(
+				new POTEntry({
+					msgid: 'hello',
+					flags: ['no-perl-brace-format'],
+					references: ['third.js: 10'],
+				}),
+			);
+			expect(warner).toHaveBeenCalledTimes(9);
+		});
+	});
+
 	describe('continuous filling', () => {
 		const catalog = new Catalog({ date });
 
@@ -169,9 +220,6 @@ describe('translation catalog', () => {
 					references: ['golf.ts:85'],
 				}),
 			);
-
-			// TODO! Check that conflicting flags are resolved with a
-			// warning!
 		});
 
 		it('should sort output on demand', () => {

@@ -1,5 +1,4 @@
 import { Textdomain } from '@esgettext/runtime';
-import { Reference } from './reference';
 
 const gtx = Textdomain.getInstance('esgettext-tools');
 
@@ -11,7 +10,7 @@ export interface POTEntryProperties {
 	translatorComments?: Array<string>;
 	flags?: Array<string>;
 	automatic?: Array<string>;
-	references?: Array<Reference>;
+	references?: Array<string>;
 	noWarnings?: boolean;
 }
 
@@ -164,17 +163,48 @@ export class POTEntry {
 			}
 			this.properties.automatic.push(...other.properties.automatic);
 		}
-		if (other.properties.references) {
-			if (!this.properties.references) {
-				this.properties.references = new Array<Reference>();
-			}
-			this.properties.references.push(...other.properties.references);
-		}
 		if (other.properties.flags) {
 			if (!this.properties.flags) {
 				this.properties.flags = new Array<string>();
 			}
+
+			other.properties.flags.forEach((flag) => {
+				let negated = flag.replace(/^no-/, '');
+				if (negated === flag) {
+					negated = 'no-' + flag;
+				}
+
+				if (this.properties.flags.includes(negated)) {
+					other.warning(
+						gtx._x("Flag '{flag}' conflicts with previous flag '{negated}'.", {
+							flag,
+							negated,
+						}),
+					);
+					const refs = this.properties.references || [];
+					if (refs) {
+						other.warning(
+							gtx._nx(
+								"The conflicting flag '{negated}' may stem from this location:",
+								"The conflicting flag '{negated}' may stem from one of these locations:",
+								refs.length,
+								{ flag, negated },
+							),
+						);
+					}
+					refs.forEach((ref) => {
+						/* eslint-disable-next-line no-console */
+						console.warn(`\t${ref}`);
+					});
+				}
+			});
 			this.properties.flags.push(...other.properties.flags);
+		}
+		if (other.properties.references) {
+			if (!this.properties.references) {
+				this.properties.references = new Array<string>();
+			}
+			this.properties.references.push(...other.properties.references);
 		}
 	}
 
@@ -289,7 +319,7 @@ export class POTEntry {
 		}
 
 		this.properties.references.forEach((ref) => {
-			if (/[,\n]/.exec(ref.filename)) {
+			if (/[,\n]/.exec(ref)) {
 				this.error(gtx._('filenames must not contain commas or newlines'));
 			}
 		});
