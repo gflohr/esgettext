@@ -1,4 +1,5 @@
 import { Textdomain } from '@esgettext/runtime';
+import { Reference } from './reference';
 
 const gtx = Textdomain.getInstance('esgettext-tools');
 
@@ -10,7 +11,7 @@ export interface POTEntryProperties {
 	translatorComments?: Array<string>;
 	flags?: Array<string>;
 	automatic?: Array<string>;
-	references?: Array<string>;
+	references?: Array<Reference>;
 	noWarnings?: boolean;
 }
 
@@ -93,7 +94,7 @@ export class POTEntry {
 
 		if (typeof this.properties.references !== 'undefined') {
 			const references = Array.from(new Set(this.properties.references))
-				.map((reference) => reference.replace(/\n/g, '\\n#, '))
+				.map((reference) => reference.toString())
 				.join(', ');
 			if (width > 0) {
 				const wrapped = this.wrap(references, width - 3);
@@ -161,7 +162,7 @@ export class POTEntry {
 		}
 		if (other.properties.references) {
 			if (!this.properties.references) {
-				this.properties.references = new Array<string>();
+				this.properties.references = new Array<Reference>();
 			}
 			this.properties.references.push(...other.properties.references);
 		}
@@ -282,7 +283,7 @@ export class POTEntry {
 		if (!this.properties.noWarnings) {
 			let location = gtx._('[in memory]');
 			if (typeof this.properties.references !== 'undefined') {
-				location = this.properties.references[0];
+				location = this.properties.references[0].toString();
 			}
 
 			// eslint-disable-next-line no-console
