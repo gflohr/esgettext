@@ -98,11 +98,11 @@ export class POTEntry {
 		if (typeof this.properties.references !== 'undefined') {
 			const references = Array.from(new Set(this.properties.references))
 				.map((reference) => reference.toString())
-				.join(', ');
+				.join(' ');
 			if (width > 0) {
 				const wrapped = this.wrap(references, width - 3);
 				for (const line of wrapped) {
-					out += `#: ${line.trimRight().replace(/,$/, '')}\n`;
+					out += `#: ${line.trimRight().replace(/ $/, '')}\n`;
 				}
 			} else {
 				out += `#: ${references}\n`;
@@ -111,7 +111,6 @@ export class POTEntry {
 
 		if (typeof this.properties.flags !== 'undefined') {
 			const flags = Array.from(new Set(this.properties.flags))
-				.map((flag) => flag.replace(/\n/g, '\n#, '))
 				.join(', ');
 			out += `#, ${flags}\n`;
 		}
@@ -319,8 +318,8 @@ export class POTEntry {
 		}
 
 		this.properties.references.forEach((ref) => {
-			if (/[,\n]/.exec(ref)) {
-				this.error(gtx._('filenames must not contain commas or newlines'));
+			if (/[ \n]/.exec(ref)) {
+				this.error(gtx._('filenames must not contain space or newlines'));
 			}
 		});
 	}

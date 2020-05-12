@@ -63,7 +63,7 @@ describe('translation catalog', () => {
 				new POTEntry({
 					msgid: 'hello',
 					flags: ['no-mercy', 'perl-brace-format'],
-					references: ['first.js: 10'],
+					references: ['first.js:10'],
 				}),
 			);
 
@@ -71,7 +71,7 @@ describe('translation catalog', () => {
 				new POTEntry({
 					msgid: 'hello',
 					flags: ['no-mercy'],
-					references: ['second.js: 10'],
+					references: ['second.js:10'],
 				}),
 			);
 
@@ -79,7 +79,7 @@ describe('translation catalog', () => {
 				new POTEntry({
 					msgid: 'hello',
 					flags: ['mercy'],
-					references: ['third.js: 10'],
+					references: ['third.js:10'],
 				}),
 			);
 			expect(warner).toHaveBeenCalledTimes(4);
@@ -88,7 +88,7 @@ describe('translation catalog', () => {
 				new POTEntry({
 					msgid: 'hello',
 					flags: ['no-perl-brace-format'],
-					references: ['third.js: 10'],
+					references: ['third.js:10'],
 				}),
 			);
 			expect(warner).toHaveBeenCalledTimes(9);

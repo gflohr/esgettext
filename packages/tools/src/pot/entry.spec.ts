@@ -219,7 +219,7 @@ msgstr ""
 				msgid: 'hello',
 				references: ['src/hello.ts:2304', 'src/goodbye.ts:2304'],
 			});
-			const expected = `#: src/hello.ts:2304, src/goodbye.ts:2304
+			const expected = `#: src/hello.ts:2304 src/goodbye.ts:2304
 msgid "hello"
 msgstr ""
 `;
@@ -237,7 +237,7 @@ msgstr ""
 `;
 			expect(entry.toString(25)).toEqual(expected);
 
-			expected = `#: src/hello.ts:2304, src/goodbye.ts:2304
+			expected = `#: src/hello.ts:2304 src/goodbye.ts:2304
 msgid "hello"
 msgstr ""
 `;
@@ -347,7 +347,7 @@ msgstr ""
 # Written by myself.
 #. TRANSLATORS: Send me a postcard!
 #. TRANSLATORS: I will write you back!
-#: src/hello.ts:2304, src/goodbye.ts:2304
+#: src/hello.ts:2304 src/goodbye.ts:2304
 msgid "hello"
 msgstr ""
 `;
@@ -363,7 +363,7 @@ msgstr ""
 # Written by myself.
 #. TRANSLATORS: Send me a postcard!
 #. TRANSLATORS: I will write you back!
-#: src/hello.ts:2304, src/goodbye.ts:2304
+#: src/hello.ts:2304 src/goodbye.ts:2304
 msgid "hello"
 msgstr ""
 `;
@@ -379,7 +379,7 @@ msgstr ""
 # Written by myself.
 #. TRANSLATORS: Send me a postcard!
 #. TRANSLATORS: I will write you back!
-#: src/hello.ts:2304, src/goodbye.ts:2304
+#: src/hello.ts:2304 src/goodbye.ts:2304
 #, no-perl-format
 msgid "hello"
 msgstr ""
@@ -396,7 +396,7 @@ msgstr ""
 # Written by myself.
 #. TRANSLATORS: Send me a postcard!
 #. TRANSLATORS: I will write you back!
-#: src/hello.ts:2304, src/goodbye.ts:2304
+#: src/hello.ts:2304 src/goodbye.ts:2304
 #, no-perl-format, no-c-format
 msgid "hello"
 msgstr ""
