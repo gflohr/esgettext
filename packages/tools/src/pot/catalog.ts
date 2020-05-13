@@ -157,6 +157,67 @@ FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 				})
 				.map((entry) => entry.toString(width))
 				.join('\n');
+		} else if (this.properties.sortByFile) {
+			const copy = this.copy(this.properties);
+
+			const splitRef = (ref: string): { filename: string; lineno: number } => {
+				const parts = ref.split(':');
+				const lineno = Number.parseInt(parts.pop(), 10);
+				const filename = parts.join(':');
+				return { filename, lineno };
+			};
+
+			// First order all references
+			copy.entries.forEach((entry) => {
+				if (entry.properties.references) {
+					entry.properties.references = entry.properties.references
+						.map(splitRef)
+						.sort((a, b) => {
+							return (
+								a.filename.localeCompare(b.filename) ||
+								Math.sign(a.lineno - b.lineno)
+							);
+						})
+						.map((ref) => `${ref.filename}:${ref.lineno}`);
+				}
+			});
+
+			const compareSplitRefs = (
+				a: {
+					refs: Array<{ filename: string; lineno: number }>;
+					entry: POTEntry;
+				},
+				b: {
+					refs: Array<{ filename: string; lineno: number }>;
+					entry: POTEntry;
+				},
+			) => {
+				const arefs = a.refs;
+				const brefs = b.refs;
+				const min = Math.min(arefs.length, brefs.length);
+				for (let i = 0; i < min; ++i) {
+					const cmp =
+						arefs[i].filename.localeCompare(brefs[i].filename) ||
+						Math.sign(arefs[i].lineno - brefs[i].lineno);
+					if (cmp) {
+						return cmp;
+					}
+				}
+				return Math.sign(arefs.length - brefs.length);
+			};
+
+			const splitRefs = (refs: Array<string>) => {
+				return refs ? refs.map(splitRef) : [];
+			};
+
+			return copy.entries
+				.map((entry) => {
+					return { refs: splitRefs(entry.properties.references), entry };
+				})
+				.sort(compareSplitRefs)
+				.map((split) => split.entry)
+				.map((entry) => entry.toString(width))
+				.join('\n');
 		} else {
 			return this.entries.map((entry) => entry.toString(width)).join('\n');
 		}

@@ -220,6 +220,14 @@ describe('translation catalog', () => {
 					references: ['golf.ts:85'],
 				}),
 			);
+
+			// And entries with one more ref than another.
+			catalog.addEntry(
+				new POTEntry({
+					msgid: 'Foxtrot',
+					references: ['src/yankee.ts:42', 'src/zulu.ts:2304'],
+				}),
+			);
 		});
 
 		it('should sort output on demand', () => {
@@ -231,8 +239,7 @@ describe('translation catalog', () => {
 		it('should sort by file on demand', () => {
 			const copy = catalog.copy({ sortByFile: true, date });
 
-			//console.log(copy.toString());
-			//expect(copy.toString()).toMatchSnapshot();
+			expect(copy.toString()).toMatchSnapshot();
 		});
 	});
 });
