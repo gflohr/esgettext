@@ -450,4 +450,20 @@ msgstr ""
 			expect(warner).toHaveBeenCalledTimes(5);
 		});
 	});
+
+	describe('errors', () => {
+		it('should reject file names with spaces', () => {
+			const msgid = 'xyz';
+			const references = ['file name:42'];
+
+			expect(() => new POTEntry({ msgid, references })).toThrow();
+		});
+
+		it('should reject flags with commas', () => {
+			const msgid = 'xyz';
+			const flags = ['foo, bar'];
+
+			expect(() => new POTEntry({ msgid, flags })).toThrow();
+		});
+	});
 });

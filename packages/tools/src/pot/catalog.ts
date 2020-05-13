@@ -141,19 +141,15 @@ FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 					const actx = a.properties.msgctxt;
 					const bctx = b.properties.msgctxt;
 
-					if (typeof actx === 'undefined') {
-						if (typeof bctx === 'undefined') {
-							return 0;
-						} else {
-							return -1;
-						}
-					} else {
-						if (typeof bctx === 'undefined') {
-							return +1;
-						} else {
-							return actx.localeCompare(bctx);
-						}
+					if (typeof actx === 'undefined' && typeof bctx === 'undefined') {
+						return 0;
+					} else if (typeof bctx === 'undefined') {
+						return +1;
+					} else if (typeof actx === 'undefined') {
+						return -1;
 					}
+
+					return actx.localeCompare(bctx);
 				})
 				.map((entry) => entry.toString(width))
 				.join('\n');

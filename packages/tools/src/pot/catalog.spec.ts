@@ -7,7 +7,7 @@ describe('translation catalog', () => {
 	describe('initialization', () => {
 		it('should be initialized with zero configuration', () => {
 			const catalog = new Catalog();
-			expect(catalog.toString()).toMatch(/Content-Type/);
+			expect(catalog.toString({ width: 76 })).toMatch(/Content-Type/);
 		});
 
 		it('should be initialized with default values', () => {
