@@ -52,7 +52,7 @@ msgstr "\\\\\\a\\b\\t\\n\\v\\f\\r\\""
 			const parser = new PoParser(warner);
 			const result = parser.parse(input, 'example.js');
 
-			expect(result).toBeDefined();
+			expect(result.toString()).toMatchSnapshot();
 			expect(warner).not.toHaveBeenCalled();
 		});
 	});
