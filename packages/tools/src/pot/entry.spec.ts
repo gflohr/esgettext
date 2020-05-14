@@ -37,6 +37,16 @@ msgstr ""
 
 		afterAll(() => jest.restoreAllMocks());
 
+		it('should escape a backslash', () => {
+			const entry = new POTEntry({ msgid: '\\' });
+			const expected = `msgid "\\\\"\nmsgstr ""\n`;
+			expect(entry.toString()).toEqual(expected);
+		});
+		it('should escape a double quote', () => {
+			const entry = new POTEntry({ msgid: '"' });
+			const expected = `msgid "\\""\nmsgstr ""\n`;
+			expect(entry.toString()).toEqual(expected);
+		});
 		it('should escape a bell character', () => {
 			const entry = new POTEntry({ msgid: '\u0007' });
 			const expected = `msgid "\\a"\nmsgstr ""\n`;
