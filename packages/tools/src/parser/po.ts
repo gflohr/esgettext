@@ -291,7 +291,7 @@ export class PoParser {
 	}
 
 	private error(msg: string): void {
-		throw new Error(`${this.filename}:${this.lineno}:${this.column} ${msg}`);
+		throw new Error(`${this.filename}:${this.lineno}:${this.column}: ${msg}`);
 	}
 
 	private trim(str: string): string {

@@ -32,4 +32,18 @@ msgstr ""
 			expect(result).toBeDefined();
 		});
 	});
+
+	describe('errors', () => {
+		// eslint-disable-next-line no-console
+		it('should discard lone strings', () => {
+			const parser = new PoParser(console.warn);
+			const input = `msgid "okay"
+msgstr ""
+
+"does not belong here"
+`;
+
+			expect(() => parser.parse(input, 'example.ts')).toThrow(new Error('example.ts:4:1: syntax error'));
+		});
+	})
 });
