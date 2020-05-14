@@ -232,24 +232,22 @@ export class PoParser {
 			}
 		});
 
-		if (this.msgType) {
-			switch (this.msgType) {
-				case 'msgid':
-					this.entry.addToMsgid(msg);
-					break;
-				case 'msgstr':
-					this.entry.addToMsgstr(msg);
-					break;
-				case 'msgid_plural':
-					this.entry.addToMsgidPlural(msg);
-					break;
-				case 'msgctxt':
-					this.entry.addToMsgctxt(msg);
-					break;
-				default:
-					// Ignore plural translations.
-					break;
-			}
+		switch (this.msgType) {
+			case 'msgid':
+				this.entry.addToMsgid(msg);
+				break;
+			case 'msgstr':
+				this.entry.addToMsgstr(msg);
+				break;
+			case 'msgid_plural':
+				this.entry.addToMsgidPlural(msg);
+				break;
+			case 'msgctxt':
+				this.entry.addToMsgctxt(msg);
+				break;
+			default:
+				// Ignore plural translations.
+				break;
 		}
 	}
 
