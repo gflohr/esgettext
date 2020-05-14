@@ -59,6 +59,14 @@ export class PoParser {
 				const first = line[0];
 				switch (first) {
 					case '#':
+						if (line.length > 1 && line[1] === '~') {
+							if (this.entry) {
+								++this.column;
+								this.syntaxError();
+							} else {
+								break;
+							}
+						}
 						if (!this.entry) {
 							this.entry = POTEntry.build();
 						}
@@ -125,10 +133,6 @@ export class PoParser {
 	private parseCommentLine(line: string): void {
 		const marker = line[1];
 		switch (marker) {
-			case '~':
-				// Obsolete entries are ignored.
-				break;
-
 			case ',':
 				this.parseFlags(line);
 				break;

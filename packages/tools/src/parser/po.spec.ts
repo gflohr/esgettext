@@ -23,6 +23,17 @@ msgstr ""
 
 msgid "no comment"
 msgstr ""
+
+#, perl-brace-format
+msgid "Hello, {name}!"
+msgstr ""
+
+#, src/example.ts:2304
+msgid "strawberry"
+msgstr ""
+
+#~ msgid "obsolete entry"
+#~ msgstr ""
 `;
 			// eslint-disable-next-line no-console
 			const parser = new PoParser(console.warn);
