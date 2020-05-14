@@ -131,5 +131,20 @@ msgstr ""
 				'example.ts:1: ...this is the location of the first definition',
 			);
 		});
+
+		it('should bail out on duplicate msgid sections', () => {
+			// eslint-disable-next-line no-console
+			const parser = new PoParser(console.warn);
+			const input = `msgid "okay"
+msgstr ""
+
+msgid "not"
+msgstr ""
+msgid "okay"
+`;
+			expect(() => parser.parse(input, 'example.ts')).toThrow(
+				new Error('example.ts:6:1: duplicate "msgid" section'),
+			);
+		});
 	});
 });
