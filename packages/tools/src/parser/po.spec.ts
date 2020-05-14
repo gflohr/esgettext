@@ -27,7 +27,6 @@ msgstr ""
 			// eslint-disable-next-line no-console
 			const parser = new PoParser(console.warn);
 			const result = parser.parse(input, 'example.js');
-			console.log(result.toString());
 
 			expect(result).toBeDefined();
 		});
@@ -43,7 +42,9 @@ msgstr ""
 "does not belong here"
 `;
 
-			expect(() => parser.parse(input, 'example.ts')).toThrow(new Error('example.ts:4:1: syntax error'));
+			expect(() => parser.parse(input, 'example.ts')).toThrow(
+				new Error('example.ts:4:1: syntax error'),
+			);
 		});
 
 		it('should bail out on unexpected input', () => {
@@ -55,7 +56,9 @@ msgstr ""
 MSGID "uppercase not allowed"
 msgstr ""
 `;
-			expect(() => parser.parse(input, 'example.ts')).toThrow(new Error('example.ts:4:1: keyword "MSGID" unknown'));
+			expect(() => parser.parse(input, 'example.ts')).toThrow(
+				new Error('example.ts:4:1: keyword "MSGID" unknown'),
+			);
 
 			input = `msgid "okay"
 msgstr ""
@@ -63,7 +66,9 @@ msgstr ""
 nsgid "no, no, no"
 msgstr ""
 `;
-			expect(() => parser.parse(input, 'example.ts')).toThrow(new Error('example.ts:4:1: keyword "nsgid" unknown'));
+			expect(() => parser.parse(input, 'example.ts')).toThrow(
+				new Error('example.ts:4:1: keyword "nsgid" unknown'),
+			);
 		});
 
 		it('should bail out on garbage', () => {
@@ -74,7 +79,9 @@ msgstr ""
 
 'garbage'
 `;
-			expect(() => parser.parse(input, 'example.ts')).toThrow(new Error('example.ts:4:1: syntax error'));
+			expect(() => parser.parse(input, 'example.ts')).toThrow(
+				new Error('example.ts:4:1: syntax error'),
+			);
 		});
 
 		it('should bail out on entries w/o msgid', () => {
@@ -86,7 +93,32 @@ msgstr ""
 # Missing msgid.
 msgstr ""
 `;
-			expect(() => parser.parse(input, 'example.ts')).toThrow(new Error("example.ts:6:1: missing 'msgid' section"));
+			expect(() => parser.parse(input, 'example.ts')).toThrow(
+				new Error('example.ts:6:1: missing "msgid" section'),
+			);
+		});
+
+		it('should bail out on duplicate entries', () => {
+			const warner = jest.fn();
+			const parser = new PoParser(warner);
+			const input = `msgid "okay"
+msgstr ""
+
+msgid "okay"
+msgstr ""
+`;
+			expect(() => parser.parse(input, 'example.ts')).toThrow(
+				new Error('example.ts:6:1: cannot proceed after fatal error'),
+			);
+			expect(warner).toHaveBeenCalledTimes(2);
+			expect(warner).toHaveBeenNthCalledWith(
+				1,
+				'example.ts:4: duplicate message definition...',
+			);
+			expect(warner).toHaveBeenNthCalledWith(
+				2,
+				'example.ts:1: ...this is the location of the first definition',
+			);
 		});
 	});
 });

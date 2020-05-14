@@ -61,14 +61,12 @@ export class PoParser {
 					case '#':
 						if (!this.entry) {
 							this.entry = POTEntry.build();
-							this.entryLineno = this.lineno;
 						}
 						this.parseCommentLine(line);
 						break;
 					case 'm':
 						if (!this.entry) {
 							this.entry = POTEntry.build();
-							this.entryLineno = this.lineno;
 						}
 						this.parseKeywordLine(line);
 						break;
@@ -79,8 +77,10 @@ export class PoParser {
 						this.parseQuotedString(line);
 						break;
 					default:
-						if ((first >= 'A' && first <= 'Z')
-						    || first >= 'a' && first <= 'z') {
+						if (
+							(first >= 'A' && first <= 'Z') ||
+							(first >= 'a' && first <= 'z')
+						) {
 							this.parseKeywordLine(line);
 						}
 						this.syntaxError();
@@ -99,12 +99,12 @@ export class PoParser {
 			const msgid = this.entry.properties.msgid;
 			if (typeof this.entry.properties.msgid === 'undefined') {
 				// TRANSLATORS: Do not translate "msgid".
-				this.error(gtx._("missing 'msgid' section"));
+				this.error(gtx._('missing "msgid" section'));
 			}
 			if (this.seen[msgctxt] && this.seen[msgctxt][msgid]) {
 				const location = this.seen[msgctxt][msgid];
 				this.warner(
-					`${this.filename}:${this.lineno}: ` +
+					`${this.filename}:${this.entryLineno}: ` +
 						gtx._('duplicate message definition...'),
 				);
 				this.warner(
@@ -116,7 +116,7 @@ export class PoParser {
 			if (!this.seen[msgctxt]) {
 				this.seen[msgctxt] = {};
 			}
-			this.seen[msgctxt][msgid] = this.lineno;
+			this.seen[msgctxt][msgid] = this.entryLineno;
 			this.catalog.addEntry(this.entry);
 		}
 		this.entry = undefined;
@@ -151,10 +151,29 @@ export class PoParser {
 		let remainder = line.replace(/^[A-Za-z0-9[\]]+/, (keyword) => {
 			switch (keyword) {
 				case 'msgid':
+					this.entryLineno = this.lineno;
+					this.msgType = keyword;
+					if (typeof this.entry.properties.msgid !== 'undefined') {
+						this.error(gtx._x('duplicate "{keyword}" section', { keyword }));
+					}
+					break;
 				case 'msgstr':
+					this.msgType = keyword;
+					if (typeof this.entry.properties.msgstr !== 'undefined') {
+						this.error(gtx._x('duplicate "{keyword}" section', { keyword }));
+					}
+					break;
 				case 'msgid_plural':
+					this.msgType = keyword;
+					if (typeof this.entry.properties.msgidPlural !== 'undefined') {
+						this.error(gtx._x('duplicate "{keyword}" section', { keyword }));
+					}
+					break;
 				case 'msgctxt':
 					this.msgType = keyword;
+					if (typeof this.entry.properties.msgctxt !== 'undefined') {
+						this.error(gtx._x('duplicate "{keyword}" section', { keyword }));
+					}
 					break;
 				default:
 					if (!/^msgstr\[[0-9]+\]/.exec(keyword)) {
@@ -241,7 +260,7 @@ export class PoParser {
 			flag = this.trim(flag);
 			if (flag.includes(',')) {
 				this.warn(
-					gtx._x("ignoring flag '{flag}' because it contains a comma.", {
+					gtx._x('ignoring flag "{flag}" because it contains a comma', {
 						flag,
 					}),
 				);
@@ -267,7 +286,7 @@ export class PoParser {
 			if (reference.includes(' ')) {
 				this.warn(
 					gtx._x(
-						"ignoring reference '{reference}' because it contains a space",
+						'ignoring reference "{reference}" because it contains a space',
 						{
 							reference,
 						},
@@ -277,7 +296,7 @@ export class PoParser {
 				this.entry.addReference(reference);
 			} else {
 				this.warn(
-					gtx._x("ignoring mal-formed reference '{reference}'.", {
+					gtx._x('ignoring mal-formed reference "{reference}".', {
 						reference,
 					}),
 				);
