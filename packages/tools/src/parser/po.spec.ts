@@ -38,6 +38,11 @@ msgstr ""
 msgid "strawberry"
 msgstr ""
 
+msgid "One universe"
+msgstr "Parallel universes"
+msgstr[0] ""
+msgstr[1] ""
+
 #~ msgid "obsolete entry"
 #~ msgstr ""
 `;
