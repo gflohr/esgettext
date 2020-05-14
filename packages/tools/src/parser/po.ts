@@ -222,6 +222,8 @@ export class PoParser {
 					return '\n';
 				case 'v':
 					return '\v';
+				case 'f':
+					return '\f';
 				case 'r':
 					return '\r';
 				default:

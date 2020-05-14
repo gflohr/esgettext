@@ -43,6 +43,9 @@ msgstr "Parallel universes"
 msgstr[0] ""
 msgstr[1] ""
 
+msgid "escapes"
+msgstr "\\\\\\a\\b\\t\\n\\v\\f\\r\\""
+
 #~ msgid "obsolete entry"
 #~ msgstr ""
 `;
