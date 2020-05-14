@@ -50,7 +50,7 @@ export class Catalog {
 			// Avoid if/else, so we do not spoil our test coverage. :)
 			let year = now.getFullYear().toString();
 			year = '0'.repeat(4 - year.length) + year;
-			let month = now.getMonth().toString();
+			let month = (1 + now.getMonth()).toString();
 			month = '0'.repeat(2 - month.length) + month;
 			let mday = now.getDate().toString();
 			mday = '0'.repeat(2 - mday.length) + mday;

@@ -242,4 +242,22 @@ describe('translation catalog', () => {
 			expect(copy.toString()).toMatchSnapshot();
 		});
 	});
+
+	describe('deleting', () => {
+		const catalog = new Catalog({ date });
+
+		catalog.addEntry(
+			new POTEntry({
+				msgid: 'Hello, world!',
+			}),
+		);
+
+		expect(catalog.toString()).toMatchSnapshot();
+
+		catalog.deleteEntry('Hello, world!');
+		catalog.deleteEntry('Goodbye, world!');
+		catalog.deleteEntry('Hello, world!', 'La-la-land');
+
+		expect(catalog.toString()).toMatchSnapshot();
+	});
 });
