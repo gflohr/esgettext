@@ -272,5 +272,19 @@ msgstr "okay"
 			);
 			expect(warner).not.toHaveBeenCalled();
 		});
+
+		it('should bail out on invalid control sequences', () => {
+			const parser = new PoParser(warner);
+			const input = `msgid "okay"
+msgstr ""
+
+msgid "beware of \\x-rays"
+msgstr ""
+`;
+			expect(() => parser.parse(input, 'example.ts')).toThrow(
+				new Error('example.ts:4:18: invalid control sequence'),
+			);
+			expect(warner).not.toHaveBeenCalled();
+		});
 	});
 });

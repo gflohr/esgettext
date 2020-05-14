@@ -207,7 +207,7 @@ export class PoParser {
 		if (raw.length && raw.endsWith('\\')) {
 			this.error(gtx._('end-of-line within string'));
 		}
-		const msg = raw.replace(/\\./g, (match) => {
+		const msg = raw.replace(/\\./g, (match, offset) => {
 			switch (match[1]) {
 				case '\\':
 				case '"':
@@ -227,6 +227,8 @@ export class PoParser {
 				case 'r':
 					return '\r';
 				default:
+					// We have to take the leading quote into account.
+					this.column += offset + 1;
 					this.error(gtx._('invalid control sequence'));
 					return 'not reached';
 			}
