@@ -74,10 +74,19 @@ msgstr ""
 
 'garbage'
 `;
-
 			expect(() => parser.parse(input, 'example.ts')).toThrow(new Error('example.ts:4:1: syntax error'));
 		});
 
+		it('should bail out on entries w/o msgid', () => {
+			// eslint-disable-next-line no-console
+			const parser = new PoParser(console.warn);
+			const input = `msgid "okay"
+msgstr ""
 
+# Missing msgid.
+msgstr ""
+`;
+			expect(() => parser.parse(input, 'example.ts')).toThrow(new Error("example.ts:6:1: missing 'msgid' section"));
+		});
 	});
 });
