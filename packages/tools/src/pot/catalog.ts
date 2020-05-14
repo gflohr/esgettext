@@ -28,7 +28,7 @@ interface RenderOptions {
  */
 export class Catalog {
 	private readonly cache: Cache = {};
-	private readonly entries: Array<POTEntry>;
+	private entries: Array<POTEntry>;
 
 	constructor(private readonly properties: CatalogProperties = {}) {
 		if (typeof properties.package === 'undefined') {
@@ -187,7 +187,7 @@ FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 					refs: Array<{ filename: string; lineno: number }>;
 					entry: POTEntry;
 				},
-			) => {
+			): number => {
 				const arefs = a.refs;
 				const brefs = b.refs;
 				const min = Math.min(arefs.length, brefs.length);
@@ -202,7 +202,9 @@ FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 				return Math.sign(arefs.length - brefs.length);
 			};
 
-			const splitRefs = (refs: Array<string>) => {
+			const splitRefs = (
+				refs: Array<string>,
+			): Array<{ filename: string; lineno: number }> => {
 				return refs ? refs.map(splitRef) : [];
 			};
 
@@ -239,6 +241,20 @@ FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 		} else {
 			this.cache[msgid][msgctxt].merge(entry);
 		}
+	}
+
+	deleteEntry(msgid: string, msgctxt?: string): void {
+		if (!this.cache[msgid]) {
+			return;
+		}
+
+		const entry = this.cache[msgid][msgctxt];
+		if (!entry) {
+			return;
+		}
+
+		delete this.cache[msgid][msgctxt];
+		this.entries = this.entries.filter((other) => other !== entry);
 	}
 
 	/**

@@ -265,6 +265,11 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
+"@esgettext/runtime@file:../runtime":
+  version "0.0.1"
+  dependencies:
+    "@types/node" "^13.13.2"
+
 "@istanbuljs/load-nyc-config@^1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@istanbuljs/load-nyc-config/-/load-nyc-config-1.0.0.tgz#10602de5570baea82f8afbfa2630b24e7a8cfe5b"
@@ -1597,6 +1602,11 @@ getpass@^0.1.1:
   integrity sha1-Xv+OPmhNVprkyysSgmBOi6YhSfo=
   dependencies:
     assert-plus "^1.0.0"
+
+gettext-po-file-parser@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/gettext-po-file-parser/-/gettext-po-file-parser-1.1.1.tgz#188f028fd3c829ab52201e2eab6174902f1f448a"
+  integrity sha512-ydnPHsceLDcfZnjUzBt/Psh6IIoVRb9DGAKVxKnjd4BJ7pFbR3L0XfUwRklkz5G8Sonm2tSAshjfmD0rOynIeA==
 
 glob-parent@^5.0.0:
   version "5.1.1"

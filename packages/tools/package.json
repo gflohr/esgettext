@@ -50,16 +50,17 @@
 		"testEnvironment": "node"
 	},
 	"dependencies": {
+		"@esgettext/runtime": "file:../runtime",
 		"@types/node": "^13.13.2",
 		"@types/yargs": "^15.0.4",
 		"camelcase": "^6.0.0",
-		"@esgettext/runtime": "file:../runtime",
 		"typescript": "^3.8.3",
 		"yargs": "^15.3.1"
 	},
 	"devDependencies": {
 		"@babel/parser": "^7.9.6",
 		"eslint": "^6.8.0",
+		"gettext-po-file-parser": "^1.1.1",
 		"jest": "^25.5.2",
 		"shx": "^0.3.2"
 	}

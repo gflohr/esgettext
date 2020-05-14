@@ -70,6 +70,13 @@ export class POTEntry {
 		this.checkFlags();
 	}
 
+	static build(): POTEntry {
+		const entry = new POTEntry({ msgid: 'ignore' });
+		delete entry.properties.msgid;
+
+		return entry;
+	}
+
 	/**
 	 * Serialize the entry to a string that can be put into a POT file.
 	 *
@@ -110,8 +117,7 @@ export class POTEntry {
 		}
 
 		if (typeof this.properties.flags !== 'undefined') {
-			const flags = Array.from(new Set(this.properties.flags))
-				.join(', ');
+			const flags = Array.from(new Set(this.properties.flags)).join(', ');
 			out += `#, ${flags}\n`;
 		}
 
@@ -205,6 +211,90 @@ export class POTEntry {
 			}
 			this.properties.references.push(...other.properties.references);
 		}
+	}
+
+	/**
+	 * Add a normal comment line.
+	 *
+	 * @param line - one comment line to add
+	 */
+	addTranslatorCommentLine(line: string): void {
+		if (!this.properties.translatorComments) {
+			this.properties.translatorComments = [];
+		}
+		this.properties.translatorComments.push(line);
+	}
+
+	/**
+	 * Add a flag.
+	 *
+	 * @param flags - the flag to add
+	 */
+	addFlag(flag: string): void {
+		if (!this.properties.flags) {
+			this.properties.flags = [];
+		}
+		this.properties.flags.push(flag);
+	}
+
+	/**
+	 * Add a reference.
+	 *
+	 * @param reference - the reference to add
+	 */
+	addReference(reference: string): void {
+		if (!this.properties.references) {
+			this.properties.references = [];
+		}
+		this.properties.references.push(reference);
+	}
+
+	/**
+	 * Add a string chunk to the msgid.
+	 *
+	 * @param chunk - the chunk to add
+	 */
+	addToMsgid(chunk: string): void {
+		if (typeof this.properties.msgid === 'undefined') {
+			this.properties.msgid = '';
+		}
+		this.properties.msgid += chunk;
+	}
+
+	/**
+	 * Add a string chunk to the msgid_plural.
+	 *
+	 * @param chunk - the chunk to add
+	 */
+	addToMsgidPlural(chunk: string): void {
+		if (typeof this.properties.msgidPlural === 'undefined') {
+			this.properties.msgidPlural = '';
+		}
+		this.properties.msgidPlural += chunk;
+	}
+
+	/**
+	 * Add a string chunk to the msgstr.
+	 *
+	 * @param chunk - the chunk to add
+	 */
+	addToMsgstr(chunk: string): void {
+		if (typeof this.properties.msgstr === 'undefined') {
+			this.properties.msgstr = '';
+		}
+		this.properties.msgstr += chunk;
+	}
+
+	/**
+	 * Add a string chunk to the msgctxt.
+	 *
+	 * @param chunk - the chunk to add
+	 */
+	addToMsgctxt(chunk: string): void {
+		if (typeof this.properties.msgctxt === 'undefined') {
+			this.properties.msgctxt = '';
+		}
+		this.properties.msgctxt += chunk;
 	}
 
 	private serializeMsgId(
