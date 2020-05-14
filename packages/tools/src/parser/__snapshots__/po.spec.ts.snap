@@ -31,12 +31,27 @@ msgid \\"strawberry\\"
 msgstr \\"\\"
 
 msgid \\"One universe\\"
-msgstr \\"Parallel universes\\"
+msgid_plural \\"Parallel universes\\"
+msgstr[0] \\"\\"
+msgstr[1] \\"\\"
 
 msgid \\"escapes\\"
 msgstr \\"\\"
 \\"\\\\\\\\\\\\a\\\\b\\\\t\\\\n\\"
 \\"\\\\v\\\\f\\\\r\\\\\\"\\"
+
+msgid \\"Multi-line msgid\\"
+msgstr \\"\\"
+
+msgctxt \\"multi-line\\"
+msgid \\"\\"
+\\"Hello, world!\\\\n\\"
+msgstr \\"\\"
+
+msgid \\"One world\\"
+msgid_plural \\"Many worlds\\"
+msgstr[0] \\"\\"
+msgstr[1] \\"\\"
 "
 `;
 
