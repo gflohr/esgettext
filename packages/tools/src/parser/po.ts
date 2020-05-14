@@ -70,7 +70,7 @@ export class PoParser {
 							this.entry = POTEntry.build();
 							this.entryLineno = this.lineno;
 						}
-						this.parsePropertyLine(line);
+						this.parseKeywordLine(line);
 						break;
 					case '"':
 						if (!this.entry) {
@@ -79,6 +79,10 @@ export class PoParser {
 						this.parseQuotedString(line);
 						break;
 					default:
+						if ((first >= 'A' && first <= 'Z')
+						    || first >= 'a' && first <= 'z') {
+							this.parseKeywordLine(line);
+						}
 						this.syntaxError();
 				}
 			}
@@ -143,8 +147,8 @@ export class PoParser {
 		}
 	}
 
-	private parsePropertyLine(line: string): void {
-		let remainder = line.replace(/^m[a-z0-9[\]]*/, (keyword) => {
+	private parseKeywordLine(line: string): void {
+		let remainder = line.replace(/^[A-Za-z0-9[\]]+/, (keyword) => {
 			switch (keyword) {
 				case 'msgid':
 				case 'msgstr':
@@ -154,7 +158,7 @@ export class PoParser {
 					break;
 				default:
 					if (!/^msgstr\[[0-9]+\]/.exec(keyword)) {
-						this.syntaxError();
+						this.error(gtx._x('keyword "{keyword}" unknown', { keyword }));
 					}
 					this.msgType = keyword;
 			}
