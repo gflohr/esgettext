@@ -30,11 +30,11 @@ msgstr ""
 msgid "no comment"
 msgstr ""
 
-#, perl-brace-format
+#, perl-brace-format, no-perl-format
 msgid "Hello, {name}!"
 msgstr ""
 
-#: src/example.ts:2304
+#: src/example.ts:2304 src/other.ts:1303
 msgid "strawberry"
 msgstr ""
 
@@ -285,6 +285,29 @@ msgstr ""
 				new Error('example.ts:4:18: invalid control sequence'),
 			);
 			expect(warner).not.toHaveBeenCalled();
+		});
+	});
+
+	describe('warnings', () => {
+		const warner = jest.fn();
+
+		beforeEach(() => {
+			warner.mockReset();
+		});
+
+		it('should warn about empty flags', () => {
+			const parser = new PoParser(warner);
+			const input = `#, fuzzy,, perl-brace-format
+msgid "Hello, {name}!"
+msgstr ""
+`;
+			const result = parser.parse(input, 'example.js');
+			expect(result.toString()).toMatchSnapshot();
+			expect(warner).toHaveBeenCalledTimes(1);
+			expect(warner).toHaveBeenNthCalledWith(
+				1,
+				'example.js:1:8: ignoring empty flag',
+			);
 		});
 	});
 });

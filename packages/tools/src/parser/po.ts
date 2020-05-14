@@ -315,7 +315,7 @@ export class PoParser {
 	}
 
 	private warn(msg: string): void {
-		this.warner(`${this.filename}:${this.lineno}:${this.column} ${msg}`);
+		this.warner(`${this.filename}:${this.lineno}:${this.column}: ${msg}`);
 	}
 
 	private syntaxError(): void {
