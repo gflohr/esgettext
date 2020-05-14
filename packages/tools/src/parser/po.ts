@@ -261,13 +261,7 @@ export class PoParser {
 
 			const rspace = this.rspace(flag);
 			flag = this.trim(flag);
-			if (flag.includes(',')) {
-				this.warn(
-					gtx._x('ignoring flag "{flag}" because it contains a comma', {
-						flag,
-					}),
-				);
-			} else if (!flag.length) {
+			if (!flag.length) {
 				this.warn(gtx._('ignoring empty flag'));
 			} else {
 				this.entry.addFlag(flag);
