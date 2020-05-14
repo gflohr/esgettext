@@ -459,6 +459,23 @@ msgstr ""
 			});
 			expect(warner).toHaveBeenCalledTimes(5);
 		});
+
+		it('should warn about conflicting flags', () => {
+			const entry = new POTEntry({
+				msgid: 'foobar',
+				flags: ['perl-brace-format'],
+			});
+			const other = new POTEntry({
+				msgid: 'foobar',
+				flags: ['no-perl-brace-format'],
+			});
+			entry.merge(other);
+			expect(warner).toHaveBeenCalledTimes(1);
+			expect(warner).toHaveBeenNthCalledWith(
+				1,
+				'[in memory]: warning: flag "no-perl-brace-format" conflicts with previous flag "perl-brace-format"',
+			);
+		});
 	});
 
 	describe('errors', () => {

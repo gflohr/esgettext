@@ -181,26 +181,26 @@ export class POTEntry {
 
 				if (this.properties.flags.includes(negated)) {
 					other.warning(
-						gtx._x("Flag '{flag}' conflicts with previous flag '{negated}'.", {
+						gtx._x('flag "{flag}" conflicts with previous flag "{negated}"', {
 							flag,
 							negated,
 						}),
 					);
-					const refs = this.properties.references || [];
+					const refs = this.properties.references;
 					if (refs) {
 						other.warning(
 							gtx._nx(
-								"The conflicting flag '{negated}' may stem from this location:",
-								"The conflicting flag '{negated}' may stem from one of these locations:",
+								'The conflicting flag "{negated}" may stem from this location:',
+								'The conflicting flag "{negated}" may stem from one of these locations:',
 								refs.length,
 								{ flag, negated },
 							),
 						);
+						refs.forEach((ref) => {
+							/* eslint-disable-next-line no-console */
+							console.warn(`\t${ref}`);
+						});
 					}
-					refs.forEach((ref) => {
-						/* eslint-disable-next-line no-console */
-						console.warn(`\t${ref}`);
-					});
 				}
 			});
 			this.properties.flags.push(...other.properties.flags);
