@@ -205,7 +205,7 @@ export class PoParser {
 
 		const raw = line.substr(1, line.length - 2);
 		if (raw.length && raw.endsWith('\\')) {
-			this.error(gtx._('end-of-line withing string'));
+			this.error(gtx._('end-of-line within string'));
 		}
 		const msg = raw.replace(/\\./g, (match) => {
 			switch (match[1]) {

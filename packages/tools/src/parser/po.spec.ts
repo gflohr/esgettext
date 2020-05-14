@@ -241,5 +241,33 @@ msgstr "okay"
 			);
 			expect(warner).not.toHaveBeenCalled();
 		});
+
+		it('should bail out on unterminated strings', () => {
+			const parser = new PoParser(warner);
+			const input = `msgid "okay"
+msgstr ""
+
+msgid "not
+msgstr "okay"
+`;
+			expect(() => parser.parse(input, 'example.ts')).toThrow(
+				new Error('example.ts:4:7: end-of-line within string'),
+			);
+			expect(warner).not.toHaveBeenCalled();
+		});
+
+		it('should bail out on trailing backslashes', () => {
+			const parser = new PoParser(warner);
+			const input = `msgid "okay"
+msgstr ""
+
+msgid "not\\"
+msgstr "okay"
+`;
+			expect(() => parser.parse(input, 'example.ts')).toThrow(
+				new Error('example.ts:4:7: end-of-line within string'),
+			);
+			expect(warner).not.toHaveBeenCalled();
+		});
 	});
 });
