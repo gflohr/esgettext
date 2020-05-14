@@ -28,7 +28,7 @@ msgstr ""
 msgid "Hello, {name}!"
 msgstr ""
 
-#, src/example.ts:2304
+#: src/example.ts:2304
 msgid "strawberry"
 msgstr ""
 
