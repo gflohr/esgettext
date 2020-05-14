@@ -297,7 +297,7 @@ msgstr ""
 
 		it('should warn about empty flags', () => {
 			const parser = new PoParser(warner);
-			const input = `#, fuzzy,, perl-brace-format
+			const input = `#, fuzzy   ,, perl-brace-format
 msgid "Hello, {name}!"
 msgstr ""
 `;
@@ -306,7 +306,7 @@ msgstr ""
 			expect(warner).toHaveBeenCalledTimes(1);
 			expect(warner).toHaveBeenNthCalledWith(
 				1,
-				'example.js:1:8: ignoring empty flag',
+				'example.js:1:11: ignoring empty flag',
 			);
 		});
 

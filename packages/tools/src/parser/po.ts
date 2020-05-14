@@ -291,7 +291,6 @@ export class PoParser {
 				++this.column;
 			}
 
-			const rspace = this.rspace(reference);
 			reference = this.trim(reference);
 
 			if (/.+:[1-9][0-9]*$/.exec(reference)) {
@@ -303,7 +302,7 @@ export class PoParser {
 					}),
 				);
 			}
-			this.column += rspace + reference.length;
+			this.column += reference.length;
 		});
 	}
 
