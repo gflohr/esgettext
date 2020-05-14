@@ -49,14 +49,21 @@ msgstr ""
 		it('should bail out on unexpected input', () => {
 			// eslint-disable-next-line no-console
 			const parser = new PoParser(console.warn);
-			const input = `msgid "okay"
+			let input = `msgid "okay"
 msgstr ""
 
 MSGID "uppercase not allowed"
 msgstr ""
 `;
-
 			expect(() => parser.parse(input, 'example.ts')).toThrow(new Error('example.ts:4:1: keyword "MSGID" unknown'));
+
+			input = `msgid "okay"
+msgstr ""
+
+messageId "no, no, now"
+msgstr ""
+`;
+			expect(() => parser.parse(input, 'example.ts')).toThrow(new Error('example.ts:4:1: keyword "messageId" unknown'));
 		});
 	})
 });
