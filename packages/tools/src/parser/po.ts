@@ -151,7 +151,7 @@ export class PoParser {
 	}
 
 	private parseKeywordLine(line: string): void {
-		let remainder = line.replace(/^[A-Za-z0-9[\]]+/, (keyword) => {
+		let remainder = line.replace(/^[_A-Za-z0-9[\]]+/, (keyword) => {
 			switch (keyword) {
 				case 'msgid':
 					this.entryLineno = this.lineno;

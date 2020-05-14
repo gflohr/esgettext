@@ -175,6 +175,23 @@ msgstr "okay"
 			expect(warner).not.toHaveBeenCalled();
 		});
 
+		it('should bail out on duplicate msgid_plural sections', () => {
+			const parser = new PoParser(warner);
+			const input = `msgid "okay"
+msgstr ""
+
+msgid "not"
+msgid_plural "really"
+msgid_plural "really"
+msgstr[0] ""
+msgstr[1] ""
+`;
+			expect(() => parser.parse(input, 'example.ts')).toThrow(
+				new Error('example.ts:6:1: duplicate "msgid_plural" section'),
+			);
+			expect(warner).not.toHaveBeenCalled();
+		});
+
 		it('should enforce consistent use of #~', () => {
 			const parser = new PoParser(warner);
 			const input = `msgid "okay"
