@@ -185,13 +185,12 @@ export class PoParser {
 					this.msgType = keyword;
 			}
 
+			this.column += keyword.length;
+
 			return '';
 		});
-		if (remainder === line) {
-			this.syntaxError();
-		}
 
-		remainder = this.trim(remainder.trim());
+		remainder = this.trim(remainder);
 		if (remainder.startsWith('"')) {
 			return this.parseQuotedString(remainder);
 		} else {

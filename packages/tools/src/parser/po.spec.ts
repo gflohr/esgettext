@@ -227,5 +227,19 @@ msgstr "okay"
 			);
 			expect(warner).not.toHaveBeenCalled();
 		});
+
+		it('should bail out on non-strings for msgids', () => {
+			const parser = new PoParser(warner);
+			const input = `msgid "okay"
+msgstr ""
+
+msgid        not
+msgstr "okay"
+`;
+			expect(() => parser.parse(input, 'example.ts')).toThrow(
+				new Error('example.ts:4:14: syntax error'),
+			);
+			expect(warner).not.toHaveBeenCalled();
+		});
 	});
 });
