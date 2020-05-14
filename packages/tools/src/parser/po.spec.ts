@@ -2,6 +2,12 @@ import { PoParser } from './po';
 
 describe('parse po files', () => {
 	describe('simple file', () => {
+		const warner = jest.fn();
+
+		beforeEach(() => {
+			warner.mockReset();
+		});
+
 		it('should parse', () => {
 			const input = `# Translations for smell-o-vision.
 # Copyright (C) 2020 SmellOVision Inc.
@@ -35,18 +41,23 @@ msgstr ""
 #~ msgid "obsolete entry"
 #~ msgstr ""
 `;
-			// eslint-disable-next-line no-console
-			const parser = new PoParser(console.warn);
+			const parser = new PoParser(warner);
 			const result = parser.parse(input, 'example.js');
 
 			expect(result).toBeDefined();
+			expect(warner).not.toHaveBeenCalled();
 		});
 	});
 
 	describe('errors', () => {
+		const warner = jest.fn();
+
+		beforeEach(() => {
+			warner.mockReset();
+		});
+
 		it('should discard lone strings', () => {
-			// eslint-disable-next-line no-console
-			const parser = new PoParser(console.warn);
+			const parser = new PoParser(warner);
 			const input = `msgid "okay"
 msgstr ""
 
@@ -56,11 +67,11 @@ msgstr ""
 			expect(() => parser.parse(input, 'example.ts')).toThrow(
 				new Error('example.ts:4:1: syntax error'),
 			);
+			expect(warner).not.toHaveBeenCalled();
 		});
 
 		it('should bail out on unexpected input', () => {
-			// eslint-disable-next-line no-console
-			const parser = new PoParser(console.warn);
+			const parser = new PoParser(warner);
 			let input = `msgid "okay"
 msgstr ""
 
@@ -70,6 +81,7 @@ msgstr ""
 			expect(() => parser.parse(input, 'example.ts')).toThrow(
 				new Error('example.ts:4:1: keyword "MSGID" unknown'),
 			);
+			expect(warner).not.toHaveBeenCalled();
 
 			input = `msgid "okay"
 msgstr ""
@@ -80,11 +92,11 @@ msgstr ""
 			expect(() => parser.parse(input, 'example.ts')).toThrow(
 				new Error('example.ts:4:1: keyword "nsgid" unknown'),
 			);
+			expect(warner).not.toHaveBeenCalled();
 		});
 
 		it('should bail out on garbage', () => {
-			// eslint-disable-next-line no-console
-			const parser = new PoParser(console.warn);
+			const parser = new PoParser(warner);
 			const input = `msgid "okay"
 msgstr ""
 
@@ -93,11 +105,11 @@ msgstr ""
 			expect(() => parser.parse(input, 'example.ts')).toThrow(
 				new Error('example.ts:4:1: syntax error'),
 			);
+			expect(warner).not.toHaveBeenCalled();
 		});
 
 		it('should bail out on entries w/o msgid', () => {
-			// eslint-disable-next-line no-console
-			const parser = new PoParser(console.warn);
+			const parser = new PoParser(warner);
 			const input = `msgid "okay"
 msgstr ""
 
@@ -107,11 +119,12 @@ msgstr ""
 			expect(() => parser.parse(input, 'example.ts')).toThrow(
 				new Error('example.ts:6:1: missing "msgid" section'),
 			);
+			expect(warner).not.toHaveBeenCalled();
 		});
 
 		it('should bail out on duplicate entries', () => {
-			const warner = jest.fn();
-			const parser = new PoParser(warner);
+			const localWarner = jest.fn();
+			const parser = new PoParser(localWarner);
 			const input = `msgid "okay"
 msgstr ""
 
@@ -121,20 +134,19 @@ msgstr ""
 			expect(() => parser.parse(input, 'example.ts')).toThrow(
 				new Error('example.ts:6:1: cannot proceed after fatal error'),
 			);
-			expect(warner).toHaveBeenCalledTimes(2);
-			expect(warner).toHaveBeenNthCalledWith(
+			expect(localWarner).toHaveBeenCalledTimes(2);
+			expect(localWarner).toHaveBeenNthCalledWith(
 				1,
 				'example.ts:4: duplicate message definition...',
 			);
-			expect(warner).toHaveBeenNthCalledWith(
+			expect(localWarner).toHaveBeenNthCalledWith(
 				2,
 				'example.ts:1: ...this is the location of the first definition',
 			);
 		});
 
 		it('should bail out on duplicate msgid sections', () => {
-			// eslint-disable-next-line no-console
-			const parser = new PoParser(console.warn);
+			const parser = new PoParser(warner);
 			const input = `msgid "okay"
 msgstr ""
 
@@ -145,6 +157,7 @@ msgid "okay"
 			expect(() => parser.parse(input, 'example.ts')).toThrow(
 				new Error('example.ts:6:1: duplicate "msgid" section'),
 			);
+			expect(warner).not.toHaveBeenCalled();
 		});
 	});
 });
