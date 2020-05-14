@@ -20,11 +20,14 @@ msgstr ""
 "MIME-Version: 1.0\\n"
 "Content-Type: text/plain; charset=utf-8\\n"
 "Content-Transfer-Encoding: 8bit\\n"
+
+msgid "no comment"
+msgstr ""
 `;
 			// eslint-disable-next-line no-console
 			const parser = new PoParser(console.warn);
 			const result = parser.parse(input, 'example.js');
-			//console.log(result.toString());
+			console.log(result.toString());
 
 			expect(result).toBeDefined();
 		});
