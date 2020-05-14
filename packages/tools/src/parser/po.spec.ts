@@ -60,10 +60,10 @@ msgstr ""
 			input = `msgid "okay"
 msgstr ""
 
-messageId "no, no, now"
+nsgid "no, no, no"
 msgstr ""
 `;
-			expect(() => parser.parse(input, 'example.ts')).toThrow(new Error('example.ts:4:1: keyword "messageId" unknown'));
+			expect(() => parser.parse(input, 'example.ts')).toThrow(new Error('example.ts:4:1: keyword "nsgid" unknown'));
 		});
 	})
 });
