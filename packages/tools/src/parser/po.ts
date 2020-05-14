@@ -208,30 +208,41 @@ export class PoParser {
 			this.error(gtx._('end-of-line within string'));
 		}
 		const msg = raw.replace(/\\./g, (match, offset) => {
+			let retval: string;
+
 			switch (match[1]) {
 				case '\\':
 				case '"':
-					return match[1];
+					retval = match[1];
+					break;
 				case 'a':
-					return '\u0007';
+					retval = '\u0007';
+					break;
 				case 'b':
-					return '\b';
+					retval = '\b';
+					break;
 				case 't':
-					return '\t';
+					retval = '\t';
+					break;
 				case 'n':
-					return '\n';
+					retval = '\n';
+					break;
 				case 'v':
-					return '\v';
+					retval = '\v';
+					break;
 				case 'f':
-					return '\f';
+					retval = '\f';
+					break;
 				case 'r':
-					return '\r';
+					retval = '\r';
+					break;
 				default:
 					// We have to take the leading quote into account.
 					this.column += offset + 1;
 					this.error(gtx._('invalid control sequence'));
-					return 'not reached';
 			}
+
+			return retval;
 		});
 
 		switch (this.msgType) {
