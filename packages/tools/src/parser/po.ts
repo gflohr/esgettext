@@ -283,6 +283,8 @@ export class PoParser {
 	}
 
 	private parseReferences(line: string): void {
+		this.column += 2;
+
 		const refs = line.substr(2).split(' ');
 		refs.forEach((reference, i) => {
 			if (i) {
@@ -292,20 +294,11 @@ export class PoParser {
 			const rspace = this.rspace(reference);
 			reference = this.trim(reference);
 
-			if (reference.includes(' ')) {
-				this.warn(
-					gtx._x(
-						'ignoring reference "{reference}" because it contains a space',
-						{
-							reference,
-						},
-					),
-				);
-			} else if (/.+:[1-9][0-9]*$/.exec(reference)) {
+			if (/.+:[1-9][0-9]*$/.exec(reference)) {
 				this.entry.addReference(reference);
 			} else if (reference !== '') {
 				this.warn(
-					gtx._x('ignoring mal-formed reference "{reference}".', {
+					gtx._x('ignoring mal-formed reference "{reference}"', {
 						reference,
 					}),
 				);

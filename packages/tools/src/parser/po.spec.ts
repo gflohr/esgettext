@@ -309,5 +309,21 @@ msgstr ""
 				'example.js:1:8: ignoring empty flag',
 			);
 		});
+
+		it('should warn about invalid references', () => {
+			const parser = new PoParser(warner);
+			const input = `#:   src/here.js:2304     somewhere
+msgid "Hello, {name}!"
+msgstr ""
+`;
+
+			const result = parser.parse(input, 'example.js');
+			expect(result.toString()).toMatchSnapshot();
+			expect(warner).toHaveBeenCalledTimes(1);
+			expect(warner).toHaveBeenNthCalledWith(
+				1,
+				'example.js:1:27: ignoring mal-formed reference "somewhere"',
+			);
+		});
 	});
 });
