@@ -192,6 +192,22 @@ msgstr[1] ""
 			expect(warner).not.toHaveBeenCalled();
 		});
 
+		it('should bail out on duplicate msgctxt sections', () => {
+			const parser = new PoParser(warner);
+			const input = `msgid "okay"
+msgstr ""
+
+msgctxt "Menu"
+msgctxt "File"
+msgid "Hello, world!"
+msgstr ""
+`;
+			expect(() => parser.parse(input, 'example.ts')).toThrow(
+				new Error('example.ts:5:1: duplicate "msgctxt" section'),
+			);
+			expect(warner).not.toHaveBeenCalled();
+		});
+
 		it('should enforce consistent use of #~', () => {
 			const parser = new PoParser(warner);
 			const input = `msgid "okay"
