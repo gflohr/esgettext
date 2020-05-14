@@ -61,8 +61,7 @@ export class PoParser {
 					case '#':
 						if (line.length > 1 && line[1] === '~') {
 							if (this.entry) {
-								++this.column;
-								this.syntaxError();
+								this.error(gtx._('inconsistent use of #~'));
 							} else {
 								break;
 							}
@@ -254,7 +253,7 @@ export class PoParser {
 	}
 
 	private parseFlags(line: string): void {
-		const flags = line.split(',');
+		const flags = line.substr(2).split(',');
 		flags.forEach((flag, i) => {
 			if (i) {
 				++this.column;
@@ -278,7 +277,7 @@ export class PoParser {
 	}
 
 	private parseReferences(line: string): void {
-		const refs = line.split(' ');
+		const refs = line.substr(2).split(' ');
 		refs.forEach((reference, i) => {
 			if (i) {
 				++this.column;
@@ -298,7 +297,7 @@ export class PoParser {
 				);
 			} else if (/.+:[1-9][0-9]*$/.exec(reference)) {
 				this.entry.addReference(reference);
-			} else {
+			} else if (reference !== '') {
 				this.warn(
 					gtx._x('ignoring mal-formed reference "{reference}".', {
 						reference,

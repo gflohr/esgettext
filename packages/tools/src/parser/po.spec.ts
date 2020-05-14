@@ -159,5 +159,20 @@ msgid "okay"
 			);
 			expect(warner).not.toHaveBeenCalled();
 		});
+
+		it('should enforce consistent use of #~', () => {
+			const parser = new PoParser(warner);
+			const input = `msgid "okay"
+msgstr ""
+
+msgid "not"
+#~ msgstr "okay"
+msgstr "okay"
+`;
+			expect(() => parser.parse(input, 'example.ts')).toThrow(
+				new Error('example.ts:5:1: inconsistent use of #~'),
+			);
+			expect(warner).not.toHaveBeenCalled();
+		});
 	});
 });
