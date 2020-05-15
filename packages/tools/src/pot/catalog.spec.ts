@@ -337,6 +337,11 @@ describe('translation catalog', () => {
 					references: ['source.ts:11', 'source.ts:12'],
 				}),
 			);
+			catalog.addEntry(
+				new POTEntry({
+					msgid: 'golf',
+				}),
+			);
 
 			expect(catalog.toString()).toMatchSnapshot();
 		});
