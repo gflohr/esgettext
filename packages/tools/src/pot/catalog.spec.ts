@@ -260,4 +260,42 @@ describe('translation catalog', () => {
 
 		expect(catalog.toString()).toMatchSnapshot();
 	});
+
+	describe('sorting', () => {
+		it('should sort by msgctxt', () => {
+			const catalog = new Catalog({ sortOutput: true, date });
+
+			catalog.addEntry(
+				new POTEntry({
+					msgid: 'sort',
+					msgctxt: 'delta',
+				}),
+			);
+			catalog.addEntry(
+				new POTEntry({
+					msgid: 'sort',
+					msgctxt: 'charlie',
+				}),
+			);
+			catalog.addEntry(
+				new POTEntry({
+					msgid: 'sort',
+					msgctxt: 'bravo',
+				}),
+			);
+			catalog.addEntry(
+				new POTEntry({
+					msgid: 'sort',
+					msgctxt: 'alpha',
+				}),
+			);
+			catalog.addEntry(
+				new POTEntry({
+					msgid: 'sort',
+				}),
+			);
+
+			expect(catalog.toString()).toMatchSnapshot();
+		});
+	});
 });
