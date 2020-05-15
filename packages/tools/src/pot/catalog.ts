@@ -28,7 +28,7 @@ interface RenderOptions {
  */
 export class Catalog {
 	private readonly cache: Cache = {};
-	private entries: Array<POTEntry>;
+	entries: Array<POTEntry>;
 
 	constructor(private readonly properties: CatalogProperties = {}) {
 		if (typeof properties.package === 'undefined') {

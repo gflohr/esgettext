@@ -39,10 +39,17 @@ export class PoParser extends Parser {
 	 * accepts input that actually does not follow the standard in certain
 	 * areas.
 	 *
+	 * The encoding will always be read from the PO header if present.
+	 * Initially, it defaults to `CP1252` aka `Windows-1252` which is more or
+	 * less binary.
+	 *
 	 * @param input - the content of the po file
 	 * @param filename - the filename
+	 * @param encoding - an optional encoding
 	 */
-	parse(input: string, filename: string): Catalog {
+	parse(buf: Buffer, filename: string, encoding = 'cp1252'): Catalog {
+		const input = buf.toString(encoding);
+
 		// Reset parser.
 		this.catalog = new Catalog();
 		this.catalog.deleteEntry('');
@@ -53,10 +60,26 @@ export class PoParser extends Parser {
 		this.msgType = null;
 		this.seen = {};
 
-		input.split('\n').forEach((line) => {
+		// We cannot use forEach here because we may have to return from
+		// inside the loop.
+		const lines = input.split('\n');
+		for (let i = 0; i < lines.length; ++i) {
+			const line = lines[i];
 			this.column = 1;
 			++this.lineno;
 			if (line === '') {
+				if (
+					this.entry &&
+					this.entry.properties.msgid === '' &&
+					typeof this.entry.properties.msgctxt === 'undefined' &&
+					this.entry.properties.msgstr
+				) {
+					const charset = this.extractCharset(this.entry.properties.msgstr);
+					if (charset && charset.toLowerCase() !== encoding.toLowerCase()) {
+						return this.parse(buf, filename, charset);
+					}
+				}
+
 				this.flushEntry();
 			} else {
 				const first = line[0];
@@ -96,7 +119,19 @@ export class PoParser extends Parser {
 						this.syntaxError();
 				}
 			}
-		});
+		}
+
+		if (
+			this.entry &&
+			this.entry.properties.msgid === '' &&
+			typeof this.entry.properties.msgctxt === 'undefined' &&
+			this.entry.properties.msgstr
+		) {
+			const charset = this.extractCharset(this.entry.properties.msgstr);
+			if (charset && charset.toLowerCase() !== encoding.toLowerCase()) {
+				return this.parse(buf, filename, charset);
+			}
+		}
 
 		this.flushEntry();
 		this.catalog.makePOT();
@@ -104,11 +139,51 @@ export class PoParser extends Parser {
 		return this.catalog;
 	}
 
+	private extractCharset(header: string): string {
+		const headers: { [key: string]: string } = {};
+
+		header
+			.split('\n')
+			.map((line) => line.split(':'))
+			.map((chunks) => ({
+				name: chunks[0].toLowerCase(),
+				value: chunks.slice(1).join(':').trim(),
+			}))
+			.filter((header) => header.name !== '')
+			.forEach((header) => (headers[header.name] = header.value));
+
+		const contentType = headers['content-type'];
+		if (typeof contentType === 'undefined') {
+			return null;
+		}
+
+		const tokens = contentType.split('=').map((token) => token.trim());
+		if (tokens.length <= 1) {
+			return null;
+		}
+
+		const charset = tokens[tokens.length - 1];
+
+		if (charset === 'CHARSET') {
+			this.warn(
+				gtx._x('The charset "{charset} is not a portable encoding name."', {
+					charset,
+				}),
+			);
+			this.warn(
+				gtx._('Message conversion to the users charset might not work.'),
+			);
+			return null;
+		}
+
+		return 'charset';
+	}
+
 	private flushEntry(): void {
 		if (this.entry) {
 			const msgctxt = this.entry.properties.msgctxt;
 			const msgid = this.entry.properties.msgid;
-			if (typeof this.entry.properties.msgid === 'undefined') {
+			if (typeof msgid === 'undefined') {
 				// TRANSLATORS: Do not translate "msgid".
 				this.error(gtx._('missing "msgid" section'));
 			}
