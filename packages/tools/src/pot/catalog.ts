@@ -141,9 +141,10 @@ FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 					const actx = a.properties.msgctxt;
 					const bctx = b.properties.msgctxt;
 
-					if (typeof actx === 'undefined' && typeof bctx === 'undefined') {
-						return 0;
-					} else if (typeof bctx === 'undefined') {
+					// It is impossible that both msgctxts are undefined
+					// because that would mean that the msgids are identical
+					// which is prevented.
+					if (typeof bctx === 'undefined') {
 						return +1;
 					} else if (typeof actx === 'undefined') {
 						return -1;
