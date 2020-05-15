@@ -1,6 +1,7 @@
 import { Textdomain } from '@esgettext/runtime';
 import { Catalog } from '../pot/catalog';
 import { POTEntry } from '../pot/entry';
+import { Parser } from './parser';
 
 const gtx = Textdomain.getInstance('esgettext-tools');
 
@@ -15,7 +16,7 @@ interface Escapes {
 	r: string;
 }
 
-export class PoParser {
+export class PoParser extends Parser {
 	private catalog: Catalog;
 	private entry: POTEntry;
 	private entryLineno: number;
@@ -29,7 +30,9 @@ export class PoParser {
 		};
 	};
 
-	constructor(private readonly warner: (msg: string) => void) {}
+	constructor(private readonly warner: (msg: string) => void) {
+		super();
+	}
 
 	/**
 	 * Parse a po file into a catalog. This parser is very forgiving and
