@@ -538,7 +538,11 @@ msgstr \\"\\"
 msgid \\"bravo\\"
 msgstr \\"\\"
 
-#: source.ts:11
+#: source.ts:11 source.ts:12
+msgid \\"foxtrot\\"
+msgstr \\"\\"
+
+#: source.ts:11 source.ts:13
 msgid \\"echo\\"
 msgstr \\"\\"
 

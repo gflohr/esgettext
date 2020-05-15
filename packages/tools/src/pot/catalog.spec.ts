@@ -328,7 +328,13 @@ describe('translation catalog', () => {
 			catalog.addEntry(
 				new POTEntry({
 					msgid: 'echo',
-					references: ['source.ts:11'],
+					references: ['source.ts:11', 'source.ts:13'],
+				}),
+			);
+			catalog.addEntry(
+				new POTEntry({
+					msgid: 'foxtrot',
+					references: ['source.ts:11', 'source.ts:12'],
 				}),
 			);
 
