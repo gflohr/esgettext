@@ -35,10 +35,11 @@ msgid_plural \\"Parallel universes\\"
 msgstr[0] \\"\\"
 msgstr[1] \\"\\"
 
-msgid \\"escapes\\"
-msgstr \\"\\"
+msgctxt \\"escapes\\"
+msgid \\"\\"
 \\"\\\\\\\\\\\\a\\\\b\\\\t\\\\n\\"
 \\"\\\\v\\\\f\\\\r\\\\\\"\\"
+msgstr \\"\\"
 
 msgid \\"Multi-line msgid\\"
 msgstr \\"\\"
@@ -50,6 +51,14 @@ msgstr \\"\\"
 
 msgid \\"One world\\"
 msgid_plural \\"Many worlds\\"
+msgstr[0] \\"\\"
+msgstr[1] \\"\\"
+
+msgid \\"The translation has to be discarded.\\"
+msgstr \\"\\"
+
+msgid \\"And this one, too.\\"
+msgid_plural \\"And these ones, too.\\"
 msgstr[0] \\"\\"
 msgstr[1] \\"\\"
 "

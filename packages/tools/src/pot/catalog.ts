@@ -269,4 +269,21 @@ FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 
 		return other;
 	}
+
+	/**
+	 * Removes all translations from a catalog, so that it can be used as
+	 * a .pot file.
+	 */
+	makePOT(): void {
+		this.entries.forEach((entry) => {
+			if (
+				!(
+					entry.properties.msgid === '' &&
+					typeof entry.properties.msgctxt === 'undefined'
+				)
+			) {
+				delete entry.properties.msgstr;
+			}
+		});
+	}
 }

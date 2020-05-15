@@ -96,6 +96,7 @@ export class PoParser {
 		});
 
 		this.flushEntry();
+		this.catalog.makePOT();
 
 		return this.catalog;
 	}
