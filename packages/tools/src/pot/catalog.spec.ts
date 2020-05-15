@@ -297,5 +297,42 @@ describe('translation catalog', () => {
 
 			expect(catalog.toString()).toMatchSnapshot();
 		});
+
+		it('should sort by line number', () => {
+			const catalog = new Catalog({ sortByFile: true, date });
+
+			catalog.addEntry(
+				new POTEntry({
+					msgid: 'alpha',
+					references: ['source.ts:42'],
+				}),
+			);
+			catalog.addEntry(
+				new POTEntry({
+					msgid: 'bravo',
+					references: ['source.ts:3'],
+				}),
+			);
+			catalog.addEntry(
+				new POTEntry({
+					msgid: 'charlie',
+					references: ['source.ts:31'],
+				}),
+			);
+			catalog.addEntry(
+				new POTEntry({
+					msgid: 'delta',
+					references: ['source.ts:1'],
+				}),
+			);
+			catalog.addEntry(
+				new POTEntry({
+					msgid: 'echo',
+					references: ['source.ts:11'],
+				}),
+			);
+
+			expect(catalog.toString()).toMatchSnapshot();
+		});
 	});
 });

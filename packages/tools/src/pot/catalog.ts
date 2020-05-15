@@ -131,8 +131,25 @@ FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 		const width =
 			options && typeof options.width !== 'undefined' ? options.width : 76;
 
+		const isNotHeader = (entry: POTEntry) => {
+			return !(
+				entry.properties.msgid === '' &&
+				typeof entry.properties.msgctxt === 'undefined'
+			);
+		};
+		const isHeader = (entry: POTEntry) => {
+			return !isNotHeader(entry);
+		};
+
+		const header = this.entries
+			.filter(isHeader)
+			.map((entry) => entry.toString(width))
+			.join('\n');
+
+		let body = '';
 		if (this.properties.sortOutput) {
-			return this.entries
+			body = this.entries
+				.filter(isNotHeader)
 				.sort((a, b) => {
 					const cmp = a.properties.msgid.localeCompare(b.properties.msgid);
 					if (cmp) {
@@ -209,7 +226,8 @@ FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 				return refs ? refs.map(splitRef) : [];
 			};
 
-			return copy.entries
+			body = copy.entries
+				.filter(isNotHeader)
 				.map((entry) => {
 					return { refs: splitRefs(entry.properties.references), entry };
 				})
@@ -218,7 +236,16 @@ FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 				.map((entry) => entry.toString(width))
 				.join('\n');
 		} else {
-			return this.entries.map((entry) => entry.toString(width)).join('\n');
+			body = this.entries
+				.filter(isNotHeader)
+				.map((entry) => entry.toString(width))
+				.join('\n');
+		}
+
+		if (body && header) {
+			return `${header}\n${body}`;
+		} else {
+			return header || body || '';
 		}
 	}
 
