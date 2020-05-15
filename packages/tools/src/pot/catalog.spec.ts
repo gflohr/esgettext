@@ -259,6 +259,9 @@ describe('translation catalog', () => {
 		catalog.deleteEntry('Hello, world!', 'La-la-land');
 
 		expect(catalog.toString()).toMatchSnapshot();
+
+		catalog.deleteEntry('');
+		expect(catalog.toString()).toEqual('');
 	});
 
 	describe('sorting', () => {
