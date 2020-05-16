@@ -110,12 +110,14 @@ export class Keyword {
 		let totalSeen = false;
 		let ready = false;
 
-		// Strip off tokens from the end of the string until a colon is
-		// encountered.
-		while (tokens.length < 5 && spec.length) {
+		while (spec.length) {
+			let modified = false;
+
 			let remainder = spec.replace(
 				/([,:])[\s]*([1-9][0-9]*[ct]?)[\s]*$/,
 				(_, sep, token) => {
+					modified = true;
+
 					if (token.endsWith('c')) {
 						if (contextSeen) {
 							spec += `:${token}`;
@@ -145,15 +147,15 @@ export class Keyword {
 				},
 			);
 
+			spec = remainder;
+
 			if (ready) {
 				break;
 			}
 
-			if (spec !== remainder) {
-				spec = remainder;
-			}
-
 			remainder = spec.replace(/([,:])[\s]*"(.*)"[\s]*$/, (_, sep, token) => {
+				modified = true;
+
 				if (commentSeen) {
 					spec += `:${token}`;
 					ready = true;
@@ -174,7 +176,9 @@ export class Keyword {
 				return '';
 			});
 
-			if (ready || remainder === spec) {
+			spec = remainder;
+
+			if (ready || !modified) {
 				break;
 			}
 		}
@@ -184,10 +188,11 @@ export class Keyword {
 			method = tokens[0];
 			tokens.unshift();
 		}
+
 		return new Keyword(method, tokens);
 	}
 
-	dump(): string {
+	toString(): string {
 		let dump = this.method + ':';
 		if (this.context) {
 			dump += this.context + 'c,';
