@@ -78,7 +78,7 @@ export class Keyword {
 			if (!argMatch) {
 				const commentMatch = commentRe.exec(arg);
 				if (commentMatch) {
-					if (typeof this._context !== 'undefined') {
+					if (typeof this._comment !== 'undefined') {
 						throw new Error(
 							gtx._x('Multiple automatic comments for function "{function}"!', {
 								function: method,
@@ -198,6 +198,9 @@ export class Keyword {
 		}
 		if (this.totalArgs) {
 			dump += this.totalArgs + 't,';
+		}
+		if (typeof this.comment !== 'undefined') {
+			dump += `"${this.comment}",`;
 		}
 
 		return dump.substr(0, dump.length - 1);
