@@ -414,5 +414,15 @@ msgstr ""
 			const catalog = parser.parse(input, 'example.ts');
 			expect(catalog.encoding()).toEqual('iso-8859-1');
 		});
+
+		it('should not reparse w/o content-type header', () => {
+			const pot = `msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\\n"
+"Content-Transfer-Encoding: 8bit\\n"`;
+			const input = Buffer.from(pot);
+			const catalog = parser.parse(input, 'example.ts');
+			expect(catalog.encoding()).toEqual('CHARSET');
+		});
 	});
 });

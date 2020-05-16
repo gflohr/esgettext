@@ -84,8 +84,9 @@ export class PoParser extends Parser {
 				) {
 					const charset = this.extractCharset(this.entry.properties.msgstr);
 					if (
-						typeof encoding === 'undefined' ||
-						(charset && charset.toLowerCase() !== encoding.toLowerCase())
+						charset &&
+						(typeof encoding === 'undefined' ||
+							charset.toLowerCase() !== encoding.toLowerCase())
 					) {
 						return this.parse(buf, filename, charset);
 					}
@@ -140,8 +141,9 @@ export class PoParser extends Parser {
 		) {
 			const charset = this.extractCharset(this.entry.properties.msgstr);
 			if (
-				typeof encoding === 'undefined' ||
-				(charset && charset.toLowerCase() !== encoding.toLowerCase())
+				charset &&
+				(typeof encoding === 'undefined' ||
+					charset.toLowerCase() !== encoding.toLowerCase())
 			) {
 				return this.parse(buf, filename, charset);
 			}
