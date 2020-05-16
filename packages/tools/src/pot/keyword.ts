@@ -36,7 +36,7 @@ export class Keyword {
 				const isCtx = argMatch[2] === 'c' ? true : false;
 				const isTotal = argMatch[2] === 't' ? true : false;
 
-				if (seen.includes(pos)) {
+				if (seen.includes(pos) && !isTotal) {
 					throw new Error(
 						gtx._x(
 							'Multiple meanings for argument #{num} for function "{function}"!',
@@ -168,9 +168,12 @@ export class Keyword {
 				}
 
 				if (':' === sep) {
-					return '';
+					ready = true;
 				}
+
+				return '';
 			});
+
 			if (ready || remainder === spec) {
 				break;
 			}
@@ -182,6 +185,22 @@ export class Keyword {
 			tokens.unshift();
 		}
 		return new Keyword(method, tokens);
+	}
+
+	dump(): string {
+		let dump = this.method + ':';
+		if (this.context) {
+			dump += this.context + 'c,';
+		}
+		dump += this.singular + ',';
+		if (this.plural) {
+			dump += this.plural + ',';
+		}
+		if (this.totalArgs) {
+			dump += this.totalArgs + 't,';
+		}
+
+		return dump.substr(0, dump.length - 1);
 	}
 
 	get singular(): number {
