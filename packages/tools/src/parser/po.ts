@@ -1,3 +1,4 @@
+import { decode, encodingExists } from 'iconv-lite';
 import { Textdomain } from '@esgettext/runtime';
 import { Catalog } from '../pot/catalog';
 import { POTEntry } from '../pot/entry';
@@ -40,18 +41,25 @@ export class PoParser extends Parser {
 	 * areas.
 	 *
 	 * The encoding will always be read from the PO header if present.
-	 * Initially, it defaults to `CP1252` aka `Windows-1252` which is more or
-	 * less binary.
 	 *
 	 * @param input - the content of the po file
 	 * @param filename - the filename
 	 * @param encoding - an optional encoding
 	 */
-	parse(buf: Buffer, filename: string, encoding = 'cp1252'): Catalog {
-		const input = buf.toString(encoding);
+	parse(buf: Buffer, filename: string, encoding?: string): Catalog {
+		if (typeof encoding !== 'undefined') {
+			if (!encodingExists(encoding)) {
+				throw new Error(
+					gtx._x('unsupported encoding "{encoding}"', { encoding }),
+				);
+			}
+		}
+
+		const input =
+			typeof encoding === 'undefined' ? buf.toString() : decode(buf, encoding);
 
 		// Reset parser.
-		this.catalog = new Catalog();
+		this.catalog = new Catalog({ fromCode: encoding });
 		this.catalog.deleteEntry('');
 		this.entry = undefined;
 		this.filename = filename;
@@ -75,7 +83,10 @@ export class PoParser extends Parser {
 					this.entry.properties.msgstr
 				) {
 					const charset = this.extractCharset(this.entry.properties.msgstr);
-					if (charset && charset.toLowerCase() !== encoding.toLowerCase()) {
+					if (
+						typeof encoding === 'undefined' ||
+						(charset && charset.toLowerCase() !== encoding.toLowerCase())
+					) {
 						return this.parse(buf, filename, charset);
 					}
 				}
@@ -128,7 +139,10 @@ export class PoParser extends Parser {
 			this.entry.properties.msgstr
 		) {
 			const charset = this.extractCharset(this.entry.properties.msgstr);
-			if (charset && charset.toLowerCase() !== encoding.toLowerCase()) {
+			if (
+				typeof encoding === 'undefined' ||
+				(charset && charset.toLowerCase() !== encoding.toLowerCase())
+			) {
 				return this.parse(buf, filename, charset);
 			}
 		}
@@ -164,7 +178,7 @@ export class PoParser extends Parser {
 
 		const charset = tokens[tokens.length - 1];
 
-		if (charset === 'CHARSET') {
+		if (!encodingExists(charset)) {
 			this.warn(
 				gtx._x('The charset "{charset} is not a portable encoding name."', {
 					charset,
@@ -176,7 +190,7 @@ export class PoParser extends Parser {
 			return null;
 		}
 
-		return 'charset';
+		return charset;
 	}
 
 	private flushEntry(): void {

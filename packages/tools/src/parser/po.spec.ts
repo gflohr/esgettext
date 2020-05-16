@@ -9,7 +9,7 @@ describe('parse po files', () => {
 		});
 
 		it('should parse', () => {
-			const input = `# Translations for smell-o-vision.
+			const pot = `# Translations for smell-o-vision.
 # Copyright (C) 2020 SmellOVision Inc.
 # This file is distributed under the same license as the smell-o-vision package.
 # John Doe <john.doe@example.com>, 2020.
@@ -80,6 +80,7 @@ msgstr[7] "For a very long time ..."
 #~ msgstr ""
 `;
 			const parser = new PoParser(warner);
+			const input = Buffer.from(pot);
 			const result = parser.parse(input, 'example.js');
 
 			expect(result.toString()).toMatchSnapshot();
@@ -96,12 +97,12 @@ msgstr[7] "For a very long time ..."
 
 		it('should discard lone strings', () => {
 			const parser = new PoParser(warner);
-			const input = `msgid "okay"
+			const pot = `msgid "okay"
 msgstr ""
 
 "does not belong here"
 `;
-
+			const input = Buffer.from(pot);
 			expect(() => parser.parse(input, 'example.ts')).toThrow(
 				new Error('example.ts:4:1: syntax error'),
 			);
@@ -110,23 +111,25 @@ msgstr ""
 
 		it('should bail out on unexpected input', () => {
 			const parser = new PoParser(warner);
-			let input = `msgid "okay"
+			let pot = `msgid "okay"
 msgstr ""
 
 MSGID "uppercase not allowed"
 msgstr ""
 `;
+			let input = Buffer.from(pot);
 			expect(() => parser.parse(input, 'example.ts')).toThrow(
 				new Error('example.ts:4:1: keyword "MSGID" unknown'),
 			);
 			expect(warner).not.toHaveBeenCalled();
 
-			input = `msgid "okay"
+			pot = `msgid "okay"
 msgstr ""
 
 nsgid "no, no, no"
 msgstr ""
 `;
+			input = Buffer.from(pot);
 			expect(() => parser.parse(input, 'example.ts')).toThrow(
 				new Error('example.ts:4:1: keyword "nsgid" unknown'),
 			);
@@ -135,11 +138,12 @@ msgstr ""
 
 		it('should bail out on garbage', () => {
 			const parser = new PoParser(warner);
-			const input = `msgid "okay"
+			const pot = `msgid "okay"
 msgstr ""
 
 'garbage'
 `;
+			const input = Buffer.from(pot);
 			expect(() => parser.parse(input, 'example.ts')).toThrow(
 				new Error('example.ts:4:1: syntax error'),
 			);
@@ -148,12 +152,13 @@ msgstr ""
 
 		it('should bail out on entries w/o msgid', () => {
 			const parser = new PoParser(warner);
-			const input = `msgid "okay"
+			const pot = `msgid "okay"
 msgstr ""
 
 # Missing msgid.
 msgstr ""
 `;
+			const input = Buffer.from(pot);
 			expect(() => parser.parse(input, 'example.ts')).toThrow(
 				new Error('example.ts:6:1: missing "msgid" section'),
 			);
@@ -163,12 +168,13 @@ msgstr ""
 		it('should bail out on duplicate entries', () => {
 			const localWarner = jest.fn();
 			const parser = new PoParser(localWarner);
-			const input = `msgid "okay"
+			const pot = `msgid "okay"
 msgstr ""
 
 msgid "okay"
 msgstr ""
 `;
+			const input = Buffer.from(pot);
 			expect(() => parser.parse(input, 'example.ts')).toThrow(
 				new Error('example.ts:6:1: cannot proceed after fatal error'),
 			);
@@ -185,13 +191,14 @@ msgstr ""
 
 		it('should bail out on duplicate msgid sections', () => {
 			const parser = new PoParser(warner);
-			const input = `msgid "okay"
+			const pot = `msgid "okay"
 msgstr ""
 
 msgid "not"
 msgstr ""
 msgid "okay"
 `;
+			const input = Buffer.from(pot);
 			expect(() => parser.parse(input, 'example.ts')).toThrow(
 				new Error('example.ts:6:1: duplicate "msgid" section'),
 			);
@@ -200,13 +207,14 @@ msgid "okay"
 
 		it('should bail out on duplicate msgstr sections', () => {
 			const parser = new PoParser(warner);
-			const input = `msgid "okay"
+			const pot = `msgid "okay"
 msgstr ""
 
 msgid "not"
 msgstr ""
 msgstr "okay"
 `;
+			const input = Buffer.from(pot);
 			expect(() => parser.parse(input, 'example.ts')).toThrow(
 				new Error('example.ts:6:1: duplicate "msgstr" section'),
 			);
@@ -215,7 +223,7 @@ msgstr "okay"
 
 		it('should bail out on duplicate msgid_plural sections', () => {
 			const parser = new PoParser(warner);
-			const input = `msgid "okay"
+			const pot = `msgid "okay"
 msgstr ""
 
 msgid "not"
@@ -224,6 +232,7 @@ msgid_plural "really"
 msgstr[0] ""
 msgstr[1] ""
 `;
+			const input = Buffer.from(pot);
 			expect(() => parser.parse(input, 'example.ts')).toThrow(
 				new Error('example.ts:6:1: duplicate "msgid_plural" section'),
 			);
@@ -232,7 +241,7 @@ msgstr[1] ""
 
 		it('should bail out on duplicate msgctxt sections', () => {
 			const parser = new PoParser(warner);
-			const input = `msgid "okay"
+			const pot = `msgid "okay"
 msgstr ""
 
 msgctxt "Menu"
@@ -240,6 +249,7 @@ msgctxt "File"
 msgid "Hello, world!"
 msgstr ""
 `;
+			const input = Buffer.from(pot);
 			expect(() => parser.parse(input, 'example.ts')).toThrow(
 				new Error('example.ts:5:1: duplicate "msgctxt" section'),
 			);
@@ -248,13 +258,14 @@ msgstr ""
 
 		it('should enforce consistent use of #~', () => {
 			const parser = new PoParser(warner);
-			const input = `msgid "okay"
+			const pot = `msgid "okay"
 msgstr ""
 
 msgid "not"
 #~ msgstr "okay"
 msgstr "okay"
 `;
+			const input = Buffer.from(pot);
 			expect(() => parser.parse(input, 'example.ts')).toThrow(
 				new Error('example.ts:5:1: inconsistent use of #~'),
 			);
@@ -263,12 +274,13 @@ msgstr "okay"
 
 		it('should bail out on non-strings for msgids', () => {
 			const parser = new PoParser(warner);
-			const input = `msgid "okay"
+			const pot = `msgid "okay"
 msgstr ""
 
 msgid        not
 msgstr "okay"
 `;
+			const input = Buffer.from(pot);
 			expect(() => parser.parse(input, 'example.ts')).toThrow(
 				new Error('example.ts:4:14: syntax error'),
 			);
@@ -277,12 +289,13 @@ msgstr "okay"
 
 		it('should bail out on unterminated strings', () => {
 			const parser = new PoParser(warner);
-			const input = `msgid "okay"
+			const pot = `msgid "okay"
 msgstr ""
 
 msgid "not
 msgstr "okay"
 `;
+			const input = Buffer.from(pot);
 			expect(() => parser.parse(input, 'example.ts')).toThrow(
 				new Error('example.ts:4:7: end-of-line within string'),
 			);
@@ -291,12 +304,13 @@ msgstr "okay"
 
 		it('should bail out on trailing backslashes', () => {
 			const parser = new PoParser(warner);
-			const input = `msgid "okay"
+			const pot = `msgid "okay"
 msgstr ""
 
 msgid "not\\"
 msgstr "okay"
 `;
+			const input = Buffer.from(pot);
 			expect(() => parser.parse(input, 'example.ts')).toThrow(
 				new Error('example.ts:4:7: end-of-line within string'),
 			);
@@ -305,12 +319,13 @@ msgstr "okay"
 
 		it('should bail out on invalid control sequences', () => {
 			const parser = new PoParser(warner);
-			const input = `msgid "okay"
+			const pot = `msgid "okay"
 msgstr ""
 
 msgid "beware of \\x-rays"
 msgstr ""
 `;
+			const input = Buffer.from(pot);
 			expect(() => parser.parse(input, 'example.ts')).toThrow(
 				new Error('example.ts:4:18: invalid control sequence'),
 			);
@@ -327,10 +342,11 @@ msgstr ""
 
 		it('should warn about empty flags', () => {
 			const parser = new PoParser(warner);
-			const input = `#, fuzzy   ,, perl-brace-format
+			const pot = `#, fuzzy   ,, perl-brace-format
 msgid "Hello, {name}!"
 msgstr ""
 `;
+			const input = Buffer.from(pot);
 			const result = parser.parse(input, 'example.js');
 			expect(result.toString()).toMatchSnapshot();
 			expect(warner).toHaveBeenCalledTimes(1);
@@ -342,11 +358,11 @@ msgstr ""
 
 		it('should warn about invalid references', () => {
 			const parser = new PoParser(warner);
-			const input = `#:   src/here.js:2304     somewhere
+			const pot = `#:   src/here.js:2304     somewhere
 msgid "Hello, {name}!"
 msgstr ""
 `;
-
+			const input = Buffer.from(pot);
 			const result = parser.parse(input, 'example.js');
 			expect(result.toString()).toMatchSnapshot();
 			expect(warner).toHaveBeenCalledTimes(1);
@@ -354,6 +370,26 @@ msgstr ""
 				1,
 				'example.js:1:27: ignoring mal-formed reference "somewhere"',
 			);
+		});
+	});
+
+	describe('encoding', () => {
+		const warner = jest.fn();
+		const parser = new PoParser(warner);
+
+		beforeEach(() => {
+			warner.mockReset();
+		});
+
+		it('should accept cp1252', () => {
+			const pot = `msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\\n"
+"Content-Type: text/plain; charset=CP1252\\n"
+`;
+			const input = Buffer.from(pot);
+			const catalog = parser.parse(input, 'example.ts');
+			expect(catalog.toString()).toEqual(pot);
 		});
 	});
 });
