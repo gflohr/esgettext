@@ -208,7 +208,12 @@ export class Keyword {
 			dump += `"${this.comment}",`;
 		}
 
-		return dump.substr(0, dump.length - 1);
+		dump = dump.substr(0, dump.length - 1);
+		if (dump === `${this.method}:1`) {
+			return this.method;
+		} else {
+			return dump;
+		}
 	}
 
 	get singular(): number {
