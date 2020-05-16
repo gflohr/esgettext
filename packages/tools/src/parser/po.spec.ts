@@ -391,5 +391,17 @@ msgstr ""
 			const catalog = parser.parse(input, 'example.ts');
 			expect(catalog.toString()).toEqual(pot);
 		});
+
+		it('should throw on unsupported encodings', () => {
+			const pot = `msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\\n"
+"Content-Type: text/plain; charset=CP1252\\n"
+`;
+			const input = Buffer.from(pot);
+			expect(() => parser.parse(input, 'example.ts', 'invalid')).toThrow(
+				'unsupported encoding "invalid"',
+			);
+		});
 	});
 });
