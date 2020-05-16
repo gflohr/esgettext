@@ -314,4 +314,11 @@ FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 			}
 		});
 	}
+
+	/**
+	 * Get the encoding of the catalog.
+	 */
+	encoding(): string {
+		return this.properties.fromCode;
+	}
 }

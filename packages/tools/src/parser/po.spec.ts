@@ -403,5 +403,16 @@ msgstr ""
 				'unsupported encoding "invalid"',
 			);
 		});
+
+		it('should re-parse a lone header', () => {
+			const pot = `msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\\n"
+"Content-Type: text/plain; charset=iso-8859-1\\n"`;
+
+			const input = Buffer.from(pot);
+			const catalog = parser.parse(input, 'example.ts');
+			expect(catalog.encoding()).toEqual('iso-8859-1');
+		});
 	});
 });
