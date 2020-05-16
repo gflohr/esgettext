@@ -131,13 +131,13 @@ FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 		const width =
 			options && typeof options.width !== 'undefined' ? options.width : 76;
 
-		const isNotHeader = (entry: POTEntry) => {
+		const isNotHeader = (entry: POTEntry): boolean => {
 			return !(
 				entry.properties.msgid === '' &&
 				typeof entry.properties.msgctxt === 'undefined'
 			);
 		};
-		const isHeader = (entry: POTEntry) => {
+		const isHeader = (entry: POTEntry): boolean => {
 			return !isNotHeader(entry);
 		};
 
