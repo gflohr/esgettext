@@ -390,6 +390,7 @@ msgstr ""
 			const input = Buffer.from(pot);
 			const catalog = parser.parse(input, 'example.ts');
 			expect(catalog.toString()).toEqual(pot);
+			expect(warner).not.toHaveBeenCalled();
 		});
 
 		it('should throw on unsupported encodings', () => {
@@ -402,6 +403,7 @@ msgstr ""
 			expect(() => parser.parse(input, 'example.ts', 'invalid')).toThrow(
 				'unsupported encoding "invalid"',
 			);
+			expect(warner).not.toHaveBeenCalled();
 		});
 
 		it('should re-parse a lone header', () => {
@@ -413,6 +415,7 @@ msgstr ""
 			const input = Buffer.from(pot);
 			const catalog = parser.parse(input, 'example.ts');
 			expect(catalog.encoding()).toEqual('iso-8859-1');
+			expect(warner).not.toHaveBeenCalled();
 		});
 
 		it('should not reparse w/o content-type header', () => {
@@ -423,6 +426,7 @@ msgstr ""
 			const input = Buffer.from(pot);
 			const catalog = parser.parse(input, 'example.ts');
 			expect(catalog.encoding()).toEqual('CHARSET');
+			expect(warner).not.toHaveBeenCalled();
 		});
 
 		it('should not reparse w/o charset', () => {
@@ -434,6 +438,27 @@ msgstr ""
 			const input = Buffer.from(pot);
 			const catalog = parser.parse(input, 'example.ts');
 			expect(catalog.encoding()).toEqual('CHARSET');
+			expect(warner).not.toHaveBeenCalled();
+		});
+
+		it('should not reparse for unknown encoding', () => {
+			const pot = `msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\\n"
+"Content-Type: text/plain; charset=invalid\\n"
+"Content-Transfer-Encoding: 8bit\\n"`;
+			const input = Buffer.from(pot);
+			const catalog = parser.parse(input, 'example.ts');
+			expect(catalog.encoding()).toEqual('CHARSET');
+			expect(warner).toHaveBeenCalledTimes(2);
+			expect(warner).toHaveBeenNthCalledWith(
+				1,
+				'example.ts:5:1: The charset "invalid" is not a portable encoding name.',
+			);
+			expect(warner).toHaveBeenNthCalledWith(
+				2,
+				'example.ts:5:1: Message conversion to the users charset might not work.',
+			);
 		});
 	});
 });

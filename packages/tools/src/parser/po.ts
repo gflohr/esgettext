@@ -182,7 +182,7 @@ export class PoParser extends Parser {
 
 		if (!encodingExists(charset)) {
 			this.warn(
-				gtx._x('The charset "{charset} is not a portable encoding name."', {
+				gtx._x('The charset "{charset}" is not a portable encoding name.', {
 					charset,
 				}),
 			);
