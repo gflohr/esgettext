@@ -191,7 +191,7 @@ export class Textdomain {
 	 *
 	 * @returns a promise for a Catalog that will always resolve.
 	 */
-	resolve(): Promise<Catalog> {
+	async resolve(): Promise<Catalog> {
 		let path = this.bindtextdomain();
 
 		if (typeof path === 'undefined' || path === null) {
