@@ -65,5 +65,10 @@ describe('keywords', () => {
 			const arg = '_npx:1c,2,3,4t,"perl-brace-format"';
 			expect(Keyword.from(arg).toString()).toEqual(arg);
 		});
+
+		it('should accept a comment only', () => {
+			const arg = '_x:"perl-brace-format"';
+			expect(Keyword.from(arg).toString()).toEqual('_x:1,"perl-brace-format"');
+		});
 	});
 });
