@@ -10,7 +10,9 @@ class DummyParser extends Parser {
 describe('parser', () => {
 	describe('dummy parser', () => {
 		it('should throw an exception on non-existing files', () => {
-			const p = new DummyParser();
+			const warner = jest.fn();
+			const catalog = new Catalog();
+			const p = new DummyParser(catalog, warner);
 
 			expect(() => p.parseFile('not-there.ts')).toThrow();
 		});
