@@ -1,26 +1,26 @@
+import { Catalog } from '../pot/catalog';
 import { JavaScriptParser } from './javascript';
 
+const date = '2020-04-23 08:50+0300';
+
 describe('JavaScript parser', () => {
-	describe('simple code', () => {
-		it('should create an empty catalog', () => {
+	describe('extract all strings', () => {
+		it('should extract all kinds of strings', () => {
+			const catalog = new Catalog({ date });
 			const warner = jest.fn();
-			const p = new JavaScriptParser(warner);
+			const p = new JavaScriptParser(catalog, warner);
+			const code = `
+// Directive.
+"double-quoted string";
 
-			const code = '';
-			const input = Buffer.from(code);
+// Function call.
+_('single-quoted string');
 
-			expect(p.parse(input, 'example.ts').toString()).toEqual('');
-			expect(warner).not.toHaveBeenCalled();
-		});
-
-		it('should parse one single call', () => {
-			const warner = jest.fn();
-			const p = new JavaScriptParser(warner);
-
-			const code = 'gtx._("Hello, world!")';
-			const input = Buffer.from(code);
-			p.parse(input, 'example.ts').toString();
-			expect(warner).not.toHaveBeenCalled();
+// perl-brace-format.
+_x('Hello, {name}!');
+`;
+			p.parse(Buffer.from(code), 'example.ts');
+			expect(catalog.toString()).toMatchSnapshot();
 		});
 	});
 });

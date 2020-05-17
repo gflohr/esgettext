@@ -1,6 +1,5 @@
 import { decode, encodingExists } from 'iconv-lite';
 import { Textdomain } from '@esgettext/runtime';
-import { Catalog } from '../pot/catalog';
 import { POTEntry } from '../pot/entry';
 import { Parser } from './parser';
 
@@ -29,13 +28,6 @@ export class PoParser extends Parser {
 			[key: string]: number;
 		};
 	};
-
-	constructor(
-		private readonly catalog: Catalog,
-		private readonly warner: (msg: string) => void,
-	) {
-		super();
-	}
 
 	/**
 	 * Parse a po file into a catalog. This parser is very forgiving and
