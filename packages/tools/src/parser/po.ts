@@ -59,8 +59,7 @@ export class PoParser extends Parser {
 			typeof encoding === 'undefined' ? buf.toString() : decode(buf, encoding);
 
 		// Reset parser.
-		this.catalog = new Catalog({ fromCode: encoding });
-		this.catalog.deleteEntry('');
+		this.catalog = new Catalog({ fromCode: encoding, noHeader: true });
 		this.entry = undefined;
 		this.filename = filename;
 		this.lineno = 0;

@@ -17,6 +17,7 @@ interface CatalogProperties {
 	fromCode?: string;
 	sortOutput?: boolean;
 	sortByFile?: boolean;
+	noHeader?: boolean;
 }
 
 interface RenderOptions {
@@ -31,55 +32,60 @@ export class Catalog {
 	entries: Array<POTEntry>;
 
 	constructor(private readonly properties: CatalogProperties = {}) {
-		if (typeof properties.package === 'undefined') {
-			properties.package = 'PACKAGE';
-		}
-		if (typeof properties.version === 'undefined') {
-			properties.version = 'VERSION';
-		}
-		if (typeof properties.msgidBugsAddress === 'undefined') {
-			properties.msgidBugsAddress = 'MSGID_BUGS_ADDRESS';
-		}
-		// GNU xgettext does not set the charset in the PO header but we do.
+		this.entries = new Array<POTEntry>();
 		if (typeof properties.fromCode === 'undefined') {
 			properties.fromCode = 'CHARSET';
 		}
-		if (typeof properties.date === 'undefined') {
-			const now = new Date();
 
-			// Avoid if/else, so we do not spoil our test coverage. :)
-			let year = now.getFullYear().toString();
-			year = '0'.repeat(4 - year.length) + year;
-			let month = (1 + now.getMonth()).toString();
-			month = '0'.repeat(2 - month.length) + month;
-			let mday = now.getDate().toString();
-			mday = '0'.repeat(2 - mday.length) + mday;
-			let hour = now.getHours().toString();
-			hour = '0'.repeat(2 - hour.length) + hour;
-			let minutes = now.getMinutes().toString();
-			minutes = '0'.repeat(2 - minutes.length) + minutes;
+		if (!properties.noHeader) {
+			if (typeof properties.package === 'undefined') {
+				properties.package = 'PACKAGE';
+			}
+			if (typeof properties.version === 'undefined') {
+				properties.version = 'VERSION';
+			}
+			if (typeof properties.msgidBugsAddress === 'undefined') {
+				properties.msgidBugsAddress = 'MSGID_BUGS_ADDRESS';
+			}
+			if (typeof properties.date === 'undefined') {
+				const now = new Date();
 
-			// Do not depend on the timezone for test coverage.
-			let offset = now.getTimezoneOffset();
-			const sign = ['+', '-'][Math.sign(offset) + 1];
-			offset = Math.abs(offset);
+				// Avoid if/else, so we do not spoil our test coverage. :)
+				let year = now.getFullYear().toString();
+				year = '0'.repeat(4 - year.length) + year;
+				let month = (1 + now.getMonth()).toString();
+				month = '0'.repeat(2 - month.length) + month;
+				let mday = now.getDate().toString();
+				mday = '0'.repeat(2 - mday.length) + mday;
+				let hour = now.getHours().toString();
+				hour = '0'.repeat(2 - hour.length) + hour;
+				let minutes = now.getMinutes().toString();
+				minutes = '0'.repeat(2 - minutes.length) + minutes;
 
-			let offsetHours = Math.floor(offset / 60).toString();
-			offsetHours = '0'.repeat(2 - offsetHours.length) + offsetHours;
-			let offsetMinutes = (offset % 60).toString();
-			offsetMinutes = '0'.repeat(2 - offsetMinutes.length) + offsetMinutes;
+				// Do not depend on the timezone for test coverage.
+				let offset = now.getTimezoneOffset();
+				const sign = ['+', '-'][Math.sign(offset) + 1];
+				offset = Math.abs(offset);
 
-			properties.date =
-				[year, month, mday].join('-') +
-				` ${hour}:${minutes}` +
-				`${sign}${offsetHours}${offsetMinutes}`;
-		}
+				let offsetHours = Math.floor(offset / 60).toString();
+				offsetHours = '0'.repeat(2 - offsetHours.length) + offsetHours;
+				let offsetMinutes = (offset % 60).toString();
+				offsetMinutes = '0'.repeat(2 - offsetMinutes.length) + offsetMinutes;
 
-		const pkg = properties.package.replace(/\n/g, '\\n');
-		const version = properties.version.replace(/\n/g, '\\n');
-		const msgidBugsAddress = properties.msgidBugsAddress.replace(/\n/g, '\\n');
+				properties.date =
+					[year, month, mday].join('-') +
+					` ${hour}:${minutes}` +
+					`${sign}${offsetHours}${offsetMinutes}`;
+			}
 
-		const header = `Project-Id-Version: ${pkg} ${version}
+			const pkg = properties.package.replace(/\n/g, '\\n');
+			const version = properties.version.replace(/\n/g, '\\n');
+			const msgidBugsAddress = properties.msgidBugsAddress.replace(
+				/\n/g,
+				'\\n',
+			);
+
+			const header = `Project-Id-Version: ${pkg} ${version}
 Report-Msgid-Bugs-To: ${msgidBugsAddress}
 POT-Creation-Date: ${properties.date}
 PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE
@@ -91,29 +97,29 @@ Content-Type: text/plain; charset=${properties.fromCode}
 Content-Transfer-Encoding: 8bit
 `;
 
-		let comment;
-		if (properties.foreignUser) {
-			comment = `SOME DESCRIPTIVE TITLE
+			let comment;
+			if (properties.foreignUser) {
+				comment = `SOME DESCRIPTIVE TITLE
 This file is put in the public domain.
 FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 `;
-		} else {
-			comment = `SOME DESCRIPTIVE TITLE
+			} else {
+				comment = `SOME DESCRIPTIVE TITLE
 Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 This file is distributed under the same license as the PACKAGE package.
 FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 `;
-		}
+			}
 
-		this.entries = new Array<POTEntry>();
-		const headerEntry = new POTEntry({
-			msgid: '',
-			msgstr: header,
-			flags: ['fuzzy'],
-			translatorComments: [comment],
-			noWarnings: true,
-		});
-		this.addEntry(headerEntry);
+			const headerEntry = new POTEntry({
+				msgid: '',
+				msgstr: header,
+				flags: ['fuzzy'],
+				translatorComments: [comment],
+				noWarnings: true,
+			});
+			this.addEntry(headerEntry);
+		}
 	}
 
 	/**
