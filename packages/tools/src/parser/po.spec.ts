@@ -76,6 +76,11 @@ msgstr[5] "For a very long time ..."
 msgstr[6] "For a very long time ..."
 msgstr[7] "For a very long time ..."
 
+#. TRANSLATORS: This is the day of the week, not our star.
+#. It is the abbreviation for Sunday.
+msgid "Sun"
+msgstr ""
+
 #~ msgid "obsolete entry"
 #~ msgstr ""
 `;

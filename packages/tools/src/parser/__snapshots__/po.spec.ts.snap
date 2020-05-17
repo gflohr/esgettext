@@ -61,6 +61,11 @@ msgid \\"And this one, too.\\"
 msgid_plural \\"And these ones, too.\\"
 msgstr[0] \\"\\"
 msgstr[1] \\"\\"
+
+#. . TRANSLATORS: This is the day of the week, not our star.
+#. . It is the abbreviation for Sunday.
+msgid \\"Sun\\"
+msgstr \\"\\"
 "
 `;
 

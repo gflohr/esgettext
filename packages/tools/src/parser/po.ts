@@ -235,6 +235,10 @@ export class PoParser extends Parser {
 				this.parseReferences(line);
 				break;
 
+			case '.':
+				this.entry.addExtractedCommentLine(line.substr(1).trim());
+				break;
+
 			case ' ':
 				this.entry.addTranslatorCommentLine(line.substr(2));
 				break;

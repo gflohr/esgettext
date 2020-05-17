@@ -96,6 +96,13 @@ export class POTEntry {
 			}
 		}
 
+		if (typeof this.properties.extractedComments !== 'undefined') {
+			for (let comment of this.properties.extractedComments) {
+				comment = comment.replace(/\n/g, '\n#. ');
+				out += `#. ${comment}\n`;
+			}
+		}
+
 		if (typeof this.properties.automatic !== 'undefined') {
 			for (let comment of this.properties.automatic) {
 				comment = comment.replace(/\n/g, '\n#. ');
@@ -212,6 +219,18 @@ export class POTEntry {
 			}
 			this.properties.references.push(...other.properties.references);
 		}
+	}
+
+	/**
+	 * Add an extracted comment line.  These are comments starting with "#.".
+	 *
+	 * @param line - one comment line to add
+	 */
+	addExtractedCommentLine(line: string): void {
+		if (!this.properties.extractedComments) {
+			this.properties.extractedComments = [];
+		}
+		this.properties.extractedComments.push(line);
 	}
 
 	/**
