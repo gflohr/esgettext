@@ -1,0 +1,97 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`JavaScript parser extract all strings should extract all kinds of comments 1`] = `
+"# SOME DESCRIPTIVE TITLE
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+#, fuzzy
+msgid \\"\\"
+msgstr \\"\\"
+\\"Project-Id-Version: PACKAGE VERSION\\\\n\\"
+\\"Report-Msgid-Bugs-To: MSGID_BUGS_ADDRESS\\\\n\\"
+\\"POT-Creation-Date: 2020-04-23 08:50+0300\\\\n\\"
+\\"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\\\\n\\"
+\\"Last-Translator: FULL NAME <EMAIL@ADDRESS>\\\\n\\"
+\\"Language-Team: LANGUAGE <LL@li.org>\\\\n\\"
+\\"Language:\\\\n\\"
+\\"MIME-Version: 1.0\\\\n\\"
+\\"Content-Type: text/plain; charset=CHARSET\\\\n\\"
+\\"Content-Transfer-Encoding: 8bit\\\\n\\"
+
+#. Single-line comment.
+#: example.ts:3
+msgid \\"single line\\"
+msgstr \\"\\"
+
+#. Block comment.
+#: example.ts:6
+msgid \\"block\\"
+msgstr \\"\\"
+
+#. Single-line
+#. and block combined.
+#: example.ts:10
+msgid \\"single + block\\"
+msgstr \\"\\"
+
+#. Block
+#. and single-line combined.
+#: example.ts:14
+msgid \\"block + single\\"
+msgstr \\"\\"
+
+#. But catch this.
+#: example.ts:19
+msgid \\"only immediately preceding\\"
+msgstr \\"\\"
+
+#. Only for one string.
+#: example.ts:22
+msgid \\"catcher\\"
+msgstr \\"\\"
+
+#: example.ts:22
+msgid \\"loser\\"
+msgstr \\"\\"
+"
+`;
+
+exports[`JavaScript parser extract all strings should extract all kinds of strings 1`] = `
+"# SOME DESCRIPTIVE TITLE
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+#, fuzzy
+msgid \\"\\"
+msgstr \\"\\"
+\\"Project-Id-Version: PACKAGE VERSION\\\\n\\"
+\\"Report-Msgid-Bugs-To: MSGID_BUGS_ADDRESS\\\\n\\"
+\\"POT-Creation-Date: 2020-04-23 08:50+0300\\\\n\\"
+\\"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\\\\n\\"
+\\"Last-Translator: FULL NAME <EMAIL@ADDRESS>\\\\n\\"
+\\"Language-Team: LANGUAGE <LL@li.org>\\\\n\\"
+\\"Language:\\\\n\\"
+\\"MIME-Version: 1.0\\\\n\\"
+\\"Content-Type: text/plain; charset=CHARSET\\\\n\\"
+\\"Content-Transfer-Encoding: 8bit\\\\n\\"
+
+#. Directive.
+#: example.ts:3
+msgid \\"double-quoted string\\"
+msgstr \\"\\"
+
+#. Function call.
+#: example.ts:6
+msgid \\"single-quoted string\\"
+msgstr \\"\\"
+
+#. perl-brace-format.
+#: example.ts:9
+#, perl-brace-format
+msgid \\"Hello, {name}!\\"
+msgstr \\"\\"
+"
+`;
