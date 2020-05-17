@@ -153,13 +153,7 @@ export class Keyword {
 			}
 		}
 
-		let method = spec;
-		if (!method.length) {
-			method = tokens[0];
-			tokens.unshift();
-		}
-
-		return new Keyword(method, tokens);
+		return new Keyword(spec, tokens);
 	}
 
 	toString(): string {
