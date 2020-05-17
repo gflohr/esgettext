@@ -40,6 +40,12 @@ describe('keywords', () => {
 				new Error('Multiple total arguments for function "_"!'),
 			);
 		});
+
+		it('should detect excess forms', () => {
+			expect(() => new Keyword('_', ['1', '3', '5'])).toThrow(
+				new Error('Too many forms for function "_"!'),
+			);
+		});
 	});
 
 	describe('from string', () => {

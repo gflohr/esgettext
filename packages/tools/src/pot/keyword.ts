@@ -66,7 +66,9 @@ export class Keyword {
 					this._totalArgs = pos;
 				} else if (this.plural) {
 					throw new Error(
-						gtx._x('Too many forms for "{function}"!', { function: method }),
+						gtx._x('Too many forms for function "{function}"!', {
+							function: method,
+						}),
 					);
 				} else if (this.singular) {
 					this._plural = pos;
@@ -80,7 +82,7 @@ export class Keyword {
 				if (commentMatch) {
 					if (typeof this._comment !== 'undefined') {
 						throw new Error(
-							gtx._x('Multiple automatic comments for function "{function}"!', {
+							gtx._x('Multiple extracted comments for function "{function}"!', {
 								function: method,
 							}),
 						);
