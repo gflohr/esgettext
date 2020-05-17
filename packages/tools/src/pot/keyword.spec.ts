@@ -46,6 +46,12 @@ describe('keywords', () => {
 				new Error('Too many forms for function "_"!'),
 			);
 		});
+
+		it('should detect excess comments', () => {
+			expect(() => new Keyword('_', ['"comment1"', '1', '"comment2"'])).toThrow(
+				new Error('Multiple extracted comments for function "_"!'),
+			);
+		});
 	});
 
 	describe('from string', () => {
