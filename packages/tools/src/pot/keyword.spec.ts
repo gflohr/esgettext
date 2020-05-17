@@ -22,6 +22,12 @@ describe('keywords', () => {
 			]);
 			expect(k.toString()).toEqual('_npx:1c,2,3,4t,"perl-brace-format"');
 		});
+
+		it('should detect conflicting form specs', () => {
+			expect(() => new Keyword('_', ['1c', '1'])).toThrow(
+				new Error('Multiple meanings for argument #1 for function "_"!'),
+			);
+		});
 	});
 
 	describe('from string', () => {
