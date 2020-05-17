@@ -8,6 +8,7 @@ export interface POTEntryProperties {
 	msgctxt?: string;
 	msgstr?: string;
 	translatorComments?: Array<string>;
+	extractedComments?: Array<string>;
 	flags?: Array<string>;
 	automatic?: Array<string>;
 	references?: Array<string>;
