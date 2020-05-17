@@ -49,7 +49,7 @@ export class Keyword {
 				if (isCtx) {
 					if (this._context) {
 						throw new Error(
-							gtx._x('Multiple context arguments for function "{function}"', {
+							gtx._x('Multiple context arguments for function "{function}"!', {
 								function: method,
 							}),
 						);
@@ -58,7 +58,7 @@ export class Keyword {
 				} else if (isTotal) {
 					if (this._totalArgs) {
 						throw new Error(
-							gtx._x('Multiple total arguments for function "{function}"', {
+							gtx._x('Multiple total arguments for function "{function}"!', {
 								function: method,
 							}),
 						);

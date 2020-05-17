@@ -23,9 +23,15 @@ describe('keywords', () => {
 			expect(k.toString()).toEqual('_npx:1c,2,3,4t,"perl-brace-format"');
 		});
 
-		it('should detect conflicting form specs', () => {
+		it('should detect meansings for arguments', () => {
 			expect(() => new Keyword('_', ['1c', '1'])).toThrow(
 				new Error('Multiple meanings for argument #1 for function "_"!'),
+			);
+		});
+
+		it('should detect multiple context arguments', () => {
+			expect(() => new Keyword('_', ['1c', '2c', '3'])).toThrow(
+				new Error('Multiple context arguments for function "_"!'),
 			);
 		});
 	});
