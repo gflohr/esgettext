@@ -34,6 +34,12 @@ describe('keywords', () => {
 				new Error('Multiple context arguments for function "_"!'),
 			);
 		});
+
+		it('should detect multiple total arguments', () => {
+			expect(() => new Keyword('_', ['1', '2t', '3t'])).toThrow(
+				new Error('Multiple total arguments for function "_"!'),
+			);
+		});
 	});
 
 	describe('from string', () => {
