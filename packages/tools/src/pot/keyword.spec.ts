@@ -52,6 +52,12 @@ describe('keywords', () => {
 				new Error('Multiple extracted comments for function "_"!'),
 			);
 		});
+
+		it('should discard garbage', () => {
+			expect(() => new Keyword('_', ['1', '2q'])).toThrow(
+				new Error('Invalid argument specification "2q" for function "_"!'),
+			);
+		});
 	});
 
 	describe('from string', () => {

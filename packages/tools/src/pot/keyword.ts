@@ -22,7 +22,7 @@ export class Keyword {
 		}
 
 		const argRe = new RegExp(/^([1-9][0-9]*)([ct]?)$/);
-		const commentRe = new RegExp(/"(.*)"/);
+		const commentRe = new RegExp(/"([^"]*)"/);
 
 		const seen = new Array<number>();
 
@@ -106,10 +106,6 @@ export class Keyword {
 
 	static from(spec: string): Keyword {
 		const tokens = new Array<string>();
-		let commentSeen = false;
-		let formsSeen = 0;
-		let contextSeen = false;
-		let totalSeen = false;
 		let ready = false;
 
 		while (spec.length) {
@@ -120,26 +116,7 @@ export class Keyword {
 				(_, sep, token) => {
 					modified = true;
 
-					if (token.endsWith('c')) {
-						if (contextSeen) {
-							spec += `:${token}`;
-						}
-						contextSeen = true;
-					} else if (token.endsWith('t')) {
-						if (totalSeen) {
-							spec += `:${token}`;
-						}
-						totalSeen = true;
-					} else {
-						if (formsSeen >= 2) {
-							spec += `:${token}`;
-							ready = true;
-						}
-						++formsSeen;
-					}
-					if (!ready) {
-						tokens.unshift(token);
-					}
+					tokens.unshift(token);
 
 					if (sep === ':') {
 						ready = true;
@@ -155,28 +132,19 @@ export class Keyword {
 				break;
 			}
 
-			remainder = spec.replace(/([,:])[\s]*"(.*)"[\s]*$/, (_, sep, token) => {
-				modified = true;
+			remainder = spec.replace(
+				/([,:])[\s]*("[^"]*")[\s]*$/,
+				(_, sep, token) => {
+					modified = true;
+					tokens.unshift(token);
 
-				if (commentSeen) {
-					spec += `:${token}`;
-					ready = true;
-				} else {
-					// GNU xgettext simply strips off quotes.
-					token = token
-						.split('')
-						.filter((c: string) => c !== '"')
-						.join('');
-					tokens.unshift(`"${token}"`);
-					commentSeen = true;
-				}
+					if (':' === sep) {
+						ready = true;
+					}
 
-				if (':' === sep) {
-					ready = true;
-				}
-
-				return '';
-			});
+					return '';
+				},
+			);
 
 			spec = remainder;
 
