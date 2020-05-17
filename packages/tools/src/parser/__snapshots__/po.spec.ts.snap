@@ -1,22 +1,50 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`parse po files encoding should accept cp1252 1`] = `
+"# SOME DESCRIPTIVE TITLE
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+#, fuzzy
+msgid \\"\\"
+msgstr \\"\\"
+\\"Project-Id-Version: PACKAGE VERSION\\\\n\\"
+\\"Report-Msgid-Bugs-To: MSGID_BUGS_ADDRESS\\\\n\\"
+\\"POT-Creation-Date: 2020-04-23 08:50+0300\\\\n\\"
+\\"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\\\\n\\"
+\\"Last-Translator: FULL NAME <EMAIL@ADDRESS>\\\\n\\"
+\\"Language-Team: LANGUAGE <LL@li.org>\\\\n\\"
+\\"Language:\\\\n\\"
+\\"MIME-Version: 1.0\\\\n\\"
+\\"Content-Type: text/plain; charset=CHARSET\\\\n\\"
+\\"Content-Transfer-Encoding: 8bit\\\\n\\"
+"
+`;
+
 exports[`parse po files simple file should parse 1`] = `
-"# Translations for smell-o-vision.
+"# SOME DESCRIPTIVE TITLE
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+# Translations for smell-o-vision.
 # Copyright (C) 2020 SmellOVision Inc.
 # This file is distributed under the same license as the smell-o-vision package.
 # John Doe <john.doe@example.com>, 2020.
 # 
+#, fuzzy
 msgid \\"\\"
 msgstr \\"\\"
-\\"Project-Id-Version: smell-o-vision 0.1.1\\\\n\\"
-\\"Report-Msgid-Bugs-To: jane.appleseed@example.com\\\\n\\"
+\\"Project-Id-Version: PACKAGE VERSION\\\\n\\"
+\\"Report-Msgid-Bugs-To: MSGID_BUGS_ADDRESS\\\\n\\"
 \\"POT-Creation-Date: 2020-04-23 08:50+0300\\\\n\\"
-\\"PO-Revision-Date: 2020-04-25 23:04+0300\\\\n\\"
-\\"Last-Translator: John Doe <John.Doe@example.com>\\\\n\\"
-\\"Language-Team: Finnish <fi@li.org>\\\\n\\"
-\\"Language: Finnish\\\\n\\"
+\\"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\\\\n\\"
+\\"Last-Translator: FULL NAME <EMAIL@ADDRESS>\\\\n\\"
+\\"Language-Team: LANGUAGE <LL@li.org>\\\\n\\"
+\\"Language:\\\\n\\"
 \\"MIME-Version: 1.0\\\\n\\"
-\\"Content-Type: text/plain; charset=utf-8\\\\n\\"
+\\"Content-Type: text/plain; charset=CHARSET\\\\n\\"
 \\"Content-Transfer-Encoding: 8bit\\\\n\\"
 
 msgid \\"no comment\\"
@@ -70,14 +98,52 @@ msgstr \\"\\"
 `;
 
 exports[`parse po files warnings should warn about empty flags 1`] = `
-"#, fuzzy, perl-brace-format
+"# SOME DESCRIPTIVE TITLE
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+#, fuzzy
+msgid \\"\\"
+msgstr \\"\\"
+\\"Project-Id-Version: PACKAGE VERSION\\\\n\\"
+\\"Report-Msgid-Bugs-To: MSGID_BUGS_ADDRESS\\\\n\\"
+\\"POT-Creation-Date: 2020-04-23 08:50+0300\\\\n\\"
+\\"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\\\\n\\"
+\\"Last-Translator: FULL NAME <EMAIL@ADDRESS>\\\\n\\"
+\\"Language-Team: LANGUAGE <LL@li.org>\\\\n\\"
+\\"Language:\\\\n\\"
+\\"MIME-Version: 1.0\\\\n\\"
+\\"Content-Type: text/plain; charset=CHARSET\\\\n\\"
+\\"Content-Transfer-Encoding: 8bit\\\\n\\"
+
+#, fuzzy, perl-brace-format
 msgid \\"Hello, {name}!\\"
 msgstr \\"\\"
 "
 `;
 
 exports[`parse po files warnings should warn about invalid references 1`] = `
-"#: src/here.js:2304
+"# SOME DESCRIPTIVE TITLE
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+#, fuzzy
+msgid \\"\\"
+msgstr \\"\\"
+\\"Project-Id-Version: PACKAGE VERSION\\\\n\\"
+\\"Report-Msgid-Bugs-To: MSGID_BUGS_ADDRESS\\\\n\\"
+\\"POT-Creation-Date: 2020-04-23 08:50+0300\\\\n\\"
+\\"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\\\\n\\"
+\\"Last-Translator: FULL NAME <EMAIL@ADDRESS>\\\\n\\"
+\\"Language-Team: LANGUAGE <LL@li.org>\\\\n\\"
+\\"Language:\\\\n\\"
+\\"MIME-Version: 1.0\\\\n\\"
+\\"Content-Type: text/plain; charset=CHARSET\\\\n\\"
+\\"Content-Transfer-Encoding: 8bit\\\\n\\"
+
+#: src/here.js:2304
 msgid \\"Hello, {name}!\\"
 msgstr \\"\\"
 "

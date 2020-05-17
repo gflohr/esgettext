@@ -18,7 +18,6 @@ interface Escapes {
 }
 
 export class PoParser extends Parser {
-	private catalog: Catalog;
 	private entry: POTEntry;
 	private entryLineno: number;
 	private filename: string;
@@ -31,7 +30,10 @@ export class PoParser extends Parser {
 		};
 	};
 
-	constructor(private readonly warner: (msg: string) => void) {
+	constructor(
+		private readonly catalog: Catalog,
+		private readonly warner: (msg: string) => void,
+	) {
 		super();
 	}
 
@@ -46,7 +48,7 @@ export class PoParser extends Parser {
 	 * @param filename - the filename
 	 * @param encoding - an optional encoding
 	 */
-	parse(buf: Buffer, filename: string, encoding?: string): Catalog {
+	parse(buf: Buffer, filename: string, encoding?: string): void {
 		if (typeof encoding !== 'undefined') {
 			if (!encodingExists(encoding)) {
 				throw new Error(
@@ -59,7 +61,6 @@ export class PoParser extends Parser {
 			typeof encoding === 'undefined' ? buf.toString() : decode(buf, encoding);
 
 		// Reset parser.
-		this.catalog = new Catalog({ fromCode: encoding, noHeader: true });
 		this.entry = undefined;
 		this.filename = filename;
 		this.lineno = 0;
@@ -87,6 +88,9 @@ export class PoParser extends Parser {
 						(typeof encoding === 'undefined' ||
 							charset.toLowerCase() !== encoding.toLowerCase())
 					) {
+						// FIXME! This must only happen, if the header is the first
+						// entry that has been added. Otherwise, we'll add the entries
+						// before this, twice.
 						return this.parse(buf, filename, charset);
 					}
 				}
@@ -144,14 +148,16 @@ export class PoParser extends Parser {
 				(typeof encoding === 'undefined' ||
 					charset.toLowerCase() !== encoding.toLowerCase())
 			) {
+				// FIXME! This must only happen, if the header is the first
+				// entry that has been added. Otherwise, we'll add the entries
+				// before this, twice.
 				return this.parse(buf, filename, charset);
 			}
 		}
 
 		this.flushEntry();
+		// FIXME! This must go into the caller!
 		this.catalog.makePOT();
-
-		return this.catalog;
 	}
 
 	private extractCharset(header: string): string {

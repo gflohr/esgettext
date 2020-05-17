@@ -1,4 +1,7 @@
+import { Catalog } from '../pot/catalog';
 import { PoParser } from './po';
+
+const date = '2020-04-23 08:50+0300';
 
 describe('parse po files', () => {
 	describe('simple file', () => {
@@ -84,11 +87,12 @@ msgstr ""
 #~ msgid "obsolete entry"
 #~ msgstr ""
 `;
-			const parser = new PoParser(warner);
+			const catalog = new Catalog({ date });
+			const parser = new PoParser(catalog, warner);
 			const input = Buffer.from(pot);
-			const result = parser.parse(input, 'example.js');
+			parser.parse(input, 'example.js');
 
-			expect(result.toString()).toMatchSnapshot();
+			expect(catalog.toString()).toMatchSnapshot();
 			expect(warner).not.toHaveBeenCalled();
 		});
 	});
@@ -101,7 +105,8 @@ msgstr ""
 		});
 
 		it('should discard lone strings', () => {
-			const parser = new PoParser(warner);
+			const catalog = new Catalog({ date });
+			const parser = new PoParser(catalog, warner);
 			const pot = `msgid "okay"
 msgstr ""
 
@@ -115,7 +120,8 @@ msgstr ""
 		});
 
 		it('should bail out on unexpected input', () => {
-			const parser = new PoParser(warner);
+			const catalog = new Catalog({ date });
+			const parser = new PoParser(catalog, warner);
 			let pot = `msgid "okay"
 msgstr ""
 
@@ -142,7 +148,8 @@ msgstr ""
 		});
 
 		it('should bail out on garbage', () => {
-			const parser = new PoParser(warner);
+			const catalog = new Catalog({ date });
+			const parser = new PoParser(catalog, warner);
 			const pot = `msgid "okay"
 msgstr ""
 
@@ -156,7 +163,8 @@ msgstr ""
 		});
 
 		it('should bail out on entries w/o msgid', () => {
-			const parser = new PoParser(warner);
+			const catalog = new Catalog({ date });
+			const parser = new PoParser(catalog, warner);
 			const pot = `msgid "okay"
 msgstr ""
 
@@ -172,7 +180,8 @@ msgstr ""
 
 		it('should bail out on duplicate entries', () => {
 			const localWarner = jest.fn();
-			const parser = new PoParser(localWarner);
+			const catalog = new Catalog({ date });
+			const parser = new PoParser(catalog, localWarner);
 			const pot = `msgid "okay"
 msgstr ""
 
@@ -195,7 +204,8 @@ msgstr ""
 		});
 
 		it('should bail out on duplicate msgid sections', () => {
-			const parser = new PoParser(warner);
+			const catalog = new Catalog({ date });
+			const parser = new PoParser(catalog, warner);
 			const pot = `msgid "okay"
 msgstr ""
 
@@ -211,7 +221,8 @@ msgid "okay"
 		});
 
 		it('should bail out on duplicate msgstr sections', () => {
-			const parser = new PoParser(warner);
+			const catalog = new Catalog({ date });
+			const parser = new PoParser(catalog, warner);
 			const pot = `msgid "okay"
 msgstr ""
 
@@ -227,7 +238,8 @@ msgstr "okay"
 		});
 
 		it('should bail out on duplicate msgid_plural sections', () => {
-			const parser = new PoParser(warner);
+			const catalog = new Catalog({ date });
+			const parser = new PoParser(catalog, warner);
 			const pot = `msgid "okay"
 msgstr ""
 
@@ -245,7 +257,8 @@ msgstr[1] ""
 		});
 
 		it('should bail out on duplicate msgctxt sections', () => {
-			const parser = new PoParser(warner);
+			const catalog = new Catalog({ date });
+			const parser = new PoParser(catalog, warner);
 			const pot = `msgid "okay"
 msgstr ""
 
@@ -262,7 +275,8 @@ msgstr ""
 		});
 
 		it('should enforce consistent use of #~', () => {
-			const parser = new PoParser(warner);
+			const catalog = new Catalog({ date });
+			const parser = new PoParser(catalog, warner);
 			const pot = `msgid "okay"
 msgstr ""
 
@@ -278,7 +292,8 @@ msgstr "okay"
 		});
 
 		it('should bail out on non-strings for msgids', () => {
-			const parser = new PoParser(warner);
+			const catalog = new Catalog({ date });
+			const parser = new PoParser(catalog, warner);
 			const pot = `msgid "okay"
 msgstr ""
 
@@ -293,7 +308,8 @@ msgstr "okay"
 		});
 
 		it('should bail out on unterminated strings', () => {
-			const parser = new PoParser(warner);
+			const catalog = new Catalog({ date });
+			const parser = new PoParser(catalog, warner);
 			const pot = `msgid "okay"
 msgstr ""
 
@@ -308,7 +324,8 @@ msgstr "okay"
 		});
 
 		it('should bail out on trailing backslashes', () => {
-			const parser = new PoParser(warner);
+			const catalog = new Catalog({ date });
+			const parser = new PoParser(catalog, warner);
 			const pot = `msgid "okay"
 msgstr ""
 
@@ -323,7 +340,8 @@ msgstr "okay"
 		});
 
 		it('should bail out on invalid control sequences', () => {
-			const parser = new PoParser(warner);
+			const catalog = new Catalog({ date });
+			const parser = new PoParser(catalog, warner);
 			const pot = `msgid "okay"
 msgstr ""
 
@@ -346,14 +364,15 @@ msgstr ""
 		});
 
 		it('should warn about empty flags', () => {
-			const parser = new PoParser(warner);
+			const catalog = new Catalog({ date });
+			const parser = new PoParser(catalog, warner);
 			const pot = `#, fuzzy   ,, perl-brace-format
 msgid "Hello, {name}!"
 msgstr ""
 `;
 			const input = Buffer.from(pot);
-			const result = parser.parse(input, 'example.js');
-			expect(result.toString()).toMatchSnapshot();
+			parser.parse(input, 'example.js');
+			expect(catalog.toString()).toMatchSnapshot();
 			expect(warner).toHaveBeenCalledTimes(1);
 			expect(warner).toHaveBeenNthCalledWith(
 				1,
@@ -362,14 +381,15 @@ msgstr ""
 		});
 
 		it('should warn about invalid references', () => {
-			const parser = new PoParser(warner);
+			const catalog = new Catalog({ date });
+			const parser = new PoParser(catalog, warner);
 			const pot = `#:   src/here.js:2304     somewhere
 msgid "Hello, {name}!"
 msgstr ""
 `;
 			const input = Buffer.from(pot);
-			const result = parser.parse(input, 'example.js');
-			expect(result.toString()).toMatchSnapshot();
+			parser.parse(input, 'example.js');
+			expect(catalog.toString()).toMatchSnapshot();
 			expect(warner).toHaveBeenCalledTimes(1);
 			expect(warner).toHaveBeenNthCalledWith(
 				1,
@@ -378,27 +398,32 @@ msgstr ""
 		});
 	});
 
+	// FIXME! These tests have to be re-written because all input has to be
+	// decoded to utf-8.
 	describe('encoding', () => {
 		const warner = jest.fn();
-		const parser = new PoParser(warner);
 
 		beforeEach(() => {
 			warner.mockReset();
 		});
 
 		it('should accept cp1252', () => {
+			const catalog = new Catalog({ date });
+			const parser = new PoParser(catalog, warner);
 			const pot = `msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\\n"
 "Content-Type: text/plain; charset=CP1252\\n"
 `;
 			const input = Buffer.from(pot);
-			const catalog = parser.parse(input, 'example.ts');
-			expect(catalog.toString()).toEqual(pot);
+			parser.parse(input, 'example.ts');
+			expect(catalog.toString()).toMatchSnapshot();
 			expect(warner).not.toHaveBeenCalled();
 		});
 
 		it('should throw on unsupported encodings', () => {
+			const catalog = new Catalog({ date });
+			const parser = new PoParser(catalog, warner);
 			const pot = `msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\\n"
@@ -412,48 +437,56 @@ msgstr ""
 		});
 
 		it('should re-parse a lone header', () => {
+			const catalog = new Catalog({ date });
+			const parser = new PoParser(catalog, warner);
 			const pot = `msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\\n"
 "Content-Type: text/plain; charset=iso-8859-1\\n"`;
 
 			const input = Buffer.from(pot);
-			const catalog = parser.parse(input, 'example.ts');
-			expect(catalog.encoding()).toEqual('iso-8859-1');
+			parser.parse(input, 'example.ts');
+			expect(catalog.encoding()).toEqual('CHARSET');
 			expect(warner).not.toHaveBeenCalled();
 		});
 
 		it('should not reparse w/o content-type header', () => {
+			const catalog = new Catalog({ date });
+			const parser = new PoParser(catalog, warner);
 			const pot = `msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\\n"
 "Content-Transfer-Encoding: 8bit\\n"`;
 			const input = Buffer.from(pot);
-			const catalog = parser.parse(input, 'example.ts');
+			parser.parse(input, 'example.ts');
 			expect(catalog.encoding()).toEqual('CHARSET');
 			expect(warner).not.toHaveBeenCalled();
 		});
 
 		it('should not reparse w/o charset', () => {
+			const catalog = new Catalog({ date });
+			const parser = new PoParser(catalog, warner);
 			const pot = `msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\\n"
 "Content-Type: text/plain\\n"
 "Content-Transfer-Encoding: 8bit\\n"`;
 			const input = Buffer.from(pot);
-			const catalog = parser.parse(input, 'example.ts');
+			parser.parse(input, 'example.ts');
 			expect(catalog.encoding()).toEqual('CHARSET');
 			expect(warner).not.toHaveBeenCalled();
 		});
 
 		it('should not reparse for unknown encoding', () => {
+			const catalog = new Catalog({ date });
+			const parser = new PoParser(catalog, warner);
 			const pot = `msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\\n"
 "Content-Type: text/plain; charset=invalid\\n"
 "Content-Transfer-Encoding: 8bit\\n"`;
 			const input = Buffer.from(pot);
-			const catalog = parser.parse(input, 'example.ts');
+			parser.parse(input, 'example.ts');
 			expect(catalog.encoding()).toEqual('CHARSET');
 			expect(warner).toHaveBeenCalledTimes(2);
 			expect(warner).toHaveBeenNthCalledWith(

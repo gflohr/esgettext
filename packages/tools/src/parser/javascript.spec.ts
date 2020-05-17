@@ -19,10 +19,8 @@ describe('JavaScript parser', () => {
 
 			const code = 'gtx._("Hello, world!")';
 			const input = Buffer.from(code);
-			const pot = p.parse(input, 'example.ts').toString();
-			console.log(pot);
+			p.parse(input, 'example.ts').toString();
 			expect(warner).not.toHaveBeenCalled();
 		});
-
 	});
 });
