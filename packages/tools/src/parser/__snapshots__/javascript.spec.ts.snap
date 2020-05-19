@@ -1,26 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`JavaScript parser extract all strings should extract all kinds of comments 1`] = `
-"# SOME DESCRIPTIVE TITLE
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
-#, fuzzy
-msgid \\"\\"
-msgstr \\"\\"
-\\"Project-Id-Version: PACKAGE VERSION\\\\n\\"
-\\"Report-Msgid-Bugs-To: MSGID_BUGS_ADDRESS\\\\n\\"
-\\"POT-Creation-Date: 2020-04-23 08:50+0300\\\\n\\"
-\\"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\\\\n\\"
-\\"Last-Translator: FULL NAME <EMAIL@ADDRESS>\\\\n\\"
-\\"Language-Team: LANGUAGE <LL@li.org>\\\\n\\"
-\\"Language:\\\\n\\"
-\\"MIME-Version: 1.0\\\\n\\"
-\\"Content-Type: text/plain; charset=CHARSET\\\\n\\"
-\\"Content-Transfer-Encoding: 8bit\\\\n\\"
-
-#. Single-line comment.
+exports[`JavaScript parser comments should extract all kinds of comments 1`] = `
+"#. Single-line comment.
 #: example.ts:3
 msgid \\"single line\\"
 msgstr \\"\\"
@@ -58,37 +39,15 @@ msgstr \\"\\"
 "
 `;
 
-exports[`JavaScript parser extract all strings should extract all kinds of strings 1`] = `
-"# SOME DESCRIPTIVE TITLE
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
-#, fuzzy
-msgid \\"\\"
-msgstr \\"\\"
-\\"Project-Id-Version: PACKAGE VERSION\\\\n\\"
-\\"Report-Msgid-Bugs-To: MSGID_BUGS_ADDRESS\\\\n\\"
-\\"POT-Creation-Date: 2020-04-23 08:50+0300\\\\n\\"
-\\"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\\\\n\\"
-\\"Last-Translator: FULL NAME <EMAIL@ADDRESS>\\\\n\\"
-\\"Language-Team: LANGUAGE <LL@li.org>\\\\n\\"
-\\"Language:\\\\n\\"
-\\"MIME-Version: 1.0\\\\n\\"
-\\"Content-Type: text/plain; charset=CHARSET\\\\n\\"
-\\"Content-Transfer-Encoding: 8bit\\\\n\\"
-
-#. Directive.
-#: example.ts:3
+exports[`JavaScript parser strings should extract all kinds of strings 1`] = `
+"#: example.ts:3
 msgid \\"double-quoted string\\"
 msgstr \\"\\"
 
-#. Function call.
 #: example.ts:6
 msgid \\"single-quoted string\\"
 msgstr \\"\\"
 
-#. perl-brace-format.
 #: example.ts:9
 #, perl-brace-format
 msgid \\"Hello, {name}!\\"

@@ -1,11 +1,6 @@
 import { readFileSync } from 'fs';
-import {
-	File,
-	StringLiteral,
-	SourceLocation,
-	CommentBlock,
-} from '@babel/types';
 import traverse, { NodePath } from '@babel/traverse';
+import * as t from '@babel/types';
 
 import { Catalog } from '../pot/catalog';
 import { POTEntry } from '../pot/entry';
@@ -22,37 +17,52 @@ export abstract class Parser {
 		return this.parse(readFileSync(filename), filename, encoding);
 	}
 
-	protected extractAllStrings(ast: File): void {
-		const comments = ast.comments as Array<CommentBlock>;
+	protected extractAllStrings(ast: t.File): void {
+		const comments = this.filterComments(ast.comments as Array<t.CommentBlock>);
 
+		// Step 1: Transform string concatenations into one string.
 		traverse(ast, {
 			StringLiteral: (path) => {
-				const loc = path.node.loc;
-				const str = this.extractString(path);
-				if (str !== null) {
-					this.addEntry(str, loc, comments);
-				}
+				this.concatStrings(path);
 			},
-			DirectiveLiteral: (path) => {
-				const loc = path.node.loc;
-				const str = this.extractString(
-					(path as unknown) as NodePath<StringLiteral>,
-				);
-				if (str !== null) {
-					this.addEntry(str, loc, comments);
+		});
+
+		// Step 2: Extract the remaining strings. Those that are part of a
+		// binary expression have not been recognized in step 1 and must be
+		// ignored.
+		traverse(ast, {
+			StringLiteral: (path) => {
+				if (!t.isBinaryExpression(path.parentPath.node)) {
+					const loc = path.node.loc;
+					this.addEntry(path.node.value, loc, comments);
 				}
 			},
 		});
 	}
 
-	private extractString(path: NodePath<StringLiteral>): string {
-		return path.node.value;
+	private concatStrings(path: NodePath<t.StringLiteral>): void {
+		if (!t.isBinaryExpression(path.parent)) {
+			return;
+		}
+
+		const parentPath = path.parentPath as NodePath<t.BinaryExpression>;
+		if (
+			parentPath.node.operator === '+' &&
+			t.isStringLiteral(parentPath.node.left) &&
+			t.isStringLiteral(parentPath.node.right)
+		) {
+			const node = t.stringLiteral(
+				parentPath.node.left.value + parentPath.node.right.value,
+			);
+			node.loc = parentPath.node.loc;
+			parentPath.replaceWith(node);
+		}
 	}
 
 	private addEntry(
 		msgid: string,
-		loc: SourceLocation,
-		remainingComments: Array<CommentBlock>,
+		loc: t.SourceLocation,
+		remainingComments: Array<t.CommentBlock>,
 		msgidPlural?: string,
 	): void {
 		let flags;
@@ -81,9 +91,9 @@ export abstract class Parser {
 	}
 
 	private findPrecedingComments(
-		comments: Array<CommentBlock>,
-		loc: SourceLocation,
-	): Array<CommentBlock> {
+		comments: Array<t.CommentBlock>,
+		loc: t.SourceLocation,
+	): Array<t.CommentBlock> {
 		let last;
 
 		// Find the last relevant comment, which is the first one that
@@ -124,5 +134,32 @@ export abstract class Parser {
 		}
 
 		return preceding.slice(first + 1);
+	}
+
+	private filterComments(
+		comments: Array<t.CommentBlock>,
+	): Array<t.CommentBlock> {
+		if (this.catalog.properties.addAllComments) {
+			return comments;
+		}
+
+		const markers = this.catalog.properties.addComments
+			? this.catalog.properties.addComments
+			: new Array<string>();
+
+		return comments.filter((block) => {
+			if (block.value.includes('xgettext:')) {
+				return true;
+			} else {
+				for (let i = 0; i < markers.length; ++i) {
+					const marker = markers[i];
+					if (marker === block.value.substr(0, marker.length)) {
+						return true;
+					}
+				}
+			}
+
+			return false;
+		});
 	}
 }

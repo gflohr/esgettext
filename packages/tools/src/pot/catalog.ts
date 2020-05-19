@@ -18,6 +18,9 @@ interface CatalogProperties {
 	sortOutput?: boolean;
 	sortByFile?: boolean;
 	noHeader?: boolean;
+	addAllComments?: boolean;
+	addComments?: Array<string>;
+	extractAll?: boolean;
 }
 
 interface RenderOptions {
@@ -31,7 +34,7 @@ export class Catalog {
 	private readonly cache: Cache = {};
 	entries: Array<POTEntry>;
 
-	constructor(private readonly properties: CatalogProperties = {}) {
+	constructor(readonly properties: CatalogProperties = {}) {
 		this.entries = new Array<POTEntry>();
 		if (typeof properties.fromCode === 'undefined') {
 			properties.fromCode = 'CHARSET';

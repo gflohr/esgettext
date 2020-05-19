@@ -1,17 +1,15 @@
 import { Catalog } from '../pot/catalog';
 import { JavaScriptParser } from './javascript';
 
-const date = '2020-04-23 08:50+0300';
-
 describe('JavaScript parser', () => {
-	describe('extract all strings', () => {
+	describe('strings', () => {
 		it('should extract all kinds of strings', () => {
-			const catalog = new Catalog({ date });
+			const catalog = new Catalog({ noHeader: true, extractAll: true });
 			const warner = jest.fn();
 			const p = new JavaScriptParser(catalog, warner);
 			const code = `
 // Directive.
-"double-quoted string";
+_("double-quoted string");
 
 // Function call.
 _('single-quoted string');
@@ -23,8 +21,34 @@ _x('Hello, {name}!');
 			expect(catalog.toString()).toMatchSnapshot();
 		});
 
+		it('should extract concatenated strings', () => {
+			const catalog = new Catalog({ noHeader: true, extractAll: true });
+			const warner = jest.fn();
+			const p = new JavaScriptParser(catalog, warner);
+			const code = '"concatenated" + " str" + "i" + "n" + "g";';
+			const buf = Buffer.from(code);
+			p.parse(buf, 'example.ts');
+			const expected = `#: example.ts:1
+msgid "concatenated string"
+msgstr ""
+`;
+			expect(catalog.toString()).toEqual(expected);
+		});
+
+		it('should not extract concatenated strings with leading variable', () => {
+			const catalog = new Catalog({ noHeader: true, extractAll: true });
+			const warner = jest.fn();
+			const p = new JavaScriptParser(catalog, warner);
+			const code = 'prefix + "concatenated" + " string";';
+			const buf = Buffer.from(code);
+			p.parse(buf, 'example.ts');
+			expect(catalog.toString()).toEqual('');
+		});
+	});
+
+	describe('comments', () => {
 		it('should extract all kinds of comments', () => {
-			const catalog = new Catalog({ date });
+			const catalog = new Catalog({ noHeader: true, addAllComments: true });
 			const warner = jest.fn();
 			const p = new JavaScriptParser(catalog, warner);
 			const code = `
