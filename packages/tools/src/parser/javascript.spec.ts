@@ -35,11 +35,31 @@ msgstr ""
 			expect(catalog.toString()).toEqual(expected);
 		});
 
-		it('should not extract concatenated strings with leading variable', () => {
+		it('should not extract concatenated strings with a leading variable', () => {
 			const catalog = new Catalog({ noHeader: true, extractAll: true });
 			const warner = jest.fn();
 			const p = new JavaScriptParser(catalog, warner);
 			const code = 'prefix + "concatenated" + " string";';
+			const buf = Buffer.from(code);
+			p.parse(buf, 'example.ts');
+			expect(catalog.toString()).toEqual('');
+		});
+
+		it('should not extract concatenated strings mixed with a variable', () => {
+			const catalog = new Catalog({ noHeader: true, extractAll: true });
+			const warner = jest.fn();
+			const p = new JavaScriptParser(catalog, warner);
+			const code = '"concatenated" + sep + "string";';
+			const buf = Buffer.from(code);
+			p.parse(buf, 'example.ts');
+			expect(catalog.toString()).toEqual('');
+		});
+
+		it('should not extract concatenated strings with a trailing variable', () => {
+			const catalog = new Catalog({ noHeader: true, extractAll: true });
+			const warner = jest.fn();
+			const p = new JavaScriptParser(catalog, warner);
+			const code = '"concatenated" + " string" + suffix;';
 			const buf = Buffer.from(code);
 			p.parse(buf, 'example.ts');
 			expect(catalog.toString()).toEqual('');
