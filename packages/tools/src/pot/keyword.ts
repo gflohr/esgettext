@@ -10,13 +10,16 @@ const gtx = Textdomain.getInstance('esgettext-tools');
  * for more information!
  */
 export class Keyword {
+	private readonly _method: string;
 	private _singular: number;
 	private _plural: number;
 	private _context: number;
 	private _totalArgs: number;
 	private _comment: string;
 
-	constructor(private readonly method: string, args?: Array<string>) {
+	constructor(method: string, args?: Array<string>) {
+		this._method = method;
+
 		if (!args) {
 			args = new Array<string>();
 		}
@@ -178,6 +181,10 @@ export class Keyword {
 		} else {
 			return dump;
 		}
+	}
+
+	get method(): string {
+		return this._method;
 	}
 
 	get singular(): number {

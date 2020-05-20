@@ -68,7 +68,11 @@ msgstr ""
 
 	describe('comments', () => {
 		it('should extract all kinds of comments', () => {
-			const catalog = new Catalog({ noHeader: true, addAllComments: true });
+			const catalog = new Catalog({
+				noHeader: true,
+				addAllComments: true,
+				extractAll: true,
+			});
 			const warner = jest.fn();
 			const p = new JavaScriptParser(catalog, warner);
 			const code = `

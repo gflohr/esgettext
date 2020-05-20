@@ -1,4 +1,5 @@
 import { POTEntry } from './entry';
+import { Keyword } from './keyword';
 
 interface Cache {
 	// msgid
@@ -21,6 +22,7 @@ interface CatalogProperties {
 	addAllComments?: boolean;
 	addComments?: Array<string>;
 	extractAll?: boolean;
+	keywords?: Array<Keyword>;
 }
 
 interface RenderOptions {

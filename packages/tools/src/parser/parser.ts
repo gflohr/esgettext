@@ -4,12 +4,22 @@ import * as t from '@babel/types';
 
 import { Catalog } from '../pot/catalog';
 import { POTEntry } from '../pot/entry';
+import { Keyword } from '../pot/keyword';
 
 export abstract class Parser {
+	private readonly keywords: {
+		[key: string]: Keyword;
+	};
+
 	constructor(
 		protected readonly catalog: Catalog,
 		protected readonly warner: (msg: string) => void,
-	) {}
+	) {
+		this.keywords = {};
+		(catalog.properties.keywords || []).forEach((keyword) => {
+			this.keywords[keyword.method] = keyword;
+		});
+	}
 
 	abstract parse(input: Buffer, filename: string, encoding?: string): void;
 
@@ -17,7 +27,19 @@ export abstract class Parser {
 		return this.parse(readFileSync(filename), filename, encoding);
 	}
 
-	protected extractAllStrings(ast: t.File): void {
+	protected extract(ast: t.File): void {
+		if (this.catalog.properties.extractAll) {
+			this.extractAllStrings(ast);
+		} else {
+			this.extractStrings(ast);
+		}
+	}
+
+	private extractStrings(_ast: t.File): void {
+		/* todo */
+	}
+
+	private extractAllStrings(ast: t.File): void {
 		const comments = this.filterComments(ast.comments as Array<t.CommentBlock>);
 
 		// Step 1: Transform string concatenations into one string.

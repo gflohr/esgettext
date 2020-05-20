@@ -19,6 +19,6 @@ export class JavaScriptParser extends Parser {
 			plugins: ['typescript'],
 		});
 
-		this.extractAllStrings(ast);
+		this.extract(ast);
 	}
 }
