@@ -114,9 +114,12 @@ msgstr ""
 `;
 			const input = Buffer.from(pot);
 			expect(() => parser.parse(input, 'example.ts')).toThrow(
-				new Error('example.ts:4:1: syntax error'),
+				new Error('Fix the above error before proceeding!'),
 			);
-			expect(warner).not.toHaveBeenCalled();
+			expect(warner).toHaveBeenCalledTimes(1);
+			expect(warner).toHaveBeenCalledWith(
+				'example.ts:4:1: error: syntax error',
+			);
 		});
 
 		it('should bail out on unexpected input', () => {
@@ -130,9 +133,17 @@ msgstr ""
 `;
 			let input = Buffer.from(pot);
 			expect(() => parser.parse(input, 'example.ts')).toThrow(
-				new Error('example.ts:4:1: keyword "MSGID" unknown'),
+				new Error('Fix the above errors before proceeding!'),
 			);
-			expect(warner).not.toHaveBeenCalled();
+			expect(warner).toHaveBeenCalledTimes(2);
+			expect(warner).toHaveBeenNthCalledWith(
+				1,
+				'example.ts:4:1: error: keyword "MSGID" unknown',
+			);
+			expect(warner).toHaveBeenNthCalledWith(
+				2,
+				'example.ts:4:6: error: syntax error',
+			);
 
 			pot = `msgid "okay"
 msgstr ""
@@ -142,9 +153,17 @@ msgstr ""
 `;
 			input = Buffer.from(pot);
 			expect(() => parser.parse(input, 'example.ts')).toThrow(
-				new Error('example.ts:4:1: keyword "nsgid" unknown'),
+				new Error('Fix the above errors before proceeding!'),
 			);
-			expect(warner).not.toHaveBeenCalled();
+			expect(warner).toHaveBeenCalledTimes(4);
+			expect(warner).toHaveBeenNthCalledWith(
+				3,
+				'example.ts:4:1: error: keyword "nsgid" unknown',
+			);
+			expect(warner).toHaveBeenNthCalledWith(
+				4,
+				'example.ts:4:6: error: syntax error',
+			);
 		});
 
 		it('should bail out on garbage', () => {
@@ -157,9 +176,13 @@ msgstr ""
 `;
 			const input = Buffer.from(pot);
 			expect(() => parser.parse(input, 'example.ts')).toThrow(
-				new Error('example.ts:4:1: syntax error'),
+				new Error('Fix the above error before proceeding!'),
 			);
-			expect(warner).not.toHaveBeenCalled();
+			expect(warner).toHaveBeenCalledTimes(1);
+			expect(warner).toHaveBeenNthCalledWith(
+				1,
+				'example.ts:4:1: error: syntax error',
+			);
 		});
 
 		it('should bail out on entries w/o msgid', () => {
@@ -173,9 +196,13 @@ msgstr ""
 `;
 			const input = Buffer.from(pot);
 			expect(() => parser.parse(input, 'example.ts')).toThrow(
-				new Error('example.ts:6:1: missing "msgid" section'),
+				new Error('Fix the above error before proceeding!'),
 			);
-			expect(warner).not.toHaveBeenCalled();
+			expect(warner).toHaveBeenCalledTimes(1);
+			expect(warner).toHaveBeenNthCalledWith(
+				1,
+				'example.ts:6:1: error: missing "msgid" section',
+			);
 		});
 
 		it('should bail out on duplicate entries', () => {
@@ -190,16 +217,16 @@ msgstr ""
 `;
 			const input = Buffer.from(pot);
 			expect(() => parser.parse(input, 'example.ts')).toThrow(
-				new Error('example.ts:6:1: cannot proceed after fatal error'),
+				new Error('Fix the above errors before proceeding!'),
 			);
 			expect(localWarner).toHaveBeenCalledTimes(2);
 			expect(localWarner).toHaveBeenNthCalledWith(
 				1,
-				'example.ts:4: duplicate message definition...',
+				'example.ts:4:1: error: duplicate message definition...',
 			);
 			expect(localWarner).toHaveBeenNthCalledWith(
 				2,
-				'example.ts:1: ...this is the location of the first definition',
+				'example.ts:1:1: error: ...this is the location of the first definition',
 			);
 		});
 
@@ -215,9 +242,13 @@ msgid "okay"
 `;
 			const input = Buffer.from(pot);
 			expect(() => parser.parse(input, 'example.ts')).toThrow(
-				new Error('example.ts:6:1: duplicate "msgid" section'),
+				new Error('Fix the above error before proceeding!'),
 			);
-			expect(warner).not.toHaveBeenCalled();
+			expect(warner).toHaveBeenCalledTimes(1);
+			expect(warner).toHaveBeenNthCalledWith(
+				1,
+				'example.ts:6:1: error: duplicate "msgid" section',
+			);
 		});
 
 		it('should bail out on duplicate msgstr sections', () => {
@@ -232,9 +263,13 @@ msgstr "okay"
 `;
 			const input = Buffer.from(pot);
 			expect(() => parser.parse(input, 'example.ts')).toThrow(
-				new Error('example.ts:6:1: duplicate "msgstr" section'),
+				new Error('Fix the above error before proceeding!'),
 			);
-			expect(warner).not.toHaveBeenCalled();
+			expect(warner).toHaveBeenCalledTimes(1);
+			expect(warner).toHaveBeenNthCalledWith(
+				1,
+				'example.ts:6:1: error: duplicate "msgstr" section',
+			);
 		});
 
 		it('should bail out on duplicate msgid_plural sections', () => {
@@ -251,9 +286,13 @@ msgstr[1] ""
 `;
 			const input = Buffer.from(pot);
 			expect(() => parser.parse(input, 'example.ts')).toThrow(
-				new Error('example.ts:6:1: duplicate "msgid_plural" section'),
+				new Error('Fix the above error before proceeding!'),
 			);
-			expect(warner).not.toHaveBeenCalled();
+			expect(warner).toHaveBeenCalledTimes(1);
+			expect(warner).toHaveBeenNthCalledWith(
+				1,
+				'example.ts:6:1: error: duplicate "msgid_plural" section',
+			);
 		});
 
 		it('should bail out on duplicate msgctxt sections', () => {
@@ -269,9 +308,13 @@ msgstr ""
 `;
 			const input = Buffer.from(pot);
 			expect(() => parser.parse(input, 'example.ts')).toThrow(
-				new Error('example.ts:5:1: duplicate "msgctxt" section'),
+				new Error('Fix the above error before proceeding!'),
 			);
-			expect(warner).not.toHaveBeenCalled();
+			expect(warner).toHaveBeenCalledTimes(1);
+			expect(warner).toHaveBeenNthCalledWith(
+				1,
+				'example.ts:5:1: error: duplicate "msgctxt" section',
+			);
 		});
 
 		it('should enforce consistent use of #~', () => {
@@ -286,9 +329,13 @@ msgstr "okay"
 `;
 			const input = Buffer.from(pot);
 			expect(() => parser.parse(input, 'example.ts')).toThrow(
-				new Error('example.ts:5:1: inconsistent use of #~'),
+				new Error('Fix the above error before proceeding!'),
 			);
-			expect(warner).not.toHaveBeenCalled();
+			expect(warner).toHaveBeenCalledTimes(1);
+			expect(warner).toHaveBeenNthCalledWith(
+				1,
+				'example.ts:5:1: error: inconsistent use of #~',
+			);
 		});
 
 		it('should bail out on non-strings for msgids', () => {
@@ -302,9 +349,13 @@ msgstr "okay"
 `;
 			const input = Buffer.from(pot);
 			expect(() => parser.parse(input, 'example.ts')).toThrow(
-				new Error('example.ts:4:14: syntax error'),
+				new Error('Fix the above error before proceeding!'),
 			);
-			expect(warner).not.toHaveBeenCalled();
+			expect(warner).toHaveBeenCalledTimes(1);
+			expect(warner).toHaveBeenNthCalledWith(
+				1,
+				'example.ts:4:14: error: syntax error',
+			);
 		});
 
 		it('should bail out on unterminated strings', () => {
@@ -318,9 +369,13 @@ msgstr "okay"
 `;
 			const input = Buffer.from(pot);
 			expect(() => parser.parse(input, 'example.ts')).toThrow(
-				new Error('example.ts:4:7: end-of-line within string'),
+				new Error('Fix the above error before proceeding!'),
 			);
-			expect(warner).not.toHaveBeenCalled();
+			expect(warner).toHaveBeenCalledTimes(1);
+			expect(warner).toHaveBeenNthCalledWith(
+				1,
+				'example.ts:4:11: error: end-of-line within string',
+			);
 		});
 
 		it('should bail out on trailing backslashes', () => {
@@ -334,9 +389,13 @@ msgstr "okay"
 `;
 			const input = Buffer.from(pot);
 			expect(() => parser.parse(input, 'example.ts')).toThrow(
-				new Error('example.ts:4:7: end-of-line within string'),
+				new Error('Fix the above error before proceeding!'),
 			);
-			expect(warner).not.toHaveBeenCalled();
+			expect(warner).toHaveBeenCalledTimes(1);
+			expect(warner).toHaveBeenNthCalledWith(
+				1,
+				'example.ts:4:7: error: end-of-line within string',
+			);
 		});
 
 		it('should bail out on invalid control sequences', () => {
@@ -350,9 +409,13 @@ msgstr ""
 `;
 			const input = Buffer.from(pot);
 			expect(() => parser.parse(input, 'example.ts')).toThrow(
-				new Error('example.ts:4:18: invalid control sequence'),
+				new Error('Fix the above error before proceeding!'),
 			);
-			expect(warner).not.toHaveBeenCalled();
+			expect(warner).toHaveBeenCalledTimes(1);
+			expect(warner).toHaveBeenNthCalledWith(
+				1,
+				'example.ts:4:18: error: invalid control sequence',
+			);
 		});
 	});
 
@@ -376,7 +439,7 @@ msgstr ""
 			expect(warner).toHaveBeenCalledTimes(1);
 			expect(warner).toHaveBeenNthCalledWith(
 				1,
-				'example.js:1:11: ignoring empty flag',
+				'example.js:1:11: warning: ignoring empty flag',
 			);
 		});
 
@@ -393,7 +456,7 @@ msgstr ""
 			expect(warner).toHaveBeenCalledTimes(1);
 			expect(warner).toHaveBeenNthCalledWith(
 				1,
-				'example.js:1:27: ignoring mal-formed reference "somewhere"',
+				'example.js:1:27: warning: ignoring mal-formed reference "somewhere"',
 			);
 		});
 	});
@@ -491,11 +554,11 @@ msgstr ""
 			expect(warner).toHaveBeenCalledTimes(2);
 			expect(warner).toHaveBeenNthCalledWith(
 				1,
-				'example.ts:5:1: The charset "invalid" is not a portable encoding name.',
+				'example.ts:5:1: warning: the charset "invalid" is not a portable encoding name.',
 			);
 			expect(warner).toHaveBeenNthCalledWith(
 				2,
-				'example.ts:5:1: Message conversion to the users charset might not work.',
+				'example.ts:5:1: warning: message conversion to the users charset might not work.',
 			);
 		});
 	});

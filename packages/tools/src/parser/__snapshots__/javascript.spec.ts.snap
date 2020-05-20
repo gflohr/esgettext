@@ -2,53 +2,53 @@
 
 exports[`JavaScript parser comments should extract all kinds of comments 1`] = `
 "#. Single-line comment.
-#: example.ts:3
+#: example.js:3
 msgid \\"single line\\"
 msgstr \\"\\"
 
 #. Block comment.
-#: example.ts:6
+#: example.js:6
 msgid \\"block\\"
 msgstr \\"\\"
 
 #. Single-line
 #. and block combined.
-#: example.ts:10
+#: example.js:10
 msgid \\"single + block\\"
 msgstr \\"\\"
 
 #. Block
 #. and single-line combined.
-#: example.ts:14
+#: example.js:14
 msgid \\"block + single\\"
 msgstr \\"\\"
 
 #. But catch this.
-#: example.ts:19
+#: example.js:19
 msgid \\"only immediately preceding\\"
 msgstr \\"\\"
 
 #. Only for one string.
-#: example.ts:22
+#: example.js:22
 msgid \\"catcher\\"
 msgstr \\"\\"
 
-#: example.ts:22
+#: example.js:22
 msgid \\"loser\\"
 msgstr \\"\\"
 "
 `;
 
 exports[`JavaScript parser strings should extract all kinds of strings 1`] = `
-"#: example.ts:3
+"#: example.js:3
 msgid \\"double-quoted string\\"
 msgstr \\"\\"
 
-#: example.ts:6
+#: example.js:6
 msgid \\"single-quoted string\\"
 msgstr \\"\\"
 
-#: example.ts:9
+#: example.js:9
 #, perl-brace-format
 msgid \\"Hello, {name}!\\"
 msgstr \\"\\"

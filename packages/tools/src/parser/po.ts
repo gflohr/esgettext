@@ -1,5 +1,6 @@
 import { decode, encodingExists } from 'iconv-lite';
 import { Textdomain } from '@esgettext/runtime';
+import { SourceLocation } from '@babel/types';
 import { POTEntry } from '../pot/entry';
 import { Parser } from './parser';
 
@@ -18,14 +19,12 @@ interface Escapes {
 
 export class PoParser extends Parser {
 	private entry: POTEntry;
-	private entryLineno: number;
-	private filename: string;
-	private lineno: number;
-	private column: number;
+	private loc: SourceLocation;
+	private entryLoc: SourceLocation;
 	private msgType: string = null;
 	private seen: {
 		[key: string]: {
-			[key: string]: number;
+			[key: string]: SourceLocation;
 		};
 	};
 
@@ -55,18 +54,24 @@ export class PoParser extends Parser {
 		// Reset parser.
 		this.entry = undefined;
 		this.filename = filename;
-		this.lineno = 0;
-		this.column = 1;
+		this.loc = {
+			start: {
+				line: 0,
+				column: 1,
+			},
+			end: null,
+		};
 		this.msgType = null;
 		this.seen = {};
+		this.errors = 0;
 
 		// We cannot use forEach here because we may have to return from
 		// inside the loop.
 		const lines = input.split('\n');
 		for (let i = 0; i < lines.length; ++i) {
 			const line = lines[i];
-			this.column = 1;
-			++this.lineno;
+			this.loc.start.column = 1;
+			++this.loc.start.line;
 			if (line === '') {
 				if (
 					this.entry &&
@@ -94,7 +99,7 @@ export class PoParser extends Parser {
 					case '#':
 						if (line.length > 1 && line[1] === '~') {
 							if (this.entry) {
-								this.error(gtx._('inconsistent use of #~'));
+								this.error(gtx._('inconsistent use of #~'), this.loc);
 							} else {
 								break;
 							}
@@ -148,6 +153,17 @@ export class PoParser extends Parser {
 		}
 
 		this.flushEntry();
+
+		if (this.errors) {
+			throw new Error(
+				gtx._n(
+					'Fix the above error before proceeding!',
+					'Fix the above errors before proceeding!',
+					this.errors,
+				),
+			);
+		}
+
 		// FIXME! This must go into the caller!
 		this.catalog.makePOT();
 	}
@@ -179,12 +195,14 @@ export class PoParser extends Parser {
 
 		if (!encodingExists(charset)) {
 			this.warn(
-				gtx._x('The charset "{charset}" is not a portable encoding name.', {
+				gtx._x('the charset "{charset}" is not a portable encoding name.', {
 					charset,
 				}),
+				this.loc,
 			);
 			this.warn(
-				gtx._('Message conversion to the users charset might not work.'),
+				gtx._('message conversion to the users charset might not work.'),
+				this.loc,
 			);
 			return null;
 		}
@@ -193,29 +211,32 @@ export class PoParser extends Parser {
 	}
 
 	private flushEntry(): void {
+		if (this.errors) {
+			this.entry = undefined;
+			return;
+		}
+
 		if (this.entry) {
 			const msgctxt = this.entry.properties.msgctxt;
 			const msgid = this.entry.properties.msgid;
 			if (typeof msgid === 'undefined') {
 				// TRANSLATORS: Do not translate "msgid".
-				this.error(gtx._('missing "msgid" section'));
+				this.error(gtx._('missing "msgid" section'), this.loc);
+				return;
 			}
 			if (this.seen[msgctxt] && this.seen[msgctxt][msgid]) {
-				const location = this.seen[msgctxt][msgid];
-				this.warner(
-					`${this.filename}:${this.entryLineno}: ` +
-						gtx._('duplicate message definition...'),
+				this.error(gtx._('duplicate message definition...'), this.entryLoc);
+				this.error(
+					gtx._('...this is the location of the first definition'),
+					this.seen[msgctxt][msgid],
 				);
-				this.warner(
-					`${this.filename}:${location}: ` +
-						gtx._('...this is the location of the first definition'),
-				);
-				this.error(gtx._('cannot proceed after fatal error'));
+				return;
 			}
 			if (!this.seen[msgctxt]) {
 				this.seen[msgctxt] = {};
 			}
-			this.seen[msgctxt][msgid] = this.entryLineno;
+
+			this.seen[msgctxt][msgid] = this.copyLocation(this.entryLoc);
 			this.catalog.addEntry(this.entry);
 		}
 		this.entry = undefined;
@@ -247,44 +268,65 @@ export class PoParser extends Parser {
 	}
 
 	private parseKeywordLine(line: string): void {
+		const errorsBefore = this.errors;
+
 		let remainder = line.replace(/^[_A-Za-z0-9[\]]+/, (keyword) => {
 			switch (keyword) {
 				case 'msgid':
-					this.entryLineno = this.lineno;
+					this.entryLoc = this.copyLocation(this.loc);
 					this.msgType = keyword;
 					if (typeof this.entry.properties.msgid !== 'undefined') {
-						this.error(gtx._x('duplicate "{keyword}" section', { keyword }));
+						this.error(
+							gtx._x('duplicate "{keyword}" section', { keyword }),
+							this.loc,
+						);
 					}
 					break;
 				case 'msgstr':
 					this.msgType = keyword;
 					if (typeof this.entry.properties.msgstr !== 'undefined') {
-						this.error(gtx._x('duplicate "{keyword}" section', { keyword }));
+						this.error(
+							gtx._x('duplicate "{keyword}" section', { keyword }),
+							this.loc,
+						);
 					}
 					break;
 				case 'msgid_plural':
 					this.msgType = keyword;
 					if (typeof this.entry.properties.msgidPlural !== 'undefined') {
-						this.error(gtx._x('duplicate "{keyword}" section', { keyword }));
+						this.error(
+							gtx._x('duplicate "{keyword}" section', { keyword }),
+							this.loc,
+						);
 					}
 					break;
 				case 'msgctxt':
 					this.msgType = keyword;
 					if (typeof this.entry.properties.msgctxt !== 'undefined') {
-						this.error(gtx._x('duplicate "{keyword}" section', { keyword }));
+						this.error(
+							gtx._x('duplicate "{keyword}" section', { keyword }),
+							this.loc,
+						);
 					}
 					break;
 				default:
 					if (!/^msgstr\[[0-9]+\]/.exec(keyword)) {
-						this.error(gtx._x('keyword "{keyword}" unknown', { keyword }));
+						this.error(
+							gtx._x('keyword "{keyword}" unknown', { keyword }),
+							this.loc,
+						);
 					}
 					this.msgType = keyword;
 			}
 
-			this.column += keyword.length;
+			this.loc.start.column += keyword.length;
 
 			return '';
 		});
+
+		if (errorsBefore !== this.errors) {
+			return;
+		}
 
 		remainder = this.trim(remainder);
 		if (remainder.startsWith('"')) {
@@ -296,12 +338,15 @@ export class PoParser extends Parser {
 
 	private parseQuotedString(line: string): void {
 		if (!line.endsWith('"')) {
-			this.error(gtx._('end-of-line within string'));
+			this.loc.start.column += line.length;
+			this.error(gtx._('end-of-line within string'), this.loc);
+			return;
 		}
 
 		const raw = line.substr(1, line.length - 2);
 		if (raw.length && raw.endsWith('\\')) {
-			this.error(gtx._('end-of-line within string'));
+			this.error(gtx._('end-of-line within string'), this.loc);
+			return;
 		}
 		const msg = raw.replace(/\\./g, (match, offset) => {
 			let retval: string;
@@ -334,12 +379,17 @@ export class PoParser extends Parser {
 					break;
 				default:
 					// We have to take the leading quote into account.
-					this.column += offset + 1;
-					this.error(gtx._('invalid control sequence'));
+					this.loc.start.column += offset + 1;
+					this.error(gtx._('invalid control sequence'), this.loc);
+					retval = '';
 			}
 
 			return retval;
 		});
+
+		if (this.errors) {
+			return;
+		}
 
 		switch (this.msgType) {
 			case 'msgid':
@@ -364,27 +414,27 @@ export class PoParser extends Parser {
 		const flags = line.substr(2).split(',');
 		flags.forEach((flag, i) => {
 			if (i) {
-				++this.column;
+				++this.loc.start.column;
 			}
 
 			const rspace = this.rspace(flag);
 			flag = this.trim(flag);
 			if (!flag.length) {
-				this.warn(gtx._('ignoring empty flag'));
+				this.warn(gtx._('ignoring empty flag'), this.loc);
 			} else {
 				this.entry.addFlag(flag);
 			}
-			this.column += rspace + flag.length;
+			this.loc.start.column += rspace + flag.length;
 		});
 	}
 
 	private parseReferences(line: string): void {
-		this.column += 2;
+		this.loc.start.column += 2;
 
 		const refs = line.substr(2).split(' ');
 		refs.forEach((reference, i) => {
 			if (i) {
-				++this.column;
+				++this.loc.start.column;
 			}
 
 			reference = this.trim(reference);
@@ -396,28 +446,21 @@ export class PoParser extends Parser {
 					gtx._x('ignoring mal-formed reference "{reference}"', {
 						reference,
 					}),
+					this.loc,
 				);
 			}
-			this.column += reference.length;
+			this.loc.start.column += reference.length;
 		});
 	}
 
-	private warn(msg: string): void {
-		this.warner(`${this.filename}:${this.lineno}:${this.column}: ${msg}`);
-	}
-
 	private syntaxError(): void {
-		this.error(gtx._('syntax error'));
-	}
-
-	private error(msg: string): void {
-		throw new Error(`${this.filename}:${this.lineno}:${this.column}: ${msg}`);
+		this.error(gtx._('syntax error'), this.loc);
 	}
 
 	private trim(str: string): string {
 		return str
 			.replace(/^[\s\uFEFF\xA0]+/, (match) => {
-				this.column += match.length;
+				this.loc.start.column += match.length;
 				return '';
 			})
 			.trim();
@@ -430,5 +473,15 @@ export class PoParser extends Parser {
 		} else {
 			return 0;
 		}
+	}
+
+	private copyLocation(loc: SourceLocation): SourceLocation {
+		return {
+			start: {
+				line: loc.start.line,
+				column: loc.start.column,
+			},
+			end: null,
+		} as SourceLocation;
 	}
 }

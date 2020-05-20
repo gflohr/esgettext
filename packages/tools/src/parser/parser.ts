@@ -2,11 +2,18 @@ import { readFileSync } from 'fs';
 import traverse, { NodePath } from '@babel/traverse';
 import * as t from '@babel/types';
 
+import { Textdomain } from '@esgettext/runtime';
 import { Catalog } from '../pot/catalog';
 import { POTEntry } from '../pot/entry';
 import { Keyword } from '../pot/keyword';
 
+const gtx = Textdomain.getInstance('esgettext-tools');
+
 export abstract class Parser {
+	protected filename: string;
+	protected errors: number;
+	private comments: Array<t.CommentBlock>;
+
 	private readonly keywords: {
 		[key: string]: Keyword;
 	};
@@ -27,21 +34,33 @@ export abstract class Parser {
 		return this.parse(readFileSync(filename), filename, encoding);
 	}
 
-	protected extract(ast: t.File): void {
+	protected extract(filename: string, ast: t.File): boolean {
+		this.errors = 0;
+		this.comments = this.filterComments(ast.comments as Array<t.CommentBlock>);
+
+		this.filename = filename;
 		if (this.catalog.properties.extractAll) {
 			this.extractAllStrings(ast);
 		} else {
 			this.extractStrings(ast);
 		}
+
+		if (this.errors) {
+			return false;
+		} else {
+			return true;
+		}
 	}
 
-	private extractStrings(_ast: t.File): void {
-		/* todo */
+	private extractStrings(ast: t.File): void {
+		traverse(ast, {
+			CallExpression: (path) => {
+				this.extractArguments(path);
+			},
+		});
 	}
 
 	private extractAllStrings(ast: t.File): void {
-		const comments = this.filterComments(ast.comments as Array<t.CommentBlock>);
-
 		// Step 1: Transform string concatenations into one string.
 		traverse(ast, {
 			StringLiteral: (path) => {
@@ -56,10 +75,65 @@ export abstract class Parser {
 			StringLiteral: (path) => {
 				if (!t.isBinaryExpression(path.parentPath.node)) {
 					const loc = path.node.loc;
-					this.addEntry(path.node.value, loc, comments);
+					this.addEntry(path.node.value, loc);
 				}
 			},
 		});
+	}
+
+	private extractArguments(path: NodePath<t.CallExpression>): void {
+		if (path.node.callee.type !== 'Identifier') {
+			return;
+		}
+
+		const method = path.node.callee.name;
+		if (!Object.prototype.hasOwnProperty.call(this.keywords, method)) {
+			return;
+		}
+
+		// Enough arguments?
+		const keywordSpec = this.keywords[method];
+		if (
+			keywordSpec.totalArgs &&
+			path.node.arguments.length !== keywordSpec.totalArgs
+		) {
+			return;
+		}
+
+		if (keywordSpec.singular > path.node.arguments.length) {
+			return;
+		}
+
+		if (keywordSpec.plural && keywordSpec.plural > path.node.arguments.length) {
+			return;
+		}
+
+		if (
+			keywordSpec.context &&
+			keywordSpec.context > path.node.arguments.length
+		) {
+			return;
+		}
+
+		const sgArg = path.node.arguments[keywordSpec.singular - 1];
+		let msgid;
+		if (t.isStringLiteral(sgArg)) {
+			msgid = sgArg.value;
+		} else if (t.isBinaryExpression(sgArg)) {
+			throw new Error('not yet implemented');
+		} else if (t.isTemplateElement(sgArg)) {
+			this.error(
+				gtx._(
+					'template strings are not allowed as arguments to gettext functions',
+				),
+				sgArg.loc,
+			);
+			return;
+		} else {
+			return;
+		}
+
+		this.addEntry(msgid, path.node.loc);
 	}
 
 	private concatStrings(path: NodePath<t.StringLiteral>): void {
@@ -84,7 +158,6 @@ export abstract class Parser {
 	private addEntry(
 		msgid: string,
 		loc: t.SourceLocation,
-		remainingComments: Array<t.CommentBlock>,
 		msgidPlural?: string,
 	): void {
 		let flags;
@@ -98,7 +171,7 @@ export abstract class Parser {
 		};
 		const references = [`${dict.filename}:${loc.start.line}`];
 
-		const commentBlocks = this.findPrecedingComments(remainingComments, loc);
+		const commentBlocks = this.findPrecedingComments(loc);
 		const extractedComments = commentBlocks.map((block) => block.value.trim());
 
 		this.catalog.addEntry(
@@ -112,35 +185,32 @@ export abstract class Parser {
 		);
 	}
 
-	private findPrecedingComments(
-		comments: Array<t.CommentBlock>,
-		loc: t.SourceLocation,
-	): Array<t.CommentBlock> {
+	private findPrecedingComments(loc: t.SourceLocation): Array<t.CommentBlock> {
 		let last;
 
 		// Find the last relevant comment, which is the first one that
 		// immediately precedes the location.
-		for (last = 0; last < comments.length; ++last) {
-			const commentLocation = comments[last].loc;
+		for (last = 0; last < this.comments.length; ++last) {
+			const commentLocation = this.comments[last].loc;
 			if (
 				commentLocation.end.line === loc.start.line ||
 				commentLocation.end.line === loc.start.line - 1
 			) {
 				break;
 			} else if (commentLocation.end.line > loc.start.line) {
-				comments.splice(0, last);
+				this.comments.splice(0, last);
 				return [];
 			}
 		}
 
-		if (last >= comments.length) {
-			comments.splice(0, comments.length);
+		if (last >= this.comments.length) {
+			this.comments.splice(0, this.comments.length);
 			return [];
 		}
 
 		// Now go back and find all adjacent comments.
-		let ptr = comments[last].loc;
-		const preceding = comments.splice(0, last + 1);
+		let ptr = this.comments[last].loc;
+		const preceding = this.comments.splice(0, last + 1);
 
 		if (!last) {
 			return preceding;
@@ -183,5 +253,20 @@ export abstract class Parser {
 
 			return false;
 		});
+	}
+
+	protected warn(msg: string, loc: t.SourceLocation): void {
+		const start = `${loc.start.line}:${loc.start.column}`;
+		const end = loc.end ? `-${loc.end.line}:${loc.end.column}` : '';
+		const location = `${this.filename}:${start}${end}`;
+		this.warner(gtx._x('{location}: warning: {msg}', { location, msg }));
+	}
+
+	protected error(msg: string, loc: t.SourceLocation): void {
+		++this.errors;
+		const start = `${loc.start.line}:${loc.start.column}`;
+		const end = loc.end ? `-${loc.end.line}:${loc.end.column}` : '';
+		const location = `${this.filename}:${start}${end}`;
+		this.warner(gtx._x('{location}: error: {msg}', { location, msg }));
 	}
 }
