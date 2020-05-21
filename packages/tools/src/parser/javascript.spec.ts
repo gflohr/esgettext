@@ -284,6 +284,84 @@ msgstr[1] ""
 					' functions because they are not constant',
 			);
 		});
+
+		it('should allow simple template literals as plural arguments', () => {
+			const catalog = new Catalog({
+				noHeader: true,
+				keywords: [new Keyword('_np', ['1c', '2', '3'])],
+			});
+			const warner = jest.fn();
+			const p = new JavaScriptParser(catalog, warner);
+			const code = '_np("world", "one earth", `many earths`)';
+			expect(p.parse(Buffer.from(code), 'example.js')).toBeTruthy();
+			const expected = `#: example.js:1
+msgctxt "world"
+msgid "one earth"
+msgid_plural "many earths"
+msgstr[0] ""
+msgstr[1] ""
+`;
+			expect(catalog.toString()).toEqual(expected);
+			expect(warner).not.toHaveBeenCalled();
+		});
+
+		it('should reject template literals with embedded expressions as plural arguments', () => {
+			const catalog = new Catalog({
+				noHeader: true,
+				keywords: [new Keyword('_np', ['1c', '2', '3'])],
+			});
+			const warner = jest.fn();
+			const p = new JavaScriptParser(catalog, warner);
+			const code = '_np("world", "one earth", `many ${planets}`)';
+			expect(p.parse(Buffer.from(code), 'example.js')).toBeFalsy();
+			expect(catalog.toString()).toEqual('');
+			expect(warner).toHaveBeenCalledTimes(1);
+			expect(warner).toHaveBeenNthCalledWith(
+				1,
+				'example.js:1:26-1:43: error: template literals with embedded' +
+					' expressions are are not allowed as arguments to gettext' +
+					' functions because they are not constant',
+			);
+		});
+
+		it('should allow simple template literals as msgctxt arguments', () => {
+			const catalog = new Catalog({
+				noHeader: true,
+				keywords: [new Keyword('_np', ['1c', '2', '3'])],
+			});
+			const warner = jest.fn();
+			const p = new JavaScriptParser(catalog, warner);
+			const code = '_np(`world`, "one earth", "many earths")';
+			expect(p.parse(Buffer.from(code), 'example.js')).toBeTruthy();
+			const expected = `#: example.js:1
+msgctxt "world"
+msgid "one earth"
+msgid_plural "many earths"
+msgstr[0] ""
+msgstr[1] ""
+`;
+			expect(catalog.toString()).toEqual(expected);
+			expect(warner).not.toHaveBeenCalled();
+		});
+
+		it('should reject template literals with embedded expressions as msgctxt arguments', () => {
+			const catalog = new Catalog({
+				noHeader: true,
+				keywords: [new Keyword('_np', ['1c', '2', '3'])],
+			});
+			const warner = jest.fn();
+			const p = new JavaScriptParser(catalog, warner);
+			const code = '_np(`${world}`, "one earth", "many earths")';
+			expect(p.parse(Buffer.from(code), 'example.js')).toBeFalsy();
+			expect(catalog.toString()).toEqual('');
+			expect(warner).toHaveBeenCalledTimes(1);
+			expect(warner).toHaveBeenNthCalledWith(
+				1,
+				'example.js:1:4-1:14: error: template literals with embedded' +
+					' expressions are are not allowed as arguments to gettext' +
+					' functions because they are not constant',
+			);
+		});
 	});
 
 	describe('encoding', () => {
