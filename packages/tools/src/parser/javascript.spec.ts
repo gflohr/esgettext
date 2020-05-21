@@ -168,4 +168,25 @@ msgstr[1] ""
 			expect(warner).not.toHaveBeenCalled();
 		});
 	});
+
+	describe('encoding', () => {
+		it('should decode to JavaScript strings', () => {
+			const catalog = new Catalog({
+				noHeader: true,
+				keywords: [new Keyword('_')],
+			});
+			const warner = jest.fn();
+			const p = new JavaScriptParser(catalog, warner);
+			const code = '_("Hello, world!")';
+			expect(
+				p.parse(Buffer.from(code), 'example.js', 'iso-8859-1'),
+			).toBeTruthy();
+			const expected = `#: example.js:1
+msgid "Hello, world!"
+msgstr ""
+`;
+			expect(catalog.toString()).toEqual(expected);
+			expect(warner).not.toHaveBeenCalled();
+		});
+	});
 });
