@@ -133,7 +133,47 @@ export abstract class Parser {
 			return;
 		}
 
-		this.addEntry(msgid, path.node.loc);
+		let msgidPlural;
+		if (keywordSpec.plural) {
+			const plArg = path.node.arguments[keywordSpec.plural - 1];
+			if (t.isStringLiteral(plArg)) {
+				msgidPlural = plArg.value;
+			} else if (t.isBinaryExpression(plArg)) {
+				throw new Error('not yet implemented');
+			} else if (t.isTemplateElement(plArg)) {
+				this.error(
+					gtx._(
+						'template strings are not allowed as arguments to gettext functions',
+					),
+					plArg.loc,
+				);
+				return;
+			} else {
+				return;
+			}
+		}
+
+		let msgctxt;
+		if (keywordSpec.context) {
+			const ctxArg = path.node.arguments[keywordSpec.context - 1];
+			if (t.isStringLiteral(ctxArg)) {
+				msgctxt = ctxArg.value;
+			} else if (t.isBinaryExpression(ctxArg)) {
+				throw new Error('not yet implemented');
+			} else if (t.isTemplateElement(ctxArg)) {
+				this.error(
+					gtx._(
+						'template strings are not allowed as arguments to gettext functions',
+					),
+					ctxArg.loc,
+				);
+				return;
+			} else {
+				return;
+			}
+		}
+
+		this.addEntry(msgid, path.node.loc, msgidPlural, msgctxt);
 	}
 
 	private concatStrings(path: NodePath<t.StringLiteral>): void {
@@ -159,6 +199,7 @@ export abstract class Parser {
 		msgid: string,
 		loc: t.SourceLocation,
 		msgidPlural?: string,
+		msgctxt?: string,
 	): void {
 		let flags;
 		if (/\{[_a-zA-Z][_a-zA-Z0-9]*\}/.exec(msgid)) {
@@ -178,6 +219,7 @@ export abstract class Parser {
 			new POTEntry({
 				msgid,
 				msgidPlural,
+				msgctxt,
 				flags,
 				references,
 				extractedComments,

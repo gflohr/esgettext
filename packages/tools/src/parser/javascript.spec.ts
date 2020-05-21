@@ -127,5 +127,45 @@ msgstr ""
 			expect(catalog.toString()).toEqual(expected);
 			expect(warner).not.toHaveBeenCalled();
 		});
+
+		it('should extract singular and plural form', () => {
+			const catalog = new Catalog({
+				noHeader: true,
+				keywords: [new Keyword('_n', ['1', '2'])],
+			});
+			const warner = jest.fn();
+			const p = new JavaScriptParser(catalog, warner);
+			const code = '_n("There was an error!", "There were errors!", n)';
+			p.parse(Buffer.from(code), 'example.js');
+			const expected = `#: example.js:1
+msgid "There was an error!"
+msgid_plural "There were errors!"
+msgstr[0] ""
+msgstr[1] ""
+`;
+			expect(catalog.toString()).toEqual(expected);
+			expect(warner).not.toHaveBeenCalled();
+		});
+
+		it('should extract context, singular and plural form', () => {
+			const catalog = new Catalog({
+				noHeader: true,
+				keywords: [new Keyword('_np', ['1c', '2', '3'])],
+			});
+			const warner = jest.fn();
+			const p = new JavaScriptParser(catalog, warner);
+			const code =
+				'_np("context", "There was an error!", "There were errors!", n)';
+			p.parse(Buffer.from(code), 'example.js');
+			const expected = `#: example.js:1
+msgctxt "context"
+msgid "There was an error!"
+msgid_plural "There were errors!"
+msgstr[0] ""
+msgstr[1] ""
+`;
+			expect(catalog.toString()).toEqual(expected);
+			expect(warner).not.toHaveBeenCalled();
+		});
 	});
 });
