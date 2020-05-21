@@ -169,7 +169,9 @@ export abstract class Parser {
 			literal.quasis.length === 1 &&
 			t.isTemplateElement(literal.quasis[0])
 		) {
-			return literal.quasis[0].value.raw;
+			return typeof literal.quasis[0].value.cooked !== 'undefined'
+				? literal.quasis[0].value.raw
+				: literal.quasis[0].value.cooked;
 		}
 
 		this.error(
