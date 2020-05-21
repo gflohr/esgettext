@@ -149,11 +149,12 @@ export abstract class Parser {
 		this.addEntry(msgid, path.node.loc, msgidPlural, msgctxt);
 	}
 
+	// eslint-disable-next-line: @typescript-eslint/no-excplit-any
 	private extractArgument(argument: any): string {
 		if (t.isStringLiteral(argument)) {
 			return argument.value;
 		} else if (t.isBinaryExpression(argument)) {
-			throw new Error('not yet implemented');
+			return this.extractBinaryExpression(argument);
 		} else if (t.isTemplateLiteral(argument)) {
 			return this.extractTemplateLiteral(argument);
 		}
@@ -161,7 +162,20 @@ export abstract class Parser {
 		return null;
 	}
 
-	private extractTemplateLiteral(literal: t.TemplateLiteral) {
+	private extractBinaryExpression(exp: t.BinaryExpression): string {
+		const left = this.extractArgument(exp.left);
+		if (left === null) {
+			return null;
+		}
+		const right = this.extractArgument(exp.right);
+		if (right === null) {
+			return null;
+		}
+
+		return left + right;
+	}
+
+	private extractTemplateLiteral(literal: t.TemplateLiteral): string {
 		if (
 			literal.expressions.length === 0 &&
 			literal.quasis.length === 1 &&

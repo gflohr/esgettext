@@ -423,4 +423,23 @@ msgstr ""
 			expect(warner).not.toHaveBeenCalled();
 		});
 	});
+
+	describe('binary expressions', () => {
+		it('should extract concatenated strings', () => {
+			const catalog = new Catalog({
+				noHeader: true,
+				keywords: [new Keyword('_')],
+			});
+			const warner = jest.fn();
+			const p = new JavaScriptParser(catalog, warner);
+			const code = '_("It\'s a " + "sad" + " and beautiful world!")';
+			expect(p.parse(Buffer.from(code), 'example.js')).toBeTruthy();
+			const expected = `#: example.js:1
+msgid "It's a sad and beautiful world!"
+msgstr ""
+`;
+			expect(catalog.toString()).toEqual(expected);
+			expect(warner).not.toHaveBeenCalled();
+		});
+	});
 });
