@@ -23,7 +23,7 @@ export abstract class Parser {
 		protected readonly warner: (msg: string) => void,
 	) {
 		this.keywords = {};
-		(catalog.properties.keywords || []).forEach((keyword) => {
+		(catalog.properties.keywords || []).forEach(keyword => {
 			this.keywords[keyword.method] = keyword;
 		});
 	}
@@ -50,7 +50,7 @@ export abstract class Parser {
 
 	private extractStrings(ast: t.File): void {
 		traverse(ast, {
-			CallExpression: (path) => {
+			CallExpression: path => {
 				this.extractArguments(path);
 			},
 		});
@@ -59,7 +59,7 @@ export abstract class Parser {
 	private extractAllStrings(ast: t.File): void {
 		// Step 1: Transform string concatenations into one string.
 		traverse(ast, {
-			StringLiteral: (path) => {
+			StringLiteral: path => {
 				this.concatStrings(path);
 			},
 		});
@@ -68,7 +68,7 @@ export abstract class Parser {
 		// binary expression have not been recognized in step 1 and must be
 		// ignored.
 		traverse(ast, {
-			StringLiteral: (path) => {
+			StringLiteral: path => {
 				if (!t.isBinaryExpression(path.parentPath.node)) {
 					const loc = path.node.loc;
 					this.addEntry(path.node.value, loc);
@@ -111,56 +111,46 @@ export abstract class Parser {
 			return;
 		}
 
-		const sgArg = path.node.arguments[keywordSpec.singular - 1];
-		let msgid;
-		if (t.isStringLiteral(sgArg)) {
-			msgid = sgArg.value;
-		} else if (t.isBinaryExpression(sgArg)) {
-			throw new Error('not yet implemented');
-		} else if (t.isTemplateLiteral(sgArg)) {
-			msgid = this.extractTemplateLiteral(sgArg);
-			if (msgid === null) {
-				return;
-			}
-		} else {
+		const msgid = this.extractArgument(
+			path.node.arguments[keywordSpec.singular - 1],
+		);
+		if (msgid === null) {
 			return;
 		}
 
 		let msgidPlural;
 		if (keywordSpec.plural) {
-			const plArg = path.node.arguments[keywordSpec.plural - 1];
-			if (t.isStringLiteral(plArg)) {
-				msgidPlural = plArg.value;
-			} else if (t.isBinaryExpression(plArg)) {
-				throw new Error('not yet implemented');
-			} else if (t.isTemplateLiteral(plArg)) {
-				msgidPlural = this.extractTemplateLiteral(plArg);
-				if (msgidPlural === null) {
-					return;
-				}
-			} else {
+			msgidPlural = this.extractArgument(
+				path.node.arguments[keywordSpec.plural - 1],
+			);
+			if (msgidPlural === null) {
 				return;
 			}
 		}
 
 		let msgctxt;
 		if (keywordSpec.context) {
-			const ctxArg = path.node.arguments[keywordSpec.context - 1];
-			if (t.isStringLiteral(ctxArg)) {
-				msgctxt = ctxArg.value;
-			} else if (t.isBinaryExpression(ctxArg)) {
-				throw new Error('not yet implemented');
-			} else if (t.isTemplateLiteral(ctxArg)) {
-				msgctxt = this.extractTemplateLiteral(ctxArg);
-				if (msgctxt === null) {
-					return;
-				}
-			} else {
+			msgctxt = this.extractArgument(
+				path.node.arguments[keywordSpec.context - 1],
+			);
+			if (msgctxt === null) {
 				return;
 			}
 		}
 
 		this.addEntry(msgid, path.node.loc, msgidPlural, msgctxt);
+	}
+
+	private extractArgument(argument: any): string {
+		if (t.isStringLiteral(argument)) {
+			return argument.value;
+		} else if (t.isBinaryExpression(argument)) {
+			throw new Error('not yet implemented');
+		} else if (t.isTemplateLiteral(argument)) {
+			return this.extractTemplateLiteral(argument);
+		}
+
+		return null;
 	}
 
 	private extractTemplateLiteral(literal: t.TemplateLiteral) {
@@ -169,9 +159,7 @@ export abstract class Parser {
 			literal.quasis.length === 1 &&
 			t.isTemplateElement(literal.quasis[0])
 		) {
-			return typeof literal.quasis[0].value.cooked !== 'undefined'
-				? literal.quasis[0].value.raw
-				: literal.quasis[0].value.cooked;
+			return literal.quasis[0].value.cooked;
 		}
 
 		this.error(
@@ -223,7 +211,7 @@ export abstract class Parser {
 		const references = [`${dict.filename}:${loc.start.line}`];
 
 		const commentBlocks = this.findPrecedingComments(loc);
-		const extractedComments = commentBlocks.map((block) => block.value.trim());
+		const extractedComments = commentBlocks.map(block => block.value.trim());
 
 		this.catalog.addEntry(
 			new POTEntry({
@@ -291,7 +279,7 @@ export abstract class Parser {
 			? this.catalog.properties.addComments
 			: new Array<string>();
 
-		return comments.filter((block) => {
+		return comments.filter(block => {
 			if (block.value.includes('xgettext:')) {
 				return true;
 			} else {
