@@ -193,6 +193,58 @@ msgstr[1] ""
 			expect(catalog.toString()).toEqual('');
 			expect(warner).not.toHaveBeenCalled();
 		});
+
+		it('should honor the total arguments spec', () => {
+			const catalog = new Catalog({
+				noHeader: true,
+				keywords: [new Keyword('_', ['1t'])],
+			});
+			const warner = jest.fn();
+			const p = new JavaScriptParser(catalog, warner);
+			const code = '_("Hello", "world")';
+			expect(p.parse(Buffer.from(code), 'example.js')).toBeTruthy();
+			expect(catalog.toString()).toEqual('');
+			expect(warner).not.toHaveBeenCalled();
+		});
+
+		it('should not extract non existing singular arguments', () => {
+			const catalog = new Catalog({
+				noHeader: true,
+				keywords: [new Keyword('_')],
+			});
+			const warner = jest.fn();
+			const p = new JavaScriptParser(catalog, warner);
+			const code = '_()';
+			expect(p.parse(Buffer.from(code), 'example.js')).toBeTruthy();
+			expect(catalog.toString()).toEqual('');
+			expect(warner).not.toHaveBeenCalled();
+		});
+
+		it('should not extract non existing plural arguments', () => {
+			const catalog = new Catalog({
+				noHeader: true,
+				keywords: [new Keyword('_n', ['1', '2'])],
+			});
+			const warner = jest.fn();
+			const p = new JavaScriptParser(catalog, warner);
+			const code = '_n("One universe")';
+			expect(p.parse(Buffer.from(code), 'example.js')).toBeTruthy();
+			expect(catalog.toString()).toEqual('');
+			expect(warner).not.toHaveBeenCalled();
+		});
+
+		it('should not extract non existing context arguments', () => {
+			const catalog = new Catalog({
+				noHeader: true,
+				keywords: [new Keyword('_pn', ['1', '2', '3c'])],
+			});
+			const warner = jest.fn();
+			const p = new JavaScriptParser(catalog, warner);
+			const code = '_pn("one world", "many worlds")';
+			expect(p.parse(Buffer.from(code), 'example.js')).toBeTruthy();
+			expect(catalog.toString()).toEqual('');
+			expect(warner).not.toHaveBeenCalled();
+		});
 	});
 
 	describe('encoding', () => {
