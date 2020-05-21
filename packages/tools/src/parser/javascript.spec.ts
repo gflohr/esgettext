@@ -167,6 +167,32 @@ msgstr[1] ""
 			expect(catalog.toString()).toEqual(expected);
 			expect(warner).not.toHaveBeenCalled();
 		});
+
+		it('should handle other callees', () => {
+			const catalog = new Catalog({
+				noHeader: true,
+				keywords: [new Keyword('_')],
+			});
+			const warner = jest.fn();
+			const p = new JavaScriptParser(catalog, warner);
+			const code = '"string".trim()';
+			expect(p.parse(Buffer.from(code), 'example.js')).toBeTruthy();
+			expect(catalog.toString()).toEqual('');
+			expect(warner).not.toHaveBeenCalled();
+		});
+
+		it('should not extract from unknown methods', () => {
+			const catalog = new Catalog({
+				noHeader: true,
+				keywords: [new Keyword('_')],
+			});
+			const warner = jest.fn();
+			const p = new JavaScriptParser(catalog, warner);
+			const code = 'gettext("string")';
+			expect(p.parse(Buffer.from(code), 'example.js')).toBeTruthy();
+			expect(catalog.toString()).toEqual('');
+			expect(warner).not.toHaveBeenCalled();
+		});
 	});
 
 	describe('encoding', () => {
