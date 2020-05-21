@@ -245,6 +245,26 @@ msgstr[1] ""
 			expect(catalog.toString()).toEqual('');
 			expect(warner).not.toHaveBeenCalled();
 		});
+
+		it('should allow simple template literals as singular arguments', () => {
+			const catalog = new Catalog({
+				noHeader: true,
+				keywords: [new Keyword('_np', ['1c', '2', '3'])],
+			});
+			const warner = jest.fn();
+			const p = new JavaScriptParser(catalog, warner);
+			const code = '_np("world", `one earth`, "many earths")';
+			expect(p.parse(Buffer.from(code), 'example.js')).toBeTruthy();
+			const expected = `#: example.js:1
+msgctxt "world"
+msgid "one earth"
+msgid_plural "many earths"
+msgstr[0] ""
+msgstr[1] ""
+`;
+			expect(catalog.toString()).toEqual(expected);
+			expect(warner).not.toHaveBeenCalled();
+		});
 	});
 
 	describe('encoding', () => {

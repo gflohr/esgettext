@@ -117,14 +117,11 @@ export abstract class Parser {
 			msgid = sgArg.value;
 		} else if (t.isBinaryExpression(sgArg)) {
 			throw new Error('not yet implemented');
-		} else if (t.isTemplateElement(sgArg)) {
-			this.error(
-				gtx._(
-					'template strings are not allowed as arguments to gettext functions',
-				),
-				sgArg.loc,
-			);
-			return;
+		} else if (t.isTemplateLiteral(sgArg)) {
+			msgid = this.extractTemplateLiteral(sgArg);
+			if (msgid === null) {
+				return;
+			}
 		} else {
 			return;
 		}
@@ -136,14 +133,11 @@ export abstract class Parser {
 				msgidPlural = plArg.value;
 			} else if (t.isBinaryExpression(plArg)) {
 				throw new Error('not yet implemented');
-			} else if (t.isTemplateElement(plArg)) {
-				this.error(
-					gtx._(
-						'template strings are not allowed as arguments to gettext functions',
-					),
-					plArg.loc,
-				);
-				return;
+			} else if (t.isTemplateLiteral(plArg)) {
+				msgidPlural = this.extractTemplateLiteral(plArg);
+				if (msgidPlural === null) {
+					return;
+				}
 			} else {
 				return;
 			}
@@ -156,20 +150,36 @@ export abstract class Parser {
 				msgctxt = ctxArg.value;
 			} else if (t.isBinaryExpression(ctxArg)) {
 				throw new Error('not yet implemented');
-			} else if (t.isTemplateElement(ctxArg)) {
-				this.error(
-					gtx._(
-						'template strings are not allowed as arguments to gettext functions',
-					),
-					ctxArg.loc,
-				);
-				return;
+			} else if (t.isTemplateLiteral(ctxArg)) {
+				msgctxt = this.extractTemplateLiteral(ctxArg);
+				if (msgctxt === null) {
+					return;
+				}
 			} else {
 				return;
 			}
 		}
 
 		this.addEntry(msgid, path.node.loc, msgidPlural, msgctxt);
+	}
+
+	private extractTemplateLiteral(literal: t.TemplateLiteral) {
+		if (
+			literal.expressions.length === 0 &&
+			literal.quasis.length === 1 &&
+			t.isTemplateElement(literal.quasis[0])
+		) {
+			return literal.quasis[0].value.raw;
+		}
+
+		this.error(
+			gtx._(
+				'template strings are not allowed as arguments to gettext functions',
+			),
+			literal.loc,
+		);
+
+		return null;
 	}
 
 	private concatStrings(path: NodePath<t.StringLiteral>): void {
