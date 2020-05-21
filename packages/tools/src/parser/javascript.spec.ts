@@ -293,7 +293,7 @@ msgstr[1] ""
 			expect(warner).toHaveBeenNthCalledWith(
 				1,
 				'example.js:1:13-1:28: error: template literals with embedded' +
-					' expressions are are not allowed as arguments to gettext' +
+					' expressions are not allowed as arguments to gettext' +
 					' functions because they are not constant',
 			);
 		});
@@ -345,7 +345,7 @@ msgstr[1] ""
 			expect(warner).toHaveBeenNthCalledWith(
 				1,
 				'example.js:1:26-1:43: error: template literals with embedded' +
-					' expressions are are not allowed as arguments to gettext' +
+					' expressions are not allowed as arguments to gettext' +
 					' functions because they are not constant',
 			);
 		});
@@ -390,14 +390,14 @@ msgstr[1] ""
 			});
 			const warner = jest.fn();
 			const p = new JavaScriptParser(catalog, warner);
-			const code = '_np(`${world}`, "one earth", "many earths")';
+			const code = '_np("world", "one earth", `many ${planets}`)';
 			expect(p.parse(Buffer.from(code), 'example.js')).toBeFalsy();
 			expect(catalog.toString()).toEqual('');
 			expect(warner).toHaveBeenCalledTimes(1);
 			expect(warner).toHaveBeenNthCalledWith(
 				1,
-				'example.js:1:4-1:14: error: template literals with embedded' +
-					' expressions are are not allowed as arguments to gettext' +
+				'example.js:1:26-1:43: error: template literals with embedded' +
+					' expressions are not allowed as arguments to gettext' +
 					' functions because they are not constant',
 			);
 		});
@@ -440,6 +440,54 @@ msgstr ""
 `;
 			expect(catalog.toString()).toEqual(expected);
 			expect(warner).not.toHaveBeenCalled();
+		});
+
+		it('should extract concatenated strings with simple template literals', () => {
+			const catalog = new Catalog({
+				noHeader: true,
+				keywords: [new Keyword('_')],
+			});
+			const warner = jest.fn();
+			const p = new JavaScriptParser(catalog, warner);
+			const code = '_("It\'s a " + `sad` + " and beautiful world!")';
+			expect(p.parse(Buffer.from(code), 'example.js')).toBeTruthy();
+			const expected = `#: example.js:1
+msgid "It's a sad and beautiful world!"
+msgstr ""
+`;
+			expect(catalog.toString()).toEqual(expected);
+			expect(warner).not.toHaveBeenCalled();
+		});
+
+		it('should ignore concatenated strings with variables', () => {
+			const catalog = new Catalog({
+				noHeader: true,
+				keywords: [new Keyword('_')],
+			});
+			const warner = jest.fn();
+			const p = new JavaScriptParser(catalog, warner);
+			const code = '_("It\'s a " + what + " and beautiful world!")';
+			expect(p.parse(Buffer.from(code), 'example.js')).toBeTruthy();
+			expect(catalog.toString()).toEqual('');
+			expect(warner).not.toHaveBeenCalled();
+		});
+
+		it('should report concatenated strings with interpolations', () => {
+			const catalog = new Catalog({
+				noHeader: true,
+				keywords: [new Keyword('_')],
+			});
+			const warner = jest.fn();
+			const p = new JavaScriptParser(catalog, warner);
+			const code = '_("It\'s " + `a ${what}` + " and beautiful world!")';
+			expect(p.parse(Buffer.from(code), 'example.js')).toBeFalsy();
+			expect(warner).toHaveBeenCalledTimes(1);
+			expect(warner).toHaveBeenCalledWith(
+				'example.js:1:12-1:23: error:' +
+					' template literals with embedded expressions are not' +
+					' allowed as arguments to gettext functions because' +
+					' they are not constant',
+			);
 		});
 	});
 });
