@@ -265,6 +265,25 @@ msgstr[1] ""
 			expect(catalog.toString()).toEqual(expected);
 			expect(warner).not.toHaveBeenCalled();
 		});
+
+		it('should reject template literals with embedded expressions as singular arguments', () => {
+			const catalog = new Catalog({
+				noHeader: true,
+				keywords: [new Keyword('_np', ['1c', '2', '3'])],
+			});
+			const warner = jest.fn();
+			const p = new JavaScriptParser(catalog, warner);
+			const code = '_np("world", `one ${planet}`, "many earths")';
+			expect(p.parse(Buffer.from(code), 'example.js')).toBeFalsy();
+			expect(catalog.toString()).toEqual('');
+			expect(warner).toHaveBeenCalledTimes(1);
+			expect(warner).toHaveBeenNthCalledWith(
+				1,
+				'example.js:1:13-1:28: error: template literals with embedded' +
+					' expressions are are not allowed as arguments to gettext' +
+					' functions because they are not constant',
+			);
+		});
 	});
 
 	describe('encoding', () => {

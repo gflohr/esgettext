@@ -174,7 +174,9 @@ export abstract class Parser {
 
 		this.error(
 			gtx._(
-				'template strings are not allowed as arguments to gettext functions',
+				'template literals with embedded expressions are are not' +
+					' allowed as arguments to gettext functions because they' +
+					' are not constant',
 			),
 			literal.loc,
 		);
