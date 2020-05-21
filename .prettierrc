@@ -3,4 +3,5 @@
   "trailingComma": "all",
   "printWidth": 80,
   "useTags": true,
+  "arrowParens": "avoid",
 }
