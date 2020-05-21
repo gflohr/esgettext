@@ -31,7 +31,15 @@ export abstract class Parser {
 	abstract parse(input: Buffer, filename: string, encoding?: string): boolean;
 
 	parseFile(filename: string, encoding?: string): boolean {
-		return this.parse(readFileSync(filename), filename, encoding);
+		try {
+			this.parse(readFileSync(filename), filename, encoding);
+			return true;
+		} catch (msg) {
+			++this.errors;
+			this.warner(`${filename}: ${msg}`);
+		}
+
+		return false;
 	}
 
 	protected extract(filename: string, ast: t.File): boolean {
