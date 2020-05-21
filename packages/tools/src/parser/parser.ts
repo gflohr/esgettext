@@ -9,6 +9,16 @@ import { Keyword } from '../pot/keyword';
 
 const gtx = Textdomain.getInstance('esgettext-tools');
 
+interface EntryProperties {
+	msgid: string;
+	loc: t.SourceLocation;
+	method?: string;
+	msgidPlural?: string;
+	msgctxt?: string;
+	comment?: string;
+	flags?: Array<string>;
+}
+
 export abstract class Parser {
 	protected filename: string;
 	protected errors: number;
@@ -79,7 +89,7 @@ export abstract class Parser {
 			StringLiteral: path => {
 				if (!t.isBinaryExpression(path.parentPath.node)) {
 					const loc = path.node.loc;
-					this.addEntry(path.node.value, loc);
+					this.addEntry({ msgid: path.node.value, loc });
 				}
 			},
 		});
@@ -146,7 +156,7 @@ export abstract class Parser {
 			}
 		}
 
-		this.addEntry(msgid, path.node.loc, msgidPlural, msgctxt);
+		this.addEntry({ msgid, loc: path.node.loc, method, msgidPlural, msgctxt });
 	}
 
 	// eslint-disable-next-line: @typescript-eslint/no-excplit-any
@@ -215,32 +225,69 @@ export abstract class Parser {
 		}
 	}
 
-	private addEntry(
-		msgid: string,
-		loc: t.SourceLocation,
-		msgidPlural?: string,
-		msgctxt?: string,
-	): void {
-		let flags;
-		if (/\{[_a-zA-Z][_a-zA-Z0-9]*\}/.exec(msgid)) {
-			flags = new Array<string>();
-			flags.push('perl-brace-format');
+	private addEntry(props: EntryProperties): void {
+		if (!props.flags) {
+			props.flags = new Array<string>();
 		}
 
-		const dict: { [key: string]: string } = (loc as unknown) as {
+		const dict: { [key: string]: string } = (props.loc as unknown) as {
 			[key: string]: string;
 		};
-		const references = [`${dict.filename}:${loc.start.line}`];
+		const references = [`${dict.filename}:${props.loc.start.line}`];
 
-		const commentBlocks = this.findPrecedingComments(loc);
-		const extractedComments = commentBlocks.map(block => block.value.trim());
+		const commentBlocks = this.findPrecedingComments(props.loc);
+		let extractedComments = commentBlocks.map(block => block.value.trim());
+
+		if (typeof props.method !== 'undefined') {
+			extractedComments = extractedComments
+				.map(comment => {
+					let cleaned = '';
+
+					comment = comment.replace(
+						/(.*?)xgettext:(.*)/g,
+						(_: string, lead: string, str: string): string => {
+							let valid = false;
+							const validTokens = ['fuzzy', 'wrap', 'no-wrap'];
+							const tokens = str.split(/[ \x09-\x0d]+/);
+							tokens.forEach(token => {
+								if (
+									validTokens.includes(token) ||
+									/^(?:[a-z]+-)+(?:format|check)$/.exec(token)
+								) {
+									props.flags.push(token);
+									valid = true;
+								}
+							});
+
+							if (!valid) {
+								cleaned += `${lead}xgettext:${str}`;
+							}
+
+							return '';
+						},
+					);
+
+					cleaned += comment;
+					comment = cleaned;
+
+					return comment;
+				})
+				.filter(comment => comment !== '');
+		}
+
+		if (
+			!props.flags.includes('no-perl-brace-format') &&
+			/\{[_a-zA-Z][_a-zA-Z0-9]*\}/.exec(props.msgid)
+		) {
+			props.flags.push('perl-brace-format');
+		}
 
 		this.catalog.addEntry(
 			new POTEntry({
-				msgid,
-				msgidPlural,
-				msgctxt,
-				flags,
+				msgid: props.msgid,
+				msgidPlural: props.msgidPlural,
+				msgctxt: props.msgctxt,
+				flags: props.flags,
 				references,
 				extractedComments,
 			}),

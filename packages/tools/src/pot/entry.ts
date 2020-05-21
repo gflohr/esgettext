@@ -112,7 +112,7 @@ export class POTEntry {
 
 		if (typeof this.properties.references !== 'undefined') {
 			const references = Array.from(new Set(this.properties.references))
-				.map((reference) => reference.toString())
+				.map(reference => reference.toString())
 				.join(' ');
 			if (width > 0) {
 				const wrapped = this.wrap(references, width - 3);
@@ -124,7 +124,10 @@ export class POTEntry {
 			}
 		}
 
-		if (typeof this.properties.flags !== 'undefined') {
+		if (
+			typeof this.properties.flags !== 'undefined' &&
+			this.properties.flags.length
+		) {
 			const flags = Array.from(new Set(this.properties.flags)).join(', ');
 			out += `#, ${flags}\n`;
 		}
@@ -181,7 +184,7 @@ export class POTEntry {
 				this.properties.flags = new Array<string>();
 			}
 
-			other.properties.flags.forEach((flag) => {
+			other.properties.flags.forEach(flag => {
 				let negated = flag.replace(/^no-/, '');
 				if (negated === flag) {
 					negated = 'no-' + flag;
@@ -204,7 +207,7 @@ export class POTEntry {
 								{ flag, negated },
 							),
 						);
-						refs.forEach((ref) => {
+						refs.forEach(ref => {
 							/* eslint-disable-next-line no-console */
 							console.warn(`\t${ref}`);
 						});
@@ -328,7 +331,7 @@ export class POTEntry {
 		}
 
 		const output = new Array<string>();
-		const preWrapped = input.split('\n').map((str) => this.escape(str));
+		const preWrapped = input.split('\n').map(str => this.escape(str));
 		if (
 			preWrapped.length > 1 ||
 			preWrapped[0].length > width - prefix.length - 3
@@ -345,7 +348,7 @@ export class POTEntry {
 			}
 			if (line.length) {
 				const wrapped = this.wrap(line, width - 2);
-				wrapped.forEach((inner) => {
+				wrapped.forEach(inner => {
 					output.push(`"${inner}"`);
 				});
 			}
@@ -387,7 +390,7 @@ export class POTEntry {
 			'\\': '\\\\',
 		};
 
-		return input.replace(/([\u0007-\u000d"\\])/gs, (m) => {
+		return input.replace(/([\u0007-\u000d"\\])/gs, m => {
 			return escapes[m[0]];
 		});
 	}
@@ -428,7 +431,7 @@ export class POTEntry {
 			return;
 		}
 
-		this.properties.references.forEach((ref) => {
+		this.properties.references.forEach(ref => {
 			if (/[ \n]/.exec(ref)) {
 				this.error(gtx._('filenames must not contain space or newlines'));
 			}
@@ -440,7 +443,7 @@ export class POTEntry {
 			return;
 		}
 
-		this.properties.flags.forEach((flag) => {
+		this.properties.flags.forEach(flag => {
 			if (/[,\n]/.exec(flag)) {
 				this.error(gtx._('flags must not contain commas or newlines'));
 			}

@@ -490,4 +490,26 @@ msgstr ""
 			);
 		});
 	});
+
+	describe('comments above calls', () => {
+		it('should extract xgettext: comments', () => {
+			const catalog = new Catalog({
+				noHeader: true,
+				keywords: [new Keyword('_')],
+			});
+			const warner = jest.fn();
+			const p = new JavaScriptParser(catalog, warner);
+			const code = `// xgettext: no-perl-brace-format
+_("It's a {sad} and beautiful world!")
+`;
+			expect(p.parse(Buffer.from(code), 'example.js')).toBeTruthy();
+			const expected = `#: example.js:2
+#, no-perl-brace-format
+msgid "It's a {sad} and beautiful world!"
+msgstr ""
+`;
+			expect(catalog.toString()).toEqual(expected);
+			expect(warner).not.toHaveBeenCalled();
+		});
+	});
 });
