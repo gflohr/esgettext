@@ -246,6 +246,19 @@ msgstr[1] ""
 			expect(warner).not.toHaveBeenCalled();
 		});
 
+		it('should reject variables as singular arguments', () => {
+			const catalog = new Catalog({
+				noHeader: true,
+				keywords: [new Keyword('_np', ['1c', '2', '3'])],
+			});
+			const warner = jest.fn();
+			const p = new JavaScriptParser(catalog, warner);
+			const code = '_np("world", earth, "many earths")';
+			expect(p.parse(Buffer.from(code), 'example.js')).toBeTruthy();
+			expect(catalog.toString()).toEqual('');
+			expect(warner).not.toHaveBeenCalled();
+		});
+
 		it('should allow simple template literals as singular arguments', () => {
 			const catalog = new Catalog({
 				noHeader: true,
@@ -285,6 +298,19 @@ msgstr[1] ""
 			);
 		});
 
+		it('should reject variables as plural arguments', () => {
+			const catalog = new Catalog({
+				noHeader: true,
+				keywords: [new Keyword('_np', ['1c', '2', '3'])],
+			});
+			const warner = jest.fn();
+			const p = new JavaScriptParser(catalog, warner);
+			const code = '_np("world", "earth", earths)';
+			expect(p.parse(Buffer.from(code), 'example.js')).toBeTruthy();
+			expect(catalog.toString()).toEqual('');
+			expect(warner).not.toHaveBeenCalled();
+		});
+
 		it('should allow simple template literals as plural arguments', () => {
 			const catalog = new Catalog({
 				noHeader: true,
@@ -322,6 +348,19 @@ msgstr[1] ""
 					' expressions are are not allowed as arguments to gettext' +
 					' functions because they are not constant',
 			);
+		});
+
+		it('should reject variables as msgctxt arguments', () => {
+			const catalog = new Catalog({
+				noHeader: true,
+				keywords: [new Keyword('_np', ['1c', '2', '3'])],
+			});
+			const warner = jest.fn();
+			const p = new JavaScriptParser(catalog, warner);
+			const code = '_np(world, "earth", "many earths")';
+			expect(p.parse(Buffer.from(code), 'example.js')).toBeTruthy();
+			expect(catalog.toString()).toEqual('');
+			expect(warner).not.toHaveBeenCalled();
 		});
 
 		it('should allow simple template literals as msgctxt arguments', () => {
