@@ -2,8 +2,8 @@ import { Catalog } from '../pot/catalog';
 import { Parser } from './parser';
 
 class DummyParser extends Parser {
-	parse(_input: Buffer, _filename: string): Catalog {
-		return null;
+	parse(_input: Buffer, _filename: string): boolean {
+		return false;
 	}
 }
 
