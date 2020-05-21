@@ -113,9 +113,7 @@ msgstr ""
 "does not belong here"
 `;
 			const input = Buffer.from(pot);
-			expect(() => parser.parse(input, 'example.ts')).toThrow(
-				new Error('Fix the above error before proceeding!'),
-			);
+			expect(parser.parse(input, 'example.ts')).toBeFalsy();
 			expect(warner).toHaveBeenCalledTimes(1);
 			expect(warner).toHaveBeenCalledWith(
 				'example.ts:4:1: error: syntax error',
@@ -132,9 +130,7 @@ MSGID "uppercase not allowed"
 msgstr ""
 `;
 			let input = Buffer.from(pot);
-			expect(() => parser.parse(input, 'example.ts')).toThrow(
-				new Error('Fix the above errors before proceeding!'),
-			);
+			expect(parser.parse(input, 'example.ts')).toBeFalsy();
 			expect(warner).toHaveBeenCalledTimes(2);
 			expect(warner).toHaveBeenNthCalledWith(
 				1,
@@ -152,9 +148,7 @@ nsgid "no, no, no"
 msgstr ""
 `;
 			input = Buffer.from(pot);
-			expect(() => parser.parse(input, 'example.ts')).toThrow(
-				new Error('Fix the above errors before proceeding!'),
-			);
+			expect(parser.parse(input, 'example.ts')).toBeFalsy();
 			expect(warner).toHaveBeenCalledTimes(4);
 			expect(warner).toHaveBeenNthCalledWith(
 				3,
@@ -175,9 +169,7 @@ msgstr ""
 'garbage'
 `;
 			const input = Buffer.from(pot);
-			expect(() => parser.parse(input, 'example.ts')).toThrow(
-				new Error('Fix the above error before proceeding!'),
-			);
+			expect(parser.parse(input, 'example.ts')).toBeFalsy();
 			expect(warner).toHaveBeenCalledTimes(1);
 			expect(warner).toHaveBeenNthCalledWith(
 				1,
@@ -195,9 +187,7 @@ msgstr ""
 msgstr ""
 `;
 			const input = Buffer.from(pot);
-			expect(() => parser.parse(input, 'example.ts')).toThrow(
-				new Error('Fix the above error before proceeding!'),
-			);
+			expect(parser.parse(input, 'example.ts')).toBeFalsy();
 			expect(warner).toHaveBeenCalledTimes(1);
 			expect(warner).toHaveBeenNthCalledWith(
 				1,
@@ -216,9 +206,7 @@ msgid "okay"
 msgstr ""
 `;
 			const input = Buffer.from(pot);
-			expect(() => parser.parse(input, 'example.ts')).toThrow(
-				new Error('Fix the above errors before proceeding!'),
-			);
+			expect(parser.parse(input, 'example.ts')).toBeFalsy();
 			expect(localWarner).toHaveBeenCalledTimes(2);
 			expect(localWarner).toHaveBeenNthCalledWith(
 				1,
@@ -241,9 +229,7 @@ msgstr ""
 msgid "okay"
 `;
 			const input = Buffer.from(pot);
-			expect(() => parser.parse(input, 'example.ts')).toThrow(
-				new Error('Fix the above error before proceeding!'),
-			);
+			expect(parser.parse(input, 'example.ts')).toBeFalsy();
 			expect(warner).toHaveBeenCalledTimes(1);
 			expect(warner).toHaveBeenNthCalledWith(
 				1,
@@ -262,9 +248,7 @@ msgstr ""
 msgstr "okay"
 `;
 			const input = Buffer.from(pot);
-			expect(() => parser.parse(input, 'example.ts')).toThrow(
-				new Error('Fix the above error before proceeding!'),
-			);
+			expect(parser.parse(input, 'example.ts')).toBeFalsy();
 			expect(warner).toHaveBeenCalledTimes(1);
 			expect(warner).toHaveBeenNthCalledWith(
 				1,
@@ -285,9 +269,7 @@ msgstr[0] ""
 msgstr[1] ""
 `;
 			const input = Buffer.from(pot);
-			expect(() => parser.parse(input, 'example.ts')).toThrow(
-				new Error('Fix the above error before proceeding!'),
-			);
+			expect(parser.parse(input, 'example.ts')).toBeFalsy();
 			expect(warner).toHaveBeenCalledTimes(1);
 			expect(warner).toHaveBeenNthCalledWith(
 				1,
@@ -307,9 +289,7 @@ msgid "Hello, world!"
 msgstr ""
 `;
 			const input = Buffer.from(pot);
-			expect(() => parser.parse(input, 'example.ts')).toThrow(
-				new Error('Fix the above error before proceeding!'),
-			);
+			expect(parser.parse(input, 'example.ts')).toBeFalsy();
 			expect(warner).toHaveBeenCalledTimes(1);
 			expect(warner).toHaveBeenNthCalledWith(
 				1,
@@ -328,9 +308,7 @@ msgid "not"
 msgstr "okay"
 `;
 			const input = Buffer.from(pot);
-			expect(() => parser.parse(input, 'example.ts')).toThrow(
-				new Error('Fix the above error before proceeding!'),
-			);
+			expect(parser.parse(input, 'example.ts')).toBeFalsy();
 			expect(warner).toHaveBeenCalledTimes(1);
 			expect(warner).toHaveBeenNthCalledWith(
 				1,
@@ -348,9 +326,7 @@ msgid        not
 msgstr "okay"
 `;
 			const input = Buffer.from(pot);
-			expect(() => parser.parse(input, 'example.ts')).toThrow(
-				new Error('Fix the above error before proceeding!'),
-			);
+			expect(parser.parse(input, 'example.ts')).toBeFalsy();
 			expect(warner).toHaveBeenCalledTimes(1);
 			expect(warner).toHaveBeenNthCalledWith(
 				1,
@@ -368,9 +344,7 @@ msgid "not
 msgstr "okay"
 `;
 			const input = Buffer.from(pot);
-			expect(() => parser.parse(input, 'example.ts')).toThrow(
-				new Error('Fix the above error before proceeding!'),
-			);
+			expect(parser.parse(input, 'example.ts')).toBeFalsy();
 			expect(warner).toHaveBeenCalledTimes(1);
 			expect(warner).toHaveBeenNthCalledWith(
 				1,
@@ -388,9 +362,7 @@ msgid "not\\"
 msgstr "okay"
 `;
 			const input = Buffer.from(pot);
-			expect(() => parser.parse(input, 'example.ts')).toThrow(
-				new Error('Fix the above error before proceeding!'),
-			);
+			expect(parser.parse(input, 'example.ts')).toBeFalsy();
 			expect(warner).toHaveBeenCalledTimes(1);
 			expect(warner).toHaveBeenNthCalledWith(
 				1,
@@ -408,9 +380,7 @@ msgid "beware of \\x-rays"
 msgstr ""
 `;
 			const input = Buffer.from(pot);
-			expect(() => parser.parse(input, 'example.ts')).toThrow(
-				new Error('Fix the above error before proceeding!'),
-			);
+			expect(parser.parse(input, 'example.ts')).toBeFalsy();
 			expect(warner).toHaveBeenCalledTimes(1);
 			expect(warner).toHaveBeenNthCalledWith(
 				1,
@@ -493,10 +463,12 @@ msgstr ""
 "Content-Type: text/plain; charset=CP1252\\n"
 `;
 			const input = Buffer.from(pot);
-			expect(() => parser.parse(input, 'example.ts', 'invalid')).toThrow(
+			expect(parser.parse(input, 'example.ts', 'invalid')).toBeFalsy();
+			expect(warner).toHaveBeenCalledTimes(1);
+			expect(warner).toHaveBeenNthCalledWith(
+				1,
 				'unsupported encoding "invalid"',
 			);
-			expect(warner).not.toHaveBeenCalled();
 		});
 
 		it('should re-parse a lone header', () => {

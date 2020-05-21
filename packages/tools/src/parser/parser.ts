@@ -28,9 +28,9 @@ export abstract class Parser {
 		});
 	}
 
-	abstract parse(input: Buffer, filename: string, encoding?: string): void;
+	abstract parse(input: Buffer, filename: string, encoding?: string): boolean;
 
-	parseFile(filename: string, encoding?: string): void {
+	parseFile(filename: string, encoding?: string): boolean {
 		return this.parse(readFileSync(filename), filename, encoding);
 	}
 
@@ -45,11 +45,7 @@ export abstract class Parser {
 			this.extractStrings(ast);
 		}
 
-		if (this.errors) {
-			return false;
-		} else {
-			return true;
-		}
+		return !this.errors;
 	}
 
 	private extractStrings(ast: t.File): void {

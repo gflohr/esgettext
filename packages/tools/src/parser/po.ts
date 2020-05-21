@@ -39,12 +39,11 @@ export class PoParser extends Parser {
 	 * @param filename - the filename
 	 * @param encoding - an optional encoding
 	 */
-	parse(buf: Buffer, filename: string, encoding?: string): void {
+	parse(buf: Buffer, filename: string, encoding?: string): boolean {
 		if (typeof encoding !== 'undefined') {
 			if (!encodingExists(encoding)) {
-				throw new Error(
-					gtx._x('unsupported encoding "{encoding}"', { encoding }),
-				);
+				this.warner(gtx._x('unsupported encoding "{encoding}"', { encoding }));
+				return false;
 			}
 		}
 
@@ -155,17 +154,13 @@ export class PoParser extends Parser {
 		this.flushEntry();
 
 		if (this.errors) {
-			throw new Error(
-				gtx._n(
-					'Fix the above error before proceeding!',
-					'Fix the above errors before proceeding!',
-					this.errors,
-				),
-			);
+			return false;
 		}
 
 		// FIXME! This must go into the caller!
 		this.catalog.makePOT();
+
+		return true;
 	}
 
 	private extractCharset(header: string): string {

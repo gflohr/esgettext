@@ -18,7 +18,7 @@ _('single-quoted string');
 // perl-brace-format.
 _x('Hello, {name}!');
 `;
-			p.parse(Buffer.from(code), 'example.js');
+			expect(p.parse(Buffer.from(code), 'example.js')).toBeTruthy();
 			expect(catalog.toString()).toMatchSnapshot();
 			expect(warner).not.toHaveBeenCalled();
 		});
@@ -29,7 +29,7 @@ _x('Hello, {name}!');
 			const p = new JavaScriptParser(catalog, warner);
 			const code = '"concatenated" + " str" + "i" + "n" + "g";';
 			const buf = Buffer.from(code);
-			p.parse(buf, 'example.js');
+			expect(p.parse(buf, 'example.js')).toBeTruthy();
 			const expected = `#: example.js:1
 msgid "concatenated string"
 msgstr ""
@@ -44,7 +44,7 @@ msgstr ""
 			const p = new JavaScriptParser(catalog, warner);
 			const code = 'prefix + "concatenated" + " string";';
 			const buf = Buffer.from(code);
-			p.parse(buf, 'example.js');
+			expect(p.parse(buf, 'example.js')).toBeTruthy();
 			expect(catalog.toString()).toEqual('');
 			expect(warner).not.toHaveBeenCalled();
 		});
@@ -55,7 +55,7 @@ msgstr ""
 			const p = new JavaScriptParser(catalog, warner);
 			const code = '"concatenated" + sep + "string";';
 			const buf = Buffer.from(code);
-			p.parse(buf, 'example.js');
+			expect(p.parse(buf, 'example.js')).toBeTruthy();
 			expect(catalog.toString()).toEqual('');
 			expect(warner).not.toHaveBeenCalled();
 		});
@@ -66,7 +66,7 @@ msgstr ""
 			const p = new JavaScriptParser(catalog, warner);
 			const code = '"concatenated" + " string" + suffix;';
 			const buf = Buffer.from(code);
-			p.parse(buf, 'example.js');
+			expect(p.parse(buf, 'example.js')).toBeTruthy();
 			expect(catalog.toString()).toEqual('');
 			expect(warner).not.toHaveBeenCalled();
 		});
@@ -104,7 +104,7 @@ _('only immediately preceding');
 // Only for one string.
 _('catcher'); _('loser');
 `;
-			p.parse(Buffer.from(code), 'example.js');
+			expect(p.parse(Buffer.from(code), 'example.js')).toBeTruthy();
 			expect(catalog.toString()).toMatchSnapshot();
 			expect(warner).not.toHaveBeenCalled();
 		});
@@ -119,7 +119,7 @@ _('catcher'); _('loser');
 			const warner = jest.fn();
 			const p = new JavaScriptParser(catalog, warner);
 			const code = '_("Hello, world!")';
-			p.parse(Buffer.from(code), 'example.js');
+			expect(p.parse(Buffer.from(code), 'example.js')).toBeTruthy();
 			const expected = `#: example.js:1
 msgid "Hello, world!"
 msgstr ""
@@ -136,7 +136,7 @@ msgstr ""
 			const warner = jest.fn();
 			const p = new JavaScriptParser(catalog, warner);
 			const code = '_n("There was an error!", "There were errors!", n)';
-			p.parse(Buffer.from(code), 'example.js');
+			expect(p.parse(Buffer.from(code), 'example.js')).toBeTruthy();
 			const expected = `#: example.js:1
 msgid "There was an error!"
 msgid_plural "There were errors!"
@@ -156,7 +156,7 @@ msgstr[1] ""
 			const p = new JavaScriptParser(catalog, warner);
 			const code =
 				'_np("context", "There was an error!", "There were errors!", n)';
-			p.parse(Buffer.from(code), 'example.js');
+			expect(p.parse(Buffer.from(code), 'example.js')).toBeTruthy();
 			const expected = `#: example.js:1
 msgctxt "context"
 msgid "There was an error!"
