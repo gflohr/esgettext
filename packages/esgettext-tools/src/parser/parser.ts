@@ -175,7 +175,7 @@ export abstract class Parser {
 		this.addEntry({ msgid, loc: path.node.loc, method, msgidPlural, msgctxt });
 	}
 
-	/* eslint-disable-next-line: @typescript-eslint/no-excplit-any */
+	/* eslint-disable-next-line @typescript-eslint/no-explicit-any */
 	private extractArgument(argument: any): string {
 		if (t.isStringLiteral(argument)) {
 			return argument.value;
