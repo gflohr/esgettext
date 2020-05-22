@@ -108,14 +108,15 @@ export abstract class Parser {
 		if (t.isIdentifier(path.node.callee)) {
 			method = path.node.callee.name;
 		} else if (t.isMemberExpression(path.node.callee)) {
-			// FIXME! This does not work for nested member expressions!
-			if (!t.isIdentifier(path.node.callee.property)) {
+			const instance = new Array<string>();
+			method = this.methodFromMemberExpression(path.node.callee, instance);
+			if (method === null) {
 				return;
 			}
-			method = path.node.callee.property.name;
 		} else {
 			return;
 		}
+
 		if (!Object.prototype.hasOwnProperty.call(this.keywords, method)) {
 			return;
 		}
@@ -307,6 +308,32 @@ export abstract class Parser {
 				extractedComments,
 			}),
 		);
+	}
+
+	private methodFromMemberExpression(
+		me: t.MemberExpression,
+		instance: Array<string> = [],
+	): string {
+		if (t.isIdentifier(me.object)) {
+			if (t.isStringLiteral(me.property) && me.computed) {
+				instance.unshift(me.property.value);
+				instance.unshift(me.object.name);
+				return me.property.value;
+			} else if (t.isIdentifier(me.property) && !me.computed) {
+				instance.unshift(me.property.name);
+				instance.unshift(me.object.name);
+				return me.property.name;
+			} else {
+				// FIXME! TemplateLiteral!
+				return null;
+			}
+		} else if (t.isMemberExpression(me.object) && !me.computed) {
+			// Recurse.
+			instance.unshift(me.property.name);
+			return this.methodFromMemberExpression(me.object, instance);
+		} else {
+			return null;
+		}
 	}
 
 	private findPrecedingComments(loc: t.SourceLocation): Array<t.CommentBlock> {
