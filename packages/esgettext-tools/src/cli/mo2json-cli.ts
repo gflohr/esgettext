@@ -29,7 +29,7 @@ gtx.resolve().then(() => {
 		},
 	];
 
-	const usage = gtx._('Usage: $0 [OPTIONS]');
+	const usage = gtx._('[OPTIONS]');
 	const description = gtx._('Convert .mo files into catalog json.');
 	const getopt = new Getopt(usage, description, optionGroups);
 	const options = getopt.argv();

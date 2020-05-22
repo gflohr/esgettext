@@ -167,11 +167,27 @@ gtx.resolve().then(() => {
 		},
 	];
 
-	const usage = gtx._('Usage: $0 [OPTIONS] INPUTFILE...');
+	const usage = gtx._x('[OPTIONS] INPUTFILE...', {
+		progName: process.argv[1],
+	});
+
 	const description = gtx._(
 		'Extract translatable strings from given input files',
 	);
-	const getopt = new Getopt(usage, description, optionGroups);
 
-	process.exit(new XGettext(getopt.argv()).run());
+	const getopt = new Getopt(usage, description, optionGroups);
+	let xgettext;
+
+	try {
+		xgettext = new XGettext(getopt.argv());
+	} catch (e) {
+		process.stderr.write(e + '\n');
+		process.stderr.write(
+			gtx._x('Try "{programName} --help" for more information!', {
+				programName: getopt.programName,
+			}),
+		);
+	}
+
+	process.exit(xgettext.run());
 });
