@@ -58,6 +58,20 @@ baz
 				'bubba',
 			]);
 		});
+
+		it('should make input files unique', () => {
+			const potfiles = `
+foo
+bar
+baz
+`;
+			reader.mockReturnValueOnce(potfiles);
+			const collector = new FilesCollector(
+				['POTFILES'],
+				['foo', 'bar', 'bazoo'],
+			);
+			expect(collector.filenames).toEqual(['foo', 'bar', 'baz', 'bazoo']);
+		});
 	});
 
 	describe('errors', () => {

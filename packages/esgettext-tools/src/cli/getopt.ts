@@ -1,4 +1,5 @@
 import yargs from 'yargs';
+
 /* eslint-disable-next-line import/default */
 import camelCase from 'camelcase';
 import { Textdomain } from '@esgettext/runtime';
@@ -7,7 +8,7 @@ const gtx = Textdomain.getInstance('esgettext-tools');
 
 export interface Options {
 	/* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-	[key: string]: string | Array<string> | number | boolean;
+	[key: string]: any;
 }
 
 export interface OptionFlags {
@@ -20,7 +21,7 @@ export interface Option {
 	yargsOptions: yargs.Options;
 }
 
-export interface GetoptOptionGroup {
+export interface OptionGroup {
 	description: string;
 	options: Array<Option>;
 }
