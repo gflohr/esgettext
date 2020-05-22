@@ -5,9 +5,9 @@ import { JavaScriptParser } from './javascript';
 describe('JavaScript parser', () => {
 	describe('strings', () => {
 		it('should extract all kinds of strings', () => {
-			const catalog = new Catalog({ noHeader: true, extractAll: true });
+			const catalog = new Catalog({ noHeader: true });
 			const warner = jest.fn();
-			const p = new JavaScriptParser(catalog, warner);
+			const p = new JavaScriptParser(catalog, warner, { extractAll: true });
 			const code = `
 // Directive.
 _("double-quoted string");
@@ -24,9 +24,9 @@ _x('Hello, {name}!');
 		});
 
 		it('should extract concatenated strings', () => {
-			const catalog = new Catalog({ noHeader: true, extractAll: true });
+			const catalog = new Catalog({ noHeader: true });
 			const warner = jest.fn();
-			const p = new JavaScriptParser(catalog, warner);
+			const p = new JavaScriptParser(catalog, warner, { extractAll: true });
 			const code = '"concatenated" + " str" + "i" + "n" + "g";';
 			const buf = Buffer.from(code);
 			expect(p.parse(buf, 'example.js')).toBeTruthy();
@@ -39,9 +39,9 @@ msgstr ""
 		});
 
 		it('should not extract concatenated strings with a leading variable', () => {
-			const catalog = new Catalog({ noHeader: true, extractAll: true });
+			const catalog = new Catalog({ noHeader: true });
 			const warner = jest.fn();
-			const p = new JavaScriptParser(catalog, warner);
+			const p = new JavaScriptParser(catalog, warner, { extractAll: true });
 			const code = 'prefix + "concatenated" + " string";';
 			const buf = Buffer.from(code);
 			expect(p.parse(buf, 'example.js')).toBeTruthy();
@@ -50,9 +50,9 @@ msgstr ""
 		});
 
 		it('should not extract concatenated strings mixed with a variable', () => {
-			const catalog = new Catalog({ noHeader: true, extractAll: true });
+			const catalog = new Catalog({ noHeader: true });
 			const warner = jest.fn();
-			const p = new JavaScriptParser(catalog, warner);
+			const p = new JavaScriptParser(catalog, warner, { extractAll: true });
 			const code = '"concatenated" + sep + "string";';
 			const buf = Buffer.from(code);
 			expect(p.parse(buf, 'example.js')).toBeTruthy();
@@ -61,9 +61,9 @@ msgstr ""
 		});
 
 		it('should not extract concatenated strings with a trailing variable', () => {
-			const catalog = new Catalog({ noHeader: true, extractAll: true });
+			const catalog = new Catalog({ noHeader: true });
 			const warner = jest.fn();
-			const p = new JavaScriptParser(catalog, warner);
+			const p = new JavaScriptParser(catalog, warner, { extractAll: true });
 			const code = '"concatenated" + " string" + suffix;';
 			const buf = Buffer.from(code);
 			expect(p.parse(buf, 'example.js')).toBeTruthy();
@@ -74,13 +74,12 @@ msgstr ""
 
 	describe('comments', () => {
 		it('should extract all kinds of comments', () => {
-			const catalog = new Catalog({
-				noHeader: true,
-				addAllComments: true,
-				extractAll: true,
-			});
+			const catalog = new Catalog({ noHeader: true });
 			const warner = jest.fn();
-			const p = new JavaScriptParser(catalog, warner);
+			const p = new JavaScriptParser(catalog, warner, {
+				extractAll: true,
+				addAllComments: true,
+			});
 			const code = `
 // Single-line comment.
 _('single line');
@@ -112,12 +111,11 @@ _('catcher'); _('loser');
 
 	describe('messages', () => {
 		it('should extract a single argument', () => {
-			const catalog = new Catalog({
-				noHeader: true,
+			const catalog = new Catalog({ noHeader: true });
+			const warner = jest.fn();
+			const p = new JavaScriptParser(catalog, warner, {
 				keywords: [new Keyword('_')],
 			});
-			const warner = jest.fn();
-			const p = new JavaScriptParser(catalog, warner);
 			const code = '_("Hello, world!")';
 			expect(p.parse(Buffer.from(code), 'example.js')).toBeTruthy();
 			const expected = `#: example.js:1
@@ -129,12 +127,11 @@ msgstr ""
 		});
 
 		it('should extract singular and plural form', () => {
-			const catalog = new Catalog({
-				noHeader: true,
+			const catalog = new Catalog({ noHeader: true });
+			const warner = jest.fn();
+			const p = new JavaScriptParser(catalog, warner, {
 				keywords: [new Keyword('_n', ['1', '2'])],
 			});
-			const warner = jest.fn();
-			const p = new JavaScriptParser(catalog, warner);
 			const code = '_n("There was an error!", "There were errors!", n)';
 			expect(p.parse(Buffer.from(code), 'example.js')).toBeTruthy();
 			const expected = `#: example.js:1
@@ -148,12 +145,11 @@ msgstr[1] ""
 		});
 
 		it('should extract context, singular and plural form', () => {
-			const catalog = new Catalog({
-				noHeader: true,
+			const catalog = new Catalog({ noHeader: true });
+			const warner = jest.fn();
+			const p = new JavaScriptParser(catalog, warner, {
 				keywords: [new Keyword('_np', ['1c', '2', '3'])],
 			});
-			const warner = jest.fn();
-			const p = new JavaScriptParser(catalog, warner);
 			const code =
 				'_np("context", "There was an error!", "There were errors!", n)';
 			expect(p.parse(Buffer.from(code), 'example.js')).toBeTruthy();
@@ -169,12 +165,11 @@ msgstr[1] ""
 		});
 
 		it('should handle other callees', () => {
-			const catalog = new Catalog({
-				noHeader: true,
+			const catalog = new Catalog({ noHeader: true });
+			const warner = jest.fn();
+			const p = new JavaScriptParser(catalog, warner, {
 				keywords: [new Keyword('_')],
 			});
-			const warner = jest.fn();
-			const p = new JavaScriptParser(catalog, warner);
 			const code = '"string".trim()';
 			expect(p.parse(Buffer.from(code), 'example.js')).toBeTruthy();
 			expect(catalog.toString()).toEqual('');
@@ -182,12 +177,11 @@ msgstr[1] ""
 		});
 
 		it('should not extract from unknown methods', () => {
-			const catalog = new Catalog({
-				noHeader: true,
+			const catalog = new Catalog({ noHeader: true });
+			const warner = jest.fn();
+			const p = new JavaScriptParser(catalog, warner, {
 				keywords: [new Keyword('_')],
 			});
-			const warner = jest.fn();
-			const p = new JavaScriptParser(catalog, warner);
 			const code = 'gettext("string")';
 			expect(p.parse(Buffer.from(code), 'example.js')).toBeTruthy();
 			expect(catalog.toString()).toEqual('');
@@ -195,12 +189,11 @@ msgstr[1] ""
 		});
 
 		it('should honor the total arguments spec', () => {
-			const catalog = new Catalog({
-				noHeader: true,
+			const catalog = new Catalog({ noHeader: true });
+			const warner = jest.fn();
+			const p = new JavaScriptParser(catalog, warner, {
 				keywords: [new Keyword('_', ['1t'])],
 			});
-			const warner = jest.fn();
-			const p = new JavaScriptParser(catalog, warner);
 			const code = '_("Hello", "world")';
 			expect(p.parse(Buffer.from(code), 'example.js')).toBeTruthy();
 			expect(catalog.toString()).toEqual('');
@@ -208,12 +201,11 @@ msgstr[1] ""
 		});
 
 		it('should not extract non existing singular arguments', () => {
-			const catalog = new Catalog({
-				noHeader: true,
+			const catalog = new Catalog({ noHeader: true });
+			const warner = jest.fn();
+			const p = new JavaScriptParser(catalog, warner, {
 				keywords: [new Keyword('_')],
 			});
-			const warner = jest.fn();
-			const p = new JavaScriptParser(catalog, warner);
 			const code = '_()';
 			expect(p.parse(Buffer.from(code), 'example.js')).toBeTruthy();
 			expect(catalog.toString()).toEqual('');
@@ -221,12 +213,11 @@ msgstr[1] ""
 		});
 
 		it('should not extract non existing plural arguments', () => {
-			const catalog = new Catalog({
-				noHeader: true,
+			const catalog = new Catalog({ noHeader: true });
+			const warner = jest.fn();
+			const p = new JavaScriptParser(catalog, warner, {
 				keywords: [new Keyword('_n', ['1', '2'])],
 			});
-			const warner = jest.fn();
-			const p = new JavaScriptParser(catalog, warner);
 			const code = '_n("One universe")';
 			expect(p.parse(Buffer.from(code), 'example.js')).toBeTruthy();
 			expect(catalog.toString()).toEqual('');
@@ -236,10 +227,11 @@ msgstr[1] ""
 		it('should not extract non existing context arguments', () => {
 			const catalog = new Catalog({
 				noHeader: true,
-				keywords: [new Keyword('_pn', ['1', '2', '3c'])],
 			});
 			const warner = jest.fn();
-			const p = new JavaScriptParser(catalog, warner);
+			const p = new JavaScriptParser(catalog, warner, {
+				keywords: [new Keyword('_pn', ['1', '2', '3c'])],
+			});
 			const code = '_pn("one world", "many worlds")';
 			expect(p.parse(Buffer.from(code), 'example.js')).toBeTruthy();
 			expect(catalog.toString()).toEqual('');
@@ -247,12 +239,11 @@ msgstr[1] ""
 		});
 
 		it('should reject variables as singular arguments', () => {
-			const catalog = new Catalog({
-				noHeader: true,
+			const catalog = new Catalog({ noHeader: true });
+			const warner = jest.fn();
+			const p = new JavaScriptParser(catalog, warner, {
 				keywords: [new Keyword('_np', ['1c', '2', '3'])],
 			});
-			const warner = jest.fn();
-			const p = new JavaScriptParser(catalog, warner);
 			const code = '_np("world", earth, "many earths")';
 			expect(p.parse(Buffer.from(code), 'example.js')).toBeTruthy();
 			expect(catalog.toString()).toEqual('');
@@ -260,12 +251,11 @@ msgstr[1] ""
 		});
 
 		it('should allow simple template literals as singular arguments', () => {
-			const catalog = new Catalog({
-				noHeader: true,
+			const catalog = new Catalog({ noHeader: true });
+			const warner = jest.fn();
+			const p = new JavaScriptParser(catalog, warner, {
 				keywords: [new Keyword('_np', ['1c', '2', '3'])],
 			});
-			const warner = jest.fn();
-			const p = new JavaScriptParser(catalog, warner);
 			const code = '_np("world", `one earth`, "many earths")';
 			expect(p.parse(Buffer.from(code), 'example.js')).toBeTruthy();
 			const expected = `#: example.js:1
@@ -280,12 +270,11 @@ msgstr[1] ""
 		});
 
 		it('should reject template literals with embedded expressions as singular arguments', () => {
-			const catalog = new Catalog({
-				noHeader: true,
+			const catalog = new Catalog({ noHeader: true });
+			const warner = jest.fn();
+			const p = new JavaScriptParser(catalog, warner, {
 				keywords: [new Keyword('_np', ['1c', '2', '3'])],
 			});
-			const warner = jest.fn();
-			const p = new JavaScriptParser(catalog, warner);
 			const code = '_np("world", `one ${planet}`, "many earths")';
 			expect(p.parse(Buffer.from(code), 'example.js')).toBeFalsy();
 			expect(catalog.toString()).toEqual('');
@@ -301,10 +290,11 @@ msgstr[1] ""
 		it('should reject variables as plural arguments', () => {
 			const catalog = new Catalog({
 				noHeader: true,
-				keywords: [new Keyword('_np', ['1c', '2', '3'])],
 			});
 			const warner = jest.fn();
-			const p = new JavaScriptParser(catalog, warner);
+			const p = new JavaScriptParser(catalog, warner, {
+				keywords: [new Keyword('_np', ['1c', '2', '3'])],
+			});
 			const code = '_np("world", "earth", earths)';
 			expect(p.parse(Buffer.from(code), 'example.js')).toBeTruthy();
 			expect(catalog.toString()).toEqual('');
@@ -312,12 +302,11 @@ msgstr[1] ""
 		});
 
 		it('should allow simple template literals as plural arguments', () => {
-			const catalog = new Catalog({
-				noHeader: true,
+			const catalog = new Catalog({ noHeader: true });
+			const warner = jest.fn();
+			const p = new JavaScriptParser(catalog, warner, {
 				keywords: [new Keyword('_np', ['1c', '2', '3'])],
 			});
-			const warner = jest.fn();
-			const p = new JavaScriptParser(catalog, warner);
 			const code = '_np("world", "one earth", `many earths`)';
 			expect(p.parse(Buffer.from(code), 'example.js')).toBeTruthy();
 			const expected = `#: example.js:1
@@ -332,12 +321,11 @@ msgstr[1] ""
 		});
 
 		it('should reject template literals with embedded expressions as plural arguments', () => {
-			const catalog = new Catalog({
-				noHeader: true,
+			const catalog = new Catalog({ noHeader: true });
+			const warner = jest.fn();
+			const p = new JavaScriptParser(catalog, warner, {
 				keywords: [new Keyword('_np', ['1c', '2', '3'])],
 			});
-			const warner = jest.fn();
-			const p = new JavaScriptParser(catalog, warner);
 			const code = '_np("world", "one earth", `many ${planets}`)';
 			expect(p.parse(Buffer.from(code), 'example.js')).toBeFalsy();
 			expect(catalog.toString()).toEqual('');
@@ -351,12 +339,11 @@ msgstr[1] ""
 		});
 
 		it('should reject variables as msgctxt arguments', () => {
-			const catalog = new Catalog({
-				noHeader: true,
+			const catalog = new Catalog({ noHeader: true });
+			const warner = jest.fn();
+			const p = new JavaScriptParser(catalog, warner, {
 				keywords: [new Keyword('_np', ['1c', '2', '3'])],
 			});
-			const warner = jest.fn();
-			const p = new JavaScriptParser(catalog, warner);
 			const code = '_np(world, "earth", "many earths")';
 			expect(p.parse(Buffer.from(code), 'example.js')).toBeTruthy();
 			expect(catalog.toString()).toEqual('');
@@ -364,12 +351,11 @@ msgstr[1] ""
 		});
 
 		it('should allow simple template literals as msgctxt arguments', () => {
-			const catalog = new Catalog({
-				noHeader: true,
+			const catalog = new Catalog({ noHeader: true });
+			const warner = jest.fn();
+			const p = new JavaScriptParser(catalog, warner, {
 				keywords: [new Keyword('_np', ['1c', '2', '3'])],
 			});
-			const warner = jest.fn();
-			const p = new JavaScriptParser(catalog, warner);
 			const code = '_np(`world`, "one earth", "many earths")';
 			expect(p.parse(Buffer.from(code), 'example.js')).toBeTruthy();
 			const expected = `#: example.js:1
@@ -384,12 +370,11 @@ msgstr[1] ""
 		});
 
 		it('should reject template literals with embedded expressions as msgctxt arguments', () => {
-			const catalog = new Catalog({
-				noHeader: true,
+			const catalog = new Catalog({ noHeader: true });
+			const warner = jest.fn();
+			const p = new JavaScriptParser(catalog, warner, {
 				keywords: [new Keyword('_np', ['1c', '2', '3'])],
 			});
-			const warner = jest.fn();
-			const p = new JavaScriptParser(catalog, warner);
 			const code = '_np("world", "one earth", `many ${planets}`)';
 			expect(p.parse(Buffer.from(code), 'example.js')).toBeFalsy();
 			expect(catalog.toString()).toEqual('');
@@ -405,12 +390,11 @@ msgstr[1] ""
 
 	describe('encoding', () => {
 		it('should decode to JavaScript strings', () => {
-			const catalog = new Catalog({
-				noHeader: true,
+			const catalog = new Catalog({ noHeader: true });
+			const warner = jest.fn();
+			const p = new JavaScriptParser(catalog, warner, {
 				keywords: [new Keyword('_')],
 			});
-			const warner = jest.fn();
-			const p = new JavaScriptParser(catalog, warner);
 			const code = '_("Hello, world!")';
 			expect(
 				p.parse(Buffer.from(code), 'example.js', 'iso-8859-1'),
@@ -428,10 +412,11 @@ msgstr ""
 		it('should extract concatenated strings', () => {
 			const catalog = new Catalog({
 				noHeader: true,
-				keywords: [new Keyword('_')],
 			});
 			const warner = jest.fn();
-			const p = new JavaScriptParser(catalog, warner);
+			const p = new JavaScriptParser(catalog, warner, {
+				keywords: [new Keyword('_')],
+			});
 			const code = '_("It\'s a " + "sad" + " and beautiful world!")';
 			expect(p.parse(Buffer.from(code), 'example.js')).toBeTruthy();
 			const expected = `#: example.js:1
@@ -443,12 +428,11 @@ msgstr ""
 		});
 
 		it('should extract concatenated strings with simple template literals', () => {
-			const catalog = new Catalog({
-				noHeader: true,
+			const catalog = new Catalog({ noHeader: true });
+			const warner = jest.fn();
+			const p = new JavaScriptParser(catalog, warner, {
 				keywords: [new Keyword('_')],
 			});
-			const warner = jest.fn();
-			const p = new JavaScriptParser(catalog, warner);
 			const code = '_("It\'s a " + `sad` + " and beautiful world!")';
 			expect(p.parse(Buffer.from(code), 'example.js')).toBeTruthy();
 			const expected = `#: example.js:1
@@ -460,12 +444,11 @@ msgstr ""
 		});
 
 		it('should ignore concatenated strings with variables', () => {
-			const catalog = new Catalog({
-				noHeader: true,
+			const catalog = new Catalog({ noHeader: true });
+			const warner = jest.fn();
+			const p = new JavaScriptParser(catalog, warner, {
 				keywords: [new Keyword('_')],
 			});
-			const warner = jest.fn();
-			const p = new JavaScriptParser(catalog, warner);
 			const code = '_("It\'s a " + what + " and beautiful world!")';
 			expect(p.parse(Buffer.from(code), 'example.js')).toBeTruthy();
 			expect(catalog.toString()).toEqual('');
@@ -473,12 +456,11 @@ msgstr ""
 		});
 
 		it('should report concatenated strings with interpolations', () => {
-			const catalog = new Catalog({
-				noHeader: true,
+			const catalog = new Catalog({ noHeader: true });
+			const warner = jest.fn();
+			const p = new JavaScriptParser(catalog, warner, {
 				keywords: [new Keyword('_')],
 			});
-			const warner = jest.fn();
-			const p = new JavaScriptParser(catalog, warner);
 			const code = '_("It\'s " + `a ${what}` + " and beautiful world!")';
 			expect(p.parse(Buffer.from(code), 'example.js')).toBeFalsy();
 			expect(warner).toHaveBeenCalledTimes(1);
@@ -493,12 +475,11 @@ msgstr ""
 
 	describe('comments above calls', () => {
 		it('should extract xgettext: comments', () => {
-			const catalog = new Catalog({
-				noHeader: true,
+			const catalog = new Catalog({ noHeader: true });
+			const warner = jest.fn();
+			const p = new JavaScriptParser(catalog, warner, {
 				keywords: [new Keyword('_')],
 			});
-			const warner = jest.fn();
-			const p = new JavaScriptParser(catalog, warner);
 			const code = `// xgettext: no-perl-brace-format
 _("It's a {sad} and beautiful world!")
 `;

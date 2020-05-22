@@ -19,6 +19,13 @@ interface EntryProperties {
 	flags?: Array<string>;
 }
 
+export interface ParserOptions {
+	addAllComments?: boolean;
+	addComments?: Array<string>;
+	extractAll?: boolean;
+	keywords?: Array<Keyword>;
+}
+
 export abstract class Parser {
 	protected filename: string;
 	protected errors: number;
@@ -31,9 +38,10 @@ export abstract class Parser {
 	constructor(
 		protected readonly catalog: Catalog,
 		protected readonly warner: (msg: string) => void,
+		protected readonly options: ParserOptions = {},
 	) {
 		this.keywords = {};
-		(catalog.properties.keywords || []).forEach(keyword => {
+		(options.keywords || []).forEach(keyword => {
 			this.keywords[keyword.method] = keyword;
 		});
 	}
@@ -57,7 +65,7 @@ export abstract class Parser {
 		this.comments = this.filterComments(ast.comments as Array<t.CommentBlock>);
 
 		this.filename = filename;
-		if (this.catalog.properties.extractAll) {
+		if (this.options.extractAll) {
 			this.extractAllStrings(ast);
 		} else {
 			this.extractStrings(ast);
@@ -159,7 +167,7 @@ export abstract class Parser {
 		this.addEntry({ msgid, loc: path.node.loc, method, msgidPlural, msgctxt });
 	}
 
-	// eslint-disable-next-line: @typescript-eslint/no-excplit-any
+	/* eslint-disable-next-line: @typescript-eslint/no-excplit-any */
 	private extractArgument(argument: any): string {
 		if (t.isStringLiteral(argument)) {
 			return argument.value;
@@ -340,12 +348,12 @@ export abstract class Parser {
 	private filterComments(
 		comments: Array<t.CommentBlock>,
 	): Array<t.CommentBlock> {
-		if (this.catalog.properties.addAllComments) {
+		if (this.options.addAllComments) {
 			return comments;
 		}
 
-		const markers = this.catalog.properties.addComments
-			? this.catalog.properties.addComments
+		const markers = this.options.addComments
+			? this.options.addComments
 			: new Array<string>();
 
 		return comments.filter(block => {

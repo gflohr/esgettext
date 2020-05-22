@@ -37,11 +37,6 @@ describe('translation catalog', () => {
 			});
 			expect(catalog.toString()).toMatchSnapshot();
 		});
-
-		it('should honor the from-code option', () => {
-			const catalog = new Catalog({ date, fromCode: 'utf-8' });
-			expect(catalog.toString()).toMatchSnapshot();
-		});
 	});
 
 	describe('conflicting flags', () => {

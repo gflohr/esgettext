@@ -1,5 +1,4 @@
 import { POTEntry } from './entry';
-import { Keyword } from './keyword';
 
 interface Cache {
 	// msgid
@@ -15,14 +14,9 @@ interface CatalogProperties {
 	msgidBugsAddress?: string;
 	foreignUser?: boolean;
 	date?: string;
-	fromCode?: string;
 	sortOutput?: boolean;
 	sortByFile?: boolean;
 	noHeader?: boolean;
-	addAllComments?: boolean;
-	addComments?: Array<string>;
-	extractAll?: boolean;
-	keywords?: Array<Keyword>;
 }
 
 interface RenderOptions {
@@ -38,9 +32,6 @@ export class Catalog {
 
 	constructor(readonly properties: CatalogProperties = {}) {
 		this.entries = new Array<POTEntry>();
-		if (typeof properties.fromCode === 'undefined') {
-			properties.fromCode = 'CHARSET';
-		}
 
 		if (!properties.noHeader) {
 			if (typeof properties.package === 'undefined') {
@@ -98,7 +89,7 @@ Last-Translator: FULL NAME <EMAIL@ADDRESS>
 Language-Team: LANGUAGE <LL@li.org>
 Language:
 MIME-Version: 1.0
-Content-Type: text/plain; charset=${properties.fromCode}
+Content-Type: text/plain; charset=CHARSET
 Content-Transfer-Encoding: 8bit
 `;
 
@@ -324,12 +315,5 @@ FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 				delete entry.properties.msgstr;
 			}
 		});
-	}
-
-	/**
-	 * Get the encoding of the catalog.
-	 */
-	encoding(): string {
-		return this.properties.fromCode;
 	}
 }
