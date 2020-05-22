@@ -15,7 +15,7 @@ export class FilesCollector {
 		if (typeof filesFrom !== 'undefined') {
 			filesFrom.forEach(fromFile => {
 				this.getFilesFromFile(fromFile).forEach(filename => {
-					this.filenames.push(filename);
+					filenames.push(filename);
 				});
 			});
 		}
