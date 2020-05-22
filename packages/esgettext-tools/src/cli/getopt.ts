@@ -7,7 +7,7 @@ const gtx = Textdomain.getInstance('esgettext-tools');
 
 export interface Options {
 	/* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-	[key: string]: any;
+	[key: string]: string | Array<string> | number | boolean;
 }
 
 export interface OptionFlags {
@@ -20,7 +20,7 @@ export interface Option {
 	yargsOptions: yargs.Options;
 }
 
-export interface OptionGroup {
+export interface GetoptOptionGroup {
 	description: string;
 	options: Array<Option>;
 }
@@ -32,7 +32,7 @@ export interface GetoptOptions {
 }
 
 export class Getopt {
-	private readonly progName: string;
+	readonly programName: string;
 	private cli = yargs;
 	private readonly allowedKeys = new Map<string, OptionFlags>();
 	private readonly defaultFlags: OptionFlags = {};
@@ -53,7 +53,7 @@ export class Getopt {
 		optionGroups: OptionGroup[],
 		options?: GetoptOptions,
 	) {
-		this.progName = process.argv[1].split(/[\\/]/).pop();
+		this.programName = process.argv[1].split(/[\\/]/).pop();
 		this.buildUsage(usage, description);
 
 		if (!options) {
@@ -112,18 +112,21 @@ export class Getopt {
 		// TODO! Check for invalid usage!
 		for (let i = 0; i < keys.length; ++i) {
 			const key = keys[i];
+			if (key === '_') {
+				continue;
+			}
 			if (!this.allowedKeys.has(key)) {
 				if (key.length > 1) {
 					this.errorFunction(
-						gtx._x("'{progName}': unrecognized option '--{option}'", {
-							progName: this.progName,
+						gtx._x("'{programName}': unrecognized option '--{option}'", {
+							programName: this.programName,
 							option: key,
 						}),
 					);
 				} else {
 					this.errorFunction(
-						gtx._x("'{progName}': invalid option -- '{option}'", {
-							progName: this.progName,
+						gtx._x("'{programName}': invalid option -- '{option}'", {
+							programName: this.programName,
 							option: key,
 						}),
 					);
@@ -148,8 +151,8 @@ export class Getopt {
 	private errorExit(message: string): void {
 		process.stderr.write(message + '\n');
 		process.stderr.write(
-			gtx._x("Try '{progName} --help' for more information.\n", {
-				progName: this.progName,
+			gtx._x("Try '{programName} --help' for more information.\n", {
+				programName: this.programName,
 			}),
 		);
 		process.exit(1);
@@ -157,7 +160,9 @@ export class Getopt {
 
 	private buildUsage(usage: string, description: string): void {
 		this.cli = this.cli.usage(
-			usage +
+			gtx._x('Usage: {programName}', { programName: this.programName }) +
+				' ' +
+				usage +
 				'\n' +
 				'\n' +
 				description +
@@ -178,7 +183,7 @@ export class Getopt {
 		const version = require(__dirname + '/../../../../package.json').version;
 		const packageName = require(__dirname + '/../../../../package.json').name;
 		const versionString =
-			`${this.progName} (${packageName}) ${version}\n` +
+			`${this.programName} (${packageName}) ${version}\n` +
 			gtx._('LICENSE: WTFPL <http://www.wtfpl.net/about/>\n') +
 			gtx._('This is free software. You can do with it whatever you want.\n') +
 			gtx._('There is NO WARRANTY, to the extent permitted by law.\n') +
