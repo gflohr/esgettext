@@ -7,5 +7,4 @@
 **/*.spec.ts
 /po
 /src/po-test
-existing.mo
-additional.mo
+*.mo

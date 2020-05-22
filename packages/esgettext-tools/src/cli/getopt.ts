@@ -191,7 +191,7 @@ export class Getopt {
 			.help()
 			.alias('help', 'h')
 			.epilogue(
-				gtx._('Report bugs at https://github.com/gflohr/gtx-i18-tools/issues'),
+				gtx._('Report bugs at https://github.com/gflohr/esgettext/issues'),
 			);
 	}
 }

@@ -2,11 +2,7 @@
 	"extends": "../../tsconfig.json",
 	"compilerOptions": {
 		"outDir": "dist",
-		"resolveJsonModule": true,
-		"baseUrl": ".",
-		"paths": {
-			"@esgettext/runtime": ["../esgettext-runtime/src"]
-		}
+		"resolveJsonModule": true
 	},
 	"includes": ["./src"]
 }
