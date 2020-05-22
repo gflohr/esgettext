@@ -24,6 +24,7 @@ export interface ParserOptions {
 	addComments?: Array<string>;
 	extractAll?: boolean;
 	keywords?: Array<Keyword>;
+	instances?: Array<string>;
 }
 
 export abstract class Parser {
@@ -105,12 +106,19 @@ export abstract class Parser {
 
 	private extractArguments(path: NodePath<t.CallExpression>): void {
 		let method: string;
-		if (t.isIdentifier(path.node.callee)) {
+		if (t.isIdentifier(path.node.callee) && !this.options.instances) {
 			method = path.node.callee.name;
 		} else if (t.isMemberExpression(path.node.callee)) {
 			const instance = new Array<string>();
 			method = this.methodFromMemberExpression(path.node.callee, instance);
 			if (method === null) {
+				return;
+			}
+			instance.shift();
+			if (
+				this.options.instances &&
+				!this.options.instances.includes(instance.reverse().join('.'))
+			) {
 				return;
 			}
 		} else {
@@ -316,20 +324,20 @@ export abstract class Parser {
 	): string {
 		if (t.isIdentifier(me.object)) {
 			if (t.isStringLiteral(me.property) && me.computed) {
-				instance.unshift(me.property.value);
-				instance.unshift(me.object.name);
-				return me.property.value;
+				instance.push(me.property.value);
+				instance.push(me.object.name);
+				return instance[0];
 			} else if (t.isIdentifier(me.property) && !me.computed) {
-				instance.unshift(me.property.name);
-				instance.unshift(me.object.name);
-				return me.property.name;
+				instance.push(me.property.name);
+				instance.push(me.object.name);
+				return instance[0];
 			} else {
 				// FIXME! TemplateLiteral!
 				return null;
 			}
 		} else if (t.isMemberExpression(me.object) && !me.computed) {
 			// Recurse.
-			instance.unshift(me.property.name);
+			instance.push(me.property.name);
 			return this.methodFromMemberExpression(me.object, instance);
 		} else {
 			return null;
