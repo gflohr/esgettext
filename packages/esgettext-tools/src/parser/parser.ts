@@ -31,6 +31,7 @@ export abstract class Parser {
 	protected filename: string;
 	protected errors: number;
 	private comments: Array<t.CommentBlock>;
+	private readonly instances: Array<Array<string>>;
 
 	private readonly keywords: {
 		[key: string]: Keyword;
@@ -45,6 +46,12 @@ export abstract class Parser {
 		(options.keywords || Parser.cookedDefaultKeywords()).forEach(keyword => {
 			this.keywords[keyword.method] = keyword;
 		});
+		if (options.instances) {
+			this.instances = new Array<Array<string>>();
+			for (let i = 0; i < options.instances.length; ++i) {
+				this.instances[i] = options.instances[i].split('.').reverse();
+			}
+		}
 	}
 
 	abstract parse(input: Buffer, filename: string, encoding?: string): boolean;
@@ -104,9 +111,35 @@ export abstract class Parser {
 		});
 	}
 
+	private checkPath(wanted: Array<string>, got: Array<string>): boolean {
+		for (let i = 0; i < got.length; ++i) {
+			if (i >= wanted.length) {
+				return true;
+			} else if (wanted[i] !== got[i]) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	private checkInstance(instance: Array<string>): boolean {
+		if (!this.options.instances) {
+			return true;
+		}
+
+		for (let i = 0; i < this.instances.length; ++i) {
+			if (this.checkPath(this.instances[i], instance)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	private extractArguments(path: NodePath<t.CallExpression>): void {
 		let method: string;
-		if (t.isIdentifier(path.node.callee) && !this.options.instances) {
+		if (t.isIdentifier(path.node.callee) && !this.instances) {
 			method = path.node.callee.name;
 		} else if (t.isMemberExpression(path.node.callee)) {
 			const instance = new Array<string>();
@@ -115,10 +148,7 @@ export abstract class Parser {
 				return;
 			}
 			instance.shift();
-			if (
-				this.options.instances &&
-				!this.options.instances.includes(instance.reverse().join('.'))
-			) {
+			if (!this.checkInstance(instance)) {
 				return;
 			}
 		} else {
