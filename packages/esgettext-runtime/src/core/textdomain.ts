@@ -161,6 +161,8 @@ export class Textdomain {
 	 * the basename of your translation files which are either TEXTDOMAIN.json
 	 * or TEXTDOMAIN.mo, depending on the format you have chosen.
 	 *
+	 * FIXME! This should be a getter!
+	 *
 	 * @returns the textdomain
 	 */
 	public textdomain(): string {
