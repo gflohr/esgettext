@@ -102,6 +102,8 @@ _('only immediately preceding');
 
 // Only for one string.
 _('catcher'); _('loser');
+
+// And this is ignored, too.
 `;
 			expect(p.parse(Buffer.from(code), 'example.js')).toBeTruthy();
 			expect(catalog.toString()).toMatchSnapshot();
