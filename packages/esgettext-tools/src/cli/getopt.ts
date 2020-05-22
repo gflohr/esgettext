@@ -73,7 +73,7 @@ export class Getopt {
 		for (let i = 0; i < optionGroups.length; ++i) {
 			const group = optionGroups[i];
 			const options = group.options;
-			const optionKeys = options.map((option) => option.name);
+			const optionKeys = options.map(option => option.name);
 
 			for (let j = 0; j < options.length; ++j) {
 				const option = options[j];
@@ -85,7 +85,7 @@ export class Getopt {
 						? [option.yargsOptions.alias]
 						: option.yargsOptions.alias;
 				if (alias) {
-					alias.map((a) => this.allowedKeys.set(a, flags));
+					alias.map(a => this.allowedKeys.set(a, flags));
 				}
 			}
 

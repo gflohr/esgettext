@@ -39,7 +39,7 @@
 			"ts"
 		],
 		"moduleNameMapper": {
-			"^@esgettext/runtime$": "<rootDir>/../../runtime/src"
+			"^@esgettext/runtime$": "<rootDir>/../../esgettext-runtime/src"
 		},
 		"rootDir": "src",
 		"testRegex": ".spec.ts$",

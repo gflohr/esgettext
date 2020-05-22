@@ -43,7 +43,7 @@ describe('XMLHttpRequest', () => {
 		// eslint-disable-next-line no-console
 		console.error = jest.fn();
 		try {
-			await transport.loadFile('/error').catch((e) => {
+			await transport.loadFile('/error').catch(e => {
 				throw new Error(e);
 			});
 		} catch (e) {

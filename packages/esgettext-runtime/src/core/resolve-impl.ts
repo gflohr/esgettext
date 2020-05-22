@@ -53,10 +53,10 @@ function loadCatalog(url: string, format: string): Promise<Catalog> {
 	return new Promise<Catalog>((resolve, reject) => {
 		transportInstance
 			.loadFile(url)
-			.then((data) => {
+			.then(data => {
 				resolve(validator(data));
 			})
-			.catch((e) => reject(e));
+			.catch(e => reject(e));
 	});
 }
 
@@ -85,7 +85,7 @@ async function loadLanguage(
 
 		const tries = new Array<CatalogLoader>();
 
-		ids.forEach((id) => {
+		ids.forEach(id => {
 			tries.push(() =>
 				loadCatalog(assemblePath(base, id, domainname, format), format),
 			);
@@ -96,8 +96,8 @@ async function loadLanguage(
 				(promise, fn: CatalogLoader) => promise.catch(fn),
 				Promise.reject(),
 			)
-			.then((value) => resolve(value))
-			.catch((e) => reject(e));
+			.then(value => resolve(value))
+			.catch(e => reject(e));
 	});
 }
 
@@ -124,7 +124,7 @@ async function loadDomain(
 			return cacheHit;
 		} else {
 			// Normal cache hit.
-			return new Promise((resolve) => resolve(cacheHit));
+			return new Promise(resolve => resolve(cacheHit));
 		}
 	}
 
@@ -133,7 +133,7 @@ async function loadDomain(
 
 	exploded.forEach((tries, i) => {
 		const p = loadLanguage(tries, base, domainname, format)
-			.then((catalog) => (results[i] = catalog))
+			.then(catalog => (results[i] = catalog))
 			.catch(() => {
 				/* ignore */
 			});
@@ -142,13 +142,13 @@ async function loadDomain(
 
 	await Promise.all(promises);
 
-	results.forEach((result) => {
+	results.forEach(result => {
 		catalog.major = result.major;
 		catalog.minor = result.minor;
 		catalog.entries = { ...catalog.entries, ...result.entries };
 	});
 
-	return new Promise((resolve) => {
+	return new Promise(resolve => {
 		resolve(catalog);
 	});
 }
@@ -186,7 +186,7 @@ function setPluralFunction(catalog: Catalog): Catalog {
 	}
 
 	const headers = catalog.entries[''][0].split('\n');
-	headers.forEach((header) => {
+	headers.forEach(header => {
 		const tokens = header.split(':');
 		if ('plural-forms' === tokens.shift().toLowerCase()) {
 			const code = tokens.join(':');
@@ -211,13 +211,13 @@ export function resolveImpl(
 	};
 
 	if (localeKey === 'C' || localeKey === 'POSIX') {
-		return new Promise((resolve) => resolve(defaultCatalog));
+		return new Promise(resolve => resolve(defaultCatalog));
 	}
 
-	return new Promise((resolve) => {
+	return new Promise(resolve => {
 		const exploded = explodeLocale(splitLocale(localeKey), true);
 		loadDomain(exploded, localeKey, path, domainname, format)
-			.then((catalog) => {
+			.then(catalog => {
 				setPluralFunction(catalog);
 				CatalogCache.store(localeKey, domainname, catalog);
 				resolve(catalog);

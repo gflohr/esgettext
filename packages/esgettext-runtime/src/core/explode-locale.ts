@@ -25,7 +25,7 @@ export function explodeLocale(
 		const lingua = locale.tags.slice(0, i + 1).join(lsep);
 		const ids = new Array<string>();
 
-		charsets.forEach((charset) => {
+		charsets.forEach(charset => {
 			let id = charset.length ? lingua + '.' + charset : lingua;
 			if (hasModifier) {
 				id += '@' + locale.modifier;

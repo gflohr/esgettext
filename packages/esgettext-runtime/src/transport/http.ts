@@ -15,7 +15,7 @@ export class TransportHttp implements Transport {
 					reject(new Error('get failed with status ' + xhr.status));
 				}
 			};
-			xhr.onerror = (err) => reject(err);
+			xhr.onerror = err => reject(err);
 			xhr.send();
 		});
 	}

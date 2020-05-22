@@ -29,7 +29,7 @@ export class Keyword {
 
 		const seen = new Array<number>();
 
-		args.forEach((arg) => {
+		args.forEach(arg => {
 			if (typeof arg === 'undefined' || arg === '') {
 				arg = '1';
 			}

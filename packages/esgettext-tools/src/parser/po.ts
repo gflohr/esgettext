@@ -168,20 +168,20 @@ export class PoParser extends Parser {
 
 		header
 			.split('\n')
-			.map((line) => line.split(':'))
-			.map((chunks) => ({
+			.map(line => line.split(':'))
+			.map(chunks => ({
 				name: chunks[0].toLowerCase(),
 				value: chunks.slice(1).join(':').trim(),
 			}))
-			.filter((header) => header.name !== '')
-			.forEach((header) => (headers[header.name] = header.value));
+			.filter(header => header.name !== '')
+			.forEach(header => (headers[header.name] = header.value));
 
 		const contentType = headers['content-type'];
 		if (typeof contentType === 'undefined') {
 			return null;
 		}
 
-		const tokens = contentType.split('=').map((token) => token.trim());
+		const tokens = contentType.split('=').map(token => token.trim());
 		if (tokens.length <= 1) {
 			return null;
 		}
@@ -265,7 +265,7 @@ export class PoParser extends Parser {
 	private parseKeywordLine(line: string): void {
 		const errorsBefore = this.errors;
 
-		let remainder = line.replace(/^[_A-Za-z0-9[\]]+/, (keyword) => {
+		let remainder = line.replace(/^[_A-Za-z0-9[\]]+/, keyword => {
 			switch (keyword) {
 				case 'msgid':
 					this.entryLoc = this.copyLocation(this.loc);
@@ -454,7 +454,7 @@ export class PoParser extends Parser {
 
 	private trim(str: string): string {
 		return str
-			.replace(/^[\s\uFEFF\xA0]+/, (match) => {
+			.replace(/^[\s\uFEFF\xA0]+/, match => {
 				this.loc.start.column += match.length;
 				return '';
 			})

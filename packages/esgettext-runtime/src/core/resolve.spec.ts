@@ -16,7 +16,7 @@ describe('resolve', () => {
 			const gtx = Textdomain.getInstance('mytest');
 
 			gtx.catalogFormat = 'json';
-			return gtx.resolve().then((catalog) => {
+			return gtx.resolve().then(catalog => {
 				expect(catalog).toBeTruthy();
 			});
 		});
@@ -25,7 +25,7 @@ describe('resolve', () => {
 			const gtx = Textdomain.getInstance('mytest');
 
 			gtx.catalogFormat = 'mo';
-			return gtx.resolve().then((catalog) => {
+			return gtx.resolve().then(catalog => {
 				expect(catalog).toBeTruthy();
 			});
 		});
@@ -33,7 +33,7 @@ describe('resolve', () => {
 		it('should also return something for not-exists.mo', () => {
 			const gtx = Textdomain.getInstance('not-exists');
 
-			return gtx.resolve().then((catalog) => {
+			return gtx.resolve().then(catalog => {
 				expect(catalog).toBeTruthy();
 			});
 		});
@@ -70,7 +70,7 @@ describe('resolve', () => {
 				body: body,
 			});
 
-			return gtx.resolve().then((data) => {
+			return gtx.resolve().then(data => {
 				browserEnvironment(old);
 				// FIXME! xhr-mock does not implement arraybuffer response types
 				// correctly, see https://github.com/jameslnewell/xhr-mock/issues/104
@@ -88,7 +88,7 @@ describe('resolve', () => {
 				body: body,
 			});
 
-			return gtx.resolve().then((data) => {
+			return gtx.resolve().then(data => {
 				// FIXME! xhr-mock does not implement arraybuffer response types
 				// correctly, see https://github.com/jameslnewell/xhr-mock/issues/104
 				// expect(data).toEqual(catalog);
@@ -105,7 +105,7 @@ describe('resolve', () => {
 				body: body,
 			});
 
-			return gtx.resolve().then((data) => {
+			return gtx.resolve().then(data => {
 				// FIXME! xhr-mock does not implement arraybuffer response types
 				// correctly, see https://github.com/jameslnewell/xhr-mock/issues/104
 				// expect(data).toEqual(catalog);
@@ -122,7 +122,7 @@ describe('resolve', () => {
 				body: body,
 			});
 
-			return gtx.resolve().then((data) => {
+			return gtx.resolve().then(data => {
 				// FIXME! xhr-mock does not implement arraybuffer response types
 				// correctly, see https://github.com/jameslnewell/xhr-mock/issues/104
 				// expect(data).toEqual(catalog);
@@ -150,10 +150,10 @@ describe('preload cache', () => {
 		CatalogCache.store(
 			'de',
 			'precached',
-			new Promise((resolve) => resolve(catalog)),
+			new Promise(resolve => resolve(catalog)),
 		);
 
-		return gtx.resolve().then((loaded) => {
+		return gtx.resolve().then(loaded => {
 			expect(loaded).toEqual(catalog);
 		});
 	});
@@ -203,13 +203,13 @@ describe('special cases', () => {
 			CatalogCache.store(
 				'de',
 				'invalid-plural',
-				new Promise((resolve) => resolve(catalog)),
+				new Promise(resolve => resolve(catalog)),
 			);
 
 			const gtx = Textdomain.getInstance('invalid-plural');
 			Textdomain.locale = 'de';
 
-			return gtx.resolve().then((catalog) => {
+			return gtx.resolve().then(catalog => {
 				expect(catalog.pluralFunction).toEqual(germanicPlural);
 			});
 		});
@@ -220,7 +220,7 @@ describe('special cases', () => {
 			Textdomain.locale = 'C';
 			const gtx = Textdomain.getInstance('c-locale');
 
-			return gtx.resolve().then((catalog) => {
+			return gtx.resolve().then(catalog => {
 				expect(catalog.pluralFunction).toEqual(germanicPlural);
 			});
 		});
@@ -228,7 +228,7 @@ describe('special cases', () => {
 			Textdomain.locale = 'POSIX';
 			const gtx = Textdomain.getInstance('posix-locale');
 
-			return gtx.resolve().then((catalog) => {
+			return gtx.resolve().then(catalog => {
 				expect(catalog.pluralFunction).toEqual(germanicPlural);
 			});
 		});
@@ -239,7 +239,7 @@ describe('special cases', () => {
 			Textdomain.locale = 'de_DE.utf-8@ksh';
 			const gtx = Textdomain.getInstance('missing');
 
-			return gtx.resolve().then((catalog) => {
+			return gtx.resolve().then(catalog => {
 				expect(catalog.pluralFunction).toEqual(germanicPlural);
 			});
 		});
@@ -250,7 +250,7 @@ describe('special cases', () => {
 			Textdomain.locale = 'fi_FI';
 			const gtx = Textdomain.getInstance('existing');
 
-			return gtx.resolve().then((catalog) => {
+			return gtx.resolve().then(catalog => {
 				expect(catalog.entries).toBeDefined();
 				expect(catalog.entries['January']).toEqual(['Tammikuu']);
 			});

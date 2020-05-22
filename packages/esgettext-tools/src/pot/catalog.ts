@@ -154,7 +154,7 @@ FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 
 		const header = this.entries
 			.filter(isHeader)
-			.map((entry) => entry.toString(width))
+			.map(entry => entry.toString(width))
 			.join('\n');
 
 		let body = '';
@@ -180,7 +180,7 @@ FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 
 					return actx.localeCompare(bctx);
 				})
-				.map((entry) => entry.toString(width))
+				.map(entry => entry.toString(width))
 				.join('\n');
 		} else if (this.properties.sortByFile) {
 			const copy = this.copy(this.properties);
@@ -193,7 +193,7 @@ FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 			};
 
 			// First order all references
-			copy.entries.forEach((entry) => {
+			copy.entries.forEach(entry => {
 				if (entry.properties.references) {
 					entry.properties.references = entry.properties.references
 						.map(splitRef)
@@ -203,7 +203,7 @@ FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 								Math.sign(a.lineno - b.lineno)
 							);
 						})
-						.map((ref) => `${ref.filename}:${ref.lineno}`);
+						.map(ref => `${ref.filename}:${ref.lineno}`);
 				}
 			});
 
@@ -239,17 +239,17 @@ FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 
 			body = copy.entries
 				.filter(isNotHeader)
-				.map((entry) => {
+				.map(entry => {
 					return { refs: splitRefs(entry.properties.references), entry };
 				})
 				.sort(compareSplitRefs)
-				.map((split) => split.entry)
-				.map((entry) => entry.toString(width))
+				.map(split => split.entry)
+				.map(entry => entry.toString(width))
 				.join('\n');
 		} else {
 			body = this.entries
 				.filter(isNotHeader)
-				.map((entry) => entry.toString(width))
+				.map(entry => entry.toString(width))
 				.join('\n');
 		}
 
@@ -293,7 +293,7 @@ FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 		}
 
 		delete this.cache[msgid][msgctxt];
-		this.entries = this.entries.filter((other) => other !== entry);
+		this.entries = this.entries.filter(other => other !== entry);
 	}
 
 	/**
@@ -304,7 +304,7 @@ FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 	copy(properties?: CatalogProperties): Catalog {
 		const other = new Catalog(properties);
 
-		this.entries.forEach((entry) => other.addEntry(entry));
+		this.entries.forEach(entry => other.addEntry(entry));
 
 		return other;
 	}
@@ -314,7 +314,7 @@ FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 	 * a .pot file.
 	 */
 	makePOT(): void {
-		this.entries.forEach((entry) => {
+		this.entries.forEach(entry => {
 			if (
 				!(
 					entry.properties.msgid === '' &&

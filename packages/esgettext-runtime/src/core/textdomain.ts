@@ -206,9 +206,9 @@ export class Textdomain {
 			path,
 			this.catalogFormat,
 			Textdomain.locale,
-		).then((catalog) => {
+		).then(catalog => {
 			this.catalog = catalog;
-			return new Promise((resolve) => resolve(catalog));
+			return new Promise(resolve => resolve(catalog));
 		});
 	}
 
