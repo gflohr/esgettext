@@ -1,4 +1,5 @@
 import { Textdomain } from '@esgettext/runtime';
+import { XGettext } from '../xgettext';
 import { OptionGroup, Getopt } from './getopt';
 
 const gtx = Textdomain.getInstance('esgettext-tools');
@@ -171,6 +172,6 @@ gtx.resolve().then(() => {
 		'Extract translatable strings from given input files',
 	);
 	const getopt = new Getopt(usage, description, optionGroups);
-	/* eslint-disable-next-line no-console */
-	console.log(getopt.argv());
+
+	process.exit(new XGettext(getopt.argv()).run());
 });

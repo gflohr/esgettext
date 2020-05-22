@@ -146,9 +146,9 @@ export class Getopt {
 	}
 
 	private errorExit(message: string): void {
-		process.stderr.write(message);
+		process.stderr.write(message + '\n');
 		process.stderr.write(
-			gtx._x("Try '{progName} --help' for more information", {
+			gtx._x("Try '{progName} --help' for more information.\n", {
 				progName: this.progName,
 			}),
 		);

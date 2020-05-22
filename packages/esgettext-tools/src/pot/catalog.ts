@@ -8,7 +8,7 @@ interface Cache {
 	};
 }
 
-interface CatalogProperties {
+export interface CatalogProperties {
 	package?: string;
 	version?: string;
 	msgidBugsAddress?: string;
