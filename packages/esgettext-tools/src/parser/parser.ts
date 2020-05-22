@@ -361,8 +361,8 @@ export abstract class Parser {
 				return true;
 			} else {
 				for (let i = 0; i < markers.length; ++i) {
-					const marker = markers[i];
-					if (marker === block.value.substr(0, marker.length)) {
+					const marker = markers[i].trim();
+					if (marker === block.value.trim().substr(0, marker.length)) {
 						return true;
 					}
 				}

@@ -494,5 +494,25 @@ msgstr ""
 			expect(catalog.toString()).toEqual(expected);
 			expect(warner).not.toHaveBeenCalled();
 		});
+
+		it('should extract translator comments', () => {
+			const catalog = new Catalog({ noHeader: true });
+			const warner = jest.fn();
+			const p = new JavaScriptParser(catalog, warner, {
+				keywords: [new Keyword('_')],
+				addComments: ['TRANSLATORS:'],
+			});
+			const code = `// TRANSLATORS: Down by Law
+_("It's a sad and beautiful world!")
+`;
+			expect(p.parse(Buffer.from(code), 'example.js')).toBeTruthy();
+			const expected = `#. TRANSLATORS: Down by Law
+#: example.js:2
+msgid "It's a sad and beautiful world!"
+msgstr ""
+`;
+			expect(catalog.toString()).toEqual(expected);
+			expect(warner).not.toHaveBeenCalled();
+		});
 	});
 });
