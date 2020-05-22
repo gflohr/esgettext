@@ -41,7 +41,7 @@ export abstract class Parser {
 		protected readonly options: ParserOptions = {},
 	) {
 		this.keywords = {};
-		(options.keywords || []).forEach(keyword => {
+		(options.keywords || Parser.cookedDefaultKeywords()).forEach(keyword => {
 			this.keywords[keyword.method] = keyword;
 		});
 	}
@@ -104,11 +104,18 @@ export abstract class Parser {
 	}
 
 	private extractArguments(path: NodePath<t.CallExpression>): void {
-		if (path.node.callee.type !== 'Identifier') {
+		let method: string;
+		if (t.isIdentifier(path.node.callee)) {
+			method = path.node.callee.name;
+		} else if (t.isMemberExpression(path.node.callee)) {
+			// FIXME! This does not work for nested member expressions!
+			if (!t.isIdentifier(path.node.callee.property)) {
+				return;
+			}
+			method = path.node.callee.property.name;
+		} else {
 			return;
 		}
-
-		const method = path.node.callee.name;
 		if (!Object.prototype.hasOwnProperty.call(this.keywords, method)) {
 			return;
 		}
@@ -370,6 +377,39 @@ export abstract class Parser {
 
 			return false;
 		});
+	}
+
+	private static cookedDefaultKeywords(): Array<Keyword> {
+		return Parser.defaultKeywords().map(keyword => Keyword.from(keyword));
+	}
+
+	private static defaultKeywords(): Array<string> {
+		return [
+			'_',
+			'_x',
+			'_n:1,2',
+			'_nx:1,2',
+			'_p:1c,2',
+			'_px:1c,2',
+			'_np:1c,2,3',
+			'_npx:1c,2,3',
+			'N_',
+			'N_x',
+			'N_p:1c,2',
+			'N_px:1c,2',
+			'_l:2',
+			'_lx:2',
+			'_ln:2,3',
+			'_lnx:2,3',
+			'_lp:2c,3',
+			'_lpx:2c,3',
+			'_lnp:2c,3,4',
+			'_lnpx:2c,3,4',
+			'N_l:2',
+			'N_lx:2',
+			'N_lp:2c,3',
+			'N_lpx:2c,3',
+		];
 	}
 
 	protected warn(msg: string, loc: t.SourceLocation): void {
