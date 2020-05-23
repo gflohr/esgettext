@@ -2,6 +2,8 @@ import { Textdomain } from '@esgettext/runtime';
 import { XGettext } from '../xgettext';
 import { OptionGroup, Getopt } from './getopt';
 
+/* eslint-disable no-console */
+
 const gtx = Textdomain.getInstance('esgettext-tools');
 
 gtx.resolve().then(() => {
@@ -180,14 +182,27 @@ gtx.resolve().then(() => {
 
 	try {
 		xgettext = new XGettext(getopt.argv());
-	} catch (e) {
-		process.stderr.write(e + '\n');
-		process.stderr.write(
+	} catch (error) {
+		console.warn(
+			gtx._x('{programName}: {error}', {
+				error,
+				programName: getopt.programName
+			})
+		);
+		console.error(
 			gtx._x('Try "{programName} --help" for more information!', {
 				programName: getopt.programName,
 			}),
 		);
+		process.exit(2);
 	}
 
 	process.exit(xgettext.run());
+}).catch(exception => {
+	console.error(
+		gtx._x('{programName}: unhandled exception: {exception}', {
+			programName: 'exgettext-xgettext',
+			exception
+		})
+	);
 });

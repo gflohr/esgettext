@@ -16,7 +16,7 @@ export class JavaScriptParser extends Parser {
 			// Documented but not supported. FIXME! Maybe only missing in types.
 			// errorRecovery: true,
 			sourceFilename: filename,
-			plugins: ['flow'],
+			plugins: ['flow', 'jsx'],
 		});
 
 		return this.extract(filename, ast);
