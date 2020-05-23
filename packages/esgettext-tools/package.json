@@ -1,6 +1,6 @@
 {
 	"name": "@esgettext/tools",
-	"version": "0.0.1",
+	"version": "0.1.0",
 	"description": "Gettext-like po creation and manipulation",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
@@ -48,7 +48,7 @@
 	},
 	"dependencies": {
 		"@babel/parser": "^7.9.6",
-		"@esgettext/runtime": "^0.0.1",
+		"@esgettext/runtime": "^0.1.0",
 		"@types/node": "^13.13.2",
 		"@types/yargs": "^15.0.4",
 		"camelcase": "^6.0.0",
