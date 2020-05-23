@@ -1,4 +1,5 @@
 import { Textdomain } from './textdomain';
+import { userLocales } from './user-locales';
 
 describe('textdomain', () => {
 	describe('getInstance()', () => {
@@ -20,5 +21,10 @@ describe('textdomain', () => {
 	describe('textdomain()', () => {
 		const gtx = Textdomain.getInstance('messages');
 		expect(gtx.textdomain()).toEqual('messages');
+	});
+	describe('userLocales()', () => {
+		const locales = ['fi', 'de-DE', 'en-US'];
+		userLocales(locales);
+		expect(Textdomain.userLocales()).toEqual(locales);
 	});
 });

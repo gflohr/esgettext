@@ -6,6 +6,7 @@ import { gettextImpl } from './gettext-impl';
 import { germanicPlural } from './germanic-plural';
 import { splitLocale } from './split-locale';
 import { pathSeparator } from './path-separator';
+import { userLocales } from './user-locales';
 
 /* eslint-disable @typescript-eslint/camelcase, tsdoc/syntax */
 
@@ -237,6 +238,17 @@ export class Textdomain {
 		} else {
 			throw new Error(`unsupported format ${format}`);
 		}
+	}
+
+	/**
+	 * Queries the user's preferred locales. On the server it queries the
+	 * environment variables `LANGUAGE`, `LC_ALL`, `LANG`, and `LC_MESSAGES`
+	 * (in that order). In the browser
+	 *
+	 * @returns the set of locales in order of preference
+	 */
+	static userLocales(): Array<string> {
+		return userLocales();
 	}
 
 	/**
