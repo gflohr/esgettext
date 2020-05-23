@@ -21,13 +21,9 @@ module.exports = {
 	module: {
 		rules: [
 			{
-				test: /\/shims\/node\/.*\.tsx?$/,
-				loader: 'null-loader',
-			},
-			{
 				test: /\.tsx?$/,
 				loader: 'ts-loader',
-				exclude: [/node_modules/, /shims\/node/],
+				exclude: [/node_modules/],
 			},
 		],
 	},
