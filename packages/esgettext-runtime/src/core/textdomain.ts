@@ -246,6 +246,8 @@ export class Textdomain {
 	 * (in that order). In the browser
 	 *
 	 * @returns the set of locales in order of preference
+	 *
+	 * Added in \@esgettext-runtime 0.1.0.
 	 */
 	static userLocales(): Array<string> {
 		return userLocales();
