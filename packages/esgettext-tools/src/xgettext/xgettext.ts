@@ -15,8 +15,9 @@ const gtx = Textdomain.getInstance('esgettext-tools');
 export class XGettext {
 	private readonly catalog: Catalog;
 
-	constructor(private readonly options: Options) {
-		const catalogProperties: CatalogProperties = {};
+	/* The date is passed only for testing. */
+	constructor(private readonly options: Options, date?: string) {
+		const catalogProperties: CatalogProperties = { date };
 
 		this.catalog = new Catalog(catalogProperties);
 
