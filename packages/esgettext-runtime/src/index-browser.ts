@@ -20,7 +20,7 @@ if (typeof (window.navigator as any).userLanguage !== 'undefined') {
 if (typeof (window.navigator as any).browserLanguage !== 'undefined') {
 	locales.push((window.navigator as any).browserLanguage);
 }
-if (typef(window.navigator as any).systemLanguage !== 'undefined') {
+if (typeof (window.navigator as any).systemLanguage !== 'undefined') {
 	locales.push((window.navigator as any).systemLanguage);
 }
 userLocales(locales);
