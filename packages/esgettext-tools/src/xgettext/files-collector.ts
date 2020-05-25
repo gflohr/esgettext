@@ -6,7 +6,7 @@ const gtx = Textdomain.getInstance('esgettext-tools');
 export class FilesCollector {
 	readonly filenames: Array<string>;
 
-	constructor(private readonly filesFrom: Array<string>, args: Array<string>) {
+	constructor(filesFrom: Array<string>, args: Array<string>) {
 		if (typeof filesFrom === 'undefined' && args.length === 0) {
 			throw new Error(gtx._('no input file given'));
 		}

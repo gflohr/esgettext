@@ -177,7 +177,7 @@ export class Getopt {
 				gtx._('Similarly for optional arguments.\n') +
 				'\n' +
 				gtx._(
-					'Arguments to options are refered to in CAPS in the description.',
+					'Arguments to options are referred to in CAPS in the description.',
 				),
 		);
 	}
