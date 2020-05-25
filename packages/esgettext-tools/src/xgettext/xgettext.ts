@@ -139,10 +139,10 @@ export class XGettext {
 	}
 
 	private warn(msg: string): void {
-		console.error(
+		console.warn(
 			gtx._x('{programName}: warning: {msg}', {
 				msg,
-				programName: process.argv[1],
+				programName: this.options.$0,
 			}),
 		);
 	}
