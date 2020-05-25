@@ -7,15 +7,22 @@ class DummyParser extends Parser {
 	}
 }
 
+const warnSpy = jest.spyOn(global.console, 'warn').mockImplementation(() => {
+	/* ignore */
+});
+const errorSpy = jest.spyOn(global.console, 'error').mockImplementation(() => {
+	/* ignore */
+});
+
 describe('parser', () => {
 	describe('dummy parser', () => {
 		it('should report i/o errors', () => {
-			const warner = jest.fn();
 			const catalog = new Catalog();
-			const p = new DummyParser(catalog, warner);
+			const p = new DummyParser(catalog);
 
 			expect(p.parseFile('not-there.ts')).toBeFalsy();
-			expect(warner).toHaveBeenCalledTimes(1);
+			expect(errorSpy).toHaveBeenCalledTimes(1);
+			expect(warnSpy).not.toHaveBeenCalled();
 		});
 	});
 });

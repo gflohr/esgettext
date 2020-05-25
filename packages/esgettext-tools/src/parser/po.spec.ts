@@ -3,12 +3,18 @@ import { PoParser } from './po';
 
 const date = '2020-04-23 08:50+0300';
 
+const warnSpy = jest.spyOn(global.console, 'warn').mockImplementation(() => {
+	/* ignore */
+});
+const errorSpy = jest.spyOn(global.console, 'error').mockImplementation(() => {
+	/* ignore */
+});
+
 describe('parse po files', () => {
 	describe('simple file', () => {
-		const warner = jest.fn();
-
-		beforeEach(() => {
-			warner.mockReset();
+		afterEach(() => {
+			warnSpy.mockClear();
+			errorSpy.mockClear();
 		});
 
 		it('should parse', () => {
@@ -88,25 +94,25 @@ msgstr ""
 #~ msgstr ""
 `;
 			const catalog = new Catalog({ date });
-			const parser = new PoParser(catalog, warner);
+			const parser = new PoParser(catalog);
 			const input = Buffer.from(pot);
 			parser.parse(input, 'example.js');
 
 			expect(catalog.toString()).toMatchSnapshot();
-			expect(warner).not.toHaveBeenCalled();
+			expect(warnSpy).not.toHaveBeenCalled();
+			expect(errorSpy).not.toHaveBeenCalled();
 		});
 	});
 
 	describe('errors', () => {
-		const warner = jest.fn();
-
-		beforeEach(() => {
-			warner.mockReset();
+		afterEach(() => {
+			warnSpy.mockClear();
+			errorSpy.mockClear();
 		});
 
 		it('should discard lone strings', () => {
 			const catalog = new Catalog({ date });
-			const parser = new PoParser(catalog, warner);
+			const parser = new PoParser(catalog);
 			const pot = `msgid "okay"
 msgstr ""
 
@@ -114,15 +120,16 @@ msgstr ""
 `;
 			const input = Buffer.from(pot);
 			expect(parser.parse(input, 'example.ts')).toBeFalsy();
-			expect(warner).toHaveBeenCalledTimes(1);
-			expect(warner).toHaveBeenCalledWith(
+			expect(errorSpy).toHaveBeenCalledTimes(1);
+			expect(errorSpy).toHaveBeenCalledWith(
 				'example.ts:4:1: error: syntax error',
 			);
+			expect(warnSpy).not.toHaveBeenCalled();
 		});
 
 		it('should bail out on unexpected input', () => {
 			const catalog = new Catalog({ date });
-			const parser = new PoParser(catalog, warner);
+			const parser = new PoParser(catalog);
 			let pot = `msgid "okay"
 msgstr ""
 
@@ -131,15 +138,16 @@ msgstr ""
 `;
 			let input = Buffer.from(pot);
 			expect(parser.parse(input, 'example.ts')).toBeFalsy();
-			expect(warner).toHaveBeenCalledTimes(2);
-			expect(warner).toHaveBeenNthCalledWith(
+			expect(errorSpy).toHaveBeenCalledTimes(2);
+			expect(errorSpy).toHaveBeenNthCalledWith(
 				1,
 				'example.ts:4:1: error: keyword "MSGID" unknown',
 			);
-			expect(warner).toHaveBeenNthCalledWith(
+			expect(errorSpy).toHaveBeenNthCalledWith(
 				2,
 				'example.ts:4:6: error: syntax error',
 			);
+			expect(warnSpy).not.toHaveBeenCalled();
 
 			pot = `msgid "okay"
 msgstr ""
@@ -149,20 +157,21 @@ msgstr ""
 `;
 			input = Buffer.from(pot);
 			expect(parser.parse(input, 'example.ts')).toBeFalsy();
-			expect(warner).toHaveBeenCalledTimes(4);
-			expect(warner).toHaveBeenNthCalledWith(
+			expect(errorSpy).toHaveBeenCalledTimes(4);
+			expect(errorSpy).toHaveBeenNthCalledWith(
 				3,
 				'example.ts:4:1: error: keyword "nsgid" unknown',
 			);
-			expect(warner).toHaveBeenNthCalledWith(
+			expect(errorSpy).toHaveBeenNthCalledWith(
 				4,
 				'example.ts:4:6: error: syntax error',
 			);
+			expect(warnSpy).not.toHaveBeenCalled();
 		});
 
 		it('should bail out on garbage', () => {
 			const catalog = new Catalog({ date });
-			const parser = new PoParser(catalog, warner);
+			const parser = new PoParser(catalog);
 			const pot = `msgid "okay"
 msgstr ""
 
@@ -170,16 +179,17 @@ msgstr ""
 `;
 			const input = Buffer.from(pot);
 			expect(parser.parse(input, 'example.ts')).toBeFalsy();
-			expect(warner).toHaveBeenCalledTimes(1);
-			expect(warner).toHaveBeenNthCalledWith(
+			expect(errorSpy).toHaveBeenCalledTimes(1);
+			expect(errorSpy).toHaveBeenNthCalledWith(
 				1,
 				'example.ts:4:1: error: syntax error',
 			);
+			expect(warnSpy).not.toHaveBeenCalled();
 		});
 
 		it('should bail out on entries w/o msgid', () => {
 			const catalog = new Catalog({ date });
-			const parser = new PoParser(catalog, warner);
+			const parser = new PoParser(catalog);
 			const pot = `msgid "okay"
 msgstr ""
 
@@ -188,17 +198,17 @@ msgstr ""
 `;
 			const input = Buffer.from(pot);
 			expect(parser.parse(input, 'example.ts')).toBeFalsy();
-			expect(warner).toHaveBeenCalledTimes(1);
-			expect(warner).toHaveBeenNthCalledWith(
+			expect(errorSpy).toHaveBeenCalledTimes(1);
+			expect(errorSpy).toHaveBeenNthCalledWith(
 				1,
 				'example.ts:6:1: error: missing "msgid" section',
 			);
+			expect(warnSpy).not.toHaveBeenCalled();
 		});
 
 		it('should bail out on duplicate entries', () => {
-			const localWarner = jest.fn();
 			const catalog = new Catalog({ date });
-			const parser = new PoParser(catalog, localWarner);
+			const parser = new PoParser(catalog);
 			const pot = `msgid "okay"
 msgstr ""
 
@@ -207,20 +217,21 @@ msgstr ""
 `;
 			const input = Buffer.from(pot);
 			expect(parser.parse(input, 'example.ts')).toBeFalsy();
-			expect(localWarner).toHaveBeenCalledTimes(2);
-			expect(localWarner).toHaveBeenNthCalledWith(
+			expect(errorSpy).toHaveBeenCalledTimes(2);
+			expect(errorSpy).toHaveBeenNthCalledWith(
 				1,
 				'example.ts:4:1: error: duplicate message definition...',
 			);
-			expect(localWarner).toHaveBeenNthCalledWith(
+			expect(errorSpy).toHaveBeenNthCalledWith(
 				2,
 				'example.ts:1:1: error: ...this is the location of the first definition',
 			);
+			expect(warnSpy).not.toHaveBeenCalled();
 		});
 
 		it('should bail out on duplicate msgid sections', () => {
 			const catalog = new Catalog({ date });
-			const parser = new PoParser(catalog, warner);
+			const parser = new PoParser(catalog);
 			const pot = `msgid "okay"
 msgstr ""
 
@@ -230,16 +241,17 @@ msgid "okay"
 `;
 			const input = Buffer.from(pot);
 			expect(parser.parse(input, 'example.ts')).toBeFalsy();
-			expect(warner).toHaveBeenCalledTimes(1);
-			expect(warner).toHaveBeenNthCalledWith(
+			expect(errorSpy).toHaveBeenCalledTimes(1);
+			expect(errorSpy).toHaveBeenNthCalledWith(
 				1,
 				'example.ts:6:1: error: duplicate "msgid" section',
 			);
+			expect(warnSpy).not.toHaveBeenCalled();
 		});
 
 		it('should bail out on duplicate msgstr sections', () => {
 			const catalog = new Catalog({ date });
-			const parser = new PoParser(catalog, warner);
+			const parser = new PoParser(catalog);
 			const pot = `msgid "okay"
 msgstr ""
 
@@ -249,16 +261,17 @@ msgstr "okay"
 `;
 			const input = Buffer.from(pot);
 			expect(parser.parse(input, 'example.ts')).toBeFalsy();
-			expect(warner).toHaveBeenCalledTimes(1);
-			expect(warner).toHaveBeenNthCalledWith(
+			expect(errorSpy).toHaveBeenCalledTimes(1);
+			expect(errorSpy).toHaveBeenNthCalledWith(
 				1,
 				'example.ts:6:1: error: duplicate "msgstr" section',
 			);
+			expect(warnSpy).not.toHaveBeenCalled();
 		});
 
 		it('should bail out on duplicate msgid_plural sections', () => {
 			const catalog = new Catalog({ date });
-			const parser = new PoParser(catalog, warner);
+			const parser = new PoParser(catalog);
 			const pot = `msgid "okay"
 msgstr ""
 
@@ -270,16 +283,17 @@ msgstr[1] ""
 `;
 			const input = Buffer.from(pot);
 			expect(parser.parse(input, 'example.ts')).toBeFalsy();
-			expect(warner).toHaveBeenCalledTimes(1);
-			expect(warner).toHaveBeenNthCalledWith(
+			expect(errorSpy).toHaveBeenCalledTimes(1);
+			expect(errorSpy).toHaveBeenNthCalledWith(
 				1,
 				'example.ts:6:1: error: duplicate "msgid_plural" section',
 			);
+			expect(warnSpy).not.toHaveBeenCalled();
 		});
 
 		it('should bail out on duplicate msgctxt sections', () => {
 			const catalog = new Catalog({ date });
-			const parser = new PoParser(catalog, warner);
+			const parser = new PoParser(catalog);
 			const pot = `msgid "okay"
 msgstr ""
 
@@ -290,16 +304,17 @@ msgstr ""
 `;
 			const input = Buffer.from(pot);
 			expect(parser.parse(input, 'example.ts')).toBeFalsy();
-			expect(warner).toHaveBeenCalledTimes(1);
-			expect(warner).toHaveBeenNthCalledWith(
+			expect(errorSpy).toHaveBeenCalledTimes(1);
+			expect(errorSpy).toHaveBeenNthCalledWith(
 				1,
 				'example.ts:5:1: error: duplicate "msgctxt" section',
 			);
+			expect(warnSpy).not.toHaveBeenCalled();
 		});
 
 		it('should enforce consistent use of #~', () => {
 			const catalog = new Catalog({ date });
-			const parser = new PoParser(catalog, warner);
+			const parser = new PoParser(catalog);
 			const pot = `msgid "okay"
 msgstr ""
 
@@ -309,16 +324,17 @@ msgstr "okay"
 `;
 			const input = Buffer.from(pot);
 			expect(parser.parse(input, 'example.ts')).toBeFalsy();
-			expect(warner).toHaveBeenCalledTimes(1);
-			expect(warner).toHaveBeenNthCalledWith(
+			expect(errorSpy).toHaveBeenCalledTimes(1);
+			expect(errorSpy).toHaveBeenNthCalledWith(
 				1,
 				'example.ts:5:1: error: inconsistent use of #~',
 			);
+			expect(warnSpy).not.toHaveBeenCalled();
 		});
 
 		it('should bail out on non-strings for msgids', () => {
 			const catalog = new Catalog({ date });
-			const parser = new PoParser(catalog, warner);
+			const parser = new PoParser(catalog);
 			const pot = `msgid "okay"
 msgstr ""
 
@@ -327,16 +343,17 @@ msgstr "okay"
 `;
 			const input = Buffer.from(pot);
 			expect(parser.parse(input, 'example.ts')).toBeFalsy();
-			expect(warner).toHaveBeenCalledTimes(1);
-			expect(warner).toHaveBeenNthCalledWith(
+			expect(errorSpy).toHaveBeenCalledTimes(1);
+			expect(errorSpy).toHaveBeenNthCalledWith(
 				1,
 				'example.ts:4:14: error: syntax error',
 			);
+			expect(warnSpy).not.toHaveBeenCalled();
 		});
 
 		it('should bail out on unterminated strings', () => {
 			const catalog = new Catalog({ date });
-			const parser = new PoParser(catalog, warner);
+			const parser = new PoParser(catalog);
 			const pot = `msgid "okay"
 msgstr ""
 
@@ -345,16 +362,17 @@ msgstr "okay"
 `;
 			const input = Buffer.from(pot);
 			expect(parser.parse(input, 'example.ts')).toBeFalsy();
-			expect(warner).toHaveBeenCalledTimes(1);
-			expect(warner).toHaveBeenNthCalledWith(
+			expect(errorSpy).toHaveBeenCalledTimes(1);
+			expect(errorSpy).toHaveBeenNthCalledWith(
 				1,
 				'example.ts:4:11: error: end-of-line within string',
 			);
+			expect(warnSpy).not.toHaveBeenCalled();
 		});
 
 		it('should bail out on trailing backslashes', () => {
 			const catalog = new Catalog({ date });
-			const parser = new PoParser(catalog, warner);
+			const parser = new PoParser(catalog);
 			const pot = `msgid "okay"
 msgstr ""
 
@@ -363,16 +381,17 @@ msgstr "okay"
 `;
 			const input = Buffer.from(pot);
 			expect(parser.parse(input, 'example.ts')).toBeFalsy();
-			expect(warner).toHaveBeenCalledTimes(1);
-			expect(warner).toHaveBeenNthCalledWith(
+			expect(errorSpy).toHaveBeenCalledTimes(1);
+			expect(errorSpy).toHaveBeenNthCalledWith(
 				1,
 				'example.ts:4:7: error: end-of-line within string',
 			);
+			expect(warnSpy).not.toHaveBeenCalled();
 		});
 
 		it('should bail out on invalid control sequences', () => {
 			const catalog = new Catalog({ date });
-			const parser = new PoParser(catalog, warner);
+			const parser = new PoParser(catalog);
 			const pot = `msgid "okay"
 msgstr ""
 
@@ -381,24 +400,24 @@ msgstr ""
 `;
 			const input = Buffer.from(pot);
 			expect(parser.parse(input, 'example.ts')).toBeFalsy();
-			expect(warner).toHaveBeenCalledTimes(1);
-			expect(warner).toHaveBeenNthCalledWith(
+			expect(errorSpy).toHaveBeenCalledTimes(1);
+			expect(errorSpy).toHaveBeenNthCalledWith(
 				1,
 				'example.ts:4:18: error: invalid control sequence',
 			);
+			expect(warnSpy).not.toHaveBeenCalled();
 		});
 	});
 
 	describe('warnings', () => {
-		const warner = jest.fn();
-
-		beforeEach(() => {
-			warner.mockReset();
+		afterEach(() => {
+			warnSpy.mockClear();
+			errorSpy.mockClear();
 		});
 
 		it('should warn about empty flags', () => {
 			const catalog = new Catalog({ date });
-			const parser = new PoParser(catalog, warner);
+			const parser = new PoParser(catalog);
 			const pot = `#, fuzzy   ,, perl-brace-format
 msgid "Hello, {name}!"
 msgstr ""
@@ -406,16 +425,17 @@ msgstr ""
 			const input = Buffer.from(pot);
 			parser.parse(input, 'example.js');
 			expect(catalog.toString()).toMatchSnapshot();
-			expect(warner).toHaveBeenCalledTimes(1);
-			expect(warner).toHaveBeenNthCalledWith(
+			expect(warnSpy).toHaveBeenCalledTimes(1);
+			expect(warnSpy).toHaveBeenNthCalledWith(
 				1,
 				'example.js:1:11: warning: ignoring empty flag',
 			);
+			expect(errorSpy).not.toHaveBeenCalled();
 		});
 
 		it('should warn about invalid references', () => {
 			const catalog = new Catalog({ date });
-			const parser = new PoParser(catalog, warner);
+			const parser = new PoParser(catalog);
 			const pot = `#:   src/here.js:2304     somewhere
 msgid "Hello, {name}!"
 msgstr ""
@@ -423,26 +443,26 @@ msgstr ""
 			const input = Buffer.from(pot);
 			parser.parse(input, 'example.js');
 			expect(catalog.toString()).toMatchSnapshot();
-			expect(warner).toHaveBeenCalledTimes(1);
-			expect(warner).toHaveBeenNthCalledWith(
+			expect(warnSpy).toHaveBeenCalledTimes(1);
+			expect(warnSpy).toHaveBeenNthCalledWith(
 				1,
 				'example.js:1:27: warning: ignoring mal-formed reference "somewhere"',
 			);
+			expect(errorSpy).not.toHaveBeenCalled();
 		});
 	});
 
 	// FIXME! These tests have to be re-written because all input has to be
 	// decoded to utf-8.
 	describe('encoding', () => {
-		const warner = jest.fn();
-
-		beforeEach(() => {
-			warner.mockReset();
+		afterEach(() => {
+			warnSpy.mockClear();
+			errorSpy.mockClear();
 		});
 
 		it('should accept cp1252', () => {
 			const catalog = new Catalog({ date });
-			const parser = new PoParser(catalog, warner);
+			const parser = new PoParser(catalog);
 			const pot = `msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\\n"
@@ -451,12 +471,13 @@ msgstr ""
 			const input = Buffer.from(pot);
 			parser.parse(input, 'example.ts');
 			expect(catalog.toString()).toMatchSnapshot();
-			expect(warner).not.toHaveBeenCalled();
+			expect(errorSpy).not.toHaveBeenCalled();
+			expect(warnSpy).not.toHaveBeenCalled();
 		});
 
 		it('should throw on unsupported encodings', () => {
 			const catalog = new Catalog({ date });
-			const parser = new PoParser(catalog, warner);
+			const parser = new PoParser(catalog);
 			const pot = `msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\\n"
@@ -464,16 +485,17 @@ msgstr ""
 `;
 			const input = Buffer.from(pot);
 			expect(parser.parse(input, 'example.ts', 'invalid')).toBeFalsy();
-			expect(warner).toHaveBeenCalledTimes(1);
-			expect(warner).toHaveBeenNthCalledWith(
+			expect(errorSpy).toHaveBeenCalledTimes(1);
+			expect(errorSpy).toHaveBeenNthCalledWith(
 				1,
 				'unsupported encoding "invalid"',
 			);
+			expect(warnSpy).not.toHaveBeenCalled();
 		});
 
 		it('should re-parse a lone header', () => {
 			const catalog = new Catalog({ date });
-			const parser = new PoParser(catalog, warner);
+			const parser = new PoParser(catalog);
 			const pot = `msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\\n"
@@ -483,12 +505,13 @@ msgstr ""
 			parser.parse(input, 'example.ts');
 			// FIXME! How can we test that the catalog gets re-parsed?
 			//expect(catalog.encoding()).toEqual('CHARSET');
-			expect(warner).not.toHaveBeenCalled();
+			expect(errorSpy).not.toHaveBeenCalled();
+			expect(warnSpy).not.toHaveBeenCalled();
 		});
 
 		it('should not reparse w/o content-type header', () => {
 			const catalog = new Catalog({ date });
-			const parser = new PoParser(catalog, warner);
+			const parser = new PoParser(catalog);
 			const pot = `msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\\n"
@@ -497,12 +520,13 @@ msgstr ""
 			parser.parse(input, 'example.ts');
 			// FIXME! How can that be tested?
 			//expect(catalog.encoding()).toEqual('CHARSET');
-			expect(warner).not.toHaveBeenCalled();
+			expect(errorSpy).not.toHaveBeenCalled();
+			expect(warnSpy).not.toHaveBeenCalled();
 		});
 
 		it('should not reparse w/o charset', () => {
 			const catalog = new Catalog({ date });
-			const parser = new PoParser(catalog, warner);
+			const parser = new PoParser(catalog);
 			const pot = `msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\\n"
@@ -512,12 +536,13 @@ msgstr ""
 			parser.parse(input, 'example.ts');
 			// FIXME! How can that be tested?
 			//expect(catalog.encoding()).toEqual('CHARSET');
-			expect(warner).not.toHaveBeenCalled();
+			expect(errorSpy).not.toHaveBeenCalled();
+			expect(warnSpy).not.toHaveBeenCalled();
 		});
 
 		it('should not reparse for unknown encoding', () => {
 			const catalog = new Catalog({ date });
-			const parser = new PoParser(catalog, warner);
+			const parser = new PoParser(catalog);
 			const pot = `msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\\n"
@@ -527,15 +552,16 @@ msgstr ""
 			parser.parse(input, 'example.ts');
 			// FIXME! How can that be tested?
 			//expect(catalog.encoding()).toEqual('CHARSET');
-			expect(warner).toHaveBeenCalledTimes(2);
-			expect(warner).toHaveBeenNthCalledWith(
+			expect(warnSpy).toHaveBeenCalledTimes(2);
+			expect(warnSpy).toHaveBeenNthCalledWith(
 				1,
 				'example.ts:5:1: warning: the charset "invalid" is not a portable encoding name.',
 			);
-			expect(warner).toHaveBeenNthCalledWith(
+			expect(warnSpy).toHaveBeenNthCalledWith(
 				2,
 				'example.ts:5:1: warning: message conversion to the users charset might not work.',
 			);
+			expect(errorSpy).not.toHaveBeenCalled();
 		});
 	});
 });

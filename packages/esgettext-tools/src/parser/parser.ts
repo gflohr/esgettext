@@ -7,6 +7,8 @@ import { Catalog } from '../pot/catalog';
 import { POTEntry } from '../pot/entry';
 import { Keyword } from '../pot/keyword';
 
+/* eslint-disable no-console */
+
 const gtx = Textdomain.getInstance('esgettext-tools');
 
 interface EntryProperties {
@@ -39,7 +41,6 @@ export abstract class Parser {
 
 	constructor(
 		protected readonly catalog: Catalog,
-		protected readonly warner: (msg: string) => void,
 		protected readonly options: ParserOptions = {},
 	) {
 		this.keywords = {};
@@ -62,7 +63,7 @@ export abstract class Parser {
 			return true;
 		} catch (msg) {
 			++this.errors;
-			this.warner(`${filename}: ${msg}`);
+			console.error(`${filename}: ${msg}`);
 		}
 
 		return false;
@@ -481,7 +482,7 @@ export abstract class Parser {
 		const start = `${loc.start.line}:${loc.start.column}`;
 		const end = loc.end ? `-${loc.end.line}:${loc.end.column}` : '';
 		const location = `${this.filename}:${start}${end}`;
-		this.warner(gtx._x('{location}: warning: {msg}', { location, msg }));
+		console.warn(gtx._x('{location}: warning: {msg}', { location, msg }));
 	}
 
 	protected error(msg: string, loc: t.SourceLocation): void {
@@ -489,6 +490,6 @@ export abstract class Parser {
 		const start = `${loc.start.line}:${loc.start.column}`;
 		const end = loc.end ? `-${loc.end.line}:${loc.end.column}` : '';
 		const location = `${this.filename}:${start}${end}`;
-		this.warner(gtx._x('{location}: error: {msg}', { location, msg }));
+		console.error(gtx._x('{location}: error: {msg}', { location, msg }));
 	}
 }

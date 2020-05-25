@@ -6,16 +6,7 @@ import { Parser } from './parser';
 
 const gtx = Textdomain.getInstance('esgettext-tools');
 
-interface Escapes {
-	'\\': string;
-	'"': string;
-	a: string;
-	b: string;
-	t: string;
-	n: string;
-	v: string;
-	r: string;
-}
+/* eslint-disable no-console */
 
 export class PoParser extends Parser {
 	private entry: POTEntry;
@@ -42,7 +33,9 @@ export class PoParser extends Parser {
 	parse(buf: Buffer, filename: string, encoding?: string): boolean {
 		if (typeof encoding !== 'undefined') {
 			if (!encodingExists(encoding)) {
-				this.warner(gtx._x('unsupported encoding "{encoding}"', { encoding }));
+				console.error(
+					gtx._x('unsupported encoding "{encoding}"', { encoding }),
+				);
 				return false;
 			}
 		}
