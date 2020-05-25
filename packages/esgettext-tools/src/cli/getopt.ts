@@ -135,14 +135,16 @@ export class Getopt {
 			}
 			const flags = this.allowedKeys.get(key);
 			const value = args[key];
-			if (Array.isArray(value) && value.length > 1) {
-				if (!flags.multiple) {
+			if (Array.isArray(value)) {
+				if (value.length > 1 && !flags.multiple) {
 					this.errorFunction(
 						gtx._x("The option '{option}' can be given only once.", {
 							option: key,
 						}),
 					);
 				}
+			} else if (flags.multiple) {
+				args[key] = [value];
 			}
 		}
 
