@@ -341,7 +341,7 @@ export abstract class Parser {
 	): string {
 		if (t.isIdentifier(me.object)) {
 			if (t.isStringLiteral(me.property) && me.computed) {
-				instance.push(me.property.value);
+				instance.push(me.property.value); // <--
 				instance.push(me.object.name);
 				return instance[0];
 			} else if (t.isIdentifier(me.property) && !me.computed) {
@@ -352,14 +352,33 @@ export abstract class Parser {
 				// FIXME! TemplateLiteral!
 				return null;
 			}
-		} else if (t.isMemberExpression(me.object) && !me.computed) {
+		} else if (
+			t.isMemberExpression(me.object) &&
+			t.isIdentifier(me.property) &&
+			!me.computed
+		) {
 			// Recurse.
 			instance.push(me.property.name);
+			return this.methodFromMemberExpression(me.object, instance);
+		} else if (
+			t.isMemberExpression(me.object) &&
+			t.isStringLiteral(me.property) &&
+			me.computed
+		) {
+			// Recurse.
+			instance.push(me.property.value);
 			return this.methodFromMemberExpression(me.object, instance);
 		} else {
 			return null;
 		}
 	}
+
+	// private literalValue(node: t.Literal): string {
+	// 	if (t.isStringLiteral(node)) {
+	// 		return node.value;
+	// 	}
+
+	// }
 
 	private findPrecedingComments(loc: t.SourceLocation): Array<t.CommentBlock> {
 		let last;
