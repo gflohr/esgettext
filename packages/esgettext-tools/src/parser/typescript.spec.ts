@@ -83,6 +83,19 @@ msgstr ""
 			expect(warnSpy).not.toHaveBeenCalled();
 		});
 
+		it('should reject a nested call with computed properties and non-constant template literals', () => {
+			const catalog = new Catalog({ noHeader: true });
+			const p = new TypeScriptParser(catalog, {
+				keywords: [new Keyword('_')],
+				instances: ['some.thing.gtx'],
+			});
+			const code = 'some[`${thing}`].gtx[`_`]("Hello, world!")';
+			expect(p.parse(Buffer.from(code), 'example.ts')).toBeTruthy();
+			expect(catalog.toString()).toEqual('');
+			expect(errorSpy).not.toHaveBeenCalled();
+			expect(warnSpy).not.toHaveBeenCalled();
+		});
+
 		it('should reject wrong instances', () => {
 			const catalog = new Catalog({ noHeader: true });
 			const p = new TypeScriptParser(catalog, {
