@@ -294,34 +294,22 @@ export abstract class Parser {
 		if (typeof props.method !== 'undefined') {
 			extractedComments = extractedComments
 				.map(comment => {
-					let cleaned = '';
+					const match = /xgettext:(.*)/.exec(comment);
 
-					comment = comment.replace(
-						/(.*?)xgettext:(.*)/g,
-						(_: string, lead: string, str: string): string => {
-							let valid = false;
-							const validTokens = ['fuzzy', 'wrap', 'no-wrap'];
-							const tokens = str.split(/[ \x09-\x0d]+/);
-							tokens.forEach(token => {
-								if (
-									validTokens.includes(token) ||
-									/^(?:[a-z]+-)+(?:format|check)$/.exec(token)
-								) {
-									props.flags.push(token);
-									valid = true;
-								}
-							});
-
-							if (!valid) {
-								cleaned += `${lead}xgettext:${str}`;
+					if (match) {
+						const str = match[1];
+						const validTokens = ['fuzzy', 'wrap', 'no-wrap'];
+						const tokens = str.split(/[ \x09-\x0d]+/);
+						tokens.forEach(token => {
+							if (
+								validTokens.includes(token) ||
+								/^(?:[a-z]+-)+(?:format|check)$/.exec(token)
+							) {
+								props.flags.push(token);
 							}
-
-							return '';
-						},
-					);
-
-					cleaned += comment;
-					comment = cleaned;
+						});
+						comment = '';
+					}
 
 					return comment;
 				})

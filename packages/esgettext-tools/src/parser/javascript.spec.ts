@@ -532,6 +532,24 @@ msgstr ""
 			expect(warnSpy).not.toHaveBeenCalled();
 		});
 
+		it('should ignore invalid xgettext: comments', () => {
+			const catalog = new Catalog({ noHeader: true });
+			const p = new JavaScriptParser(catalog, {
+				keywords: [new Keyword('_')],
+			});
+			const code = `// xgettext: down-by-law
+_("It's a sad and beautiful world!")
+`;
+			expect(p.parse(Buffer.from(code), 'example.js')).toBeTruthy();
+			const expected = `#: example.js:2
+msgid "It's a sad and beautiful world!"
+msgstr ""
+`;
+			expect(catalog.toString()).toEqual(expected);
+			expect(errorSpy).not.toHaveBeenCalled();
+			expect(warnSpy).not.toHaveBeenCalled();
+		});
+
 		it('should extract translator comments', () => {
 			const catalog = new Catalog({ noHeader: true });
 			const p = new JavaScriptParser(catalog, {
