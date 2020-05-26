@@ -32,6 +32,22 @@ msgstr ""
 			expect(warnSpy).not.toHaveBeenCalled();
 		});
 
+		it('should parse a simple call with specified encoding', () => {
+			const catalog = new Catalog({ noHeader: true });
+			const p = new TypeScriptParser(catalog, {
+				keywords: [new Keyword('_')],
+			});
+			const code = 'gtx._("Hello, world!")';
+			expect(p.parse(Buffer.from(code), 'example.ts', 'utf-8')).toBeTruthy();
+			const expected = `#: example.ts:1
+msgid "Hello, world!"
+msgstr ""
+`;
+			expect(catalog.toString()).toEqual(expected);
+			expect(errorSpy).not.toHaveBeenCalled();
+			expect(warnSpy).not.toHaveBeenCalled();
+		});
+
 		it('should parse a nested call', () => {
 			const catalog = new Catalog({ noHeader: true });
 			const p = new TypeScriptParser(catalog, {
