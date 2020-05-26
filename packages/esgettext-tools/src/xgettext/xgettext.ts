@@ -6,6 +6,7 @@ import { Options } from '../cli/getopt';
 import { JavaScriptParser } from '../parser/javascript';
 import { TypeScriptParser } from '../parser/typescript';
 import { Parser } from '../parser/parser';
+import { PoParser } from '../parser/po';
 import { FilesCollector } from './files-collector';
 
 /* eslint-disable no-console */
@@ -104,6 +105,10 @@ export class XGettext {
 			case '.js':
 			case '.jsx':
 				parser = new JavaScriptParser(this.catalog, {});
+				break;
+			case '.po':
+			case '.pot':
+				parser = new PoParser(this.catalog, {});
 				break;
 			default:
 				this.warn(
