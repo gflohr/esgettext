@@ -30,6 +30,7 @@ type ErrorFunction = (message: string) => void;
 
 export interface GetoptOptions {
 	errorFunction?: ErrorFunction;
+	hasVerboseOption?: boolean;
 }
 
 export class Getopt {
@@ -38,6 +39,7 @@ export class Getopt {
 	private readonly allowedKeys = new Map<string, OptionFlags>();
 	private readonly defaultFlags: OptionFlags = {};
 	private readonly errorFunction: ErrorFunction;
+	private readonly hasVerboseOption: boolean;
 
 	/**
 	 * Create a yargs option parser.
@@ -45,6 +47,7 @@ export class Getopt {
 	 * @param usage - string to print for usage
 	 * @param description - short one-line description of the program
 	 * @param optionGroups - all options grouped
+	 * @param options - other options
 	 *
 	 * The strings should not end in a newline!
 	 */
@@ -63,6 +66,7 @@ export class Getopt {
 
 		// eslint-disable-next-line @typescript-eslint/unbound-method
 		this.errorFunction = options.errorFunction || this.errorExit;
+		this.hasVerboseOption = options.hasVerboseOption || false;
 
 		this.allowedKeys.set('help', this.defaultFlags);
 		this.allowedKeys.set('h', this.defaultFlags);
@@ -109,6 +113,10 @@ export class Getopt {
 			args = this.cli.argv;
 		}
 		const keys = Object.keys(args);
+
+		if (keys.includes('help')) {
+			this.cli.showHelp('log');
+		}
 
 		// TODO! Check for invalid usage!
 		for (let i = 0; i < keys.length; ++i) {
@@ -183,7 +191,10 @@ export class Getopt {
 	}
 
 	private addDefaultOptions(): void {
-		const version = require(__dirname + '/../../../../package.json').version;
+		const infoOptions = this.hasVerboseOption
+			? ['version', 'help', 'verbose']
+			: ['version', 'help'];
+		const version = require(__dirname + '/../../../../lerna.json').version;
 		const packageName = require(__dirname + '/../../../../package.json').name;
 		const versionString =
 			`${this.programName} (${packageName}) ${version}\n` +
@@ -192,14 +203,27 @@ export class Getopt {
 			gtx._('There is NO WARRANTY, to the extent permitted by law.\n') +
 			gtx._('Written by Guido Flohr.');
 
+		this.cli = this.cli.group(infoOptions, gtx._('Informative output'));
 		this.cli = this.cli
-			.group(['version', 'help'], 'Informative output')
-			.version(versionString)
-			.alias('version', 'v')
-			.help()
-			.alias('help', 'h')
-			.epilogue(
-				gtx._('Report bugs at https://github.com/gflohr/esgettext/issues'),
-			);
+			.option('help', {
+				alias: 'h',
+				description: gtx._('display this help and exit'),
+			})
+			.option('version', {
+				alias: 'v',
+				description: gtx._('output version information and exit'),
+			})
+			.version(versionString);
+
+		if (this.hasVerboseOption) {
+			this.cli = this.cli.options('verbose', {
+				alias: 'V',
+				description: gtx._('enable verbose output'),
+			});
+		}
+
+		this.cli = this.cli.epilogue(
+			gtx._('Report bugs at https://github.com/gflohr/esgettext/issues'),
+		);
 	}
 }

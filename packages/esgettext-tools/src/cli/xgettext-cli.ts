@@ -17,7 +17,6 @@ gtx
 						name: 'files-from',
 						flags: { multiple: true },
 						yargsOptions: {
-							alias: 'f',
 							type: 'string',
 							describe: gtx._('get list of input files from FILE'),
 						},
@@ -171,9 +170,138 @@ gtx
 					},
 				],
 			},
+			{
+				description: gtx._('Output details'),
+				options: [
+					{
+						name: 'no-escape',
+						yargsOptions: {
+							alias: 'e',
+							type: 'boolean',
+							describe: gtx._('do not use C escapes in output (default)'),
+						},
+					},
+					{
+						name: 'escape',
+						yargsOptions: {
+							alias: 'E',
+							type: 'boolean',
+							describe: gtx._('use C escapes in output, no extended chars'),
+						},
+					},
+					{
+						name: 'force-po',
+						yargsOptions: {
+							type: 'boolean',
+							describe: gtx._('write PO file even if empty'),
+						},
+					},
+					{
+						name: 'no-location',
+						yargsOptions: {
+							type: 'boolean',
+							describe: gtx._('do not write "#: filename:line" lines'),
+						},
+					},
+					{
+						name: 'location',
+						yargsOptions: {
+							type: 'boolean',
+							describe: gtx._('generate "#: filename:line" lines (default)'),
+						},
+					},
+					{
+						name: 'width',
+						yargsOptions: {
+							alias: 'w',
+							type: 'number',
+							describe: gtx._('set output page width'),
+						},
+					},
+					{
+						name: 'no-wrap',
+						yargsOptions: {
+							type: 'boolean',
+							describe: gtx._(
+								'do not break long message lines,' +
+									' longer than' +
+									' the output page width, into' +
+									' several lines',
+							),
+						},
+					},
+					{
+						name: 'sort-output',
+						yargsOptions: {
+							alias: 's',
+							type: 'boolean',
+							describe: gtx._('generate sorted output'),
+						},
+					},
+					{
+						name: 'omit-header',
+						yargsOptions: {
+							type: 'boolean',
+							describe: gtx._("don't write header with msgid '\"\"' header"),
+						},
+					},
+					{
+						name: 'sort-by-file',
+						yargsOptions: {
+							alias: 'F',
+							type: 'boolean',
+							describe: gtx._('sort output by file location'),
+						},
+					},
+					{
+						name: 'copyright-holder',
+						yargsOptions: {
+							type: 'string',
+							describe: gtx._('set copyright holder in output'),
+						},
+					},
+					{
+						name: 'foreign-user',
+						yargsOptions: {
+							type: 'string',
+							describe: gtx._('omit FSF copyright in output for foreign user'),
+						},
+					},
+					{
+						name: 'package-name',
+						yargsOptions: {
+							type: 'string',
+							describe: gtx._('set package name in output'),
+						},
+					},
+					{
+						name: 'package-name',
+						yargsOptions: {
+							type: 'string',
+							describe: gtx._('set package version in output'),
+						},
+					},
+					{
+						name: 'msgstr-prefix',
+						yargsOptions: {
+							alias: 'm',
+							type: 'string',
+							describe: gtx._('use STRING or "" as prefix for msgstr values'),
+						},
+					},
+					{
+						name: 'msgstr-suffix',
+						yargsOptions: {
+							alias: 'M',
+							type: 'string',
+							describe: gtx._('use STRING or "" as suffix for msgstr values'),
+						},
+					},
+				],
+			},
 		];
 
-		const usage = gtx._x('[OPTIONS] INPUTFILE...', {
+		const usage = gtx._x('[OPTIONS] [INPUTFILE]...', {
 			progName: process.argv[1],
 		});
 
@@ -181,7 +309,9 @@ gtx
 			'Extract translatable strings from given input files',
 		);
 
-		const getopt = new Getopt(usage, description, optionGroups);
+		const getopt = new Getopt(usage, description, optionGroups, {
+			hasVerboseOption: true,
+		});
 		let xgettext;
 
 		try {
