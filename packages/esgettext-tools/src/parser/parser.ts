@@ -340,8 +340,8 @@ export abstract class Parser {
 		instance: Array<string> = [],
 	): string {
 		if (t.isIdentifier(me.object)) {
-			if (t.isStringLiteral(me.property) && me.computed) {
-				instance.push(me.property.value); // <--
+			if (t.isLiteral(me.property) && me.computed) {
+				instance.push(this.literalValue(me.property));
 				instance.push(me.object.name);
 				return instance[0];
 			} else if (t.isIdentifier(me.property) && !me.computed) {
@@ -349,7 +349,6 @@ export abstract class Parser {
 				instance.push(me.object.name);
 				return instance[0];
 			} else {
-				// FIXME! TemplateLiteral!
 				return null;
 			}
 		} else if (
@@ -362,23 +361,31 @@ export abstract class Parser {
 			return this.methodFromMemberExpression(me.object, instance);
 		} else if (
 			t.isMemberExpression(me.object) &&
-			t.isStringLiteral(me.property) &&
+			t.isLiteral(me.property) &&
 			me.computed
 		) {
 			// Recurse.
-			instance.push(me.property.value);
+			instance.push(this.literalValue(me.property));
 			return this.methodFromMemberExpression(me.object, instance);
 		} else {
 			return null;
 		}
 	}
 
-	// private literalValue(node: t.Literal): string {
-	// 	if (t.isStringLiteral(node)) {
-	// 		return node.value;
-	// 	}
-
-	// }
+	private literalValue(node: t.Literal): string {
+		if (t.isStringLiteral(node)) {
+			return node.value;
+		} else if (
+			t.isTemplateLiteral(node) &&
+			node.expressions.length === 0 &&
+			node.quasis.length === 1 &&
+			t.isTemplateElement(node.quasis[0])
+		) {
+			return node.quasis[0].value.cooked;
+		} else {
+			return null;
+		}
+	}
 
 	private findPrecedingComments(loc: t.SourceLocation): Array<t.CommentBlock> {
 		let last;
