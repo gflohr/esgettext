@@ -60,36 +60,6 @@ msgstr \\"\\"
 "
 `;
 
-exports[`xgettext defaults should fallback to javascript 1`] = `
-"# SOME DESCRIPTIVE TITLE
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
-#, fuzzy
-msgid \\"\\"
-msgstr \\"\\"
-\\"Project-Id-Version: PACKAGE VERSION\\\\n\\"
-\\"Report-Msgid-Bugs-To: MSGID_BUGS_ADDRESS\\\\n\\"
-\\"POT-Creation-Date: 2020-04-23 08:50+0300\\\\n\\"
-\\"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\\\\n\\"
-\\"Last-Translator: FULL NAME <EMAIL@ADDRESS>\\\\n\\"
-\\"Language-Team: LANGUAGE <LL@li.org>\\\\n\\"
-\\"Language: \\\\n\\"
-\\"MIME-Version: 1.0\\\\n\\"
-\\"Content-Type: text/plain; charset=CHARSET\\\\n\\"
-\\"Content-Transfer-Encoding: 8bit\\\\n\\"
-
-#: hello.rs:2
-msgid \\"Hello, world!\\"
-msgstr \\"\\"
-
-#: goodbye.rs:2
-msgid \\"Goodbye, world!\\"
-msgstr \\"\\"
-"
-`;
-
 exports[`xgettext defaults should parse po/pot files 1`] = `
 "# SOME DESCRIPTIVE TITLE
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
