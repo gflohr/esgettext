@@ -167,6 +167,16 @@ gtx
 							),
 						},
 					},
+					{
+						name: 'instance',
+						flags: { multiple: true },
+						yargsOptions: {
+							type: 'string',
+							describe: gtx._(
+								'only accept method calls of specified instance names',
+							),
+						},
+					},
 				],
 			},
 			{
