@@ -570,5 +570,25 @@ msgstr ""
 			expect(warnSpy).not.toHaveBeenCalled();
 			expect(warnSpy).not.toHaveBeenCalled();
 		});
+
+		it('should ignore other comments', () => {
+			const catalog = new Catalog({ noHeader: true });
+			const p = new JavaScriptParser(catalog, {
+				keywords: [new Keyword('_')],
+				addComments: ['TRANSLATORS:'],
+			});
+			const code = `// TERMINATORS: Down by Law
+_("It's a sad and beautiful world!")
+`;
+			expect(p.parse(Buffer.from(code), 'example.js')).toBeTruthy();
+			const expected = `#: example.js:2
+msgid "It's a sad and beautiful world!"
+msgstr ""
+`;
+			expect(catalog.toString()).toEqual(expected);
+			expect(errorSpy).not.toHaveBeenCalled();
+			expect(warnSpy).not.toHaveBeenCalled();
+			expect(warnSpy).not.toHaveBeenCalled();
+		});
 	});
 });
