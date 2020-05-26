@@ -23,14 +23,15 @@ export class XGettext {
 		this.catalog = new Catalog(catalogProperties);
 
 		if (typeof options.language !== 'undefined') {
-			options.language = options.language.toLowerCase();
-			if (!['javascript', 'typescript'].includes(options.language)) {
+			const language = options.language.toLowerCase();
+			if (!['javascript', 'typescript'].includes(language)) {
 				throw new Error(
 					gtx._x('language "{language}" unknown', {
 						language: this.options.language,
 					}),
 				);
 			}
+			this.options.language = language;
 		}
 	}
 

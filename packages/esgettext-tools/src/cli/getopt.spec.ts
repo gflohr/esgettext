@@ -78,7 +78,7 @@ describe('getting command line options', () => {
 
 		it('to fail for unknown short options', () => {
 			const args = getArgv();
-			args['f'] = true;
+			args['%'] = true;
 			expect(() => getopt.argv(args)).toThrow();
 		});
 	});

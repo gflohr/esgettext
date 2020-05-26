@@ -161,7 +161,6 @@ gtx
 						name: 'flag',
 						flags: { multiple: true },
 						yargsOptions: {
-							alias: 'f',
 							type: 'string',
 							describe: gtx._(
 								'argument: WORD:ARG:FLAG, additional flag for strings inside the argument number ARG of keyword WORD',

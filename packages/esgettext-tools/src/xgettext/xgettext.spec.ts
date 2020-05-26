@@ -150,4 +150,66 @@ msgstr ""
 			expect(errorSpy).toHaveBeenCalled();
 		});
 	});
+
+	describe('option --language', () => {
+		afterEach(() => {
+			clearMocks();
+		});
+
+		it('should honor the --language option', () => {
+			const code = `# SOME DESCRIPTIVE TITLE
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\\n"
+"Report-Msgid-Bugs-To: MSGID_BUGS_ADDRESS\\n"
+"POT-Creation-Date: 2020-05-25 11:50+0300\\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\\n"
+"Language-Team: LANGUAGE <LL@li.org>\\n"
+"Language: \\n"
+"MIME-Version: 1.0\\n"
+"Content-Type: text/plain; charset=utf-8\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+
+#: src/cli/getopt.ts:122
+#, perl-brace-format
+msgid "'{programName}': unrecognized option '--{option}'"
+msgstr ""
+`;
+
+			readFileSync.mockReturnValueOnce(Buffer.from(code));
+
+			const argv = {
+				...baseArgv,
+				// This is on purpose the wrong language.
+				language: 'javascript',
+				_: ['hello.pot'],
+			};
+			const xgettext = new XGettext(argv, date);
+			expect(xgettext.run()).toEqual(0);
+			expect(writeFileSync).toHaveBeenCalledTimes(0);
+			expect(warnSpy).not.toHaveBeenCalled();
+			expect(errorSpy).toHaveBeenCalled();
+		});
+
+		/*
+		it('should bail out on unknown languages', () => {
+			const code = `gtx._('Hello, world!)`;
+
+			readFileSync.mockReturnValueOnce(Buffer.from(code));
+
+			const argv = {
+				...baseArgv,
+				language: 'VBScript',
+				_: ['hello.js'],
+			};
+			expect(() => new XGettext(argv, date)).toThrow('language "VBScript" unknown');
+		});
+		*/
+	});
 });
