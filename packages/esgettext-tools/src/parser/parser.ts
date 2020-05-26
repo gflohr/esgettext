@@ -281,9 +281,7 @@ export abstract class Parser {
 	}
 
 	private addEntry(props: EntryProperties): void {
-		if (!props.flags) {
-			props.flags = new Array<string>();
-		}
+		props.flags = new Array<string>();
 
 		const dict: { [key: string]: string } = (props.loc as unknown) as {
 			[key: string]: string;

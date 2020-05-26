@@ -118,7 +118,7 @@ describe('getting command line options', () => {
 		it('fail with option -a', () => {
 			const args = getArgv();
 			args.a = 'something';
-			expect(getopt.argv(args)).toThrow();
+			expect(() => getopt.argv(args)).toThrow();
 			expect(warnSpy).not.toHaveBeenCalled();
 			expect(errorSpy).not.toHaveBeenCalled();
 		});
@@ -165,6 +165,27 @@ describe('getting command line options', () => {
 				},
 			);
 			expect(getoptLocal.argv(args)).toBeDefined();
+			expect(logSpy).toHaveBeenCalledTimes(1);
+			const calls = logSpy.mock.calls;
+			expect(calls[0][0]).toMatch(new RegExp('--verbose'));
+			expect(warnSpy).not.toHaveBeenCalled();
+			expect(errorSpy).not.toHaveBeenCalled();
+		});
+
+		it.skip('should fall back to command-line arguments', () => {
+			// This test segfaults node.
+			const savedArgv = process.argv;
+			process.argv = ['/usr/local/bin/node', '/some/script/name', '--help'];
+			const getoptLocal = new Getopt(
+				'local usage',
+				'local description',
+				optionGroups,
+				{
+					hasVerboseOption: true,
+				},
+			);
+			expect(getoptLocal.argv()).toBeDefined();
+			process.argv = savedArgv;
 			expect(logSpy).toHaveBeenCalledTimes(1);
 			const calls = logSpy.mock.calls;
 			expect(calls[0][0]).toMatch(new RegExp('--verbose'));
