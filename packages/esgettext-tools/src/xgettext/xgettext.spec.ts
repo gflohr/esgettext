@@ -197,7 +197,6 @@ msgstr ""
 			expect(errorSpy).toHaveBeenCalled();
 		});
 
-		/*
 		it('should bail out on unknown languages', () => {
 			const code = `gtx._('Hello, world!)`;
 
@@ -208,8 +207,9 @@ msgstr ""
 				language: 'VBScript',
 				_: ['hello.js'],
 			};
-			expect(() => new XGettext(argv, date)).toThrow('language "VBScript" unknown');
+			expect(() => new XGettext(argv, date)).toThrow(
+				'language "VBScript" unknown',
+			);
 		});
-		*/
 	});
 });

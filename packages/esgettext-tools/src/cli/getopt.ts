@@ -26,10 +26,7 @@ export interface OptionGroup {
 	options: Array<Option>;
 }
 
-type ErrorFunction = (message: string) => void;
-
 export interface GetoptOptions {
-	errorFunction?: ErrorFunction;
 	hasVerboseOption?: boolean;
 }
 
@@ -38,7 +35,6 @@ export class Getopt {
 	private cli = yargs;
 	private readonly allowedKeys = new Map<string, OptionFlags>();
 	private readonly defaultFlags: OptionFlags = {};
-	private readonly errorFunction: ErrorFunction;
 	private readonly hasVerboseOption: boolean;
 
 	/**
@@ -65,7 +61,6 @@ export class Getopt {
 		}
 
 		// eslint-disable-next-line @typescript-eslint/unbound-method
-		this.errorFunction = options.errorFunction || this.errorExit;
 		this.hasVerboseOption = options.hasVerboseOption || false;
 
 		this.allowedKeys.set('help', this.defaultFlags);
@@ -126,14 +121,14 @@ export class Getopt {
 			}
 			if (!this.allowedKeys.has(key)) {
 				if (key.length > 1) {
-					this.errorFunction(
+					throw new Error(
 						gtx._x("'{programName}': unrecognized option '--{option}'", {
 							programName: this.programName,
 							option: key,
 						}),
 					);
 				} else {
-					this.errorFunction(
+					throw new Error(
 						gtx._x("'{programName}': invalid option -- '{option}'", {
 							programName: this.programName,
 							option: key,
@@ -145,7 +140,7 @@ export class Getopt {
 			const value = args[key];
 			if (Array.isArray(value)) {
 				if (value.length > 1 && !flags.multiple) {
-					this.errorFunction(
+					throw new Error(
 						gtx._x("The option '{option}' can be given only once.", {
 							option: key,
 						}),
@@ -157,16 +152,6 @@ export class Getopt {
 		}
 
 		return args;
-	}
-
-	private errorExit(message: string): void {
-		process.stderr.write(message + '\n');
-		process.stderr.write(
-			gtx._x("Try '{programName} --help' for more information.\n", {
-				programName: this.programName,
-			}),
-		);
-		process.exit(1);
 	}
 
 	private buildUsage(usage: string, description: string): void {
