@@ -338,6 +338,28 @@ describe('xgettext command-line options', () => {
 				expect(errorSpy).not.toHaveBeenCalled();
 			});
 		});
+		describe('option --output-dir', () => {
+			beforeEach(() => {
+				resetMocks();
+			});
+
+			it('should be changed to "po"', () => {
+				const code = 'gtx._("Hello, world")';
+				readFileSync.mockReturnValueOnce(Buffer.from(code));
+				const argv = {
+					...baseArgv,
+					outputDir: 'po',
+					_: ['option-output.js'],
+				};
+				const xgettext = new XGettext(argv, date);
+
+				expect(xgettext.run()).toEqual(0);
+				expect(writeFileSync).toHaveBeenCalledTimes(1);
+				expect(writeFileSync.mock.calls[0][0]).toEqual('po/messages.po');
+				expect(warnSpy).not.toHaveBeenCalled();
+				expect(errorSpy).not.toHaveBeenCalled();
+			});
+		});
 	});
 
 	describe('choice of input language', () => {
