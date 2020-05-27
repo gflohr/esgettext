@@ -170,6 +170,24 @@ msgstr ""
 				'hello.js:1:18-1:35: error: template literals with embedded expressions are not allowed as arguments to gettext functions because they are not constant',
 			);
 		});
+
+		it('should fail on exceptions', () => {
+			readFileSync.mockImplementationOnce(() => {
+				throw new Error('no such file or directory');
+			});
+
+			const argv = { ...baseArgv, _: ['hello.js'] };
+			const xgettext = new XGettext(argv, date);
+			expect(xgettext.run()).toEqual(1);
+			expect(writeFileSync).not.toHaveBeenCalled();
+
+			expect(warnSpy).not.toHaveBeenCalled();
+			expect(errorSpy).toHaveBeenCalledTimes(1);
+			expect(errorSpy).toHaveBeenNthCalledWith(
+				1,
+				'hello.js: Error: no such file or directory',
+			);
+		});
 	});
 
 	describe('option --language', () => {
