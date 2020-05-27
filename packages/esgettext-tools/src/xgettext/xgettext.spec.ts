@@ -42,7 +42,7 @@ console.log(gtx._('Goodbye, world!'));
 				.mockReturnValueOnce(Buffer.from(hello))
 				.mockReturnValueOnce(Buffer.from(goodbye));
 
-			const argv = { ...baseArgv, _: ['hello.js', 'goodbye.js'] };
+			const argv = { ...baseArgv, _: ['hello1.js', 'goodbye.js'] };
 			const xgettext = new XGettext(argv, date);
 			expect(xgettext.run()).toEqual(0);
 			expect(writeFileSync).toHaveBeenCalledTimes(1);
@@ -64,7 +64,7 @@ const goodbye: string = gtx._('Goodbye, world!');
 
 			readFileSync.mockReturnValueOnce(hello).mockReturnValueOnce(goodbye);
 
-			const argv = { ...baseArgv, _: ['hello.ts', 'goodbye.ts'] };
+			const argv = { ...baseArgv, _: ['hello2.ts', 'goodbye.ts'] };
 			const xgettext = new XGettext(argv, date);
 			expect(xgettext.run()).toEqual(0);
 			expect(writeFileSync).toHaveBeenCalledTimes(1);
@@ -76,7 +76,48 @@ const goodbye: string = gtx._('Goodbye, world!');
 			expect(errorSpy).not.toHaveBeenCalled();
 		});
 
-		it('should parse po/pot files', () => {
+		it('should parse po files', () => {
+			const po = `# SOME DESCRIPTIVE TITLE
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\\n"
+"Report-Msgid-Bugs-To: MSGID_BUGS_ADDRESS\\n"
+"POT-Creation-Date: 2020-05-25 11:50+0300\\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\\n"
+"Language-Team: German <de@li.org>\\n"
+"Language: \\n"
+"MIME-Version: 1.0\\n"
+"Content-Type: text/plain; charset=utf-8\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+"Plural-Forms: Plural-Forms: nplurals=2; plural=(n != 1);\\n"
+
+#: src/cli/getopt.ts:122
+#, perl-brace-format
+msgid "'{programName}': unrecognized option '--{option}'"
+msgstr ""
+`;
+
+			readFileSync.mockReturnValueOnce(Buffer.from(po));
+
+			const argv = { ...baseArgv, _: ['de.po'] };
+			const xgettext = new XGettext(argv, date);
+			expect(xgettext.run()).toEqual(0);
+			expect(writeFileSync).toHaveBeenCalledTimes(1);
+
+			const call = writeFileSync.mock.calls[0];
+			expect(call[0]).toEqual('messages.po');
+			expect(call[1]).toMatchSnapshot();
+			expect(warnSpy).not.toHaveBeenCalled();
+			expect(errorSpy).not.toHaveBeenCalled();
+		});
+
+		it('should parse pot files', () => {
 			const pot = `# SOME DESCRIPTIVE TITLE
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
@@ -158,7 +199,7 @@ msgstr ""
 
 			readFileSync.mockReturnValueOnce(Buffer.from(hello));
 
-			const argv = { ...baseArgv, _: ['hello.js'] };
+			const argv = { ...baseArgv, _: ['hello3.js'] };
 			const xgettext = new XGettext(argv, date);
 			expect(xgettext.run()).toEqual(1);
 			expect(writeFileSync).not.toHaveBeenCalled();
@@ -167,7 +208,7 @@ msgstr ""
 			expect(errorSpy).toHaveBeenCalledTimes(1);
 			expect(errorSpy).toHaveBeenNthCalledWith(
 				1,
-				'hello.js:1:18-1:35: error: template literals with embedded expressions are not allowed as arguments to gettext functions because they are not constant',
+				'hello3.js:1:18-1:35: error: template literals with embedded expressions are not allowed as arguments to gettext functions because they are not constant',
 			);
 		});
 
@@ -176,7 +217,7 @@ msgstr ""
 				throw new Error('no such file or directory');
 			});
 
-			const argv = { ...baseArgv, _: ['hello.js'] };
+			const argv = { ...baseArgv, _: ['hello4.js'] };
 			const xgettext = new XGettext(argv, date);
 			expect(xgettext.run()).toEqual(1);
 			expect(writeFileSync).not.toHaveBeenCalled();
@@ -185,7 +226,28 @@ msgstr ""
 			expect(errorSpy).toHaveBeenCalledTimes(1);
 			expect(errorSpy).toHaveBeenNthCalledWith(
 				1,
-				'hello.js: Error: no such file or directory',
+				'hello4.js: Error: no such file or directory',
+			);
+		});
+
+		it('should fail on output exceptions', () => {
+			const code = 'gtx._("Hello, world!");';
+
+			readFileSync.mockReturnValueOnce(Buffer.from(code));
+			writeFileSync.mockImplementationOnce(() => {
+				throw new Error('no such file or directory');
+			});
+
+			const argv = { ...baseArgv, _: ['hello5.js'] };
+			const xgettext = new XGettext(argv, date);
+			expect(xgettext.run()).toEqual(1);
+			expect(writeFileSync).toHaveBeenCalledTimes(1);
+
+			expect(warnSpy).not.toHaveBeenCalled();
+			expect(errorSpy).toHaveBeenCalledTimes(1);
+			expect(errorSpy).toHaveBeenNthCalledWith(
+				1,
+				'esgettext-xgettext: Error: no such file or directory',
 			);
 		});
 	});
@@ -227,11 +289,11 @@ msgstr ""
 				...baseArgv,
 				// This is on purpose the wrong language.
 				language: 'javascript',
-				_: ['hello.pot'],
+				_: ['hello6.pot'],
 			};
 			const xgettext = new XGettext(argv, date);
 			expect(xgettext.run()).toEqual(1);
-			expect(writeFileSync).toHaveBeenCalledTimes(0);
+			//expect(writeFileSync).toHaveBeenCalledTimes(0);
 			expect(warnSpy).not.toHaveBeenCalled();
 			expect(errorSpy).toHaveBeenCalled();
 		});
@@ -244,7 +306,7 @@ msgstr ""
 			const argv = {
 				...baseArgv,
 				language: 'VBScript',
-				_: ['hello.js'],
+				_: ['hello7.js'],
 			};
 			expect(() => new XGettext(argv, date)).toThrow(
 				'language "VBScript" unknown',
