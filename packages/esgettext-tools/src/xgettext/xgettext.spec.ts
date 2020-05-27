@@ -312,5 +312,23 @@ msgstr ""
 				'language "VBScript" unknown',
 			);
 		});
+
+		it('should accept the language typescript', () => {
+			const code = 'gtx._("Hello, world!");';
+
+			readFileSync.mockReturnValueOnce(Buffer.from(code));
+
+			const argv = {
+				...baseArgv,
+				language: 'TypeScript',
+				_: ['hello-language-typescript.ts'],
+			};
+			const xgettext = new XGettext(argv, date);
+			expect(xgettext.run()).toEqual(0);
+			expect(writeFileSync).toHaveBeenCalledTimes(1);
+			expect(writeFileSync.mock.calls[0][1]).toMatchSnapshot();
+			expect(warnSpy).not.toHaveBeenCalled();
+			expect(errorSpy).not.toHaveBeenCalled();
+		});
 	});
 });

@@ -92,7 +92,7 @@ msgstr \\"\\"
 "
 `;
 
-exports[`xgettext defaults should parse po/pot files 1`] = `
+exports[`xgettext defaults should parse pot files 1`] = `
 "# SOME DESCRIPTIVE TITLE
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
@@ -124,13 +124,8 @@ msgstr \\"\\"
 "
 `;
 
-exports[`xgettext defaults should parse pot files 1`] = `
+exports[`xgettext option --language should accept the language typescript 1`] = `
 "# SOME DESCRIPTIVE TITLE
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
-# SOME DESCRIPTIVE TITLE
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
@@ -149,9 +144,8 @@ msgstr \\"\\"
 \\"Content-Type: text/plain; charset=CHARSET\\\\n\\"
 \\"Content-Transfer-Encoding: 8bit\\\\n\\"
 
-#: src/cli/getopt.ts:122
-#, perl-brace-format
-msgid \\"'{programName}': unrecognized option '--{option}'\\"
+#: hello-language-typescript.ts:1
+msgid \\"Hello, world!\\"
 msgstr \\"\\"
 "
 `;
