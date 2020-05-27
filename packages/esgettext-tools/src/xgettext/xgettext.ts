@@ -48,17 +48,7 @@ export class XGettext {
 			this.options._,
 		);
 		fileCollector.filenames.forEach(filename => {
-			try {
-				if (!this.parseFile(filename)) {
-					exitCode = 1;
-				}
-			} catch (exception) {
-				console.error(
-					gtx._x('{programName}: {exception}', {
-						programName: this.options['$0'],
-						exception,
-					}),
-				);
+			if (!this.parseFile(filename)) {
 				exitCode = 1;
 			}
 		});
