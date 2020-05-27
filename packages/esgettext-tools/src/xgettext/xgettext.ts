@@ -89,9 +89,7 @@ export class XGettext {
 			parser = this.getParserByFilename(filename);
 		}
 
-		parser.parseFile(filename);
-
-		return true;
+		return parser.parseFile(filename);
 	}
 
 	private getParserByFilename(filename: string): Parser {

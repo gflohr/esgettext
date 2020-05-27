@@ -59,8 +59,7 @@ export abstract class Parser {
 
 	parseFile(filename: string, encoding?: string): boolean {
 		try {
-			this.parse(readFileSync(filename), filename, encoding);
-			return true;
+			return this.parse(readFileSync(filename), filename, encoding);
 		} catch (msg) {
 			++this.errors;
 			console.error(`${filename}: ${msg}`);

@@ -17,17 +17,17 @@ const baseArgv = {
 	$0: 'esgettext-xgettext',
 };
 
-function clearMocks(): void {
-	readFileSync.mockClear();
-	writeFileSync.mockClear();
-	warnSpy.mockClear();
-	errorSpy.mockClear();
+function resetMocks(): void {
+	readFileSync.mockReset();
+	writeFileSync.mockReset();
+	warnSpy.mockReset();
+	errorSpy.mockReset();
 }
 
 describe('xgettext', () => {
 	describe('defaults', () => {
-		afterEach(() => {
-			clearMocks();
+		beforeEach(() => {
+			resetMocks();
 		});
 
 		it('should extract strings from javascript files', () => {
@@ -38,7 +38,9 @@ console.log(gtx._('Hello, world!'));
 console.log(gtx._('Goodbye, world!'));
 `;
 
-			readFileSync.mockReturnValueOnce(hello).mockReturnValueOnce(goodbye);
+			readFileSync
+				.mockReturnValueOnce(Buffer.from(hello))
+				.mockReturnValueOnce(Buffer.from(goodbye));
 
 			const argv = { ...baseArgv, _: ['hello.js', 'goodbye.js'] };
 			const xgettext = new XGettext(argv, date);
@@ -144,16 +146,35 @@ msgstr ""
 
 			const argv = { ...baseArgv, _: ['package.xyz'] };
 			const xgettext = new XGettext(argv, date);
-			expect(xgettext.run()).toEqual(0);
+			expect(xgettext.run()).toEqual(1);
 			expect(writeFileSync).toHaveBeenCalledTimes(0);
 			expect(warnSpy).toHaveBeenCalledTimes(1);
 			expect(errorSpy).toHaveBeenCalled();
+		});
+
+		it('should fail on errors', () => {
+			// Template literal is not constant.
+			const hello = 'console.log(gtx._(`Hello, ${name}!`));';
+
+			readFileSync.mockReturnValueOnce(Buffer.from(hello));
+
+			const argv = { ...baseArgv, _: ['hello.js'] };
+			const xgettext = new XGettext(argv, date);
+			expect(xgettext.run()).toEqual(1);
+			expect(writeFileSync).not.toHaveBeenCalled();
+
+			expect(warnSpy).not.toHaveBeenCalled();
+			expect(errorSpy).toHaveBeenCalledTimes(1);
+			expect(errorSpy).toHaveBeenNthCalledWith(
+				1,
+				'hello.js:1:18-1:35: error: template literals with embedded expressions are not allowed as arguments to gettext functions because they are not constant',
+			);
 		});
 	});
 
 	describe('option --language', () => {
 		afterEach(() => {
-			clearMocks();
+			resetMocks();
 		});
 
 		it('should honor the --language option', () => {
@@ -191,7 +212,7 @@ msgstr ""
 				_: ['hello.pot'],
 			};
 			const xgettext = new XGettext(argv, date);
-			expect(xgettext.run()).toEqual(0);
+			expect(xgettext.run()).toEqual(1);
 			expect(writeFileSync).toHaveBeenCalledTimes(0);
 			expect(warnSpy).not.toHaveBeenCalled();
 			expect(errorSpy).toHaveBeenCalled();
