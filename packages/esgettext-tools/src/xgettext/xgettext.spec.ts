@@ -354,6 +354,29 @@ describe('options', () => {
 			expect(warnSpy).not.toHaveBeenCalled();
 			expect(errorSpy).not.toHaveBeenCalled();
 		});
+
+		it('should write to stdout', () => {
+			const code = 'console.log(gtx._("Hello, world!"))';
+			readFileSync.mockReturnValueOnce(Buffer.from(code));
+			const argv = {
+				...baseArgv,
+				output: '-',
+				_: ['option-output.js'],
+			};
+			const xgettext = new XGettext(argv, date);
+
+			const stdoutSpy = jest
+				.spyOn(global.process.stdout, 'write')
+				.mockImplementation(() => {
+					return true;
+				});
+			expect(xgettext.run()).toEqual(0);
+			expect(writeFileSync).toHaveBeenCalledTimes(0);
+			expect(stdoutSpy.mock.calls).toMatchSnapshot();
+			stdoutSpy.mockRestore();
+			expect(warnSpy).not.toHaveBeenCalled();
+			expect(errorSpy).not.toHaveBeenCalled();
+		});
 	});
 
 	describe('option --force-po', () => {
