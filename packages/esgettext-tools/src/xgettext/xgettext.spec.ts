@@ -332,3 +332,63 @@ msgstr ""
 		});
 	});
 });
+
+describe('options', () => {
+	describe('option --output', () => {
+		beforeEach(() => {
+			resetMocks();
+		});
+
+		it('should honor the option --output', () => {
+			const code = 'console.log(gtx._("Hello, world!"))';
+			readFileSync.mockReturnValueOnce(Buffer.from(code));
+			const argv = {
+				...baseArgv,
+				output: 'option-output.pot',
+				_: ['option-output.js'],
+			};
+			const xgettext = new XGettext(argv, date);
+			expect(xgettext.run()).toEqual(0);
+			expect(writeFileSync).toHaveBeenCalledTimes(1);
+			expect(writeFileSync.mock.calls[0][0]).toEqual('option-output.pot');
+			expect(warnSpy).not.toHaveBeenCalled();
+			expect(errorSpy).not.toHaveBeenCalled();
+		});
+	});
+
+	describe('option --force-po', () => {
+		beforeEach(() => {
+			resetMocks();
+		});
+
+		it('should not write empty catalogs', () => {
+			const code = 'console.log("Hello, world!")';
+			readFileSync.mockReturnValueOnce(Buffer.from(code));
+			const argv = {
+				...baseArgv,
+				_: ['force-po1.js'],
+			};
+			const xgettext = new XGettext(argv, date);
+			expect(xgettext.run()).toEqual(0);
+			expect(writeFileSync).not.toHaveBeenCalled();
+			expect(warnSpy).not.toHaveBeenCalled();
+			expect(errorSpy).not.toHaveBeenCalled();
+		});
+
+		it('should write empty catalogs with option --force-po', () => {
+			const code = 'console.log("Hello, world!")';
+			readFileSync.mockReturnValueOnce(Buffer.from(code));
+			const argv = {
+				...baseArgv,
+				forcePo: true,
+				_: ['force-po1.js'],
+			};
+			const xgettext = new XGettext(argv, date);
+			expect(xgettext.run()).toEqual(0);
+			expect(writeFileSync).toHaveBeenCalledTimes(1);
+			expect(writeFileSync.mock.calls[0][1]).toMatchSnapshot();
+			expect(warnSpy).not.toHaveBeenCalled();
+			expect(errorSpy).not.toHaveBeenCalled();
+		});
+	});
+});
