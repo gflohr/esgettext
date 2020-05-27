@@ -111,9 +111,9 @@ export class POTEntry {
 		}
 
 		if (typeof this.properties.references !== 'undefined') {
-			const references = Array.from(new Set(this.properties.references))
-				.map(reference => reference.toString())
-				.join(' ');
+			const references = Array.from(new Set(this.properties.references)).join(
+				' ',
+			);
 			if (width > 0) {
 				const wrapped = this.wrap(references, width - 3);
 				for (const line of wrapped) {

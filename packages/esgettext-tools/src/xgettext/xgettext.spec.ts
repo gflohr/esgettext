@@ -253,7 +253,60 @@ msgstr ""
 	});
 });
 
-describe('xgettext command-line options', () => {
+describe('xgettext command-line options and arguments', () => {
+	describe('input file location', () => {
+		describe('input file arguments', () => {
+			beforeEach(() => {
+				resetMocks();
+			});
+
+			it('should treat non-options as input file names', () => {
+				const argv = {
+					...baseArgv,
+					output: 'option-output.pot',
+					_: ['here/option-output.js', 'there/option-output.js'],
+				};
+				const xgettext = new XGettext(argv, date);
+				expect(xgettext.run()).toEqual(1);
+				expect(writeFileSync).not.toHaveBeenCalled();
+				expect(readFileSync).toHaveBeenCalledTimes(2);
+				expect(readFileSync.mock.calls[0][0]).toEqual('here/option-output.js');
+				expect(readFileSync.mock.calls[1][0]).toEqual('there/option-output.js');
+				expect(warnSpy).not.toHaveBeenCalled();
+				expect(errorSpy).toHaveBeenCalledTimes(2);
+			});
+
+			it('should interpret "-" as stdin', () => {
+				const code = 'gtx._("Hello, world!")';
+
+				const argv = {
+					...baseArgv,
+					output: 'option-output.pot',
+					_: ['-'],
+				};
+				const stdinSpy = jest
+					.spyOn(global.process.stdin, 'read')
+					.mockReturnValueOnce(Buffer.from(code));
+
+				const xgettext = new XGettext(argv, date);
+				expect(xgettext.run()).toEqual(0);
+				expect(stdinSpy).toHaveBeenCalledTimes(1);
+				stdinSpy.mockReset();
+				expect(writeFileSync).toHaveBeenCalledTimes(1);
+				expect(writeFileSync.mock.calls[0][0]).toMatchSnapshot();
+				expect(readFileSync).not.toHaveBeenCalled();
+				expect(warnSpy).toHaveBeenCalledTimes(1);
+				expect(warnSpy).toHaveBeenNthCalledWith(
+					1,
+					'esgettext-xgettext: warning: language for standard' +
+						' input is unknown without option "--language";' +
+						' will try JavaScript',
+				);
+				expect(errorSpy).toHaveBeenCalledTimes(0);
+			});
+		});
+	});
+
 	describe('output file location', () => {
 		describe('option --output', () => {
 			beforeEach(() => {

@@ -100,16 +100,25 @@ export class XGettext {
 				parser = new PoParser(this.catalog, {});
 				break;
 			default:
-				this.warn(
-					gtx._x(
-						'file "{filename}" extension "{extname}"' +
-							' is unknown; will try JavaScript instead',
-						{
-							filename,
-							extname: ext,
-						},
-					),
-				);
+				if ('-' === filename) {
+					this.warn(
+						gtx._(
+							'language for standard input is unknown without' +
+								' option "--language"; will try JavaScript',
+						),
+					);
+				} else {
+					this.warn(
+						gtx._x(
+							'file "{filename}" extension "{extname}"' +
+								' is unknown; will try JavaScript instead',
+							{
+								filename,
+								extname: ext,
+							},
+						),
+					);
+				}
 				parser = new JavaScriptParser(this.catalog, {});
 				break;
 		}

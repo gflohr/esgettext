@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`xgettext command-line options choice of input language option --language should accept the language typescript 1`] = `
+exports[`xgettext command-line options and arguments choice of input language option --language should accept the language typescript 1`] = `
 "# SOME DESCRIPTIVE TITLE
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
@@ -26,7 +26,9 @@ msgstr \\"\\"
 "
 `;
 
-exports[`xgettext command-line options output details option --force-po should write empty catalogs with option --force-po 1`] = `
+exports[`xgettext command-line options and arguments input file location input file arguments should interpret "-" as stdin 1`] = `"option-output.pot"`;
+
+exports[`xgettext command-line options and arguments output details option --force-po should write empty catalogs with option --force-po 1`] = `
 "# SOME DESCRIPTIVE TITLE
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
@@ -48,7 +50,7 @@ msgstr \\"\\"
 "
 `;
 
-exports[`xgettext command-line options output file location option --output should write to stdout 1`] = `
+exports[`xgettext command-line options and arguments output file location option --output should write to stdout 1`] = `
 Array [
   Array [
     "# SOME DESCRIPTIVE TITLE

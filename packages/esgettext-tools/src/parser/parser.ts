@@ -59,7 +59,11 @@ export abstract class Parser {
 
 	parseFile(filename: string, encoding?: string): boolean {
 		try {
-			return this.parse(readFileSync(filename), filename, encoding);
+			if ('-' === filename) {
+				return this.parse(process.stdin.read(), '-', encoding);
+			} else {
+				return this.parse(readFileSync(filename), filename, encoding);
+			}
 		} catch (msg) {
 			++this.errors;
 			console.error(`${filename}: ${msg}`);
@@ -285,7 +289,8 @@ export abstract class Parser {
 		const dict: { [key: string]: string } = (props.loc as unknown) as {
 			[key: string]: string;
 		};
-		const references = [`${dict.filename}:${props.loc.start.line}`];
+		const filename = '-' === dict.filename ? '[stdin]' : dict.filename;
+		const references = [`${filename}:${props.loc.start.line}`];
 
 		const commentBlocks = this.findPrecedingComments(props.loc);
 		let extractedComments = commentBlocks.map(block => block.value.trim());
@@ -492,7 +497,9 @@ export abstract class Parser {
 	protected warn(msg: string, loc: t.SourceLocation): void {
 		const start = `${loc.start.line}:${loc.start.column}`;
 		const end = loc.end ? `-${loc.end.line}:${loc.end.column}` : '';
-		const location = `${this.filename}:${start}${end}`;
+		const filename =
+			'-' === this.filename ? gtx._('[standard input]') : this.filename;
+		const location = `${filename}:${start}${end}`;
 		console.warn(gtx._x('{location}: warning: {msg}', { location, msg }));
 	}
 
@@ -500,7 +507,9 @@ export abstract class Parser {
 		++this.errors;
 		const start = `${loc.start.line}:${loc.start.column}`;
 		const end = loc.end ? `-${loc.end.line}:${loc.end.column}` : '';
-		const location = `${this.filename}:${start}${end}`;
+		const filename =
+			'-' === this.filename ? gtx._('[standard input]') : this.filename;
+		const location = `${filename}:${start}${end}`;
 		console.error(gtx._x('{location}: error: {msg}', { location, msg }));
 	}
 }
