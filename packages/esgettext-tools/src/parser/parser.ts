@@ -1,4 +1,3 @@
-import { readFileSync } from 'fs';
 import traverse, { NodePath } from '@babel/traverse';
 import * as t from '@babel/types';
 
@@ -56,21 +55,6 @@ export abstract class Parser {
 	}
 
 	abstract parse(input: Buffer, filename: string, encoding?: string): boolean;
-
-	parseFile(filename: string, encoding?: string): boolean {
-		try {
-			if ('-' === filename) {
-				return this.parse(process.stdin.read(), '-', encoding);
-			} else {
-				return this.parse(readFileSync(filename), filename, encoding);
-			}
-		} catch (msg) {
-			++this.errors;
-			console.error(`${filename}: ${msg}`);
-		}
-
-		return false;
-	}
 
 	protected extract(filename: string, ast: t.File): boolean {
 		this.errors = 0;

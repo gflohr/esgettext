@@ -1,5 +1,5 @@
-import { extname, join } from 'path';
-import { writeFileSync } from 'fs';
+import * as path from 'path';
+import { writeFileSync, readFileSync } from 'fs';
 import { Textdomain } from '@esgettext/runtime';
 import { Catalog, CatalogProperties } from '../pot/catalog';
 import { Options } from '../cli/getopt';
@@ -48,7 +48,15 @@ export class XGettext {
 			this.options._,
 		);
 		fileCollector.filenames.forEach(filename => {
-			if (!this.parseFile(filename)) {
+			try {
+				if (!this.parse(this.readFile(filename), filename)) {
+					exitCode = 1;
+				}
+			} catch (msg) {
+				if ('-' === filename) {
+					filename = gtx._('[standard input]');
+				}
+				console.error(`${filename}: ${msg}`);
 				exitCode = 1;
 			}
 		});
@@ -70,7 +78,7 @@ export class XGettext {
 		return exitCode;
 	}
 
-	private parseFile(filename: string): boolean {
+	private parse(code: Buffer, filename: string): boolean {
 		let parser: Parser;
 
 		if (typeof this.options.language !== 'undefined') {
@@ -79,12 +87,39 @@ export class XGettext {
 			parser = this.getParserByFilename(filename);
 		}
 
-		return parser.parseFile(filename);
+		return parser.parse(code, filename);
+	}
+
+	private readFile(filename: string): Buffer {
+		if ('-' === filename) {
+			return process.stdin.read();
+		}
+		const directories = this.options.directory || [''];
+
+		// Avoid ugly absolute paths.
+		const resolve = (dir: string, file: string): string => {
+			if (dir === '') {
+				return file;
+			} else {
+				return dir + path.sep + file;
+			}
+		};
+
+		for (let i = 0; i < directories.length - 1; ++i) {
+			try {
+				const fullName = resolve(directories[i], filename);
+				return readFileSync(fullName);
+			} catch (e) {
+				/* ignore */
+			}
+		}
+
+		return readFileSync(resolve(directories[directories.length - 1], filename));
 	}
 
 	private getParserByFilename(filename: string): Parser {
 		let parser: Parser;
-		const ext = extname(filename);
+		const ext = path.extname(filename);
 
 		switch (ext.toLocaleLowerCase()) {
 			case '.ts':
@@ -179,7 +214,7 @@ export class XGettext {
 			typeof this.options.outputDir === 'undefined'
 				? ''
 				: this.options.outputDir;
-		const path = join(outputDir, filename);
-		writeFileSync(path, po);
+
+		writeFileSync(path.join(outputDir, filename), po);
 	}
 }
