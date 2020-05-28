@@ -27,7 +27,13 @@ export class FilesCollector {
 	}
 
 	private getFilesFromFile(filename: string): Array<string> {
-		return readFileSync(filename)
+		let content: Buffer;
+		if ('-' === filename) {
+			content = process.stdin.read();
+		} else {
+			content = readFileSync(filename);
+		}
+		return content
 			.toString()
 			.split('\n')
 			.map(line => line.replace(/#.*/, '').trim())

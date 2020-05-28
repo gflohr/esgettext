@@ -305,6 +305,69 @@ describe('xgettext command-line options and arguments', () => {
 				expect(errorSpy).toHaveBeenCalledTimes(0);
 			});
 		});
+
+		describe('option --files-from', () => {
+			beforeEach(() => resetMocks());
+
+			it('should accept multiple --files-from options', () => {
+				const potfiles1 = 'files-from1.js';
+				const filesFrom1 = 'gtx._("Hello, world!")';
+				const potfiles2 = 'files-from2.js';
+				const filesFrom2 = 'gtx._("Hello, world!")';
+				readFileSync
+					.mockReturnValueOnce(Buffer.from(potfiles1))
+					.mockReturnValueOnce(Buffer.from(potfiles2))
+					.mockReturnValueOnce(Buffer.from(filesFrom1))
+					.mockReturnValueOnce(Buffer.from(filesFrom2));
+				const argv = {
+					...baseArgv,
+					filesFrom: ['POTFILES-1', 'POTFILES-2'],
+					_: [] as Array<string>,
+				};
+				const xgettext = new XGettext(argv, date);
+				expect(xgettext.run()).toEqual(0);
+				expect(readFileSync).toHaveBeenCalledTimes(4);
+				expect(readFileSync.mock.calls[0][0]).toEqual('POTFILES-1');
+				expect(readFileSync.mock.calls[1][0]).toEqual('POTFILES-2');
+				expect(readFileSync.mock.calls[2][0]).toEqual('files-from1.js');
+				expect(readFileSync.mock.calls[3][0]).toEqual('files-from2.js');
+				expect(writeFileSync).toHaveBeenCalledTimes(1);
+				expect(warnSpy).not.toHaveBeenCalled();
+				expect(errorSpy).not.toHaveBeenCalled();
+			});
+
+			it('should treat "-" as standard input', () => {
+				const filesFrom1 = 'gtx._("Hello, world!")';
+				const filesFrom2 = 'gtx._("Hello, world!")';
+				readFileSync
+					.mockReturnValueOnce(Buffer.from(filesFrom1))
+					.mockReturnValueOnce(Buffer.from(filesFrom2));
+				const argv = {
+					...baseArgv,
+					filesFrom: ['-'],
+					_: [] as Array<string>,
+				};
+				const stdinSpy = jest
+					.spyOn(global.process.stdin, 'read')
+					.mockReturnValueOnce(
+						Buffer.from(`
+files-from-1.js
+files-from-2.js
+`),
+					);
+
+				const xgettext = new XGettext(argv, date);
+				expect(xgettext.run()).toEqual(0);
+				expect(stdinSpy).toHaveBeenCalledTimes(1);
+				stdinSpy.mockReset();
+				expect(readFileSync).toHaveBeenCalledTimes(2);
+				expect(readFileSync.mock.calls[0][0]).toEqual('files-from-1.js');
+				expect(readFileSync.mock.calls[1][0]).toEqual('files-from-2.js');
+				expect(writeFileSync).toHaveBeenCalledTimes(1);
+				expect(warnSpy).not.toHaveBeenCalled();
+				expect(errorSpy).not.toHaveBeenCalled();
+			});
+		});
 	});
 
 	describe('output file location', () => {
