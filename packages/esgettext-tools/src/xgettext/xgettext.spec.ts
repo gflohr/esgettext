@@ -304,6 +304,30 @@ describe('xgettext command-line options and arguments', () => {
 				);
 				expect(errorSpy).toHaveBeenCalledTimes(0);
 			});
+
+			it('should catch errors on stdin', () => {
+				const argv = {
+					...baseArgv,
+					language: 'JavaScript',
+					_: ['-'],
+				};
+				const stdinSpy = jest
+					.spyOn(global.process.stdin, 'read')
+					.mockImplementation(() => {
+						throw new Error('I/O error');
+					});
+
+				const xgettext = new XGettext(argv, date);
+				expect(xgettext.run()).toEqual(1);
+				expect(stdinSpy).toHaveBeenCalledTimes(1);
+				stdinSpy.mockReset();
+				expect(writeFileSync).not.toHaveBeenCalled();
+				expect(warnSpy).not.toHaveBeenCalled();
+				expect(errorSpy).toHaveBeenCalledTimes(1);
+				expect(errorSpy).toHaveBeenCalledWith(
+					'[standard input]: Error: I/O error',
+				);
+			});
 		});
 
 		describe('option --files-from', () => {
@@ -334,6 +358,28 @@ describe('xgettext command-line options and arguments', () => {
 				expect(writeFileSync).toHaveBeenCalledTimes(1);
 				expect(warnSpy).not.toHaveBeenCalled();
 				expect(errorSpy).not.toHaveBeenCalled();
+			});
+
+			it('should report errors for missing --files-from files', () => {
+				readFileSync.mockImplementation(filename => {
+					throw new Error(
+						`ENOENT: no such file or directory, open '${filename}'`,
+					);
+				});
+				const argv = {
+					...baseArgv,
+					filesFrom: ['POTFILES'],
+					_: [] as Array<string>,
+				};
+				const xgettext = new XGettext(argv, date);
+				expect(xgettext.run()).toEqual(1);
+				expect(readFileSync).toHaveBeenCalledTimes(1);
+				expect(readFileSync).toHaveBeenCalledWith('POTFILES');
+				expect(writeFileSync).not.toHaveBeenCalled();
+				expect(warnSpy).not.toHaveBeenCalled();
+				expect(errorSpy).toHaveBeenCalledWith(
+					"esgettext-xgettext: Error: ENOENT: no such file or directory, open 'POTFILES'",
+				);
 			});
 
 			it('should treat "-" as standard input', () => {

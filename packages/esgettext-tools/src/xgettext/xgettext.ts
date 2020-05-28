@@ -41,12 +41,18 @@ export class XGettext {
 	 * @returns the exit code.
 	 */
 	public run(): number {
-		let exitCode = 0;
+		let fileCollector;
+		try {
+			fileCollector = new FilesCollector(
+				this.options.filesFrom,
+				this.options._,
+			);
+		} catch (e) {
+			console.error(`${this.options.$0}: ${e}`);
+			return 1;
+		}
 
-		const fileCollector = new FilesCollector(
-			this.options.filesFrom,
-			this.options._,
-		);
+		let exitCode = 0;
 		fileCollector.filenames.forEach(filename => {
 			try {
 				if (!this.parse(this.readFile(filename), filename)) {
