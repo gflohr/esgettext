@@ -368,6 +368,28 @@ files-from-2.js
 				expect(errorSpy).not.toHaveBeenCalled();
 			});
 		});
+
+		describe('option --directory', () => {
+			beforeEach(resetMocks);
+
+			it.skip('should search for files in other directories', () => {
+				const argv = {
+					...baseArgv,
+					directory: ['foo', 'bar', 'baz'],
+					_: ['directory.c'] as Array<string>,
+				};
+				const xgettext = new XGettext(argv, date);
+				expect(xgettext.run()).toEqual(1);
+				expect(readFileSync).toHaveBeenCalledTimes(3);
+				expect(readFileSync).toHaveBeenNthCalledWith(1, 'foo/directory.c');
+				expect(readFileSync).toHaveBeenNthCalledWith(2, 'bar/directory.c');
+				expect(readFileSync).toHaveBeenNthCalledWith(3, 'baz/directory.c');
+				expect(writeFileSync).not.toHaveBeenCalled();
+				expect(warnSpy).not.toHaveBeenCalled();
+				expect(errorSpy).toHaveBeenCalledTimes(3);
+				expect(errorSpy).toHaveBeenNthCalledWith(1, '???');
+			});
+		});
 	});
 
 	describe('output file location', () => {
