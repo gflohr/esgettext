@@ -372,22 +372,30 @@ files-from-2.js
 		describe('option --directory', () => {
 			beforeEach(resetMocks);
 
-			it.skip('should search for files in other directories', () => {
+			it('should search for files in other directories', () => {
 				const argv = {
 					...baseArgv,
 					directory: ['foo', 'bar', 'baz'],
-					_: ['directory.c'] as Array<string>,
+					_: ['directory.js'] as Array<string>,
 				};
+				readFileSync.mockImplementation(filename => {
+					throw new Error(
+						`ENOENT: no such file or directory, open '${filename}'`,
+					);
+				});
 				const xgettext = new XGettext(argv, date);
 				expect(xgettext.run()).toEqual(1);
 				expect(readFileSync).toHaveBeenCalledTimes(3);
-				expect(readFileSync).toHaveBeenNthCalledWith(1, 'foo/directory.c');
-				expect(readFileSync).toHaveBeenNthCalledWith(2, 'bar/directory.c');
-				expect(readFileSync).toHaveBeenNthCalledWith(3, 'baz/directory.c');
+				expect(readFileSync).toHaveBeenNthCalledWith(1, 'foo/directory.js');
+				expect(readFileSync).toHaveBeenNthCalledWith(2, 'bar/directory.js');
+				expect(readFileSync).toHaveBeenNthCalledWith(3, 'baz/directory.js');
 				expect(writeFileSync).not.toHaveBeenCalled();
 				expect(warnSpy).not.toHaveBeenCalled();
-				expect(errorSpy).toHaveBeenCalledTimes(3);
-				expect(errorSpy).toHaveBeenNthCalledWith(1, '???');
+				expect(errorSpy).toHaveBeenCalledTimes(1);
+				expect(errorSpy).toHaveBeenNthCalledWith(
+					1,
+					"directory.js: Error: ENOENT: no such file or directory, open 'baz/directory.js'",
+				);
 			});
 		});
 	});
