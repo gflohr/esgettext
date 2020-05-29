@@ -681,3 +681,27 @@ msgstr ""
 		});
 	});
 });
+
+describe('xgettext encodings', () => {
+	describe('ascii', () => {
+		afterEach(() => {
+			resetMocks();
+		});
+
+		it('should accept plain ascii', () => {
+			const code = 'gtx._("Hello, world!");';
+
+			readFileSync.mockReturnValueOnce(Buffer.from(code));
+
+			const argv = {
+				...baseArgv,
+				_: ['hello-ascii.js'],
+			};
+			const xgettext = new XGettext(argv, date);
+			expect(xgettext.run()).toEqual(1);
+			expect(writeFileSync).toHaveBeenCalledTimes(1);
+			expect(warnSpy).not.toHaveBeenCalled();
+			expect(errorSpy).not.toHaveBeenCalled();
+		});
+	});
+});
