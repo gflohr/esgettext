@@ -1,3 +1,4 @@
+import { decode } from 'iconv-lite';
 import traverse, { NodePath } from '@babel/traverse';
 import * as t from '@babel/types';
 
@@ -26,6 +27,7 @@ export interface ParserOptions {
 	extractAll?: boolean;
 	keywords?: Array<Keyword>;
 	instances?: Array<string>;
+	fromCode?: string;
 }
 
 export abstract class Parser {
@@ -54,7 +56,78 @@ export abstract class Parser {
 		}
 	}
 
-	abstract parse(input: Buffer, filename: string, encoding?: string): boolean;
+	protected abstract doParse(input: string, filename: string): boolean;
+
+	parse(buf: Buffer, filename: string): boolean {
+		this.filename = filename;
+
+		const encoding =
+			typeof this.options.fromCode === 'undefined'
+				? 'ascii'
+				: this.options.fromCode;
+		const canonical = this.canonicalizeEncoding(encoding);
+
+		let input;
+		let pos = 0;
+		if ('ascii' === canonical) {
+			if (
+				buf.find((ord, idx) => {
+					if (ord > 0x7f) {
+						pos = idx;
+						return true;
+					} else {
+						return false;
+					}
+				})
+			) {
+				const loc: t.SourceLocation = {
+					start: {
+						line: 1,
+						column: 1,
+					},
+					end: null,
+				};
+
+				// Find the offending character.
+				for (let i = 0; i < pos; ++i) {
+					if (buf[i] === 10) {
+						++loc.start.line;
+						loc.start.column = 1;
+					} else {
+						++loc.start.column;
+					}
+				}
+				this.error(
+					gtx._(
+						'Non-ASCII character.\n' +
+							'Please specify the encoding through "--from-code".',
+					),
+					loc,
+				);
+				return false;
+			}
+			input = buf.toString();
+		} else if ('utf8' === encoding) {
+			const loc = this.findNonUtf8(buf);
+			if (loc !== null) {
+				this.error(gtx._('invalid multibyte sequence'), loc);
+				return false;
+			}
+			input = buf.toString();
+		} else {
+			// Convert.
+			try {
+				input = decode(buf, this.options.fromCode);
+			} catch (e) {
+				const usedFilename =
+					'-' === filename ? gtx._('[standard input]') : filename;
+				console.error(`${usedFilename}: ${e}`);
+				return false;
+			}
+		}
+
+		return this.doParse(input, filename);
+	}
 
 	protected extract(filename: string, ast: t.File): boolean {
 		this.errors = 0;
@@ -495,5 +568,127 @@ export abstract class Parser {
 			'-' === this.filename ? gtx._('[standard input]') : this.filename;
 		const location = `${filename}:${start}${end}`;
 		console.error(gtx._x('{location}: error: {msg}', { location, msg }));
+	}
+
+	private canonicalizeEncoding(encoding: string): string {
+		// This is taken from iconv-lite.
+		const canonical = ('' + encoding)
+			.toLowerCase()
+			.replace(/:[0-9]{4}$|[^0-9a-z]/g, '');
+		const asciiAliases = [
+			'ascii8bit',
+			'usascii',
+			'ansix34',
+			'ansix341968',
+			'ansix341986',
+			'csascii',
+			'cp367',
+			'ibm367',
+			'isoir6',
+			'iso646us',
+			'iso646irv',
+			'us',
+		];
+		if (asciiAliases.includes(canonical)) {
+			return 'ascii';
+		} else {
+			return canonical;
+		}
+	}
+
+	private findNonUtf8(buf: Buffer): t.SourceLocation {
+		let i = 0;
+		const loc: t.SourceLocation = {
+			start: {
+				line: 1,
+				column: 1,
+			},
+			end: null,
+		};
+		while (i < buf.length) {
+			if (
+				buf[i] === 0x09 ||
+				buf[i] === 0x0a ||
+				buf[i] === 0x0 ||
+				(0x20 <= buf[i] && buf[i] <= 0x7e)
+			) {
+				++i;
+				if (buf[i] === 0x0a) {
+					++loc.start.line;
+					loc.start.column = 1;
+				} else {
+					++loc.start.column;
+				}
+				continue;
+			}
+
+			if (
+				0xc2 <= buf[i] &&
+				buf[i] <= 0xdf &&
+				0x80 <= buf[i + 1] &&
+				buf[i + 1] <= 0xbf
+			) {
+				i += 2;
+				loc.start.column += 2;
+				continue;
+			}
+
+			if (
+				(buf[i] === 0xe0 &&
+					0xa0 <= buf[i + 1] &&
+					buf[i + 1] <= 0xbf &&
+					0x80 <= buf[i + 2] &&
+					buf[i + 2] <= 0xbf) ||
+				(((0xe1 <= buf[i] && buf[i] <= 0xec) ||
+					buf[i] === 0xee ||
+					buf[i] === 0xef) &&
+					0x80 <= buf[i + 1] &&
+					buf[i + 1] <= 0xbf &&
+					0x80 <= buf[i + 2] &&
+					buf[i + 2] <= 0xbf) ||
+				(buf[i] === 0xed &&
+					0x80 <= buf[i + 1] &&
+					buf[i + 1] <= 0x9f &&
+					0x80 <= buf[i + 2] &&
+					buf[i + 2] <= 0xbf)
+			) {
+				i += 3;
+				loc.start.column += 3;
+				continue;
+			}
+
+			if (
+				(buf[i] === 0xf0 &&
+					0x90 <= buf[i + 1] &&
+					buf[i + 1] <= 0xbf &&
+					0x80 <= buf[i + 2] &&
+					buf[i + 2] <= 0xbf &&
+					0x80 <= buf[i + 3] &&
+					buf[i + 3] <= 0xbf) ||
+				(0xf1 <= buf[i] &&
+					buf[i] <= 0xf3 &&
+					0x80 <= buf[i + 1] &&
+					buf[i + 1] <= 0xbf &&
+					0x80 <= buf[i + 2] &&
+					buf[i + 2] <= 0xbf &&
+					0x80 <= buf[i + 3] &&
+					buf[i + 3] <= 0xbf) ||
+				(buf[i] === 0xf4 &&
+					0x80 <= buf[i + 1] &&
+					buf[i + 1] <= 0x8f &&
+					0x80 <= buf[i + 2] &&
+					buf[i + 2] <= 0xbf &&
+					0x80 <= buf[i + 3] &&
+					buf[i + 3] <= 0xbf)
+			) {
+				i += 4;
+				loc.start.column += 4;
+				continue;
+			}
+
+			return loc;
+		}
+
+		return null;
 	}
 }

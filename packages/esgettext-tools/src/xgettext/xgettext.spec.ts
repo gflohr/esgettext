@@ -62,7 +62,9 @@ const hello: string = gtx._('Hello, world!');
 const goodbye: string = gtx._('Goodbye, world!');
 `;
 
-			readFileSync.mockReturnValueOnce(hello).mockReturnValueOnce(goodbye);
+			readFileSync
+				.mockReturnValueOnce(Buffer.from(hello))
+				.mockReturnValueOnce(Buffer.from(goodbye));
 
 			const argv = { ...baseArgv, _: ['hello2.ts', 'goodbye.ts'] };
 			const xgettext = new XGettext(argv, date);
@@ -530,6 +532,7 @@ files-from-2.js
 				expect(errorSpy).not.toHaveBeenCalled();
 			});
 		});
+
 		describe('option --output-dir', () => {
 			beforeEach(() => {
 				resetMocks();
@@ -634,6 +637,10 @@ msgstr ""
 				expect(errorSpy).not.toHaveBeenCalled();
 			});
 		});
+	});
+
+	describe('interpretation of input files', () => {
+		describe('option --from-code', () => {});
 	});
 
 	describe('output details', () => {

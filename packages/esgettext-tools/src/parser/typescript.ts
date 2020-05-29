@@ -1,12 +1,8 @@
-import { decode } from 'iconv-lite';
 import { parse } from '@babel/parser';
 import { Parser } from './parser';
 
 export class TypeScriptParser extends Parser {
-	parse(buf: Buffer, filename: string, encoding?: string): boolean {
-		const input =
-			typeof encoding === 'undefined' ? buf.toString() : decode(buf, encoding);
-
+	doParse(input: string, filename: string): boolean {
 		const ast = parse(input, {
 			allowAwaitOutsideFunction: true,
 			allowImportExportEverywhere: true,

@@ -156,6 +156,10 @@ export class PoParser extends Parser {
 		return true;
 	}
 
+	doParse(_input: string, _filename: string): boolean {
+		throw new Error('not implemented');
+	}
+
 	private extractCharset(header: string): string {
 		const headers: { [key: string]: string } = {};
 
