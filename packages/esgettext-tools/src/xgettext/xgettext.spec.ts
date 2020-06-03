@@ -744,5 +744,61 @@ gtx._("Hello, world!");
 			expect(writeFileSync).toHaveBeenCalledTimes(1);
 			expect(writeFileSync.mock.calls[0]).toMatchSnapshot();
 		});
+
+		it('should accept ASCII-8bit as an alias for ASCII', () => {
+			const code = `gtx._("Hyvää yötä!")`;
+			readFileSync.mockReturnValueOnce(Buffer.from(code));
+
+			const argv = {
+				...baseArgv,
+				_: ['hyvää-yötä.js'],
+			};
+			const xgettext = new XGettext(argv, date);
+			expect(xgettext.run()).toEqual(1);
+			expect(writeFileSync).toHaveBeenCalledTimes(0);
+			expect(warnSpy).not.toHaveBeenCalled();
+			expect(errorSpy).toHaveBeenCalledTimes(1);
+			expect(errorSpy)
+				.toHaveBeenCalledWith(`hyvää-yötä.js:1:11: error: Non-ASCII character.
+Please specify the encoding through "--from-code".`);
+		});
+
+		it('should accept US-ASCII as an alias for ASCII', () => {
+			const code = `gtx._("Hyvää yötä!")`;
+			readFileSync.mockReturnValueOnce(Buffer.from(code));
+
+			const argv = {
+				...baseArgv,
+				fromCode: 'US-ASCII',
+				_: ['hyvää-yötä.js'],
+			};
+			const xgettext = new XGettext(argv, date);
+			expect(xgettext.run()).toEqual(1);
+			expect(writeFileSync).toHaveBeenCalledTimes(0);
+			expect(warnSpy).not.toHaveBeenCalled();
+			expect(errorSpy).toHaveBeenCalledTimes(1);
+			expect(errorSpy)
+				.toHaveBeenCalledWith(`hyvää-yötä.js:1:11: error: Non-ASCII character.
+Please specify the encoding through "--from-code".`);
+		});
+
+		it('should accept ANSI_X3.4-1968 as an alias for ASCII', () => {
+			const code = `gtx._("Hyvää yötä!")`;
+			readFileSync.mockReturnValueOnce(Buffer.from(code));
+
+			const argv = {
+				...baseArgv,
+				fromCode: 'ANSI_X3.4-1968',
+				_: ['hyvää-yötä.js'],
+			};
+			const xgettext = new XGettext(argv, date);
+			expect(xgettext.run()).toEqual(1);
+			expect(writeFileSync).toHaveBeenCalledTimes(0);
+			expect(warnSpy).not.toHaveBeenCalled();
+			expect(errorSpy).toHaveBeenCalledTimes(1);
+			expect(errorSpy)
+				.toHaveBeenCalledWith(`hyvää-yötä.js:1:11: error: Non-ASCII character.
+Please specify the encoding through "--from-code".`);
+		});
 	});
 });
