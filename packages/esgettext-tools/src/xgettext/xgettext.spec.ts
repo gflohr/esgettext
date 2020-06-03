@@ -701,5 +701,50 @@ describe('xgettext encodings', () => {
 			expect(warnSpy).not.toHaveBeenCalled();
 			expect(errorSpy).not.toHaveBeenCalled();
 		});
+
+		it('should complain about 8 bit characters', () => {
+			const code = `
+gtx._("Hello, world!");
+`;
+			// Replace o => ö (latin-1).
+			const buf = Buffer.from(code).map(c => (c === 0x6f ? 0xf6 : c));
+			readFileSync.mockReturnValueOnce(buf);
+
+			const argv = {
+				...baseArgv,
+				_: ['hello-ascii.js'],
+			};
+			const xgettext = new XGettext(argv, date);
+			expect(xgettext.run()).toEqual(1);
+			expect(writeFileSync).toHaveBeenCalledTimes(0);
+			expect(warnSpy).not.toHaveBeenCalled();
+			expect(errorSpy).toHaveBeenCalledTimes(1);
+			expect(errorSpy)
+				.toHaveBeenCalledWith(`hello-ascii.js:2:12: error: Non-ASCII character.
+Please specify the encoding through "--from-code".`);
+		});
+
+		it('should accept 8 bit characters with iso-8859-1', () => {
+			const code = `
+gtx._("Hello, world!");
+`;
+			// Replace o => ö (latin-1).
+			const buf = Buffer.from(code).map(c => (c === 0x6f ? 0xf6 : c));
+			readFileSync.mockReturnValueOnce(buf);
+
+			const argv = {
+				...baseArgv,
+				fromCode: 'iso-8859-1',
+				_: ['hello-ascii.js'],
+			};
+			const xgettext = new XGettext(argv, date);
+			expect(xgettext.run()).toEqual(1);
+			expect(writeFileSync).toHaveBeenCalledTimes(0);
+			expect(warnSpy).not.toHaveBeenCalled();
+			expect(errorSpy).toHaveBeenCalledTimes(1);
+			expect(errorSpy)
+				.toHaveBeenCalledWith(`hello-ascii.js:2:12: error: Non-ASCII character.
+Please specify the encoding through "--from-code".`);
+		});
 	});
 });
