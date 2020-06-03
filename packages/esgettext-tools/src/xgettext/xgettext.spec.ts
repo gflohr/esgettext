@@ -684,11 +684,9 @@ msgstr ""
 
 describe('xgettext encodings', () => {
 	describe('ascii', () => {
-		afterEach(() => {
-			resetMocks();
-		});
+		beforeEach(resetMocks);
 
-		it('should accept plain ascii', () => {
+		it('should accept plain ascii by default', () => {
 			const code = 'gtx._("Hello, world!");';
 
 			readFileSync.mockReturnValueOnce(Buffer.from(code));
@@ -698,7 +696,7 @@ describe('xgettext encodings', () => {
 				_: ['hello-ascii.js'],
 			};
 			const xgettext = new XGettext(argv, date);
-			expect(xgettext.run()).toEqual(1);
+			expect(xgettext.run()).toEqual(0);
 			expect(writeFileSync).toHaveBeenCalledTimes(1);
 			expect(warnSpy).not.toHaveBeenCalled();
 			expect(errorSpy).not.toHaveBeenCalled();

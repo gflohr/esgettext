@@ -424,9 +424,7 @@ msgstr[1] ""
 				keywords: [new Keyword('_')],
 			});
 			const code = '_("Hello, world!")';
-			expect(
-				p.parse(Buffer.from(code), 'example.js', 'iso-8859-1'),
-			).toBeTruthy();
+			expect(p.parse(Buffer.from(code), 'example.js')).toBeTruthy();
 			const expected = `#: example.js:1
 msgid "Hello, world!"
 msgstr ""
