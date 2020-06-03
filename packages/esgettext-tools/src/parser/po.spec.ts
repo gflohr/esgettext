@@ -127,6 +127,23 @@ msgstr ""
 			expect(warnSpy).not.toHaveBeenCalled();
 		});
 
+		it('should discard lone strings reading from standard input', () => {
+			const catalog = new Catalog({ date });
+			const parser = new PoParser(catalog);
+			const pot = `msgid "okay"
+msgstr ""
+
+"does not belong here"
+`;
+			const input = Buffer.from(pot);
+			expect(parser.parse(input, '-')).toBeFalsy();
+			expect(errorSpy).toHaveBeenCalledTimes(1);
+			expect(errorSpy).toHaveBeenCalledWith(
+				'[standard input]:4:1: error: syntax error',
+			);
+			expect(warnSpy).not.toHaveBeenCalled();
+		});
+
 		it('should bail out on unexpected input', () => {
 			const catalog = new Catalog({ date });
 			const parser = new PoParser(catalog);
@@ -429,6 +446,24 @@ msgstr ""
 			expect(warnSpy).toHaveBeenNthCalledWith(
 				1,
 				'example.js:1:11: warning: ignoring empty flag',
+			);
+			expect(errorSpy).not.toHaveBeenCalled();
+		});
+
+		it('should warn about empty flags reading from standard input', () => {
+			const catalog = new Catalog({ date });
+			const parser = new PoParser(catalog);
+			const pot = `#, fuzzy   ,, perl-brace-format
+msgid "Hello, {name}!"
+msgstr ""
+`;
+			const input = Buffer.from(pot);
+			parser.parse(input, '-');
+			expect(catalog.toString()).toMatchSnapshot();
+			expect(warnSpy).toHaveBeenCalledTimes(1);
+			expect(warnSpy).toHaveBeenNthCalledWith(
+				1,
+				'[standard input]:1:11: warning: ignoring empty flag',
 			);
 			expect(errorSpy).not.toHaveBeenCalled();
 		});
