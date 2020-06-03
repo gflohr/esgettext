@@ -738,13 +738,11 @@ gtx._("Hello, world!");
 				_: ['hello-ascii.js'],
 			};
 			const xgettext = new XGettext(argv, date);
-			expect(xgettext.run()).toEqual(1);
-			expect(writeFileSync).toHaveBeenCalledTimes(0);
+			expect(xgettext.run()).toEqual(0);
 			expect(warnSpy).not.toHaveBeenCalled();
-			expect(errorSpy).toHaveBeenCalledTimes(1);
-			expect(errorSpy)
-				.toHaveBeenCalledWith(`hello-ascii.js:2:12: error: Non-ASCII character.
-Please specify the encoding through "--from-code".`);
+			expect(errorSpy).not.toHaveBeenCalled();
+			expect(writeFileSync).toHaveBeenCalledTimes(1);
+			expect(writeFileSync.mock.calls[0]).toMatchSnapshot();
 		});
 	});
 });

@@ -5,7 +5,7 @@ import { Catalog, CatalogProperties } from '../pot/catalog';
 import { Options } from '../cli/getopt';
 import { JavaScriptParser } from '../parser/javascript';
 import { TypeScriptParser } from '../parser/typescript';
-import { Parser } from '../parser/parser';
+import { Parser, ParserOptions } from '../parser/parser';
 import { PoParser } from '../parser/po';
 import { FilesCollector } from './files-collector';
 
@@ -86,11 +86,13 @@ export class XGettext {
 
 	private parse(code: Buffer, filename: string): boolean {
 		let parser: Parser;
+		/* eslint-disable-next-line @typescript-eslint/explicit-function-return-type */
+		const parserOptions = (({ fromCode }) => ({ fromCode }))(this.options);
 
 		if (typeof this.options.language !== 'undefined') {
-			parser = this.getParserByLanguage(this.options.language);
+			parser = this.getParserByLanguage(this.options.language, parserOptions);
 		} else {
-			parser = this.getParserByFilename(filename);
+			parser = this.getParserByFilename(filename, parserOptions);
 		}
 
 		return parser.parse(code, filename);
@@ -123,22 +125,25 @@ export class XGettext {
 		return readFileSync(resolve(directories[directories.length - 1], filename));
 	}
 
-	private getParserByFilename(filename: string): Parser {
+	private getParserByFilename(
+		filename: string,
+		parserOptions: ParserOptions,
+	): Parser {
 		let parser: Parser;
 		const ext = path.extname(filename);
 
 		switch (ext.toLocaleLowerCase()) {
 			case '.ts':
 			case '.tsx':
-				parser = new TypeScriptParser(this.catalog, {});
+				parser = new TypeScriptParser(this.catalog, parserOptions);
 				break;
 			case '.js':
 			case '.jsx':
-				parser = new JavaScriptParser(this.catalog, {});
+				parser = new JavaScriptParser(this.catalog, parserOptions);
 				break;
 			case '.po':
 			case '.pot':
-				parser = new PoParser(this.catalog, {});
+				parser = new PoParser(this.catalog, parserOptions);
 				break;
 			default:
 				if ('-' === filename) {
@@ -160,22 +165,25 @@ export class XGettext {
 						),
 					);
 				}
-				parser = new JavaScriptParser(this.catalog, {});
+				parser = new JavaScriptParser(this.catalog, parserOptions);
 				break;
 		}
 
 		return parser;
 	}
 
-	private getParserByLanguage(language: string): Parser {
+	private getParserByLanguage(
+		language: string,
+		parserOptions: ParserOptions,
+	): Parser {
 		let parser: Parser;
 		switch (language.toLocaleLowerCase()) {
 			case 'typescript':
-				parser = new TypeScriptParser(this.catalog, {});
+				parser = new TypeScriptParser(this.catalog, parserOptions);
 				break;
 			case 'javascript':
 			default:
-				parser = new JavaScriptParser(this.catalog, {});
+				parser = new JavaScriptParser(this.catalog, parserOptions);
 				break;
 		}
 
