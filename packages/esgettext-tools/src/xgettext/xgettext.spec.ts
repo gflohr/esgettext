@@ -853,5 +853,47 @@ gtx._("Hello, world!");
 				'hello-ascii.js:2:12: error: invalid multibyte sequence',
 			);
 		});
+
+		it('should complain about invalid charsets', () => {
+			const code = `
+gtx._("Hello, world!");
+`;
+			const buf = Buffer.from(code);
+			readFileSync.mockReturnValueOnce(buf);
+
+			const argv = {
+				...baseArgv,
+				fromCode: 'no-such-charset',
+				_: ['hello-ascii.js'],
+			};
+			const xgettext = new XGettext(argv, date);
+			expect(xgettext.run()).toEqual(1);
+			expect(writeFileSync).toHaveBeenCalledTimes(0);
+			expect(warnSpy).not.toHaveBeenCalled();
+			expect(errorSpy).toHaveBeenCalledTimes(1);
+		});
+
+		it('should complain about invalid charsets converting stanard input', () => {
+			const code = `
+gtx._("Hello, world!");
+`;
+
+			const argv = {
+				...baseArgv,
+				fromCode: 'no-such-charset',
+				_: ['-'],
+			};
+			const stdinSpy = jest
+				.spyOn(global.process.stdin, 'read')
+				.mockReturnValueOnce(Buffer.from(code));
+
+			const xgettext = new XGettext(argv, date);
+			expect(xgettext.run()).toEqual(1);
+			expect(stdinSpy).toHaveBeenCalledTimes(1);
+			stdinSpy.mockReset();
+			expect(writeFileSync).toHaveBeenCalledTimes(0);
+			expect(warnSpy).not.toHaveBeenCalled();
+			expect(errorSpy).toHaveBeenCalledTimes(1);
+		});
 	});
 });
