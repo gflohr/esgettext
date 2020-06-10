@@ -881,6 +881,7 @@ gtx._("Hello, world!");
 			const argv = {
 				...baseArgv,
 				fromCode: 'no-such-charset',
+				language: 'javascript',
 				_: ['-'],
 			};
 			const stdinSpy = jest
