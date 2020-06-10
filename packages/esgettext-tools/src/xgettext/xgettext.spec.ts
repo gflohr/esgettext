@@ -805,6 +805,26 @@ Please specify the encoding through "--from-code".`);
 	describe('utf-8', () => {
 		beforeEach(resetMocks);
 
+		it('should accept valid utf-8', () => {
+			const code = `
+gtx._('Здравей, свят!');
+`;
+			const buf = Buffer.from(code);
+			readFileSync.mockReturnValueOnce(buf);
+
+			const argv = {
+				...baseArgv,
+				fromCode: 'utf-8',
+				_: ['hello-ascii.js'],
+			};
+			const xgettext = new XGettext(argv, date);
+			expect(xgettext.run()).toEqual(0);
+			expect(writeFileSync).toHaveBeenCalledTimes(1);
+			expect(writeFileSync.mock.calls[0][1]).toMatchSnapshot();
+			expect(warnSpy).not.toHaveBeenCalled();
+			expect(errorSpy).not.toHaveBeenCalled();
+		});
+
 		it('should complain about invalid multi-bytes sequences', () => {
 			const code = `
 gtx._("Hello, world!");
