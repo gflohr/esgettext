@@ -801,4 +801,31 @@ Please specify the encoding through "--from-code".`);
 Please specify the encoding through "--from-code".`);
 		});
 	});
+
+	describe('utf-8', () => {
+		beforeEach(resetMocks);
+
+		it('should complain about invalid multi-bytes sequences', () => {
+			const code = `
+gtx._("Hello, world!");
+`;
+			// Replace o => ö (latin-1).
+			const buf = Buffer.from(code).map(c => (c === 0x6f ? 0xf6 : c));
+			readFileSync.mockReturnValueOnce(buf);
+
+			const argv = {
+				...baseArgv,
+				fromCode: 'utf-8',
+				_: ['hello-ascii.js'],
+			};
+			const xgettext = new XGettext(argv, date);
+			expect(xgettext.run()).toEqual(1);
+			expect(writeFileSync).toHaveBeenCalledTimes(0);
+			expect(warnSpy).not.toHaveBeenCalled();
+			expect(errorSpy).toHaveBeenCalledTimes(1);
+			expect(errorSpy).toHaveBeenCalledWith(
+				'hello-ascii.js:2:12: error: invalid multibyte sequence',
+			);
+		});
+	});
 });

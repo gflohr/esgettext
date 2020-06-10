@@ -107,7 +107,7 @@ export abstract class Parser {
 				return false;
 			}
 			input = buf.toString();
-		} else if ('utf8' === encoding) {
+		} else if ('utf8' === canonical) {
 			const loc = this.findNonUtf8(buf);
 			if (loc !== null) {
 				this.error(gtx._('invalid multibyte sequence'), loc);
@@ -612,13 +612,13 @@ export abstract class Parser {
 				buf[i] === 0x0 ||
 				(0x20 <= buf[i] && buf[i] <= 0x7e)
 			) {
-				++i;
 				if (buf[i] === 0x0a) {
 					++loc.start.line;
 					loc.start.column = 1;
 				} else {
 					++loc.start.column;
 				}
+				++i;
 				continue;
 			}
 
