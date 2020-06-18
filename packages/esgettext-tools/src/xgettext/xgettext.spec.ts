@@ -677,7 +677,7 @@ msgstr ""
 					output: '-',
 					language: 'javascript',
 					joinExisting: true,
-					_: ['join-existing1.js'],
+					_: ['join-existing2.js'],
 				};
 
 				const xgettext = new XGettext(argv, date);
@@ -688,6 +688,33 @@ msgstr ""
 				expect(errorSpy).toHaveBeenCalledTimes(1);
 				expect(errorSpy).toHaveBeenCalledWith(
 					'esgettext-xgettext: error: --join-existing cannot be used, when output is written to stdout',
+				);
+			});
+
+			it('should report exceptions', () => {
+				const argv = {
+					...baseArgv,
+					output: 'package.pot',
+					language: 'javascript',
+					joinExisting: true,
+					_: ['join-existing3.js'],
+				};
+
+				readFileSync.mockImplementationOnce(() => {
+					throw new Error('no such file or directory');
+				});
+				readFileSync.mockReturnValueOnce(Buffer.from(''));
+
+				const xgettext = new XGettext(argv, date);
+				expect(xgettext.run()).toEqual(1);
+				expect(readFileSync).toHaveBeenCalledTimes(2);
+				expect(readFileSync).toHaveBeenNthCalledWith(1, 'package.pot');
+				expect(readFileSync).toHaveBeenNthCalledWith(2, 'join-existing3.js');
+				expect(writeFileSync).not.toHaveBeenCalled();
+				expect(warnSpy).not.toHaveBeenCalled();
+				expect(errorSpy).toHaveBeenCalledTimes(1);
+				expect(errorSpy).toHaveBeenCalledWith(
+					'package.pot: Error: no such file or directory',
 				);
 			});
 		});

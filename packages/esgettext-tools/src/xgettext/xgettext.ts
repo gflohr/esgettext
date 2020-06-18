@@ -60,15 +60,12 @@ export class XGettext {
 			/* eslint-disable-next-line @typescript-eslint/explicit-function-return-type */
 			const parserOptions = (({ fromCode }) => ({ fromCode }))(this.options);
 			const parser = new PoParser(this.catalog, parserOptions);
-			let filename: string = this.options.output;
+			const filename: string = this.options.output;
 			try {
 				if (!parser.parse(this.readFile(filename), filename)) {
 					exitCode = 1;
 				}
 			} catch (msg) {
-				if ('-' === filename) {
-					filename = gtx._('[standard input]');
-				}
 				console.error(`${filename}: ${msg}`);
 				exitCode = 1;
 			}
