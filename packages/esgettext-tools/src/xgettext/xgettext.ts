@@ -1,7 +1,7 @@
 import * as path from 'path';
 import { writeFileSync, readFileSync } from 'fs';
 import { Textdomain } from '@esgettext/runtime';
-import { Catalog, CatalogProperties } from '../pot/catalog';
+import { Catalog, CatalogProperties, RenderOptions } from '../pot/catalog';
 import { Options } from '../cli/getopt';
 import { JavaScriptParser } from '../parser/javascript';
 import { TypeScriptParser } from '../parser/typescript';
@@ -267,7 +267,13 @@ export class XGettext {
 			}
 		}
 
-		const po = this.catalog.toString();
+		const renderOptions: RenderOptions = {};
+
+		if (typeof this.options.width !== 'undefined') {
+			renderOptions.width = this.options.width;
+		}
+
+		const po = this.catalog.toString(renderOptions);
 
 		if (this.options.output === '-') {
 			process.stdout.write(po);

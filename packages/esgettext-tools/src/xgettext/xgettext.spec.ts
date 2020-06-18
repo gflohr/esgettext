@@ -844,9 +844,7 @@ gtx._("catch me!");
 
 	describe('output details', () => {
 		describe('option --force-po', () => {
-			beforeEach(() => {
-				resetMocks();
-			});
+			beforeEach(resetMocks);
 
 			it('should not write empty catalogs', () => {
 				const code = 'console.log("Hello, world!")';
@@ -869,6 +867,26 @@ gtx._("catch me!");
 					...baseArgv,
 					forcePo: true,
 					_: ['force-po1.js'],
+				};
+				const xgettext = new XGettext(argv, date);
+				expect(xgettext.run()).toEqual(0);
+				expect(writeFileSync).toHaveBeenCalledTimes(1);
+				expect(writeFileSync.mock.calls[0][1]).toMatchSnapshot();
+				expect(warnSpy).not.toHaveBeenCalled();
+				expect(errorSpy).not.toHaveBeenCalled();
+			});
+		});
+
+		describe('option --width', () => {
+			beforeEach(resetMocks);
+
+			it('should honor the option --width', () => {
+				const code = 'gtx._("For a very long time! For a very long time!")';
+				readFileSync.mockReturnValue(Buffer.from(code));
+				const argv = {
+					...baseArgv,
+					width: 25,
+					_: ['width.js'],
 				};
 				const xgettext = new XGettext(argv, date);
 				expect(xgettext.run()).toEqual(0);

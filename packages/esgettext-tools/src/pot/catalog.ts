@@ -19,7 +19,7 @@ export interface CatalogProperties {
 	noHeader?: boolean;
 }
 
-interface RenderOptions {
+export interface RenderOptions {
 	width?: number;
 }
 
