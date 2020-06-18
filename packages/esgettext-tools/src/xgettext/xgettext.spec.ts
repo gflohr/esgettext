@@ -670,6 +670,26 @@ msgstr ""
 				expect(warnSpy).not.toHaveBeenCalled();
 				expect(errorSpy).not.toHaveBeenCalled();
 			});
+
+			it('should bail out, when output is stdout', () => {
+				const argv = {
+					...baseArgv,
+					output: '-',
+					language: 'javascript',
+					joinExisting: true,
+					_: ['join-existing1.js'],
+				};
+
+				const xgettext = new XGettext(argv, date);
+				expect(xgettext.run()).toEqual(1);
+				expect(readFileSync).not.toHaveBeenCalled();
+				expect(writeFileSync).not.toHaveBeenCalled();
+				expect(warnSpy).not.toHaveBeenCalled();
+				expect(errorSpy).toHaveBeenCalledTimes(1);
+				expect(errorSpy).toHaveBeenCalledWith(
+					'esgettext-xgettext: error: --join-existing cannot be used, when output is written to stdout',
+				);
+			});
 		});
 	});
 
