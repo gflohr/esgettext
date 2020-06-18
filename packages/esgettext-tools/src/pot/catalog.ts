@@ -14,13 +14,13 @@ export interface CatalogProperties {
 	msgidBugsAddress?: string;
 	foreignUser?: boolean;
 	date?: string;
-	noHeader?: boolean;
 }
 
 export interface RenderOptions {
 	width?: number;
 	sortOutput?: boolean;
 	sortByFile?: boolean;
+	omitHeader?: boolean;
 }
 
 /**
@@ -33,55 +33,51 @@ export class Catalog {
 	constructor(readonly properties: CatalogProperties = {}) {
 		this.entries = new Array<POTEntry>();
 
-		if (!properties.noHeader) {
-			if (typeof properties.package === 'undefined') {
-				properties.package = 'PACKAGE';
-			}
-			if (typeof properties.version === 'undefined') {
-				properties.version = 'VERSION';
-			}
-			if (typeof properties.msgidBugsAddress === 'undefined') {
-				properties.msgidBugsAddress = 'MSGID_BUGS_ADDRESS';
-			}
-			if (typeof properties.date === 'undefined') {
-				const now = new Date();
+		if (typeof properties.package === 'undefined') {
+			properties.package = 'PACKAGE';
+		}
+		if (typeof properties.version === 'undefined') {
+			properties.version = 'VERSION';
+		}
+		if (typeof properties.msgidBugsAddress === 'undefined') {
+			properties.msgidBugsAddress = 'MSGID_BUGS_ADDRESS';
+		}
+		if (typeof properties.date === 'undefined') {
+			const now = new Date();
 
-				// Avoid if/else, so we do not spoil our test coverage. :)
-				let year = now.getFullYear().toString();
-				year = '0'.repeat(4 - year.length) + year;
-				let month = (1 + now.getMonth()).toString();
-				month = '0'.repeat(2 - month.length) + month;
-				let mday = now.getDate().toString();
-				mday = '0'.repeat(2 - mday.length) + mday;
-				let hour = now.getHours().toString();
-				hour = '0'.repeat(2 - hour.length) + hour;
-				let minutes = now.getMinutes().toString();
-				minutes = '0'.repeat(2 - minutes.length) + minutes;
+			// Avoid if/else, so we do not spoil our test coverage. :)
+			let year = now.getFullYear().toString();
+			year = '0'.repeat(4 - year.length) + year;
+			let month = (1 + now.getMonth()).toString();
+			month = '0'.repeat(2 - month.length) + month;
+			let mday = now.getDate().toString();
+			mday = '0'.repeat(2 - mday.length) + mday;
+			let hour = now.getHours().toString();
+			hour = '0'.repeat(2 - hour.length) + hour;
+			let minutes = now.getMinutes().toString();
+			minutes = '0'.repeat(2 - minutes.length) + minutes;
 
-				// Do not depend on the timezone for test coverage.
-				let offset = now.getTimezoneOffset();
-				const sign = ['+', '-'][Math.sign(offset) + 1];
-				offset = Math.abs(offset);
+			// Do not depend on the timezone for test coverage.
+			let offset = now.getTimezoneOffset();
+			const sign = ['+', '-'][Math.sign(offset) + 1];
+			offset = Math.abs(offset);
 
-				let offsetHours = Math.floor(offset / 60).toString();
-				offsetHours = '0'.repeat(2 - offsetHours.length) + offsetHours;
-				let offsetMinutes = (offset % 60).toString();
-				offsetMinutes = '0'.repeat(2 - offsetMinutes.length) + offsetMinutes;
+			let offsetHours = Math.floor(offset / 60).toString();
+			offsetHours = '0'.repeat(2 - offsetHours.length) + offsetHours;
+			let offsetMinutes = (offset % 60).toString();
+			offsetMinutes = '0'.repeat(2 - offsetMinutes.length) + offsetMinutes;
 
-				properties.date =
-					[year, month, mday].join('-') +
-					` ${hour}:${minutes}` +
-					`${sign}${offsetHours}${offsetMinutes}`;
-			}
+			properties.date =
+				[year, month, mday].join('-') +
+				` ${hour}:${minutes}` +
+				`${sign}${offsetHours}${offsetMinutes}`;
+		}
 
-			const pkg = properties.package.replace(/\n/g, '\\n');
-			const version = properties.version.replace(/\n/g, '\\n');
-			const msgidBugsAddress = properties.msgidBugsAddress.replace(
-				/\n/g,
-				'\\n',
-			);
+		const pkg = properties.package.replace(/\n/g, '\\n');
+		const version = properties.version.replace(/\n/g, '\\n');
+		const msgidBugsAddress = properties.msgidBugsAddress.replace(/\n/g, '\\n');
 
-			const header = `Project-Id-Version: ${pkg} ${version}
+		const header = `Project-Id-Version: ${pkg} ${version}
 Report-Msgid-Bugs-To: ${msgidBugsAddress}
 POT-Creation-Date: ${properties.date}
 PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE
@@ -93,29 +89,28 @@ Content-Type: text/plain; charset=CHARSET
 Content-Transfer-Encoding: 8bit
 `;
 
-			let comment;
-			if (properties.foreignUser) {
-				comment = `SOME DESCRIPTIVE TITLE
+		let comment;
+		if (properties.foreignUser) {
+			comment = `SOME DESCRIPTIVE TITLE
 This file is put in the public domain.
 FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 `;
-			} else {
-				comment = `SOME DESCRIPTIVE TITLE
+		} else {
+			comment = `SOME DESCRIPTIVE TITLE
 Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 This file is distributed under the same license as the PACKAGE package.
 FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 `;
-			}
-
-			const headerEntry = new POTEntry({
-				msgid: '',
-				msgstr: header,
-				flags: ['fuzzy'],
-				translatorComments: [comment],
-				noWarnings: true,
-			});
-			this.addEntry(headerEntry);
 		}
+
+		const headerEntry = new POTEntry({
+			msgid: '',
+			msgstr: header,
+			flags: ['fuzzy'],
+			translatorComments: [comment],
+			noWarnings: true,
+		});
+		this.addEntry(headerEntry);
 	}
 
 	/**
@@ -143,10 +138,12 @@ FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 			return !isNotHeader(entry);
 		};
 
-		const header = this.entries
-			.filter(isHeader)
-			.map(entry => entry.toString(width))
-			.join('\n');
+		const header = options.omitHeader
+			? undefined
+			: this.entries
+					.filter(isHeader)
+					.map(entry => entry.toString(width))
+					.join('\n');
 
 		let body = '';
 		if (options.sortOutput) {

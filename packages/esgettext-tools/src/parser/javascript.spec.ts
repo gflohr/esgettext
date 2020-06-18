@@ -17,7 +17,7 @@ describe('JavaScript parser', () => {
 		});
 
 		it('should extract all kinds of strings', () => {
-			const catalog = new Catalog({ noHeader: true });
+			const catalog = new Catalog();
 			const p = new JavaScriptParser(catalog, { extractAll: true });
 			const code = `
 // Directive.
@@ -30,13 +30,13 @@ _('single-quoted string');
 _x('Hello, {name}!');
 `;
 			expect(p.parse(Buffer.from(code), 'example.js')).toBeTruthy();
-			expect(catalog.toString()).toMatchSnapshot();
+			expect(catalog.toString({ omitHeader: true })).toMatchSnapshot();
 			expect(errorSpy).not.toHaveBeenCalled();
 			expect(warnSpy).not.toHaveBeenCalled();
 		});
 
 		it('should extract concatenated strings', () => {
-			const catalog = new Catalog({ noHeader: true });
+			const catalog = new Catalog();
 			const p = new JavaScriptParser(catalog, { extractAll: true });
 			const code = '"concatenated" + " str" + "i" + "n" + "g";';
 			const buf = Buffer.from(code);
@@ -45,40 +45,40 @@ _x('Hello, {name}!');
 msgid "concatenated string"
 msgstr ""
 `;
-			expect(catalog.toString()).toEqual(expected);
+			expect(catalog.toString({ omitHeader: true })).toEqual(expected);
 			expect(errorSpy).not.toHaveBeenCalled();
 			expect(warnSpy).not.toHaveBeenCalled();
 		});
 
 		it('should not extract concatenated strings with a leading variable', () => {
-			const catalog = new Catalog({ noHeader: true });
+			const catalog = new Catalog();
 			const p = new JavaScriptParser(catalog, { extractAll: true });
 			const code = 'prefix + "concatenated" + " string";';
 			const buf = Buffer.from(code);
 			expect(p.parse(buf, 'example.js')).toBeTruthy();
-			expect(catalog.toString()).toEqual('');
+			expect(catalog.toString({ omitHeader: true })).toEqual('');
 			expect(errorSpy).not.toHaveBeenCalled();
 			expect(warnSpy).not.toHaveBeenCalled();
 		});
 
 		it('should not extract concatenated strings mixed with a variable', () => {
-			const catalog = new Catalog({ noHeader: true });
+			const catalog = new Catalog();
 			const p = new JavaScriptParser(catalog, { extractAll: true });
 			const code = '"concatenated" + sep + "string";';
 			const buf = Buffer.from(code);
 			expect(p.parse(buf, 'example.js')).toBeTruthy();
-			expect(catalog.toString()).toEqual('');
+			expect(catalog.toString({ omitHeader: true })).toEqual('');
 			expect(errorSpy).not.toHaveBeenCalled();
 			expect(warnSpy).not.toHaveBeenCalled();
 		});
 
 		it('should not extract concatenated strings with a trailing variable', () => {
-			const catalog = new Catalog({ noHeader: true });
+			const catalog = new Catalog();
 			const p = new JavaScriptParser(catalog, { extractAll: true });
 			const code = '"concatenated" + " string" + suffix;';
 			const buf = Buffer.from(code);
 			expect(p.parse(buf, 'example.js')).toBeTruthy();
-			expect(catalog.toString()).toEqual('');
+			expect(catalog.toString({ omitHeader: true })).toEqual('');
 			expect(errorSpy).not.toHaveBeenCalled();
 			expect(warnSpy).not.toHaveBeenCalled();
 		});
@@ -91,7 +91,7 @@ msgstr ""
 		});
 
 		it('should extract all kinds of comments', () => {
-			const catalog = new Catalog({ noHeader: true });
+			const catalog = new Catalog();
 			const p = new JavaScriptParser(catalog, {
 				extractAll: true,
 				addAllComments: true,
@@ -122,7 +122,7 @@ _('catcher'); _('loser');
 // And this is ignored, too.
 `;
 			expect(p.parse(Buffer.from(code), 'example.js')).toBeTruthy();
-			expect(catalog.toString()).toMatchSnapshot();
+			expect(catalog.toString({ omitHeader: true })).toMatchSnapshot();
 			expect(errorSpy).not.toHaveBeenCalled();
 			expect(warnSpy).not.toHaveBeenCalled();
 		});
@@ -135,7 +135,7 @@ _('catcher'); _('loser');
 		});
 
 		it('should extract a single argument', () => {
-			const catalog = new Catalog({ noHeader: true });
+			const catalog = new Catalog();
 			const p = new JavaScriptParser(catalog, {
 				keywords: [new Keyword('_')],
 			});
@@ -145,13 +145,13 @@ _('catcher'); _('loser');
 msgid "Hello, world!"
 msgstr ""
 `;
-			expect(catalog.toString()).toEqual(expected);
+			expect(catalog.toString({ omitHeader: true })).toEqual(expected);
 			expect(errorSpy).not.toHaveBeenCalled();
 			expect(warnSpy).not.toHaveBeenCalled();
 		});
 
 		it('should extract singular and plural form', () => {
-			const catalog = new Catalog({ noHeader: true });
+			const catalog = new Catalog();
 			const p = new JavaScriptParser(catalog, {
 				keywords: [new Keyword('_n', ['1', '2'])],
 			});
@@ -163,13 +163,13 @@ msgid_plural "There were errors!"
 msgstr[0] ""
 msgstr[1] ""
 `;
-			expect(catalog.toString()).toEqual(expected);
+			expect(catalog.toString({ omitHeader: true })).toEqual(expected);
 			expect(errorSpy).not.toHaveBeenCalled();
 			expect(warnSpy).not.toHaveBeenCalled();
 		});
 
 		it('should extract context, singular and plural form', () => {
-			const catalog = new Catalog({ noHeader: true });
+			const catalog = new Catalog();
 			const p = new JavaScriptParser(catalog, {
 				keywords: [new Keyword('_np', ['1c', '2', '3'])],
 			});
@@ -183,99 +183,97 @@ msgid_plural "There were errors!"
 msgstr[0] ""
 msgstr[1] ""
 `;
-			expect(catalog.toString()).toEqual(expected);
+			expect(catalog.toString({ omitHeader: true })).toEqual(expected);
 			expect(errorSpy).not.toHaveBeenCalled();
 			expect(warnSpy).not.toHaveBeenCalled();
 		});
 
 		it('should handle other callees', () => {
-			const catalog = new Catalog({ noHeader: true });
+			const catalog = new Catalog();
 			const p = new JavaScriptParser(catalog, {
 				keywords: [new Keyword('_')],
 			});
 			const code = '"string".trim()';
 			expect(p.parse(Buffer.from(code), 'example.js')).toBeTruthy();
-			expect(catalog.toString()).toEqual('');
+			expect(catalog.toString({ omitHeader: true })).toEqual('');
 			expect(errorSpy).not.toHaveBeenCalled();
 			expect(warnSpy).not.toHaveBeenCalled();
 		});
 
 		it('should not extract from unknown methods', () => {
-			const catalog = new Catalog({ noHeader: true });
+			const catalog = new Catalog();
 			const p = new JavaScriptParser(catalog, {
 				keywords: [new Keyword('_')],
 			});
 			const code = 'gettext("string")';
 			expect(p.parse(Buffer.from(code), 'example.js')).toBeTruthy();
-			expect(catalog.toString()).toEqual('');
+			expect(catalog.toString({ omitHeader: true })).toEqual('');
 			expect(errorSpy).not.toHaveBeenCalled();
 			expect(warnSpy).not.toHaveBeenCalled();
 		});
 
 		it('should honor the total arguments spec', () => {
-			const catalog = new Catalog({ noHeader: true });
+			const catalog = new Catalog();
 			const p = new JavaScriptParser(catalog, {
 				keywords: [new Keyword('_', ['1t'])],
 			});
 			const code = '_("Hello", "world")';
 			expect(p.parse(Buffer.from(code), 'example.js')).toBeTruthy();
-			expect(catalog.toString()).toEqual('');
+			expect(catalog.toString({ omitHeader: true })).toEqual('');
 			expect(errorSpy).not.toHaveBeenCalled();
 			expect(warnSpy).not.toHaveBeenCalled();
 		});
 
 		it('should not extract non existing singular arguments', () => {
-			const catalog = new Catalog({ noHeader: true });
+			const catalog = new Catalog();
 			const p = new JavaScriptParser(catalog, {
 				keywords: [new Keyword('_')],
 			});
 			const code = '_()';
 			expect(p.parse(Buffer.from(code), 'example.js')).toBeTruthy();
-			expect(catalog.toString()).toEqual('');
+			expect(catalog.toString({ omitHeader: true })).toEqual('');
 			expect(errorSpy).not.toHaveBeenCalled();
 			expect(warnSpy).not.toHaveBeenCalled();
 		});
 
 		it('should not extract non existing plural arguments', () => {
-			const catalog = new Catalog({ noHeader: true });
+			const catalog = new Catalog();
 			const p = new JavaScriptParser(catalog, {
 				keywords: [new Keyword('_n', ['1', '2'])],
 			});
 			const code = '_n("One universe")';
 			expect(p.parse(Buffer.from(code), 'example.js')).toBeTruthy();
-			expect(catalog.toString()).toEqual('');
+			expect(catalog.toString({ omitHeader: true })).toEqual('');
 			expect(errorSpy).not.toHaveBeenCalled();
 			expect(warnSpy).not.toHaveBeenCalled();
 		});
 
 		it('should not extract non existing context arguments', () => {
-			const catalog = new Catalog({
-				noHeader: true,
-			});
+			const catalog = new Catalog();
 			const p = new JavaScriptParser(catalog, {
 				keywords: [new Keyword('_pn', ['1', '2', '3c'])],
 			});
 			const code = '_pn("one world", "many worlds")';
 			expect(p.parse(Buffer.from(code), 'example.js')).toBeTruthy();
-			expect(catalog.toString()).toEqual('');
+			expect(catalog.toString({ omitHeader: true })).toEqual('');
 			expect(errorSpy).not.toHaveBeenCalled();
 			expect(warnSpy).not.toHaveBeenCalled();
 		});
 
 		it('should reject variables as singular arguments', () => {
-			const catalog = new Catalog({ noHeader: true });
+			const catalog = new Catalog();
 			const p = new JavaScriptParser(catalog, {
 				keywords: [new Keyword('_np', ['1c', '2', '3'])],
 			});
 			const code = '_np("world", earth, "many earths")';
 			expect(p.parse(Buffer.from(code), 'example.js')).toBeTruthy();
-			expect(catalog.toString()).toEqual('');
+			expect(catalog.toString({ omitHeader: true })).toEqual('');
 			expect(errorSpy).not.toHaveBeenCalled();
 			expect(warnSpy).not.toHaveBeenCalled();
 		});
 
 		it('should allow simple template literals as singular arguments', () => {
-			const catalog = new Catalog({ noHeader: true });
+			const catalog = new Catalog();
 			const p = new JavaScriptParser(catalog, {
 				keywords: [new Keyword('_np', ['1c', '2', '3'])],
 			});
@@ -288,19 +286,19 @@ msgid_plural "many earths"
 msgstr[0] ""
 msgstr[1] ""
 `;
-			expect(catalog.toString()).toEqual(expected);
+			expect(catalog.toString({ omitHeader: true })).toEqual(expected);
 			expect(errorSpy).not.toHaveBeenCalled();
 			expect(warnSpy).not.toHaveBeenCalled();
 		});
 
 		it('should reject template literals with embedded expressions as singular arguments', () => {
-			const catalog = new Catalog({ noHeader: true });
+			const catalog = new Catalog();
 			const p = new JavaScriptParser(catalog, {
 				keywords: [new Keyword('_np', ['1c', '2', '3'])],
 			});
 			const code = '_np("world", `one ${planet}`, "many earths")';
 			expect(p.parse(Buffer.from(code), 'example.js')).toBeFalsy();
-			expect(catalog.toString()).toEqual('');
+			expect(catalog.toString({ omitHeader: true })).toEqual('');
 			expect(errorSpy).toHaveBeenCalledTimes(1);
 			expect(errorSpy).toHaveBeenNthCalledWith(
 				1,
@@ -312,21 +310,19 @@ msgstr[1] ""
 		});
 
 		it('should reject variables as plural arguments', () => {
-			const catalog = new Catalog({
-				noHeader: true,
-			});
+			const catalog = new Catalog();
 			const p = new JavaScriptParser(catalog, {
 				keywords: [new Keyword('_np', ['1c', '2', '3'])],
 			});
 			const code = '_np("world", "earth", earths)';
 			expect(p.parse(Buffer.from(code), 'example.js')).toBeTruthy();
-			expect(catalog.toString()).toEqual('');
+			expect(catalog.toString({ omitHeader: true })).toEqual('');
 			expect(errorSpy).not.toHaveBeenCalled();
 			expect(warnSpy).not.toHaveBeenCalled();
 		});
 
 		it('should allow simple template literals as plural arguments', () => {
-			const catalog = new Catalog({ noHeader: true });
+			const catalog = new Catalog();
 			const p = new JavaScriptParser(catalog, {
 				keywords: [new Keyword('_np', ['1c', '2', '3'])],
 			});
@@ -339,19 +335,19 @@ msgid_plural "many earths"
 msgstr[0] ""
 msgstr[1] ""
 `;
-			expect(catalog.toString()).toEqual(expected);
+			expect(catalog.toString({ omitHeader: true })).toEqual(expected);
 			expect(errorSpy).not.toHaveBeenCalled();
 			expect(warnSpy).not.toHaveBeenCalled();
 		});
 
 		it('should reject template literals with embedded expressions as plural arguments', () => {
-			const catalog = new Catalog({ noHeader: true });
+			const catalog = new Catalog();
 			const p = new JavaScriptParser(catalog, {
 				keywords: [new Keyword('_np', ['1c', '2', '3'])],
 			});
 			const code = '_np("world", "one earth", `many ${planets}`)';
 			expect(p.parse(Buffer.from(code), 'example.js')).toBeFalsy();
-			expect(catalog.toString()).toEqual('');
+			expect(catalog.toString({ omitHeader: true })).toEqual('');
 			expect(errorSpy).toHaveBeenCalledTimes(1);
 			expect(errorSpy).toHaveBeenNthCalledWith(
 				1,
@@ -363,19 +359,19 @@ msgstr[1] ""
 		});
 
 		it('should reject variables as msgctxt arguments', () => {
-			const catalog = new Catalog({ noHeader: true });
+			const catalog = new Catalog();
 			const p = new JavaScriptParser(catalog, {
 				keywords: [new Keyword('_np', ['1c', '2', '3'])],
 			});
 			const code = '_np(world, "earth", "many earths")';
 			expect(p.parse(Buffer.from(code), 'example.js')).toBeTruthy();
-			expect(catalog.toString()).toEqual('');
+			expect(catalog.toString({ omitHeader: true })).toEqual('');
 			expect(errorSpy).not.toHaveBeenCalled();
 			expect(warnSpy).not.toHaveBeenCalled();
 		});
 
 		it('should allow simple template literals as msgctxt arguments', () => {
-			const catalog = new Catalog({ noHeader: true });
+			const catalog = new Catalog();
 			const p = new JavaScriptParser(catalog, {
 				keywords: [new Keyword('_np', ['1c', '2', '3'])],
 			});
@@ -388,19 +384,19 @@ msgid_plural "many earths"
 msgstr[0] ""
 msgstr[1] ""
 `;
-			expect(catalog.toString()).toEqual(expected);
+			expect(catalog.toString({ omitHeader: true })).toEqual(expected);
 			expect(errorSpy).not.toHaveBeenCalled();
 			expect(warnSpy).not.toHaveBeenCalled();
 		});
 
 		it('should reject template literals with embedded expressions as msgctxt arguments', () => {
-			const catalog = new Catalog({ noHeader: true });
+			const catalog = new Catalog();
 			const p = new JavaScriptParser(catalog, {
 				keywords: [new Keyword('_np', ['1c', '2', '3'])],
 			});
 			const code = '_np("world", "one earth", `many ${planets}`)';
 			expect(p.parse(Buffer.from(code), 'example.js')).toBeFalsy();
-			expect(catalog.toString()).toEqual('');
+			expect(catalog.toString({ omitHeader: true })).toEqual('');
 			expect(errorSpy).toHaveBeenCalledTimes(1);
 			expect(errorSpy).toHaveBeenNthCalledWith(
 				1,
@@ -419,7 +415,7 @@ msgstr[1] ""
 		});
 
 		it('should decode to JavaScript strings', () => {
-			const catalog = new Catalog({ noHeader: true });
+			const catalog = new Catalog();
 			const p = new JavaScriptParser(catalog, {
 				keywords: [new Keyword('_')],
 			});
@@ -429,7 +425,7 @@ msgstr[1] ""
 msgid "Hello, world!"
 msgstr ""
 `;
-			expect(catalog.toString()).toEqual(expected);
+			expect(catalog.toString({ omitHeader: true })).toEqual(expected);
 			expect(errorSpy).not.toHaveBeenCalled();
 			expect(warnSpy).not.toHaveBeenCalled();
 		});
@@ -442,9 +438,7 @@ msgstr ""
 		});
 
 		it('should extract concatenated strings', () => {
-			const catalog = new Catalog({
-				noHeader: true,
-			});
+			const catalog = new Catalog();
 			const p = new JavaScriptParser(catalog, {
 				keywords: [new Keyword('_')],
 			});
@@ -454,13 +448,13 @@ msgstr ""
 msgid "It's a sad and beautiful world!"
 msgstr ""
 `;
-			expect(catalog.toString()).toEqual(expected);
+			expect(catalog.toString({ omitHeader: true })).toEqual(expected);
 			expect(errorSpy).not.toHaveBeenCalled();
 			expect(warnSpy).not.toHaveBeenCalled();
 		});
 
 		it('should extract concatenated strings with simple template literals', () => {
-			const catalog = new Catalog({ noHeader: true });
+			const catalog = new Catalog();
 			const p = new JavaScriptParser(catalog, {
 				keywords: [new Keyword('_')],
 			});
@@ -470,25 +464,25 @@ msgstr ""
 msgid "It's a sad and beautiful world!"
 msgstr ""
 `;
-			expect(catalog.toString()).toEqual(expected);
+			expect(catalog.toString({ omitHeader: true })).toEqual(expected);
 			expect(errorSpy).not.toHaveBeenCalled();
 			expect(warnSpy).not.toHaveBeenCalled();
 		});
 
 		it('should ignore concatenated strings with variables', () => {
-			const catalog = new Catalog({ noHeader: true });
+			const catalog = new Catalog();
 			const p = new JavaScriptParser(catalog, {
 				keywords: [new Keyword('_')],
 			});
 			const code = '_("It\'s a " + what + " and beautiful world!")';
 			expect(p.parse(Buffer.from(code), 'example.js')).toBeTruthy();
-			expect(catalog.toString()).toEqual('');
+			expect(catalog.toString({ omitHeader: true })).toEqual('');
 			expect(errorSpy).not.toHaveBeenCalled();
 			expect(warnSpy).not.toHaveBeenCalled();
 		});
 
 		it('should report concatenated strings with interpolations', () => {
-			const catalog = new Catalog({ noHeader: true });
+			const catalog = new Catalog();
 			const p = new JavaScriptParser(catalog, {
 				keywords: [new Keyword('_')],
 			});
@@ -512,7 +506,7 @@ msgstr ""
 		});
 
 		it('should extract xgettext: comments', () => {
-			const catalog = new Catalog({ noHeader: true });
+			const catalog = new Catalog();
 			const p = new JavaScriptParser(catalog, {
 				keywords: [new Keyword('_')],
 			});
@@ -525,13 +519,13 @@ _("It's a {sad} and beautiful world!")
 msgid "It's a {sad} and beautiful world!"
 msgstr ""
 `;
-			expect(catalog.toString()).toEqual(expected);
+			expect(catalog.toString({ omitHeader: true })).toEqual(expected);
 			expect(errorSpy).not.toHaveBeenCalled();
 			expect(warnSpy).not.toHaveBeenCalled();
 		});
 
 		it('should ignore invalid xgettext: comments', () => {
-			const catalog = new Catalog({ noHeader: true });
+			const catalog = new Catalog();
 			const p = new JavaScriptParser(catalog, {
 				keywords: [new Keyword('_')],
 			});
@@ -543,13 +537,13 @@ _("It's a sad and beautiful world!")
 msgid "It's a sad and beautiful world!"
 msgstr ""
 `;
-			expect(catalog.toString()).toEqual(expected);
+			expect(catalog.toString({ omitHeader: true })).toEqual(expected);
 			expect(errorSpy).not.toHaveBeenCalled();
 			expect(warnSpy).not.toHaveBeenCalled();
 		});
 
 		it('should extract translator comments', () => {
-			const catalog = new Catalog({ noHeader: true });
+			const catalog = new Catalog();
 			const p = new JavaScriptParser(catalog, {
 				keywords: [new Keyword('_')],
 				addComments: ['TRANSLATORS:'],
@@ -563,14 +557,14 @@ _("It's a sad and beautiful world!")
 msgid "It's a sad and beautiful world!"
 msgstr ""
 `;
-			expect(catalog.toString()).toEqual(expected);
+			expect(catalog.toString({ omitHeader: true })).toEqual(expected);
 			expect(errorSpy).not.toHaveBeenCalled();
 			expect(warnSpy).not.toHaveBeenCalled();
 			expect(warnSpy).not.toHaveBeenCalled();
 		});
 
 		it('should ignore other comments', () => {
-			const catalog = new Catalog({ noHeader: true });
+			const catalog = new Catalog();
 			const p = new JavaScriptParser(catalog, {
 				keywords: [new Keyword('_')],
 				addComments: ['TRANSLATORS:'],
@@ -583,7 +577,7 @@ _("It's a sad and beautiful world!")
 msgid "It's a sad and beautiful world!"
 msgstr ""
 `;
-			expect(catalog.toString()).toEqual(expected);
+			expect(catalog.toString({ omitHeader: true })).toEqual(expected);
 			expect(errorSpy).not.toHaveBeenCalled();
 			expect(warnSpy).not.toHaveBeenCalled();
 			expect(warnSpy).not.toHaveBeenCalled();
