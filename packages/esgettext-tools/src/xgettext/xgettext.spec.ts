@@ -717,6 +717,35 @@ msgstr ""
 					'package.pot: Error: no such file or directory',
 				);
 			});
+
+			it('should report parser errors', () => {
+				const existing = `
+msgidError "existing"
+msgstr ""
+`;
+				readFileSync.mockReturnValueOnce(Buffer.from(existing));
+
+				const code = 'gtx._("new")';
+				readFileSync.mockReturnValueOnce(Buffer.from(code));
+
+				const argv = {
+					...baseArgv,
+					output: 'package.pot',
+					language: 'javascript',
+					joinExisting: true,
+					_: ['join-existing1.js'],
+				};
+
+				const xgettext = new XGettext(argv, date);
+				expect(xgettext.run()).toEqual(1);
+				expect(readFileSync).toHaveBeenCalledTimes(2);
+				expect(writeFileSync).not.toHaveBeenCalled();
+				expect(warnSpy).not.toHaveBeenCalled();
+				expect(errorSpy).toHaveBeenCalledTimes(1);
+				expect(errorSpy).toHaveBeenCalledWith(
+					'package.pot:2:1: error: keyword "msgidError" unknown',
+				);
+			});
 		});
 	});
 
