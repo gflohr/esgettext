@@ -190,20 +190,6 @@ gtx
 						},
 					},
 					{
-						name: 'no-location',
-						yargsOptions: {
-							type: 'boolean',
-							describe: gtx._('do not write "#: filename:line" lines'),
-						},
-					},
-					{
-						name: 'location',
-						yargsOptions: {
-							type: 'boolean',
-							describe: gtx._('generate "#: filename:line" lines (default)'),
-						},
-					},
-					{
 						name: 'width',
 						yargsOptions: {
 							alias: 'w',
@@ -329,7 +315,7 @@ gtx
 	.catch(exception => {
 		console.error(
 			gtx._x('{programName}: unhandled exception: {exception}', {
-				programName: 'exgettext-xgettext',
+				programName: 'esgettext-xgettext',
 				exception,
 			}),
 		);
