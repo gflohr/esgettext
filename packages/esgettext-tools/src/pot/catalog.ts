@@ -14,13 +14,13 @@ export interface CatalogProperties {
 	msgidBugsAddress?: string;
 	foreignUser?: boolean;
 	date?: string;
-	sortOutput?: boolean;
-	sortByFile?: boolean;
 	noHeader?: boolean;
 }
 
 export interface RenderOptions {
 	width?: number;
+	sortOutput?: boolean;
+	sortByFile?: boolean;
 }
 
 /**
@@ -129,7 +129,7 @@ FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 	 *
 	 * @returns the catalog rendered as a po(t) file
 	 */
-	toString(options?: RenderOptions): string {
+	toString(options: RenderOptions = {}): string {
 		const width =
 			options && typeof options.width !== 'undefined' ? options.width : 76;
 
@@ -149,7 +149,7 @@ FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 			.join('\n');
 
 		let body = '';
-		if (this.properties.sortOutput) {
+		if (options.sortOutput) {
 			body = this.entries
 				.filter(isNotHeader)
 				.sort((a, b) => {
@@ -173,7 +173,7 @@ FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 				})
 				.map(entry => entry.toString(width))
 				.join('\n');
-		} else if (this.properties.sortByFile) {
+		} else if (options.sortByFile) {
 			const copy = this.copy(this.properties);
 
 			const splitRef = (ref: string): { filename: string; lineno: number } => {

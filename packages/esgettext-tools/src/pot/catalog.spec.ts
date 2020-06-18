@@ -226,15 +226,11 @@ describe('translation catalog', () => {
 		});
 
 		it('should sort output on demand', () => {
-			const copy = catalog.copy({ sortOutput: true, date });
-
-			expect(copy.toString()).toMatchSnapshot();
+			expect(catalog.toString({ sortOutput: true })).toMatchSnapshot();
 		});
 
 		it('should sort by file on demand', () => {
-			const copy = catalog.copy({ sortByFile: true, date });
-
-			expect(copy.toString()).toMatchSnapshot();
+			expect(catalog.toString({ sortByFile: true })).toMatchSnapshot();
 		});
 	});
 
@@ -261,7 +257,7 @@ describe('translation catalog', () => {
 
 	describe('sorting', () => {
 		it('should sort by msgctxt', () => {
-			const catalog = new Catalog({ sortOutput: true, date });
+			const catalog = new Catalog({ date });
 
 			catalog.addEntry(
 				new POTEntry({
@@ -293,11 +289,11 @@ describe('translation catalog', () => {
 				}),
 			);
 
-			expect(catalog.toString()).toMatchSnapshot();
+			expect(catalog.toString({ sortOutput: true })).toMatchSnapshot();
 		});
 
 		it('should sort by line number', () => {
-			const catalog = new Catalog({ sortByFile: true, date });
+			const catalog = new Catalog({ date });
 
 			catalog.addEntry(
 				new POTEntry({
@@ -341,7 +337,7 @@ describe('translation catalog', () => {
 				}),
 			);
 
-			expect(catalog.toString()).toMatchSnapshot();
+			expect(catalog.toString({ sortByFile: true })).toMatchSnapshot();
 		});
 	});
 });
