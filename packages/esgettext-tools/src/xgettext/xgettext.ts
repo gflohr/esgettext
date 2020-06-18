@@ -13,8 +13,13 @@ import { FilesCollector } from './files-collector';
 
 const gtx = Textdomain.getInstance('esgettext-tools');
 
+interface ExclusionCatalog {
+	[key: string]: Array<string>;
+}
+
 export class XGettext {
 	private readonly catalog: Catalog;
+	private exclude: ExclusionCatalog;
 
 	/* The date is passed only for testing. */
 	constructor(private readonly options: Options, date?: string) {
@@ -42,6 +47,23 @@ export class XGettext {
 	 */
 	public run(): number {
 		let exitCode = 0;
+
+		this.exclude = {} as ExclusionCatalog;
+		if (this.options.excludeFile) {
+			try {
+				if (!this.fillExclusionCatalog(this.options.excludeFile)) {
+					return 1;
+				}
+			} catch (e) {
+				console.error(
+					gtx._x('{programName}: error: {message}', {
+						programName: this.options.$0,
+						message: e.message,
+					}),
+				);
+				return 1;
+			}
+		}
 
 		if (this.options.joinExisting) {
 			if (this.options.output === '-') {
@@ -229,6 +251,16 @@ export class XGettext {
 	}
 
 	private output(): void {
+		Object.keys(this.exclude)
+			.filter(msgctxt =>
+				Object.prototype.hasOwnProperty.call(this.exclude, msgctxt),
+			)
+			.forEach(msgctxt => {
+				this.exclude[msgctxt].forEach(msgid => {
+					this.catalog.deleteEntry(msgid, msgctxt);
+				});
+			});
+
 		if (!this.options.forcePo) {
 			if (this.catalog.entries.length < 2) {
 				return;
@@ -259,5 +291,32 @@ export class XGettext {
 				: this.options.outputDir;
 
 		writeFileSync(path.join(outputDir, filename), po);
+	}
+
+	private fillExclusionCatalog(catalogs: Array<string>): boolean {
+		const catalog = new Catalog();
+		const parser = new PoParser(catalog);
+		let success = true;
+
+		catalogs.forEach(filename => {
+			if (!parser.parse(this.readFile(filename), filename)) {
+				success = false;
+			}
+		});
+
+		if (!success) {
+			return false;
+		}
+
+		catalog.deleteEntry('');
+
+		catalog.entries.forEach(entry => {
+			if (typeof this.exclude[entry.properties.msgctxt] === 'undefined') {
+				this.exclude[entry.properties.msgctxt] = [];
+			}
+			this.exclude[entry.properties.msgctxt].push(entry.properties.msgid);
+		});
+
+		return true;
 	}
 }

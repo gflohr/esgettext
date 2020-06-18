@@ -747,6 +747,99 @@ msgstr ""
 				);
 			});
 		});
+
+		describe('option --exclude-file', () => {
+			beforeEach(resetMocks);
+
+			it('should exclude entries from the reference pots', () => {
+				const exclude1 = `
+msgid "exclude 1"
+msgstr ""
+`;
+				const exclude2 = `
+msgid "exclude 2"
+msgstr ""
+`;
+				const code = `
+gtx._("exclude 1");
+gtx._("exclude 2");
+gtx._("catch me!");
+`;
+				readFileSync.mockReturnValueOnce(Buffer.from(exclude1));
+				readFileSync.mockReturnValueOnce(Buffer.from(exclude2));
+				readFileSync.mockReturnValueOnce(Buffer.from(code));
+
+				const argv = {
+					...baseArgv,
+					excludeFile: ['exclude1.pot', 'exclude2.pot'],
+					_: ['exclude-file1.js'],
+				};
+
+				const xgettext = new XGettext(argv, date);
+				expect(xgettext.run()).toEqual(0);
+				expect(readFileSync).toHaveBeenCalledTimes(3);
+				expect(writeFileSync).toHaveBeenCalledTimes(1);
+				expect(writeFileSync.mock.calls[0][1]).toMatchSnapshot();
+				expect(warnSpy).not.toHaveBeenCalled();
+				expect(errorSpy).not.toHaveBeenCalled();
+			});
+
+			it('should report i/o errors for the reference pots', () => {
+				readFileSync.mockImplementation(() => {
+					throw new Error('ouch!');
+				});
+
+				const argv = {
+					...baseArgv,
+					excludeFile: ['exclude1.pot', 'exclude2.pot'],
+					_: ['exclude-file1.js'],
+				};
+
+				const xgettext = new XGettext(argv, date);
+				expect(xgettext.run()).toEqual(1);
+				expect(readFileSync).toHaveBeenCalledTimes(1);
+				expect(writeFileSync).toHaveBeenCalledTimes(0);
+				expect(warnSpy).not.toHaveBeenCalled();
+				expect(errorSpy).toHaveBeenCalledTimes(1);
+				expect(errorSpy).toHaveBeenNthCalledWith(
+					1,
+					'esgettext-xgettext: error: ouch!',
+				);
+			});
+
+			it('should report parsing errors for the reference pots', () => {
+				readFileSync.mockReturnValue(Buffer.from('invalid'));
+
+				const argv = {
+					...baseArgv,
+					excludeFile: ['exclude1.pot', 'exclude2.pot'],
+					_: ['exclude-file1.js'],
+				};
+
+				const xgettext = new XGettext(argv, date);
+				expect(xgettext.run()).toEqual(1);
+				expect(readFileSync).toHaveBeenCalledTimes(2);
+				expect(writeFileSync).toHaveBeenCalledTimes(0);
+				expect(warnSpy).not.toHaveBeenCalled();
+				expect(errorSpy).toHaveBeenCalledTimes(4);
+				expect(errorSpy).toHaveBeenNthCalledWith(
+					1,
+					'exclude1.pot:1:1: error: keyword "invalid" unknown',
+				);
+				expect(errorSpy).toHaveBeenNthCalledWith(
+					2,
+					'exclude1.pot:1:8: error: syntax error',
+				);
+				expect(errorSpy).toHaveBeenNthCalledWith(
+					3,
+					'exclude2.pot:1:1: error: keyword "invalid" unknown',
+				);
+				expect(errorSpy).toHaveBeenNthCalledWith(
+					4,
+					'exclude2.pot:1:8: error: syntax error',
+				);
+			});
+		});
 	});
 
 	describe('output details', () => {
