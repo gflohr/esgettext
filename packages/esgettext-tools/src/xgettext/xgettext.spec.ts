@@ -639,8 +639,38 @@ msgstr ""
 		});
 	});
 
-	describe('interpretation of input files', () => {
-		describe('option --from-code', () => {});
+	describe('operation mode', () => {
+		describe('option --join-existing', () => {
+			beforeEach(resetMocks);
+
+			it('should merge into the output file regardless of language', () => {
+				const existing = `
+msgid "existing"
+msgstr ""
+`;
+				readFileSync.mockReturnValueOnce(Buffer.from(existing));
+
+				const code = 'gtx._("new")';
+				readFileSync.mockReturnValueOnce(Buffer.from(code));
+
+				const argv = {
+					...baseArgv,
+					output: 'package.pot',
+					language: 'javascript',
+					joinExisting: true,
+					_: ['join-existing1.js'],
+				};
+
+				const xgettext = new XGettext(argv, date);
+				expect(xgettext.run()).toEqual(0);
+				expect(readFileSync).toHaveBeenCalledTimes(2);
+				expect(writeFileSync).toHaveBeenCalledTimes(1);
+				expect(writeFileSync.mock.calls[0][0]).toEqual('package.pot');
+				expect(writeFileSync.mock.calls[0][1]).toMatchSnapshot();
+				expect(warnSpy).not.toHaveBeenCalled();
+				expect(errorSpy).not.toHaveBeenCalled();
+			});
+		});
 	});
 
 	describe('output details', () => {

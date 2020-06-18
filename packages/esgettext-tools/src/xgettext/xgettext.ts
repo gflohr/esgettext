@@ -41,6 +41,39 @@ export class XGettext {
 	 * @returns the exit code.
 	 */
 	public run(): number {
+		let exitCode = 0;
+
+		if (this.options.joinExisting) {
+			if (this.options.output === '-') {
+				console.error(
+					gtx._x(
+						'{programName}: error: --join-existing' +
+							' cannot be used, when output is written to stdout',
+						{
+							programName: this.options.$0,
+						},
+					),
+				);
+				return 1;
+			}
+
+			/* eslint-disable-next-line @typescript-eslint/explicit-function-return-type */
+			const parserOptions = (({ fromCode }) => ({ fromCode }))(this.options);
+			const parser = new PoParser(this.catalog, parserOptions);
+			let filename: string = this.options.output;
+			try {
+				if (!parser.parse(this.readFile(filename), filename)) {
+					exitCode = 1;
+				}
+			} catch (msg) {
+				if ('-' === filename) {
+					filename = gtx._('[standard input]');
+				}
+				console.error(`${filename}: ${msg}`);
+				exitCode = 1;
+			}
+		}
+
 		let fileCollector;
 		try {
 			fileCollector = new FilesCollector(
@@ -52,7 +85,6 @@ export class XGettext {
 			return 1;
 		}
 
-		let exitCode = 0;
 		fileCollector.filenames.forEach(filename => {
 			try {
 				if (!this.parse(this.readFile(filename), filename)) {
