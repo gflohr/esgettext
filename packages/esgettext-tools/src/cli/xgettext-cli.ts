@@ -218,18 +218,18 @@ gtx
 						},
 					},
 					{
-						name: 'omit-header',
-						yargsOptions: {
-							type: 'boolean',
-							describe: gtx._("don't write header with msgid '\"\"' header"),
-						},
-					},
-					{
 						name: 'sort-by-file',
 						yargsOptions: {
 							alias: 'F',
 							type: 'boolean',
 							describe: gtx._('sort output by file location'),
+						},
+					},
+					{
+						name: 'omit-header',
+						yargsOptions: {
+							type: 'boolean',
+							describe: gtx._("don't write header with msgid '\"\"' header"),
 						},
 					},
 					{
