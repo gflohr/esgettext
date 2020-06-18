@@ -183,22 +183,6 @@ gtx
 				description: gtx._('Output details'),
 				options: [
 					{
-						name: 'no-escape',
-						yargsOptions: {
-							alias: 'e',
-							type: 'boolean',
-							describe: gtx._('do not use C escapes in output (default)'),
-						},
-					},
-					{
-						name: 'escape',
-						yargsOptions: {
-							alias: 'E',
-							type: 'boolean',
-							describe: gtx._('use C escapes in output, no extended chars'),
-						},
-					},
-					{
 						name: 'force-po',
 						yargsOptions: {
 							type: 'boolean',
