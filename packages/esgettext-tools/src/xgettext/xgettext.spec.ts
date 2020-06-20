@@ -900,6 +900,31 @@ gtx._("Copy & Paste");
 		});
 	});
 
+	describe('language specific options', () => {
+		describe('--extract-all', () => {
+			beforeEach(resetMocks);
+
+			it('should extract all strings', () => {
+				const code = `
+gtx._("gettext function");
+console.log("non-gettext-function");
+`;
+				readFileSync.mockReturnValueOnce(Buffer.from(code));
+				const argv = {
+					...baseArgv,
+					extractAll: true,
+					_: ['extract-all.js'],
+				};
+				const xgettext = new XGettext(argv, date);
+				expect(xgettext.run()).toEqual(0);
+				expect(writeFileSync).toHaveBeenCalledTimes(1);
+				expect(writeFileSync.mock.calls[0][1]).toMatchSnapshot();
+				expect(warnSpy).not.toHaveBeenCalled();
+				expect(errorSpy).not.toHaveBeenCalled();
+			});
+		});
+	});
+
 	describe('output details', () => {
 		describe('option --force-po', () => {
 			beforeEach(resetMocks);
