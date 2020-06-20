@@ -79,8 +79,7 @@ export class XGettext {
 				return 1;
 			}
 
-			/* eslint-disable-next-line @typescript-eslint/explicit-function-return-type */
-			const parserOptions = (({ fromCode }) => ({ fromCode }))(this.options);
+			const parserOptions = this.getParserOptions();
 			const parser = new PoParser(this.catalog, parserOptions);
 			const filename: string = this.options.output;
 			try {
@@ -137,8 +136,7 @@ export class XGettext {
 
 	private parse(code: Buffer, filename: string): boolean {
 		let parser: Parser;
-		/* eslint-disable-next-line @typescript-eslint/explicit-function-return-type */
-		const parserOptions = (({ fromCode }) => ({ fromCode }))(this.options);
+		const parserOptions = this.getParserOptions();
 
 		if (typeof this.options.language !== 'undefined') {
 			parser = this.getParserByLanguage(this.options.language, parserOptions);
@@ -324,5 +322,12 @@ export class XGettext {
 		});
 
 		return true;
+	}
+
+	private getParserOptions(): ParserOptions {
+		return (({ fromCode, addComments }): ParserOptions => ({
+			fromCode,
+			addComments,
+		}))(this.options);
 	}
 }
