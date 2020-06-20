@@ -7,6 +7,7 @@ import { JavaScriptParser } from '../parser/javascript';
 import { TypeScriptParser } from '../parser/typescript';
 import { Parser, ParserOptions } from '../parser/parser';
 import { PoParser } from '../parser/po';
+import { Keyword } from '../../src/pot/keyword';
 import { FilesCollector } from './files-collector';
 
 /* eslint-disable no-console */
@@ -325,7 +326,7 @@ export class XGettext {
 	}
 
 	private getParserOptions(): ParserOptions {
-		return (({
+		const parserOptions: ParserOptions = (({
 			fromCode,
 			addComments,
 			addAllComments,
@@ -336,5 +337,15 @@ export class XGettext {
 			addAllComments,
 			extractAll,
 		}))(this.options);
+
+		if (this.options.keyword) {
+			const cookedKeywords = new Array<Keyword>();
+			this.options.keyword.forEach((raw: string) => {
+				cookedKeywords.push(Keyword.from(raw));
+			});
+			parserOptions.keyword = cookedKeywords;
+		}
+
+		return parserOptions;
 	}
 }

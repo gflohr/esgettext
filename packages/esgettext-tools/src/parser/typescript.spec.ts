@@ -19,7 +19,7 @@ describe('TypeScript parser', () => {
 		it('should parse a simple call', () => {
 			const catalog = new Catalog();
 			const p = new TypeScriptParser(catalog, {
-				keywords: [new Keyword('_')],
+				keyword: [new Keyword('_')],
 			});
 			const code = 'gtx._("Hello, world!")';
 			expect(p.parse(Buffer.from(code), 'example.ts')).toBeTruthy();
@@ -35,8 +35,8 @@ msgstr ""
 		it('should parse a nested call', () => {
 			const catalog = new Catalog();
 			const p = new TypeScriptParser(catalog, {
-				keywords: [new Keyword('_')],
-				instances: ['some.thing.gtx'],
+				keyword: [new Keyword('_')],
+				instance: ['some.thing.gtx'],
 			});
 			const code = 'some.thing.gtx._("Hello, world!")';
 			expect(p.parse(Buffer.from(code), 'example.ts')).toBeTruthy();
@@ -52,8 +52,8 @@ msgstr ""
 		it('should parse a nested call with computed properties', () => {
 			const catalog = new Catalog();
 			const p = new TypeScriptParser(catalog, {
-				keywords: [new Keyword('_')],
-				instances: ['some.thing.gtx'],
+				keyword: [new Keyword('_')],
+				instance: ['some.thing.gtx'],
 			});
 			const code = 'some["thing"].gtx["_"]("Hello, world!")';
 			expect(p.parse(Buffer.from(code), 'example.ts')).toBeTruthy();
@@ -69,8 +69,8 @@ msgstr ""
 		it('should parse a nested call with computed properties and template literals', () => {
 			const catalog = new Catalog();
 			const p = new TypeScriptParser(catalog, {
-				keywords: [new Keyword('_')],
-				instances: ['some.thing.gtx'],
+				keyword: [new Keyword('_')],
+				instance: ['some.thing.gtx'],
 			});
 			const code = 'some[`thing`].gtx[`_`]("Hello, world!")';
 			expect(p.parse(Buffer.from(code), 'example.ts')).toBeTruthy();
@@ -86,8 +86,8 @@ msgstr ""
 		it('should reject a nested call with computed properties and non-constant template literals', () => {
 			const catalog = new Catalog();
 			const p = new TypeScriptParser(catalog, {
-				keywords: [new Keyword('_')],
-				instances: ['some.thing.gtx'],
+				keyword: [new Keyword('_')],
+				instance: ['some.thing.gtx'],
 			});
 			const code = 'some[`${thing}`].gtx[`_`]("Hello, world!")';
 			expect(p.parse(Buffer.from(code), 'example.ts')).toBeTruthy();
@@ -99,8 +99,8 @@ msgstr ""
 		it('should reject wrong instances', () => {
 			const catalog = new Catalog();
 			const p = new TypeScriptParser(catalog, {
-				keywords: [new Keyword('_')],
-				instances: ['some.thing.else.gtx'],
+				keyword: [new Keyword('_')],
+				instance: ['some.thing.else.gtx'],
 			});
 			const code = 'some.thing.gtx._("Hello, world!")';
 			expect(p.parse(Buffer.from(code), 'example.ts')).toBeTruthy();
@@ -112,8 +112,8 @@ msgstr ""
 		it('should accept a partially correct instance', () => {
 			const catalog = new Catalog();
 			const p = new TypeScriptParser(catalog, {
-				keywords: [new Keyword('_')],
-				instances: ['thing.gtx'],
+				keyword: [new Keyword('_')],
+				instance: ['thing.gtx'],
 			});
 			const code = 'some.thing.gtx._("Hello, world!")';
 			expect(p.parse(Buffer.from(code), 'example.ts')).toBeTruthy();

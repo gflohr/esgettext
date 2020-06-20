@@ -18,15 +18,15 @@ interface EntryProperties {
 	msgidPlural?: string;
 	msgctxt?: string;
 	comment?: string;
-	flags?: Array<string>;
+	flag?: Array<string>;
 }
 
 export interface ParserOptions {
 	addAllComments?: boolean;
 	addComments?: Array<string>;
 	extractAll?: boolean;
-	keywords?: Array<Keyword>;
-	instances?: Array<string>;
+	keyword?: Array<Keyword>;
+	instance?: Array<string>;
 	fromCode?: string;
 }
 
@@ -45,13 +45,13 @@ export abstract class Parser {
 		protected readonly options: ParserOptions = {},
 	) {
 		this.keywords = {};
-		(options.keywords || Parser.cookedDefaultKeywords()).forEach(keyword => {
+		(options.keyword || Parser.cookedDefaultKeywords()).forEach(keyword => {
 			this.keywords[keyword.method] = keyword;
 		});
-		if (options.instances) {
+		if (options.instance) {
 			this.instances = new Array<Array<string>>();
-			for (let i = 0; i < options.instances.length; ++i) {
-				this.instances[i] = options.instances[i].split('.').reverse();
+			for (let i = 0; i < options.instance.length; ++i) {
+				this.instances[i] = options.instance[i].split('.').reverse();
 			}
 		}
 	}
@@ -185,7 +185,7 @@ export abstract class Parser {
 	}
 
 	private checkInstance(instance: Array<string>): boolean {
-		if (!this.options.instances) {
+		if (!this.options.instance) {
 			return true;
 		}
 
@@ -341,7 +341,7 @@ export abstract class Parser {
 	}
 
 	private addEntry(props: EntryProperties): void {
-		props.flags = new Array<string>();
+		props.flag = new Array<string>();
 
 		const dict: { [key: string]: string } = (props.loc as unknown) as {
 			[key: string]: string;
@@ -366,7 +366,7 @@ export abstract class Parser {
 								validTokens.includes(token) ||
 								/^(?:[a-z]+-)+(?:format|check)$/.exec(token)
 							) {
-								props.flags.push(token);
+								props.flag.push(token);
 							}
 						});
 						comment = '';
@@ -378,10 +378,10 @@ export abstract class Parser {
 		}
 
 		if (
-			!props.flags.includes('no-perl-brace-format') &&
+			!props.flag.includes('no-perl-brace-format') &&
 			/\{[_a-zA-Z][_a-zA-Z0-9]*\}/.exec(props.msgid)
 		) {
-			props.flags.push('perl-brace-format');
+			props.flag.push('perl-brace-format');
 		}
 
 		this.catalog.addEntry(
@@ -389,7 +389,7 @@ export abstract class Parser {
 				msgid: props.msgid,
 				msgidPlural: props.msgidPlural,
 				msgctxt: props.msgctxt,
-				flags: props.flags,
+				flags: props.flag,
 				references,
 				extractedComments,
 			}),

@@ -923,6 +923,30 @@ console.log("non-gettext-function");
 				expect(errorSpy).not.toHaveBeenCalled();
 			});
 		});
+
+		describe('--keyword', () => {
+			beforeEach(resetMocks);
+
+			it('should extract the selected keywords', () => {
+				const code = `
+gtx._("ignore");
+gettext("catch");
+npgettext("context", "one file", "multiple files", 2304);
+`;
+				readFileSync.mockReturnValueOnce(Buffer.from(code));
+				const argv = {
+					...baseArgv,
+					keyword: ['', 'gettext', 'npgettext:1c,2,3'],
+					_: ['keyword.js'],
+				};
+				const xgettext = new XGettext(argv, date);
+				expect(xgettext.run()).toEqual(0);
+				expect(writeFileSync).toHaveBeenCalledTimes(1);
+				expect(writeFileSync.mock.calls[0][1]).toMatchSnapshot();
+				expect(warnSpy).not.toHaveBeenCalled();
+				expect(errorSpy).not.toHaveBeenCalled();
+			});
+		});
 	});
 
 	describe('output details', () => {
