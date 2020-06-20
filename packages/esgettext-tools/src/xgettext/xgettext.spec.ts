@@ -844,7 +844,8 @@ gtx._("catch me!");
 		describe('add-comments', () => {
 			beforeEach(resetMocks);
 
-			const code = `
+			it('should add selected comments', () => {
+				const code = `
 // TRANSLATORS: The abbreviated day of the week, not our star.
 gtx._("Sun");
 
@@ -854,18 +855,48 @@ gtx._("Hello, world!");
 // DEVELOPERS: Don't repeat yourself.
 gtx._("Copy & Paste");
 `;
-			readFileSync.mockReturnValueOnce(Buffer.from(code));
-			const argv = {
-				...baseArgv,
-				addComments: ['TRANSLATORS:', 'TESTERS:'],
-				_: ['add-comments.js'],
-			};
-			const xgettext = new XGettext(argv, date);
-			expect(xgettext.run()).toEqual(0);
-			expect(writeFileSync).toHaveBeenCalledTimes(1);
-			expect(writeFileSync.mock.calls[0][1]).toMatchSnapshot();
-			expect(warnSpy).not.toHaveBeenCalled();
-			expect(errorSpy).not.toHaveBeenCalled();
+				readFileSync.mockReturnValueOnce(Buffer.from(code));
+				const argv = {
+					...baseArgv,
+					addComments: ['TRANSLATORS:', 'TESTERS:'],
+					_: ['add-comments.js'],
+				};
+				const xgettext = new XGettext(argv, date);
+				expect(xgettext.run()).toEqual(0);
+				expect(writeFileSync).toHaveBeenCalledTimes(1);
+				expect(writeFileSync.mock.calls[0][1]).toMatchSnapshot();
+				expect(warnSpy).not.toHaveBeenCalled();
+				expect(errorSpy).not.toHaveBeenCalled();
+			});
+		});
+
+		describe('add-all-comments', () => {
+			beforeEach(resetMocks);
+
+			it('should add all comments', () => {
+				const code = `
+// TRANSLATORS: The abbreviated day of the week, not our star.
+gtx._("Sun");
+
+// TESTERS: This must be translated!
+gtx._("Hello, world!");
+
+// DEVELOPERS: Don't repeat yourself.
+gtx._("Copy & Paste");
+`;
+				readFileSync.mockReturnValueOnce(Buffer.from(code));
+				const argv = {
+					...baseArgv,
+					addAllComments: true,
+					_: ['add-comments.js'],
+				};
+				const xgettext = new XGettext(argv, date);
+				expect(xgettext.run()).toEqual(0);
+				expect(writeFileSync).toHaveBeenCalledTimes(1);
+				expect(writeFileSync.mock.calls[0][1]).toMatchSnapshot();
+				expect(warnSpy).not.toHaveBeenCalled();
+				expect(errorSpy).not.toHaveBeenCalled();
+			});
 		});
 	});
 

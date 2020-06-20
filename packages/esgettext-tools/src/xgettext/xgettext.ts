@@ -325,9 +325,10 @@ export class XGettext {
 	}
 
 	private getParserOptions(): ParserOptions {
-		return (({ fromCode, addComments }): ParserOptions => ({
+		return (({ fromCode, addComments, addAllComments }): ParserOptions => ({
 			fromCode,
 			addComments,
+			addAllComments,
 		}))(this.options);
 	}
 }
