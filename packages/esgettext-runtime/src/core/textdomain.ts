@@ -51,6 +51,8 @@ export class Textdomain {
 		/* Prevent instantiation. */
 	}
 
+	_: (msgid: string) => string;
+
 	/**
 	 * Instantiate a Textdomain object. Textdomain objects are singletons
 	 * for each textdomain identifier.
@@ -78,6 +80,16 @@ export class Textdomain {
 				pluralFunction: germanicPlural,
 				entries: {},
 			};
+
+			if (typeof Textdomain.prototype['_'] !== 'function') {
+				Textdomain.prototype['_'] = function (msgid) {
+					return gettextImpl({
+						msgid,
+						catalog: this.catalog,
+					});
+				};
+			}
+
 			return domain;
 		}
 	}
@@ -274,7 +286,7 @@ export class Textdomain {
 	 *
 	 * @returns the translated string
 	 */
-	_(msgid: string): string {
+	underscore(msgid: string): string {
 		return gettextImpl({
 			msgid,
 			catalog: this.catalog,
