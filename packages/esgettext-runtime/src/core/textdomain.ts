@@ -51,6 +51,27 @@ export class Textdomain {
 		/* Prevent instantiation. */
 	}
 
+	/**
+	 * The basic and most-used method. If your code loooked like this
+	 * until now:
+	 *
+	 * ```
+	 * console.log('permission denied');
+	 * ```
+	 *
+	 * You will now write:
+	 *
+	 * ```
+	 * console.log(gtx._(permission denied'));
+	 * ```
+	 *
+	 * That's all, the string will be output in the user's preferred
+	 * language, provided that you have installed a translation for it.
+	 *
+	 * @param msgid - the string to translate
+	 *
+	 * @returns the translated string
+	 */
 	_: (msgid: string) => string;
 
 	/**
@@ -81,13 +102,29 @@ export class Textdomain {
 				entries: {},
 			};
 
+			/* Generate all trivial methods.  */
 			if (typeof Textdomain.prototype['_'] !== 'function') {
-				Textdomain.prototype['_'] = function (msgid) {
-					return gettextImpl({
+				// eslint-disable-next-line @typescript-eslint/no-unused-vars
+				const gettext = gettextImpl;
+
+				// Arguments in standardized order.
+				//const args = ['msgctxt', 'msgid', 'msgidPlural', 'numItems'];
+
+				// Method signatures (range of arguments to pick.)
+				// const methods = {
+				// 	_: [1, 1],
+				// 	_n: [1, 3],
+				// 	_p: [0, 1],
+				// 	_np: [0, 3],
+				// };
+
+				// eslint-disable-next-line no-eval
+				eval(`Textdomain.prototype['_'] = function (msgid) {
+					return gettext({
 						msgid,
 						catalog: this.catalog,
 					});
-				};
+				}`);
 			}
 
 			return domain;
@@ -263,34 +300,6 @@ export class Textdomain {
 	 */
 	static userLocales(): Array<string> {
 		return userLocales();
-	}
-
-	/**
-	 * The basic and most-used method. If your code loooked like this
-	 * until now:
-	 *
-	 * ```
-	 * console.log('permission denied');
-	 * ```
-	 *
-	 * You will now write:
-	 *
-	 * ```
-	 * console.log(gtx._(permission denied'));
-	 * ```
-	 *
-	 * That's all, the string will be output in the user's preferred
-	 * language, provided that you have installed a translation for it.
-	 *
-	 * @param msgid - the string to translate
-	 *
-	 * @returns the translated string
-	 */
-	underscore(msgid: string): string {
-		return gettextImpl({
-			msgid,
-			catalog: this.catalog,
-		});
 	}
 
 	/**
