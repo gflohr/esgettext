@@ -55,7 +55,7 @@
 		"eslint-plugin-tsdoc": "^0.2.4",
 		"husky": "^4.2.5",
 		"jest": "^25.5.2",
-		"lerna": "^3.20.2",
+		"lerna": "^3.22.1",
 		"lint-staged": "^10.2.0",
 		"prettier": "^2.0.5",
 		"shx": "^0.3.2",
