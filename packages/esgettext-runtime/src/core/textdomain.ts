@@ -111,11 +111,11 @@ export class Textdomain {
 	 * "[_a-zA-Z][_a-zA-Z0-9]*".
 	 *
 	 * @param msgid - the msgid to translate
-	 * @param placeholders - a dictionary of placeholders
+	 * @param placeholders - an optional dictionary of placeholders
 	 *
 	 * @returns the translated string with placeholders expanded
 	 */
-	_x: (msgid: string, placeholders: Placeholders) => string;
+	_x: (msgid: string, placeholders?: Placeholders) => string;
 
 	/**
 	 * Translate a string with a plural expression with placeholders.
@@ -123,7 +123,7 @@ export class Textdomain {
 	 * @param msgid - the string in the singular
 	 * @param msgidPlural - the string in the plural
 	 * @param numItems - the number of items
-	 * @param placeholders - a dictionary of placeholders
+	 * @param placeholders - an optional dictionary of placeholders
 	 *
 	 * @returns the translated string
 	 */
@@ -131,7 +131,7 @@ export class Textdomain {
 		msgid: string,
 		msgidPlural: string,
 		numItems: number,
-		placeholders: Placeholders,
+		placeholders?: Placeholders,
 	) => string;
 
 	/**
@@ -139,10 +139,10 @@ export class Textdomain {
 	 *
 	 * @param msgctxt - the message context
 	 * @param msgid - the message id
-	 * @param placeholders a dictionary with placehoders
+	 * @param placeholders an optional dictionary with placehoders
 	 * @returns the translated string
 	 */
-	_px: (msgctxt: string, msgid: string, placeholders: Placeholders) => string;
+	_px: (msgctxt: string, msgid: string, placeholders?: Placeholders) => string;
 
 	/**
 	 * The method `_npx()` brings it all together. It combines `_n()` and
@@ -152,7 +152,7 @@ export class Textdomain {
 	 * @param msgid - the message id
 	 * @param msgidPlural - the plural string
 	 * @param numItems - the number of items
-	 * @param placeholders a dictionary with placehoders
+	 * @param placeholders an optional dictionary with placehoders
 	 * @returns the translated string
 	 */
 	_npx: (
@@ -160,7 +160,7 @@ export class Textdomain {
 		msgid: string,
 		msgidPlural: string,
 		numItems: number,
-		placeholders: Placeholders,
+		placeholders?: Placeholders,
 	) => string;
 
 	private static expand(
