@@ -449,6 +449,15 @@ describe('_l methods with fixed locale', () => {
 			it('should translate "January"', () => {
 				expect(gtx._l('de', 'January')).toEqual('Januar');
 			});
+			it('should expand all placeholders', () => {
+				expect(
+					gtx._lx('de', 'The colors are {color1}, {color2}, and {color3}.', {
+						color1: gtx._('red'),
+						color2: gtx._('green'),
+						color3: gtx._('blue'),
+					}),
+				).toEqual('Die Farben sind Rot, Grün und Blau.');
+			});
 		});
 	});
 });
