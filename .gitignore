@@ -5,6 +5,7 @@ lib-esm/
 dist/
 /tmp
 /out-tsc
+packages/esgettext-runtime/api-docs
 
 # dependencies
 node_modules/

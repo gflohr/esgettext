@@ -25,7 +25,8 @@
 		"posttest:cov": "node merge-lcov.js packages/*",
 		"test:debug": "lerna run test:debug --stream",
 		"test:e2e": "lerna run test:e2e --stream",
-		"test:ci": "lerna exec --stream -- DOTENV_CONFIG_PATH=./.env.example jest --coverage --ci --reporters=default --reporters=jest-junit --coverage-reporters=text --coverage-reporters=cobertura"
+		"test:ci": "lerna exec --stream -- DOTENV_CONFIG_PATH=./.env.example jest --coverage --ci --reporters=default --reporters=jest-junit --coverage-reporters=text --coverage-reporters=cobertura",
+		"typedoc": "lerna run typedoc --stream"
 	},
 	"husky": {
 		"hooks": {

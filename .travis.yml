@@ -16,6 +16,6 @@ deploy:
     branch: master
 before_deploy:
   - touch .nojekyll
-  - sed -i '/docs/d' .gitignore
+  - sed -i 's/api-docs/api-docs-unignored/g' .gitignore
 after_success:
   - node node_modules/.bin/coveralls <coverage/lcov.info
