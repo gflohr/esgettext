@@ -226,15 +226,16 @@ export class Textdomain {
 				for (const m in methodArgs) {
 					if ({}.hasOwnProperty.call(methodArgs, m)) {
 						const range = methodArgs[m];
-						const a = argNames.slice(range[0], range[1]).join(',');
-
+						const slice = argNames.slice(range[0], range[1]);
+						const a = slice.join(',');
+						const k = slice.map(a => `${a}:${a}`).join(',');
 						// FIXME! expand arguments msgid => msgid: msgid!  But
 						// shorten the actual arguments to single letters.
 
 						// eslint-disable-next-line no-eval
 						eval(`
-${tp}${m}=${f}(${a}){${rg}({${a},${c}});};
-${tp}${m}x=${f}(${a},p){${rx}(g({${a},${c}}),p||{},);};`);
+${tp}${m}=${f}(${a}){${rg}({${k},${c}});};
+${tp}${m}x=${f}(${a},p){${rx}(g({${k},${c}}),p||{},);};`);
 					}
 				}
 			}
