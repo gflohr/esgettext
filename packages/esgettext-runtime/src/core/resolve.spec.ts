@@ -9,7 +9,10 @@ import { Catalog } from './catalog';
 
 // FIXME! Use the method, not the function!
 describe('resolve', () => {
-	beforeEach(() => CatalogCache.clear());
+	beforeEach(() => {
+		CatalogCache.clear();
+		Textdomain.forgetInstances();
+	});
 
 	describe('simple test', () => {
 		it('should return something for mytest.json', () => {
@@ -133,7 +136,10 @@ describe('resolve', () => {
 });
 
 describe('preload cache', () => {
-	beforeEach(() => CatalogCache.clear());
+	beforeEach(() => {
+		CatalogCache.clear();
+		Textdomain.forgetInstances();
+	});
 
 	it('should load', async () => {
 		Textdomain.locale = 'de';
@@ -160,14 +166,16 @@ describe('preload cache', () => {
 });
 
 describe('special cases', () => {
-	beforeEach(() => CatalogCache.clear());
+	beforeEach(() => {
+		CatalogCache.clear();
+		Textdomain.forgetInstances();
+	});
 
 	describe('unsupported URL protocols', () => {
 		const gtx = Textdomain.getInstance('mailto');
 		Textdomain.locale = 'de';
 
 		const url = 'mailto:guido.flohr@cantanea.com';
-		gtx.bindtextdomain('mailto:guido.flohr@cantanea.com');
 
 		const path = [url, 'de', 'LC_MESSAGES', 'mailto.json'].join(
 			pathSeparator(),
@@ -177,6 +185,8 @@ describe('special cases', () => {
 			const loadFile = jest.fn();
 			const oldLoadFile = TransportFs.prototype.loadFile;
 			TransportFs.prototype.loadFile = loadFile;
+
+			gtx.bindtextdomain('mailto:guido.flohr@cantanea.com');
 
 			return gtx.resolve().then(() => {
 				TransportFs.prototype.loadFile = oldLoadFile;

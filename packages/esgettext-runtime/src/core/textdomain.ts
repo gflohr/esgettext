@@ -415,6 +415,14 @@ ${tp}l${m}x=${f}(l,${a},p){${tc}${rx}(g({${k},${cc}}),p||{});};
 	}
 
 	/**
+	 * This method is used for testing.  Do not use it yourself!
+	 */
+	static forgetInstances(): void {
+		Textdomain.clearInstances();
+		Textdomain.domains = {};
+	}
+
+	/**
 	 * Query the locale in use.
 	 */
 	static get locale(): string {
@@ -522,6 +530,22 @@ ${tp}l${m}x=${f}(l,${a},p){${tc}${rx}(g({${k},${cc}}),p||{});};
 	 * @returns a promise for a Catalog that will always resolve.
 	 */
 	async resolve(locale?: string): Promise<Catalog> {
+		const promises = [this.resolve1(locale)];
+		for (const td in Textdomain.domains) {
+			if (
+				Object.prototype.hasOwnProperty.call(Textdomain.domains, td) &&
+				Textdomain.domains[td] !== this
+			) {
+				promises.push(Textdomain.domains[td].resolve1(locale));
+			}
+		}
+
+		return Promise.all(promises).then(values => {
+			return new Promise(resolve => resolve(values[0]));
+		});
+	}
+
+	private async resolve1(locale?: string): Promise<Catalog> {
 		let path = this.bindtextdomain();
 
 		if (typeof path === 'undefined' || path === null) {

@@ -56,6 +56,33 @@ describe('existing translations for locale de', () => {
 	});
 });
 
+describe('translations from multiple packages de', () => {
+	const gtx1 = Textdomain.getInstance('existing');
+	const gtx2 = Textdomain.getInstance('additional');
+
+	beforeAll(() => {
+		Textdomain.locale = 'de';
+		// This should also resolve gtx2.
+		return gtx1.resolve();
+	});
+
+	describe('locale should be de indeed', () => {
+		it('should use the locale de', () => {
+			expect(Textdomain.locale).toEqual('de');
+		});
+	});
+
+	describe('normal strings', () => {
+		it('should translate "January" from first domain', () => {
+			expect(gtx1._('January')).toEqual('Januar');
+		});
+
+		it('should translate "Saturday" from second domain', () => {
+			expect(gtx2._('Saturday')).toEqual('Samstag');
+		});
+	});
+});
+
 describe('existing translations for locale de_AT', () => {
 	const gtx = Textdomain.getInstance('existing');
 
