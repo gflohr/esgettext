@@ -52,6 +52,14 @@ export class Textdomain {
 	}
 
 	/**
+	 * Instantiate a Textdomain object. Textdomain objects are singletons
+	 * for each textdomain identifier.
+	 *
+	 * @param textdomain - the textdomain of your application or library.
+	 */
+	getInstance: (textdomain: string) => Textdomain;
+
+	/**
 	 * The basic and most-used method. If your code loooked like this
 	 * until now:
 	 *
@@ -75,11 +83,105 @@ export class Textdomain {
 	_: (msgid: string) => string;
 
 	/**
-	 * Instantiate a Textdomain object. Textdomain objects are singletons
-	 * for each textdomain identifier.
+	 * This method is complicated and is best explained with an
+	 * example. We'll have another look at your vintage code:
 	 *
-	 * @param textdomain - the textdomain of your application or library.
+	 * ```
+	 * if (files_deleted === 1) {
+	 *     console.log('One file has been deleted.');
+	 * } else {
+	 *     console.log('All files have been deleted.\n);
+	 * }
+	 * ```
+	 *
+	 * Your intent is clear, you wanted to avoid the cumbersome "1 files
+	 * deleted". This is okay for English, but other languages have more
+	 * than one plural form. For example in Russian it makes a difference
+	 * whether you want to say 1 file, 3 files or 6 files. You will use
+	 * three different forms of the noun 'file' in each case. (Note: Yep,
+	 * very smart you are, the Russian word for 'file' is in fact the
+	 * English word, and it is an invariable noun, but if you know that,
+	 * you will also understand the rest despite this little simplification
+	 * ...).
+	 *
+	 * That is the reason for the existance of the method `_n()`.
+	 *
+	 * ```
+	 * console.log(gtx._n('One file has been deleted.',
+	 *                    'All files have been deleted.',
+	 *                     files_deleted));
+	 * ```
+	 *
+	 * The effect is that `esgettext-runtime` will find out which
+	 * plural form to pick for your user's language, and the output string
+	 * will always look okay.
+	 *
+	 * It should be mentioned that the method is rarely useful because messages
+	 * with plural forms will almost always require the use of placeholders.
+	 * See `_nx()` below for a solution.
+	 *
+	 * @param msgid - the string in the singular
+	 * @param msgidPlural - the string in the plural
+	 * @param numItems - the number of items
+	 *
+	 * @returns the translated string
 	 */
+	_n: (msgid: string, msgidPlural: string, numItems: number) => string;
+
+	/**
+	 * The method `_np()` combines `_n()` with `_p()`. Normally you will
+	 * want to use `_npx()` instead, so that you can interpolate numbers.
+	 *
+	 * @param msgctxt - the message context
+	 * @param msgid - the message id
+	 * @param placeholders a dictionary with placehoders
+	 * @returns the translated string
+	 */
+	_np: (
+		msgctxt: string,
+		msgid: string,
+		msgidPlural: string,
+		numItems: number,
+	) => string;
+
+	/**
+	 * Translate a string with a context.
+	 *
+	 * This is much like __. The "p" stands for "particular", and the
+	 * MSGCTXT is used to provide context to the translator. This may be
+	 * neccessary when your string is short, and could stand for multiple
+	 * things. For example:
+	 *
+	 * ```
+	 * console.log(gtx._p('Verb, to view', 'View'));
+	 * console.log(gtx._p('Noun, a view', 'View'));
+	 * ```
+	 *
+	 * The above may be the "View" entries in a menu, where View-\>Source and
+	 * File-\>View are different forms of "View", and likely need to be
+	 * translated differently.
+	 *
+	 * A typical usage are GUI programs. Imagine a program with a main menu
+	 * and the notorious "Open" entry in the "File" menu. Now imagine,
+	 * there is another menu entry Preferences-\>Advanced-\>Policy where you
+	 * have a choice between the alternatives "Open" and "Closed". In
+	 * English, "Open" is the adequate text at both places. In other
+	 * languages, it is very likely that you need two different
+	 * translations. Therefore, you would now write:
+	 *
+	 * gtx._p('File|', 'Open');
+	 * gtx._p('Preferences|Advanced|Policy', 'Open');
+	 *
+	 * In English, or if no translation can be found, the second argument
+	 * (MSGID) is returned.
+	 *
+	 * @param msgctxt - the message context
+	 * @param msgid - the string to translate
+	 *
+	 * @returns the translated string
+	 */
+	_p: (msgctxt: string, msgid: string) => string;
+
 	static getInstance(textdomain: string): Textdomain {
 		if (
 			typeof textdomain === 'undefined' ||
@@ -108,23 +210,32 @@ export class Textdomain {
 				const gettext = gettextImpl;
 
 				// Arguments in standardized order.
-				//const args = ['msgctxt', 'msgid', 'msgidPlural', 'numItems'];
+				const argNames = ['msgctxt', 'msgid', 'msgidPlural', 'numItems'];
 
 				// Method signatures (range of arguments to pick.)
-				// const methods = {
-				// 	_: [1, 1],
-				// 	_n: [1, 3],
-				// 	_p: [0, 1],
-				// 	_np: [0, 3],
-				// };
+				const methodArgs: { [key: string]: Array<number> } = {
+					_: [1, 2],
+					_n: [1, 4],
+					_p: [0, 2],
+					_np: [0, 4],
+				};
 
-				// eslint-disable-next-line no-eval
-				eval(`Textdomain.prototype['_'] = function (msgid) {
-					return gettext({
-						msgid,
-						catalog: this.catalog,
-					});
-				}`);
+				for (const method in methodArgs) {
+					if ({}.hasOwnProperty.call(methodArgs, method)) {
+						const range = methodArgs[method];
+						const args = argNames.slice(range[0], range[1]).join(',');
+
+						// eslint-disable-next-line no-eval
+						eval(`
+							Textdomain.prototype['${method}'] = function(${args}) {
+								return gettext({
+									${args},
+									catalog: this.catalog,
+								});
+							}
+						`);
+					}
+				}
 			}
 
 			return domain;
@@ -376,59 +487,6 @@ export class Textdomain {
 	}
 
 	/**
-	 * This method is complicated and is best explained with an
-	 * example. We'll have another look at your vintage code:
-	 *
-	 * ```
-	 * if (files_deleted === 1) {
-	 *     console.log('One file has been deleted.');
-	 * } else {
-	 *     console.log('All files have been deleted.\n);
-	 * }
-	 * ```
-	 *
-	 * Your intent is clear, you wanted to avoid the cumbersome "1 files
-	 * deleted". This is okay for English, but other languages have more
-	 * than one plural form. For example in Russian it makes a difference
-	 * whether you want to say 1 file, 3 files or 6 files. You will use
-	 * three different forms of the noun 'file' in each case. (Note: Yep,
-	 * very smart you are, the Russian word for 'file' is in fact the
-	 * English word, and it is an invariable noun, but if you know that,
-	 * you will also understand the rest despite this little simplification
-	 * ...).
-	 *
-	 * That is the reason for the existance of the method `_n()`.
-	 *
-	 * ```
-	 * console.log(gtx._n('One file has been deleted.',
-	 *                    'All files have been deleted.',
-	 *                     files_deleted));
-	 * ```
-	 *
-	 * The effect is that `esgettext-runtime` will find out which
-	 * plural form to pick for your user's language, and the output string
-	 * will always look okay.
-	 *
-	 * It should be mentioned that the method is rarely useful because messages
-	 * with plural forms will almost always require the use of placeholders.
-	 * See `_nx()` below for a solution.
-	 *
-	 * @param msgid - the string in the singular
-	 * @param msgidPlural - the string in the plural
-	 * @param numItems - the number of items
-	 *
-	 * @returns the translated string
-	 */
-	_n(msgid: string, msgidPlural: string, numItems: number): string {
-		return gettextImpl({
-			msgid,
-			catalog: this.catalog,
-			msgidPlural,
-			numItems,
-		});
-	}
-
-	/**
 	 * The method normally used for plural expressions.
 	 *
 	 * ```
@@ -476,50 +534,6 @@ export class Textdomain {
 	}
 
 	/**
-	 * Translate a string with a context.
-	 *
-	 * This is much like __. The "p" stands for "particular", and the
-	 * MSGCTXT is used to provide context to the translator. This may be
-	 * neccessary when your string is short, and could stand for multiple
-	 * things. For example:
-	 *
-	 * ```
-	 * console.log(gtx._p('Verb, to view', 'View'));
-	 * console.log(gtx._p('Noun, a view', 'View'));
-	 * ```
-	 *
-	 * The above may be the "View" entries in a menu, where View-\>Source and
-	 * File-\>View are different forms of "View", and likely need to be
-	 * translated differently.
-	 *
-	 * A typical usage are GUI programs. Imagine a program with a main menu
-	 * and the notorious "Open" entry in the "File" menu. Now imagine,
-	 * there is another menu entry Preferences-\>Advanced-\>Policy where you
-	 * have a choice between the alternatives "Open" and "Closed". In
-	 * English, "Open" is the adequate text at both places. In other
-	 * languages, it is very likely that you need two different
-	 * translations. Therefore, you would now write:
-	 *
-	 * gtx._p('File|', 'Open');
-	 * gtx._p('Preferences|Advanced|Policy', 'Open');
-	 *
-	 * In English, or if no translation can be found, the second argument
-	 * (MSGID) is returned.
-	 *
-	 * @param msgctxt - the message context
-	 * @param msgid - the string to translate
-	 *
-	 * @returns the translated string
-	 */
-	_p(msgctxt: string, msgid: string): string {
-		return gettextImpl({
-			msgid,
-			catalog: this.catalog,
-			msgctxt,
-		});
-	}
-
-	/**
 	 * The method `_px()` combines `_p()` with `_x()`.
 	 *
 	 * @param msgctxt - the message context
@@ -536,30 +550,6 @@ export class Textdomain {
 			}),
 			placeholders,
 		);
-	}
-
-	/**
-	 * The method `_np()` combines `_n()` with `_p()`. Normally you will
-	 * want to use `_npx()` instead, so that you can interpolate numbers.
-	 *
-	 * @param msgctxt - the message context
-	 * @param msgid - the message id
-	 * @param placeholders a dictionary with placehoders
-	 * @returns the translated string
-	 */
-	_np(
-		msgctxt: string,
-		msgid: string,
-		msgidPlural: string,
-		numItems: number,
-	): string {
-		return gettextImpl({
-			msgid,
-			catalog: this.catalog,
-			msgctxt,
-			msgidPlural,
-			numItems,
-		});
 	}
 
 	/**
