@@ -64,7 +64,7 @@ describe('existing translations for locale de_AT', () => {
 		return gtx.resolve();
 	});
 
-	describe('locale should be de indeed', () => {
+	describe('locale should be de_AT indeed', () => {
 		it('should use the locale de_AT', () => {
 			expect(Textdomain.locale).toEqual('de_AT');
 		});
@@ -97,7 +97,7 @@ describe('_x() (placeholder strings)', () => {
 		return gtx.resolve();
 	});
 
-	describe('locale should be de indeed', () => {
+	describe('locale should be de_AT indeed', () => {
 		it('should use the locale de_AT', () => {
 			expect(Textdomain.locale).toEqual('de_AT');
 		});
@@ -145,7 +145,7 @@ describe('_n() (plural forms)', () => {
 		return gtx.resolve();
 	});
 
-	describe('locale should be de indeed', () => {
+	describe('locale should be de_AT indeed', () => {
 		it('should use the locale de_AT', () => {
 			expect(Textdomain.locale).toEqual('de_AT');
 		});
@@ -172,7 +172,7 @@ describe('_nx() (plural forms with placeholder expansion)', () => {
 		return gtx.resolve();
 	});
 
-	describe('locale should be de indeed', () => {
+	describe('locale should be de_AT indeed', () => {
 		it('should use the locale de_AT', () => {
 			expect(Textdomain.locale).toEqual('de_AT');
 		});
@@ -219,7 +219,7 @@ describe('_p() (with context)', () => {
 		return gtx.resolve();
 	});
 
-	describe('locale should be de indeed', () => {
+	describe('locale should be de_AT indeed', () => {
 		it('should use the locale de_AT', () => {
 			expect(Textdomain.locale).toEqual('de_AT');
 		});
@@ -256,7 +256,7 @@ describe('_px() (with context and placeholders)', () => {
 		return gtx.resolve();
 	});
 
-	describe('locale should be de indeed', () => {
+	describe('locale should be de_AT indeed', () => {
 		it('should use the locale de_AT', () => {
 			expect(Textdomain.locale).toEqual('de_AT');
 		});
@@ -313,7 +313,7 @@ describe('_np() (with context and placeholders)', () => {
 		return gtx.resolve();
 	});
 
-	describe('locale should be de indeed', () => {
+	describe('locale should be de_AT indeed', () => {
 		it('should use the locale de_AT', () => {
 			expect(Textdomain.locale).toEqual('de_AT');
 		});
@@ -353,7 +353,7 @@ describe('_npx() (with plural, context and placeholders)', () => {
 		return gtx.resolve();
 	});
 
-	describe('locale should be de indeed', () => {
+	describe('locale should be de_AT indeed', () => {
 		it('should use the locale de_AT', () => {
 			expect(Textdomain.locale).toEqual('de_AT');
 		});
@@ -433,6 +433,22 @@ describe('_npx() (with plural, context and placeholders)', () => {
 					2304,
 				),
 			).toEqual('{num} directories have been deleted.');
+		});
+	});
+});
+
+describe('_l methods with fixed locale', () => {
+	const gtx = Textdomain.getInstance('existing');
+
+	beforeAll(() => {
+		return gtx.resolve('de');
+	});
+
+	describe('tests', () => {
+		describe('_l', () => {
+			it('should translate "January"', () => {
+				expect(gtx._l('de', 'January')).toEqual('Januar');
+			});
 		});
 	});
 });

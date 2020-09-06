@@ -70,6 +70,8 @@ export class Textdomain {
 
 	/**
 	 * Retrieve a translation for a string containing a possible plural.
+	 * You will almost always want to call {@linkcode _nx} instead so that
+	 * you can interpolate the number of items into the strings.
 	 *
 	 * @param msgid - the string in the singular
 	 * @param msgidPlural - the string in the plural
@@ -90,8 +92,10 @@ export class Textdomain {
 	_p: (msgctxt: string, msgid: string) => string;
 
 	/**
-	 * The method `_np()` combines `_n()` with `_p()`. Normally you will
-	 * want to use `_npx()` instead, so that you can interpolate numbers.
+	 * The method `_np()` combines `_n()` with `_p()`.
+	 * You will almost always want to call {@linkcode _npx} instead so that
+	 * you can interpolate the number of items into the strings.
+
 	 *
 	 * @param msgctxt - the message context
 	 * @param msgid - the message id
@@ -163,6 +167,147 @@ export class Textdomain {
 		placeholders?: Placeholders,
 	) => string;
 
+	private static getCatalog(locale: string, textdomain: string): Catalog {
+		const catalog = CatalogCache.lookup(locale, textdomain);
+		if (!catalog || Promise.resolve(catalog) === catalog) {
+			return {
+				major: 0,
+				minor: 0,
+				pluralFunction: germanicPlural,
+				entries: {},
+			};
+		}
+
+		return catalog as Catalog;
+	}
+
+	/**
+	 * Retrieve a translation for a string with a fixed locale.
+	 *
+	 * @param locale - the locale identifier
+	 * @param msgid - the string to translate
+	 *
+	 * @returns the translated string
+	 */
+	_l: (locale: string, msgid: string) => string;
+
+	/**
+	 * Retrieve a translation for a string containing a possible plural with
+	 * a fixed locale.
+	 * You will almost always want to call {@linkcode _nx} instead so that
+	 * you can interpolate the number of items into the strings.
+	 *
+	 * @param locale - the locale identifier
+	 * @param msgid - the string in the singular
+	 * @param msgidPlural - the string in the plural
+	 * @param numItems - the number of items
+	 *
+	 * @returns the translated string
+	 */
+	_ln: (
+		locale: string,
+		msgid: string,
+		msgidPlural: string,
+		numItems: number,
+	) => string;
+
+	/**
+	 * Translate a string with a context with a fixed locale.
+	 *
+	 * @param locale - the locale identifier
+	 * @param msgctxt - the message context
+	 * @param msgid - the string to translate
+	 *
+	 * @returns the translated string
+	 */
+	_lp: (locale: string, msgctxt: string, msgid: string) => string;
+
+	/**
+	 * The method `_lnp()` combines `_ln()` with `_lp()`.
+	 * You will almost always want to call {@linkcode _npx} instead so that
+	 * you can interpolate the number of items into the strings.
+
+	 *
+	 * @param locale - the locale identifier
+	 * @param msgctxt - the message context
+	 * @param msgid - the message id
+	 * @param placeholders a dictionary with placehoders
+	 * @returns the translated string
+	 */
+	_lnp: (
+		locale: string,
+		msgctxt: string,
+		msgid: string,
+		msgidPlural: string,
+		numItems: number,
+	) => string;
+
+	/**
+	 * Translate a string with placeholders for a fixed locale.
+	 * The placeholders should be
+	 * wrapped into curly braces and must match the regular expression
+	 * "[_a-zA-Z][_a-zA-Z0-9]*".
+	 *
+	 * @param locale - the locale identifier
+	 * @param msgid - the msgid to translate
+	 * @param placeholders - an optional dictionary of placeholders
+	 *
+	 * @returns the translated string with placeholders expanded
+	 */
+	_lx: (locale: string, msgid: string, placeholders?: Placeholders) => string;
+
+	/**
+	 * Translate a string with a plural expression with placeholders into a
+	 * fixed locale.
+	 *
+	 * @param locale - the locale identifier
+	 * @param msgid - the string in the singular
+	 * @param msgidPlural - the string in the plural
+	 * @param numItems - the number of items
+	 * @param placeholders - an optional dictionary of placeholders
+	 *
+	 * @returns the translated string
+	 */
+	_lnx: (
+		locale: string,
+		msgid: string,
+		msgidPlural: string,
+		numItems: number,
+		placeholders?: Placeholders,
+	) => string;
+
+	/**
+	 * The method `_lpx()` combines `_lp()` with `_lx()`.
+	 *
+	 * @param locale - the locale identifier
+	 * @param msgctxt - the message context
+	 * @param msgid - the message id
+	 * @param placeholders an optional dictionary with placehoders
+	 * @returns the translated string
+	 */
+	_lpx: (msgctxt: string, msgid: string, placeholders?: Placeholders) => string;
+
+	/**
+	 * The method `_lnpx()` brings it all together. It combines `_ln()` and
+	 * _lp()` and `_lx()`.
+	 *
+	 * @param locale - the locale identifier
+	 * @param msgctxt - the message context
+	 * @param msgid - the message id
+	 * @param msgidPlural - the plural string
+	 * @param numItems - the number of items
+	 * @param placeholders an optional dictionary with placehoders
+	 * @returns the translated string
+	 */
+	_lnpx: (
+		locale: string,
+		msgctxt: string,
+		msgid: string,
+		msgidPlural: string,
+		numItems: number,
+		placeholders?: Placeholders,
+	) => string;
+
 	private static expand(
 		msg: string,
 		placeholders: { [key: string]: string },
@@ -206,21 +351,35 @@ export class Textdomain {
 				const g = gettextImpl;
 				// eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/unbound-method
 				const x = Textdomain.expand;
+				// eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/unbound-method
+				const lk = CatalogCache.lookup;
+				// eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/unbound-method
+				const gc = this.getCatalog;
+
+				// eslint-disable-next-line @typescript-eslint/no-unused-vars
+				const e = {
+					major: 0,
+					minor: 0,
+					pluralFunction: germanicPlural,
+					entries: {},
+				};
 
 				// Arguments in standardized order.
 				const argNames = ['msgctxt', 'msgid', 'msgidPlural', 'numItems'];
 
 				// Method signatures (range of arguments to pick.)
 				const methodArgs: { [key: string]: Array<number> } = {
-					_: [1, 2],
-					_n: [1, 4],
-					_p: [0, 2],
-					_np: [0, 4],
+					'': [1, 2],
+					n: [1, 4],
+					p: [0, 2],
+					np: [0, 4],
 				};
 
-				const tp = 'Textdomain.prototype.';
+				const tp = 'Textdomain.prototype._';
 				const f = 'function';
-				const c = 'catalog: this.catalog';
+				const c = 'catalog:this.catalog';
+				const tc = 'catalog=Textdomain.getCatalog(l,this.textdomain());';
+				const cc = 'catalog:catalog';
 				const rg = 'return g';
 				const rx = 'return x';
 				for (const m in methodArgs) {
@@ -235,7 +394,9 @@ export class Textdomain {
 						// eslint-disable-next-line no-eval
 						eval(`
 ${tp}${m}=${f}(${a}){${rg}({${k},${c}});};
-${tp}${m}x=${f}(${a},p){${rx}(g({${k},${c}}),p||{},);};`);
+${tp}l${m}=${f}(l,${a}){${tc}${rg}({${k},${cc}});};
+${tp}${m}x=${f}(${a},p){${rx}(g({${k},${c}}),p||{},);};
+`);
 					}
 				}
 			}
@@ -349,14 +510,17 @@ ${tp}${m}x=${f}(${a},p){${rx}(g({${k},${c}}),p||{},);};`);
 
 	/**
 	 * Resolve a textdomain, i.e. load the catalogs for this domain and all
-	 * of its dependencies for the currently selected locale.
+	 * of its dependencies for the currently selected locale or the locale
+	 * specified.
 	 *
 	 * The promise will always resolve. If no catalog was found, an empty
 	 * catalog will be returned that is still usable.
 	 *
+	 * @param locale - an optional locale identifier, defaults to Textdomain.locale
+	 *
 	 * @returns a promise for a Catalog that will always resolve.
 	 */
-	async resolve(): Promise<Catalog> {
+	async resolve(locale?: string): Promise<Catalog> {
 		let path = this.bindtextdomain();
 
 		if (typeof path === 'undefined' || path === null) {
@@ -366,13 +530,16 @@ ${tp}${m}x=${f}(${a},p){${rx}(g({${k},${c}}),p||{},);};`);
 			path = parts.join(pathSeparator());
 		}
 
+		const resolvedLocale = locale ? locale : Textdomain.locale;
 		return resolveImpl(
 			this.domain,
 			path,
 			this.catalogFormat,
-			Textdomain.locale,
+			resolvedLocale,
 		).then(catalog => {
-			this.catalog = catalog;
+			if (!locale) {
+				this.catalog = catalog;
+			}
 			return new Promise(resolve => resolve(catalog));
 		});
 	}
