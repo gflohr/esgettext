@@ -7,5 +7,15 @@ script:
   - yarn bootstrap
   - yarn build
   - yarn test:cov
+  - yarn run typedoc
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN
+  on:
+    branch: master
+before_deploy:
+  - touch .nojekyll
+  - sed -i '/doc/d' .gitignore
 after_success:
   - node node_modules/.bin/coveralls <coverage/lcov.info
