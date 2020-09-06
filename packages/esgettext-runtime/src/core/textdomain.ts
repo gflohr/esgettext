@@ -182,6 +182,19 @@ export class Textdomain {
 	 */
 	_p: (msgctxt: string, msgid: string) => string;
 
+	private static expand(
+		msg: string,
+		placeholders: { [key: string]: string },
+	): string {
+		return msg.replace(/\{([a-zA-Z][0-9a-zA-Z]*)\}/g, (_, match) => {
+			if (Object.prototype.hasOwnProperty.call(placeholders, match)) {
+				return placeholders[match];
+			} else {
+				return `{${match}}`;
+			}
+		});
+	}
+
 	static getInstance(textdomain: string): Textdomain {
 		if (
 			typeof textdomain === 'undefined' ||
@@ -207,7 +220,9 @@ export class Textdomain {
 			/* Generate all trivial methods.  */
 			if (typeof Textdomain.prototype['_'] !== 'function') {
 				// eslint-disable-next-line @typescript-eslint/no-unused-vars
-				const gettext = gettextImpl;
+				const g = gettextImpl;
+				// eslint-disable-next-line @typescript-eslint/no-unused-vars
+				const x = Textdomain.expand;
 
 				// Arguments in standardized order.
 				const argNames = ['msgctxt', 'msgid', 'msgidPlural', 'numItems'];
@@ -220,20 +235,33 @@ export class Textdomain {
 					_np: [0, 4],
 				};
 
+				const tp = 'Textdomain.prototype.';
+				const f = 'function';
 				for (const method in methodArgs) {
 					if ({}.hasOwnProperty.call(methodArgs, method)) {
 						const range = methodArgs[method];
 						const args = argNames.slice(range[0], range[1]).join(',');
 
+						// FIXME! expand arguments msgid => msgid: msgid!  But
+						// shorten the actual arguments to single letters.
+
 						// eslint-disable-next-line no-eval
 						eval(`
-							Textdomain.prototype['${method}'] = function(${args}) {
-								return gettext({
-									${args},
-									catalog: this.catalog,
-								});
-							}
-						`);
+${tp}${method} = ${f}(${args}) {
+	return g({
+		${args},
+		catalog: this.catalog
+	});
+};
+${tp}${method}x = ${f}(${args},p) {
+	return x(
+		g({
+			${args},
+			catalog: this.catalog,
+		}),
+		p || {},
+	);
+};`);
 					}
 				}
 			}
@@ -476,7 +504,7 @@ export class Textdomain {
 	 *
 	 * @returns the translated string with placeholders expanded
 	 */
-	_x(msgid: string, placeholders: Placeholders): string {
+	undercore_x(msgid: string, placeholders: Placeholders): string {
 		return Textdomain.expand(
 			gettextImpl({
 				msgid,
@@ -516,7 +544,7 @@ export class Textdomain {
 	 *
 	 * @returns the translated string
 	 */
-	_nx(
+	underscore_nx(
 		msgid: string,
 		msgidPlural: string,
 		numItems: number,
@@ -541,7 +569,7 @@ export class Textdomain {
 	 * @param placeholders a dictionary with placehoders
 	 * @returns the translated string
 	 */
-	_px(msgctxt: string, msgid: string, placeholders: Placeholders = {}): string {
+	underscore_px(msgctxt: string, msgid: string, placeholders: Placeholders = {}): string {
 		return Textdomain.expand(
 			gettextImpl({
 				msgid,
@@ -563,7 +591,7 @@ export class Textdomain {
 	 * @param placeholders a dictionary with placehoders
 	 * @returns the translated string
 	 */
-	_npx(
+	underscore_npx(
 		msgctxt: string,
 		msgid: string,
 		msgidPlural: string,
@@ -706,18 +734,5 @@ export class Textdomain {
 		placeholders?: Placeholders,
 	): string {
 		return Textdomain.expand(msgid, placeholders);
-	}
-
-	private static expand(
-		msg: string,
-		placeholders: { [key: string]: string },
-	): string {
-		return msg.replace(/\{([a-zA-Z][0-9a-zA-Z]*)\}/g, (_, match) => {
-			if (Object.prototype.hasOwnProperty.call(placeholders, match)) {
-				return placeholders[match];
-			} else {
-				return `{${match}}`;
-			}
-		});
 	}
 }
