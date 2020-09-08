@@ -645,7 +645,7 @@ ${tp}l${m}x=${f}(l,${a},p){${tc}${rx}(g({${k},${cc}}),p||{});};
 	 * expansion, context, or both). They are *not* available for plural
 	 * methods because that would not make sense.
 	 *
-	 * Note that all of these methods are also available as class methods.
+	 * Note that all of these methods are also available as instance methods.
 	 *
 	 * @param msgid - the message id
 	 * @returns the original string
