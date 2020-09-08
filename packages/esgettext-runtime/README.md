@@ -10,12 +10,17 @@ GNU gettext-alike translation runtime library.
   - [Install the Library](#install-the-library)
   - [Import the Library](#import-the-library)
   - [Prepare Your Sources](#prepare-your-sources)
+  - [Translation Methods](#translation-methods)
+    - [Simple Translations With `_()`](#simple-translations-with-_)
+    - [Variable Interpolation With `_x()`](#variable-interpolation-with-_x)
+    - [Plural Forms With `_nx()`](#plural-forms-with-_nx)
+    - [Message Context With `_p()`](#message-context-with-_p)
 - [Copyright](#copyright)
 
 ## API Documentation
 
 If you are already familiar with the concepts of the esgettext runtime library,
-you can go straight to the [API documentation](https://gflohr.github.io/esgettext/packages/esgettext-runtime/api-docs/globals.html). <!-- host the bundle on jsdelivr? -->
+you can go straight to the [API documentation](https://gflohr.github.io/esgettext/packages/esgettext-runtime/api-docs/globals.html).
 
 ## Internationalizing Hello World
 
@@ -28,7 +33,7 @@ console.log('Hello, world!');
 ### Choosing a Textdomain
 
 First, you have to choose a unique identifier for your project so that the
-translation catalogs will have a unique name. You are almost completely free
+translation catalogs will have a unique name. You are almost free
 in what you are choosing but you have to keep in mind that the textdomain
 will be part of a URI or filename and therefore a couple of rules apply:
 
@@ -38,12 +43,12 @@ will be part of a URI or filename and therefore a couple of rules apply:
 - A textdomain _should not_ contain binary characters.
 
 In general, you should only use lowercase characters that are valid inside
-hostnames, namely "a-z", "0-9", the hyphen ".", and the dot ".".
+hostnames, namely "a-z", "0-9", the hyphen "-", and the dot ".".
 
-If possible follow this advice.
+If possible follow this advice:
 
-1. If your organization has a domain, use the reverse(!) name of the domain followed by the name of your product for example "com.example.hello"
-2. Otherwise, if your project sources are publicly hosted use the reserve domain name of your hoster followed by an identifier of your project. For example, the textdomain for `https://github.com/gflohr/esgettext` would then be "com.github.gflohr.esgettext".
+1. If your organization has a domain, use the reverse(!) domain name followed by the name of your product for example "com.example.hello"
+2. Otherwise, if your project sources are publicly hosted use the reverse domain name of your hoster followed by an identifier of your project. For example, the textdomain for `https://github.com/gflohr/esgettext` would then be "com.github.gflohr.esgettext".
 3. Otherwise, use common sense.
 
 We will use the the third rule and pick the textdomain "hello".
@@ -86,18 +91,22 @@ _FIXME! Is this correct?_
 If you are writing javascript loaded by a browser:
 
 ```html
-<script src="esgettext-runtime.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@esgettext/esgettext-runtime/_bundles/esgettext-runtime.min.js"></script>
 <script>
 	var Textdomain = esgettext.Textdomain;
 	// ... your code follows.
 </script>
 ```
 
-If you are not using `npm` or `yarn` for getting the library, you can download
-a tar ball from https://github.com/gflohr/esgettext/releases. You will find
-the file `esgettext-runtime.min.js` at `packages/esgettext-runtime/_bundles`.
+If you want a specific version, you can do like this:
 
-_FIXME! This is currently not true._
+```html
+<script src="https://cdn.jsdelivr.net/npm/@esgettext/esgettext-runtime@0.1.0/_bundles/esgettext-runtime.min.js"></script>
+<script>
+	var Textdomain = esgettext.Textdomain;
+	// ... your code follows.
+</script>
+```
 
 ### Prepare Your Sources
 
@@ -122,30 +131,130 @@ What is happening here?
 First you set the locale (resp. language) to the desired value. Here we
 choose "fr" for French.
 
-_FIXME! There should be a static method for selecting a language/locale!_
+_FIXME! Use the static method [`userLocales()`](https://gflohr.github.io/esgettext/packages/esgettext-runtime/api-docs/classes/textdomain.html#userLocales) for that purpose!_
 
 You then get an instance of a `Textdomain` object. You cannot use the regular
-constructor because it is private! The argument to the `getInstance` class
+constructor because it is private! The argument to the
+[`getInstance()`](https://gflohr.github.io/esgettext/packages/esgettext-runtime/api-docs/classes/textdomain.html#getinstance) class
 method is the textdomain you have chosen.
 
 You then have to tell the library where to find translations for the "hello"
-textdomain. You do that with the instance method `bindtextdomain()` that
+textdomain. You do that with the instance method
+[`bindtextdomain()`](https://gflohr.github.io/esgettext/packages/esgettext-runtime/api-docs/classes/textdomain.html#bindtextdomain) that
 receives a (base) directory as its argument. The actual translation catalog
 would then be searched at `/assets/locale/fr/LC_MESSAGES/hello.json` (or
 `hello.mo` depending on your environment).
 
 Don't worry that there are no translations at the moment. Failure is handled
-gracefully by the library by falling back to using the original, untranslated
+gracefully by the library falling back to using the original, untranslated
 strings. See the [docs for esgettext-tools](../esgettext-tools/README.md) for
-instructions how to create translation catalogs.
+instructions on how to create translation catalogs.
 
-You then have to `resolve()` the translations. The method returns a promise,
+You then have to [`resolve()`](https://gflohr.github.io/esgettext/packages/esgettext-runtime/api-docs/classes/textdomain.html#resolve) the translations. The method returns a promise,
 and your actual code should be moved into the promise's `then()` method.
 
 Now that everything is loaded you can translate all messages by replacing
 `'some string'` with `gtx._('some string')`. That's it!
 
-_To be continued ..._
+### Translation Methods
+
+The method [`_()`](https://gflohr.github.io/esgettext/packages/esgettext-runtime/api-docs/classes/textdomain.html#_) is the simplest but by far not the only translation method
+that esgettext has to offer.
+
+#### Simple Translations With [`_()`](https://gflohr.github.io/esgettext/packages/esgettext-runtime/api-docs/classes/textdomain.html#_)
+
+The method [`_()`](https://gflohr.github.io/esgettext/packages/esgettext-runtime/api-docs/classes/textdomain.html#_) has already been introduced:
+
+```javascript
+console.log(gtx._('Hello, world!'));
+```
+
+It returns the translation of its argument or just the argument if no
+translation can be found.
+
+#### Variable Interpolation With [`_x()`](https://gflohr.github.io/esgettext/packages/esgettext-runtime/api-docs/classes/textdomain.html#_x)
+
+Imagine you want to express RGB colors in human-readable form. The esgettext
+way to do that goes like this:
+
+```javascript
+console.log(gtx._x(
+	'red: {r}, green: {g}, blue: {b}', {
+		r: red,
+		g: green,
+		b: blue
+	}
+);
+```
+
+You use placeholders surrounded by curly braces (`{}`), and provide an object
+as an additional argument where the keys are the placeholder names and the
+values, the respective values to be interpolated.
+
+Placeholder names must be valid C identifiers: They must begin with a
+lower- or uppercase letter ("a" to "z", "A" to "Z") or an underscore ("\_")
+followed by an arbitrary number of characters from the same set or decimal
+digits ("0" to "9"). In regular espression syntax: `/^[_a-zA-Z][_a-zA-Z0-9]*$/`.
+
+#### Plural Forms With [`_nx()`](https://gflohr.github.io/esgettext/packages/esgettext-runtime/api-docs/classes/textdomain.html#_nx)
+
+Translating a string with plural expressions is unfortunately somewhat
+convoluted:
+
+```javascript
+console.log(
+	gtx._nx('One file copied', '{count} files copied.', count, {
+		count: count,
+	}),
+);
+```
+
+Count, count, count, count.
+
+If the variable `count` has the value 42, the above would yield in English:
+"42 files copied.". If `count` had the value 1, it would yield: "One file
+copied.".
+
+The method [`_nx()`](https://gflohr.github.io/esgettext/packages/esgettext-runtime/api-docs/classes/textdomain.html#_) has this signature:
+
+```javascript
+_nx(
+	(msgid: string),
+	(msgidPlural: string),
+	(numberOfItems: number),
+	(placeholders: Object),
+);
+```
+
+Many times, the placeholder name will equal the variable name, so that you see
+that name once inside the plural string as the placeholder, then as the
+argument `numberOfItems`, then as the key in the placeholder hash, and again
+as the value for that key.
+
+Note that there is also a method [`_n()`](https://gflohr.github.io/esgettext/packages/esgettext-runtime/api-docs/classes/textdomain.html#_n) that does the same as [`_nx()`](https://gflohr.github.io/esgettext/packages/esgettext-runtime/api-docs/classes/textdomain.html#_nx) but
+without inpterpolation but it only exists for completeness and is useless for
+practical purposes.
+
+#### Message Context With [`_p()`](https://gflohr.github.io/esgettext/packages/esgettext-runtime/api-docs/classes/textdomain.html#_p)
+
+It is sometimes possible that one English sentence can have multiple, different
+meanings in another language. For example "Sun" can mean our planet's star or
+the abbreviation of "Sunday". In order to allow translators to provide
+accurate translations for each meaning, you can distinguish them by message
+context:
+
+```javascript
+weekday = gtx._p('wday', 'Sun');
+star = gtx._p('star', 'Sun');
+```
+
+The first argument is the context (a free-form string), the second is the
+string to translate.
+
+It is actually sufficient to use a context just for one of the two cases.
+
+There are also methods [`_px()`](https://gflohr.github.io/esgettext/packages/esgettext-runtime/api-docs/classes/textdomain.html#_px), when you need placeholders or [`_npx()`](https://gflohr.github.io/esgettext/packages/esgettext-runtime/api-docs/classes/textdomain.html#_npx), when
+you need placeholders and plural forms in addition to a message context.
 
 ## Copyright
 
