@@ -131,7 +131,7 @@ What is happening here?
 First you set the locale (resp. language) to the desired value. Here we
 choose "fr" for French.
 
-_FIXME! Use the static method [`userLocales()`](https://gflohr.github.io/esgettext/packages/esgettext-runtime/api-docs/classes/textdomain.html#userLocales) for that purpose!_
+_FIXME! Use the static method [`userLocales()`](https://gflohr.github.io/esgettext/packages/esgettext-runtime/api-docs/classes/textdomain.html#userlocales) for that purpose!_
 
 You then get an instance of a `Textdomain` object. You cannot use the regular
 constructor because it is private! The argument to the

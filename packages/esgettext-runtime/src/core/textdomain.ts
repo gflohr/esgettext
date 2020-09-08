@@ -597,7 +597,10 @@ ${tp}l${m}x=${f}(l,${a},p){${tc}${rx}(g({${k},${cc}}),p||{});};
 	/**
 	 * Queries the user's preferred locales. On the server it queries the
 	 * environment variables `LANGUAGE`, `LC_ALL`, `LANG`, and `LC_MESSAGES`
-	 * (in that order). In the browser
+	 * (in that order). In the browser, it parses it checks the user preferences
+	 * in the variables `navigator.languages`, `navigator.language`,
+	 * `navigator.userLanguage`, `navigator.browserLanguage`, and
+	 * `navigator.systemLanguage`.
 	 *
 	 * @returns the set of locales in order of preference
 	 *
@@ -652,7 +655,7 @@ ${tp}l${m}x=${f}(l,${a},p){${tc}${rx}(g({${k},${cc}}),p||{});};
 	}
 
 	/**
-	 * Does the same as the instance method `N_()`.
+	 * Does the same as the static method `N_()`.
 	 *
 	 * @param msgid - the message id
 	 * @returns the original string
@@ -673,7 +676,7 @@ ${tp}l${m}x=${f}(l,${a},p){${tc}${rx}(g({${k},${cc}}),p||{});};
 	}
 
 	/**
-	 * Does the same as the instance method `N_x()`.
+	 * Does the same as the static method `N_x()`.
 	 *
 	 * @param msgid - the message id
 	 * @param placeholders - a dictionary of placeholders
@@ -695,7 +698,7 @@ ${tp}l${m}x=${f}(l,${a},p){${tc}${rx}(g({${k},${cc}}),p||{});};
 	}
 
 	/**
-	 * Does the same as the instance method `N_p()`.
+	 * Does the same as the static method `N_p()`.
 	 *
 	 * @param msgid - the message id
 	 * @param placeholders - a dictionary of placeholders
@@ -718,7 +721,7 @@ ${tp}l${m}x=${f}(l,${a},p){${tc}${rx}(g({${k},${cc}}),p||{});};
 	}
 
 	/**
-	 * Does the same as the instance method `N_px()`.
+	 * Does the same as the static method `N_px()`.
 	 *
 	 * @param msgctxt - the message context
 	 * @param msgid - the message id
