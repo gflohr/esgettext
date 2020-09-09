@@ -16,8 +16,8 @@ GNU gettext-alike translation runtime library.
     - [Plural Forms With `_nx()`](#plural-forms-with-_nx)
     - [Message Context With `_p()`](#message-context-with-_p)
     - [Specific Locale with `_l`](#specific-locale-with-_l)
-    - [Gender-Specific Translations](#gender-specific-translations)
-  - [Selecting the Preferred Language with [`selectLocale()`](https://gflohr.github.io/esgettext/packages/esgettext-runtime/api-docs/classes/textdomain.html#selectLocale](#selecting-the-preferred-language-with-selectlocalehttpsgflohrgithubioesgettextpackagesesgettext-runtimeapi-docsclassestextdomainhtmlselectlocale)
+    - [TODO: Gender-Specific Translations](#todo-gender-specific-translations)
+  - [Selecting the Preferred Language with `selectLocale()`](#selecting-the-preferred-language-with-selectlocale)
 - [Frequently-Asked Questions](#frequently-asked-questions)
 - [Copyright](#copyright)
 
@@ -290,7 +290,7 @@ would be a web server. A web server handles requests asynchronously, and a
 global locale doesn't make sense. Instead, the language is typically bound
 to the request or response and should be taken from there.
 
-#### Gender-Specific Translations
+#### TODO: Gender-Specific Translations
 
 This is on the todo list for a future version. You will be able to do something
 like:
@@ -303,7 +303,7 @@ msg = gtx._g(
 );
 ```
 
-### Selecting the Preferred Language with [`selectLocale()`](https://gflohr.github.io/esgettext/packages/esgettext-runtime/api-docs/classes/textdomain.html#selectLocale
+### Selecting the Preferred Language with [`selectLocale()`](https://gflohr.github.io/esgettext/packages/esgettext-runtime/api-docs/classes/textdomain.html#selectLocale)
 
 _TODO!_
 
