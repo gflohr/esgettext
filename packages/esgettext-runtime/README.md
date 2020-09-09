@@ -15,6 +15,10 @@ GNU gettext-alike translation runtime library.
     - [Variable Interpolation With `_x()`](#variable-interpolation-with-_x)
     - [Plural Forms With `_nx()`](#plural-forms-with-_nx)
     - [Message Context With `_p()`](#message-context-with-_p)
+    - [Specific Locale with `_l`](#specific-locale-with-_l)
+    - [Gender-Specific Translations](#gender-specific-translations)
+  - [Selecting the Preferred Language with [`selectLocale()`](https://gflohr.github.io/esgettext/packages/esgettext-runtime/api-docs/classes/textdomain.html#selectLocale](#selecting-the-preferred-language-with-selectlocalehttpsgflohrgithubioesgettextpackagesesgettext-runtimeapi-docsclassestextdomainhtmlselectlocale)
+- [Frequently-Asked Questions](#frequently-asked-questions)
 - [Copyright](#copyright)
 
 ## API Documentation
@@ -255,6 +259,69 @@ It is actually sufficient to use a context just for one of the two cases.
 
 There are also methods [`_px()`](https://gflohr.github.io/esgettext/packages/esgettext-runtime/api-docs/classes/textdomain.html#_px), when you need placeholders or [`_npx()`](https://gflohr.github.io/esgettext/packages/esgettext-runtime/api-docs/classes/textdomain.html#_npx), when
 you need placeholders and plural forms in addition to a message context.
+
+#### Specific Locale with [`_l`](https://gflohr.github.io/esgettext/packages/esgettext-runtime/api-docs/classes/textdomain.html#_l)
+
+Most of the time, the locale resp. language is set just once by setting the
+static property `locale`:
+
+```javascript
+Textdomain.locale = 'fr';
+console.log(gtx._('Hello, world!'));
+```
+
+Alternatively, you can pass the locale with every call to a translation
+method:
+
+```javascript
+console.log(gtx._l('fr', 'Hello, world!'));
+```
+
+There is not just [`_l()`](https://gflohr.github.io/esgettext/packages/esgettext-runtime/api-docs/classes/textdomain.html#_l), but actually all of the above mentioned methods have
+versions with a leading `_l`, like
+[`_lx()`](https://gflohr.github.io/esgettext/packages/esgettext-runtime/api-docs/classes/textdomain.html#_lx)
+or as complicated as
+[`_lnpx()`](https://gflohr.github.io/esgettext/packages/esgettext-runtime/api-docs/classes/textdomain.html#_lnpx).
+
+One use-case for the
+[`_l()`](https://gflohr.github.io/esgettext/packages/esgettext-runtime/api-docs/classes/textdomain.html#_l)
+family of methods
+would be a web server. A web server handles requests asynchronously, and a
+global locale doesn't make sense. Instead, the language is typically bound
+to the request or response and should be taken from there.
+
+#### Gender-Specific Translations
+
+This is on the todo list for a future version. You will be able to do something
+like:
+
+```javascript
+msg = gtx._g(
+	user.gender,
+	'They have liked your photo.',
+	'She has liked your photo.',
+);
+```
+
+### Selecting the Preferred Language with [`selectLocale()`](https://gflohr.github.io/esgettext/packages/esgettext-runtime/api-docs/classes/textdomain.html#selectLocale
+
+_TODO!_
+
+Negotiating the preferred locale can be performed with the help of esgettext:
+
+```javascript
+Textdomain.locale = Textdomain.selectLocale(['de', 'fr', 'bg']);
+```
+
+If your application supports the three language "de", "fr", and "bg", a call
+to the static method
+[`Textdomain.selectLocale()`](https://gflohr.github.io/esgettext/packages/esgettext-runtime/api-docs/classes/textdomain.html#selectLocale)
+will return the most suitable locale for the current user. For browser code,
+the browser will be queried for the user language preferences, for server
+code the environment variables `LANGUAGE`, `LC_ALL`, `LANG`, and `LC_MESSAGES`
+will be queried in that order.
+
+## Frequently-Asked Questions
 
 ## Copyright
 
