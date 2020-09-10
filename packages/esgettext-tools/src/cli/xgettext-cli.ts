@@ -1,4 +1,4 @@
-import { Textdomain } from '@esgettext/runtime';
+import { Textdomain } from '@esgettext/esgettext-runtime';
 import { XGettext } from '../xgettext/xgettext';
 import { OptionGroup, Getopt } from './getopt';
 
