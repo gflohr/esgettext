@@ -1,5 +1,5 @@
 import { readFileSync, writeFileSync } from 'fs';
-import { Textdomain, parseMoCatalog } from '@esgettext/runtime';
+import { Textdomain, parseMoCatalog } from '@esgettext/esgettext-runtime';
 import { OptionGroup, Getopt } from './getopt';
 
 const gtx = Textdomain.getInstance('esgettext-tools');
