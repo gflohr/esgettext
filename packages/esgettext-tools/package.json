@@ -1,5 +1,5 @@
 {
-	"name": "@esgettext/tools",
+	"name": "@esgettext/esgettext-tools",
 	"version": "0.1.0",
 	"description": "Gettext-like po creation and manipulation",
 	"main": "dist/index.js",
@@ -39,6 +39,9 @@
 			"json",
 			"ts"
 		],
+		"moduleNameMapper": {
+			"^@esgettext/esgettext-runtime$": "<rootDir>/../../esgettext-runtime/src"
+		},
 		"rootDir": "src",
 		"testRegex": ".spec.ts$",
 		"transform": {
@@ -49,7 +52,7 @@
 	},
 	"dependencies": {
 		"@babel/parser": "^7.9.6",
-		"@esgettext/runtime": "^0.0.1",
+		"@esgettext/esgettext-runtime": "^0.1.0",
 		"@types/node": "^13.13.2",
 		"@types/yargs": "^15.0.4",
 		"camelcase": "^6.0.0",

@@ -2,7 +2,7 @@ import { decode } from 'iconv-lite';
 import traverse, { NodePath } from '@babel/traverse';
 import * as t from '@babel/types';
 
-import { Textdomain } from '@esgettext/runtime';
+import { Textdomain } from '@esgettext/esgettext-runtime';
 import { Catalog } from '../pot/catalog';
 import { POTEntry } from '../pot/entry';
 import { Keyword } from '../pot/keyword';

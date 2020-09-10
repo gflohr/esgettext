@@ -1,5 +1,5 @@
 import { decode, encodingExists } from 'iconv-lite';
-import { Textdomain } from '@esgettext/runtime';
+import { Textdomain } from '@esgettext/esgettext-runtime';
 import { SourceLocation } from '@babel/types';
 import { POTEntry } from '../pot/entry';
 import { Parser } from './parser';

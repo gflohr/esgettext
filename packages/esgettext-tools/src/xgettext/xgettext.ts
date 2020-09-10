@@ -1,6 +1,6 @@
 import * as path from 'path';
 import { writeFileSync, readFileSync } from 'fs';
-import { Textdomain } from '@esgettext/runtime';
+import { Textdomain } from '@esgettext/esgettext-runtime';
 import { Catalog, CatalogProperties, RenderOptions } from '../pot/catalog';
 import { Options } from '../cli/getopt';
 import { JavaScriptParser } from '../parser/javascript';

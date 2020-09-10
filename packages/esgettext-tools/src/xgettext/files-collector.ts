@@ -1,5 +1,5 @@
 import { readFileSync } from 'fs';
-import { Textdomain } from '@esgettext/runtime';
+import { Textdomain } from '@esgettext/esgettext-runtime';
 
 const gtx = Textdomain.getInstance('esgettext-tools');
 
