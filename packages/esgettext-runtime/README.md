@@ -34,6 +34,8 @@ You have written this little piece of JavaScript:
 console.log('Hello, world!');
 ```
 
+What are the steps needed to internationalize it with this library?
+
 ### Choosing a Textdomain
 
 First, you have to choose a unique identifier for your project so that the
@@ -44,12 +46,12 @@ will be part of a URI or filename and therefore a couple of rules apply:
 - A textdomain _must not_ contain a slash ("/").
 - A textdomain _should not_ contain a colon (":"), because of Windows.
 - A textdomain _should not_ contain a backslash (":"), because of Windows.
-- A textdomain _should not_ contain binary characters.
+- A textdomain _should not_ contain binary characters, because of common sense.
 
 In general, you should only use lowercase characters that are valid inside
 hostnames, namely "a-z", "0-9", the hyphen "-", and the dot ".".
 
-If possible follow this advice:
+If possible, follow this advice:
 
 1. If your organization has a domain, use the reverse(!) domain name followed by the name of your product for example "com.example.hello"
 2. Otherwise, if your project sources are publicly hosted use the reverse domain name of your hoster followed by an identifier of your project. For example, the textdomain for `https://github.com/gflohr/esgettext` would then be "com.github.gflohr.esgettext".
@@ -132,7 +134,7 @@ above to make the `Textdomain` class available in your source!
 
 What is happening here?
 
-First you set the locale (resp. language) to the desired value. Here we
+First, you set the locale (resp. language) to the desired value. Here we
 choose "fr" for French.
 
 _FIXME! Use the static method [`userLocales()`](https://gflohr.github.io/esgettext/packages/esgettext-runtime/api-docs/classes/textdomain.html#userlocales) for that purpose!_
