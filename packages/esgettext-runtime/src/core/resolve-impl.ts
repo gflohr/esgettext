@@ -71,7 +71,7 @@ function assemblePath(
 
 /*
  * First tries to load a catalog with the specified charset, then with the
- * charset converted to uppercase (if it differs from the origina charset),
+ * charset converted to uppercase (if it differs from the original charset),
  * and finally without a charset.
  */
 async function loadLanguage(
