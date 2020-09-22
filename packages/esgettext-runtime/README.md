@@ -6,19 +6,22 @@ GNU gettext-alike translation runtime library.
 
 - [API Documentation](#api-documentation)
 - [Internationalizing Hello World](#internationalizing-hello-world)
-	- [Choosing a Textdomain](#choosing-a-textdomain)
-	- [Install the Library](#install-the-library)
-	- [Import the Library](#import-the-library)
-	- [Prepare Your Sources](#prepare-your-sources)
-	- [Translation Methods](#translation-methods)
-		- [Simple Translations With `_()`](#simple-translations-with-_)
-		- [Variable Interpolation With `_x()`](#variable-interpolation-with-_x)
-		- [Plural Forms With `_nx()`](#plural-forms-with-_nx)
-		- [Message Context With `_p()`](#message-context-with-_p)
-		- [Specific Locale with `_l`](#specific-locale-with-_l)
-		- [TODO: Gender-Specific Translations](#todo-gender-specific-translations)
-	- [Selecting the Preferred Language with `selectLocale()`](#selecting-the-preferred-language-with-selectlocale)
+  - [Choosing a Textdomain](#choosing-a-textdomain)
+  - [Install the Library](#install-the-library)
+  - [Import the Library](#import-the-library)
+  - [Prepare Your Sources](#prepare-your-sources)
+  - [Translation Methods](#translation-methods)
+    - [Simple Translations With `_()`](#simple-translations-with-_)
+    - [Variable Interpolation With `_x()`](#variable-interpolation-with-_x)
+    - [Plural Forms With `_nx()`](#plural-forms-with-_nx)
+    - [Message Context With `_p()`](#message-context-with-_p)
+    - [Specific Locale with `_l`](#specific-locale-with-_l)
+    - [TODO: Gender-Specific Translations](#todo-gender-specific-translations)
+  - [Selecting the Preferred Language with `selectLocale()`](#selecting-the-preferred-language-with-selectlocale)
+- [Internationalizing a Library](#internationalizing-a-library)
 - [Frequently-Asked Questions](#frequently-asked-questions)
+  - [Why do Template Strings not Work?](#why-do-template-strings-not-work)
+  - [What Does the Error "template literals with embedded expressions are not allowed as arguments to gettext functions because they are not constant" Mean?](#what-does-the-error-template-literals-with-embedded-expressions-are-not-allowed-as-arguments-to-gettext-functions-because-they-are-not-constant-mean)
 - [Copyright](#copyright)
 
 ## API Documentation
@@ -119,7 +122,7 @@ If you want a specific version, you can do like this:
 Change your `hello.js` to read like this:
 
 ```javascript
-import Textdomain from '@esgettext/esgettext-runtime';
+import { Textdomain } from '@esgettext/esgettext-runtime';
 
 Textdomain.locale = 'fr';
 const gtx = Textdomain.getInstance('hello');
@@ -135,9 +138,8 @@ above to make the `Textdomain` class available in your source!
 What is happening here?
 
 First, you set the locale (resp. language) to the desired value. Here we
-choose "fr" for French.
-
-_FIXME! Use the static method [`userLocales()`](https://gflohr.github.io/esgettext/packages/esgettext-runtime/api-docs/classes/textdomain.html#userlocales) for that purpose!_
+choose "fr" for French. See the section [Selecting the Preferred Language with `selectLocale()`](#selecting-the-preferred-language-with-selectlocale)
+for a more flexible way to select the user's locale.
 
 You then get an instance of a `Textdomain` object. You cannot use the regular
 constructor because it is private! The argument to the
@@ -225,10 +227,10 @@ The method [`_nx()`](https://gflohr.github.io/esgettext/packages/esgettext-runti
 
 ```javascript
 _nx(
-	msgid: string,
-	msgidPlural: string,
-	numberOfItems: number,
-	placeholders: Object
+	(msgid: string),
+	(msgidPlural: string),
+	(numberOfItems: number),
+	(placeholders: Object),
 );
 ```
 
@@ -307,23 +309,98 @@ msg = gtx._g(
 
 ### Selecting the Preferred Language with [`selectLocale()`](https://gflohr.github.io/esgettext/packages/esgettext-runtime/api-docs/classes/textdomain.html#selectLocale)
 
-_TODO!_
-
-Negotiating the preferred locale can be performed with the help of esgettext:
+Negotiating the preferred locale can be performed with the help of esgettext.
+If your application supports the locales "en-US", "en-GB", "fr-FR", and
+"de-DE", you can select a suitable locale for the current user by calling
+[`Textdomain.selectlocale`](https://gflohr.github.io/esgettext/packages/esgettext-runtime/api-docs/classes/textdomain.html#selectLocale)
 
 ```javascript
-Textdomain.locale = Textdomain.selectLocale(['de', 'fr', 'bg']);
+Textdomain.locale = Textdomain.selectLocale(['en-US', 'en-GB', 'fr-FR']);
 ```
 
-If your application supports the three language "de", "fr", and "bg", a call
-to the static method
 [`Textdomain.selectLocale()`](https://gflohr.github.io/esgettext/packages/esgettext-runtime/api-docs/classes/textdomain.html#selectLocale)
 will return the most suitable locale for the current user. For browser code,
 the browser will be queried for the user language preferences, for server
 code the environment variables `LANGUAGE`, `LC_ALL`, `LANG`, and `LC_MESSAGES`
 will be queried in that order.
 
+You can also explicitly specify, which locales the user has requested by
+passing a second argument:
+
+```javascript
+Textdomain.locale = Textdomain.selectLocale(
+	['en-US', 'en-GB', 'fr-FR'], // Supported by the application.
+	['de-DE', 'fr-FR'],
+); // Requested by the user.
+```
+
+## Internationalizing a Library
+
+Internationalizing a library is very simple. Take this sample library:
+
+```javascript
+function greet(name) {
+	return `Hello, ${name}`;
+}
+```
+
+Internationalized, it would look like this:
+
+```javascript
+import { Textdomain } from '@esgettext/esgettext-runtime';
+
+const gtx = Textdomain.getInstance('hello-library');
+gtx.bindtextdomain('/assets/locale');
+
+function greet(name) {
+	return gtx._x('Hello, {name}', { name: name });
+}
+```
+
+The main differences to an internationalized application are:
+
+- You do not set [Textdomain.locale](https://gflohr.github.io/esgettext/packages/esgettext-runtime/api-docs/classes/textdomain.html#locale) because the main application (the application that loads your library) does it.
+- You do not call [resolve()](https://gflohr.github.io/esgettext/packages/esgettext-runtime/api-docs/classes/textdomain.html#resolve) because whenever the main application calls `resolve()`, the catalogs for your library will also be loaded.
+
 ## Frequently-Asked Questions
+
+### Why do Template Strings not Work?
+
+A common error is to use template strings with interpolations as arguments to
+the translation functions, for example:
+
+```javascript
+console.log(gtx._(`red: ${red}, green: ${green}, blue: ${blue}`);
+```
+
+That seems to work for English but the string never gets translated.
+
+The reason is that the argument to
+[`_()`](https://gflohr.github.io/esgettext/packages/esgettext-runtime/api-docs/classes/textdomain.html#_)
+is the lookup key into the translation database but that key has to be constant.
+The method receives an argument like "red: 127, green: 63, blue: 31" because
+the JavaScript engine has already interpolated the variables into the string.
+But that string does not exist in the database.
+
+You have to use
+[`_x()`](https://gflohr.github.io/esgettext/packages/esgettext-runtime/api-docs/classes/textdomain.html#_x)
+instead:
+
+```javascript
+console.log(gtx._x(
+	'red: {r}, green: {g}, blue: {b}', {
+		r: red,
+		g: green,
+		b: blue
+	}
+);
+```
+
+### What Does the Error "template literals with embedded expressions are not allowed as arguments to gettext functions because they are not constant" Mean?
+
+See [Why do Template Strings not Work?](#why-do-template-strings-not-work)
+above! the extractor `esgettext-xgettext` complains that you are using a
+template string with interpolated expressions.
 
 ## Copyright
 
