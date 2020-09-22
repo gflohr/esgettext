@@ -399,7 +399,7 @@ console.log(gtx._x(
 ### What Does the Error "template literals with embedded expressions are not allowed as arguments to gettext functions because they are not constant" Mean?
 
 See [Why do Template Strings not Work?](#why-do-template-strings-not-work)
-above! the extractor `esgettext-xgettext` complains that you are using a
+above! The extractor `esgettext-xgettext` complains that you are using a
 template string with interpolated expressions.
 
 ## Copyright
