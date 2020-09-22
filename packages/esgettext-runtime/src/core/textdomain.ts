@@ -38,7 +38,8 @@ interface Placeholders {
  * Besides, depending on the string extractor you are using, it may be useful
  * that the method names do not collide with method names from other packages.
  */
-export class Textdomain { // FIXME! Use a default export instead?
+export class Textdomain {
+	// FIXME! Use a default export instead?
 	private static domains: { [key: string]: Textdomain } = {};
 	private static readonly cache = CatalogCache.getInstance();
 	private static boundDomains: { [key: string]: string } = {};
@@ -615,16 +616,22 @@ ${tp}l${m}x=${f}(l,${a},p){${tc}${rx}(g({${k},${cc}}),p||{});};
 	 * Select one of the supported locales from a list of locales accepted by
 	 * the user.
 	 *
-	 * @param supported the list of locales supported by the application
-	 * @param requested the list of locales accepted by the user
+	 * @param supported - the list of locales supported by the application
+	 * @param requested - the list of locales accepted by the user
 	 *
 	 * If called with just one argument, then the list of requested locales
 	 * is determined by calling [[Textdomain.userLocales]].
 	 *
 	 * @returns the negotiated locale or 'C' if not possible.
 	 */
-	static selectLocale(supported: Array<string>, requested?: Array<string>): string {
-		return selectLocale(supported, requested === null ? Textdomain.userLocales() : requested);
+	static selectLocale(
+		supported: Array<string>,
+		requested?: Array<string>,
+	): string {
+		return selectLocale(
+			supported,
+			requested === null ? Textdomain.userLocales() : requested,
+		);
 	}
 
 	/**

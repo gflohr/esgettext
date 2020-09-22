@@ -40,7 +40,7 @@ export interface Catalog {
 	 * The plural function would then compute one of 0, 1, or 2 from an
 	 * arbitrary non-negative integer.
 	 *
-	 * @param numItems the number of items.
+	 * @param numItems - the number of items.
 	 *
 	 * @returns the index of the plural form.
 	 */
