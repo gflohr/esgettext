@@ -28,13 +28,13 @@ export class CalendarStrings {
 
 	public getAbbreviatedWeekDay(id: number): string {
 		const weekDays = [
-			Textdomain.N_('Sunday'),
-			Textdomain.N_('Monday'),
-			Textdomain.N_('Tuesday'),
-			Textdomain.N_('Wednesday'),
-			Textdomain.N_('Thursday'),
-			Textdomain.N_('Friday'),
-			Textdomain.N_('Saturday'),
+			Textdomain.N_('Sun'),
+			Textdomain.N_('Mon'),
+			Textdomain.N_('Tue'),
+			Textdomain.N_('Wed'),
+			Textdomain.N_('Thu'),
+			Textdomain.N_('Fri'),
+			Textdomain.N_('Sat'),
 		];
 
 		if (id < 0 || id > weekDays.length) {

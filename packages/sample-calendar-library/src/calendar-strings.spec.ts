@@ -19,8 +19,8 @@ describe('Month names', () => {
 describe('Abbreviated weekday names', () => {
 	const cs = new CalendarStrings();
 
-	it('should get the name of the weekday Monday', () => {
-		expect(cs.getAbbreviatedWeekDay(1)).toEqual('Monday');
+	it('should get the abbreviated name of the weekday Monday', () => {
+		expect(cs.getAbbreviatedWeekDay(1)).toEqual('Mon');
 	});
 
 	it('should fail for a negative weekday number', () => {
