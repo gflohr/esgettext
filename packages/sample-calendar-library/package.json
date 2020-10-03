@@ -18,6 +18,7 @@
 		"clean:lib": "shx rm -rf lib",
 		"clean:lib-esm": "shx rm -rf lib-esm",
 		"clean:webpack": "shx rm -rf dist",
+		"po:POTFILES": "cd po; git ls-files .. | grep \"\\.ts\\$\" >POTFILES",
 		"format": "prettier --write 'src/**/*.ts' 'test/**/*.ts'",
 		"watch": "tsc --watch",
 		"lint": "eslint './src/**/*.ts'",
