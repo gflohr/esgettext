@@ -25,4 +25,22 @@ export class CalendarStrings {
 
 		return gtx._(months[id]);
 	}
+
+	public getAbbreviatedWeekDay(id: number): string {
+		const weekDays = [
+			Textdomain.N_('Sunday'),
+			Textdomain.N_('Monday'),
+			Textdomain.N_('Tuesday'),
+			Textdomain.N_('Wednesday'),
+			Textdomain.N_('Thursday'),
+			Textdomain.N_('Friday'),
+			Textdomain.N_('Saturday'),
+		];
+
+		if (id < 0 || id > weekDays.length) {
+			return null;
+		}
+
+		return gtx._(weekDays[id]);
+	}
 }
