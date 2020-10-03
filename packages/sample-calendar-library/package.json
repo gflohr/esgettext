@@ -43,8 +43,8 @@
 			"ts"
 		],
 		"moduleNameMapper": {
-                        "^@esgettext/runtime$": "<rootDir>/../../runtime/src"
-                },
+			"^@esgettext/runtime$": "<rootDir>/../../runtime/src"
+		},
 		"rootDir": "src",
 		"testRegex": ".spec.ts$",
 		"transform": {
@@ -54,6 +54,7 @@
 		"testEnvironment": "node"
 	},
 	"dependencies": {
+		"@esgettext/runtime": "^0.1.0"
 	},
 	"devDependencies": {
 		"eslint": "^6.8.0",
