@@ -8,19 +8,9 @@ import { splitLocale } from './split-locale';
 import { germanicPlural } from './germanic-plural';
 import { CatalogCache } from './catalog-cache';
 import { explodeLocale, ExplodedLocale } from './explode-locale';
+import { LocaleContainer } from './locale-container';
 
 /* eslint-disable no-console */
-
-export interface Catalogs {
-	// Language code.
-	[key: string]: {
-		// Locale category (alway 'LC_MESSAGES')
-		[key: string]: {
-			// Textdomain
-			[key: string]: Catalog;
-		};
-	};
-}
 
 type PluralFunction = (numItems: number) => number;
 
@@ -82,7 +72,7 @@ function assemblePath(
 
 function loadLanguageFromObject(
 	ids: Array<string>,
-	base: Catalogs,
+	base: LocaleContainer,
 	domainname: string,
 ): Promise<Catalog> {
 	let catalog: Catalog;
@@ -123,7 +113,7 @@ function loadLanguageFromObject(
  */
 async function loadLanguage(
 	ids: Array<string>,
-	base: string | Catalogs,
+	base: string | LocaleContainer,
 	domainname: string,
 	format: string,
 ): Promise<Catalog> {
@@ -158,7 +148,7 @@ async function loadLanguage(
 async function loadDomain(
 	exploded: ExplodedLocale,
 	localeKey: string,
-	base: string | Catalogs,
+	base: string | LocaleContainer,
 	domainname: string,
 	format: string,
 ): Promise<Catalog> {
@@ -253,7 +243,7 @@ function setPluralFunction(catalog: Catalog): Catalog {
 
 export function resolveImpl(
 	domainname: string,
-	path: string | Catalogs,
+	path: string | LocaleContainer,
 	format: string,
 	localeKey: string,
 ): Promise<Catalog> {

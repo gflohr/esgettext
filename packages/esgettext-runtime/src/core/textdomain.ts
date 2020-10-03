@@ -1,4 +1,4 @@
-import { Catalogs, resolveImpl } from './resolve-impl';
+import { resolveImpl } from './resolve-impl';
 import { CatalogCache } from './catalog-cache';
 import { Catalog } from './catalog';
 import { browserEnvironment } from './browser-environment';
@@ -8,6 +8,7 @@ import { splitLocale } from './split-locale';
 import { pathSeparator } from './path-separator';
 import { userLocales } from './user-locales';
 import { selectLocale } from './select-locale';
+import { LocaleContainer } from './locale-container';
 
 /* eslint-disable @typescript-eslint/camelcase, tsdoc/syntax */
 
@@ -18,7 +19,7 @@ interface Placeholders {
 
 /**
  * A Textdomain is a container for an esgettext configuration and all loaded
- * catalogs for the textual domain selected.
+ * LocaleContainer for the textual domain selected.
  *
  * The actual translation methods have quite funny names like `_()` or
  * `_x()`. The purpose of this naming convention is to make the
@@ -42,7 +43,7 @@ export class Textdomain {
 	// FIXME! Use a default export instead?
 	private static domains: { [key: string]: Textdomain } = {};
 	private static readonly cache = CatalogCache.getInstance();
-	private static boundDomains: { [key: string]: string | Catalogs } = {};
+	private static boundDomains: { [key: string]: string | LocaleContainer } = {};
 	private static _locale = 'C';
 
 	private domain: string;
@@ -509,9 +510,12 @@ ${tp}l${m}x=${f}(l,${a},p){${tc}${rx}(g({${k},${cc}}),p||{});};
 	 * textdomain is bound to. The catalog file will be searched
 	 * in `${path}/locale/LC_MESSAGES/${domainname}.EXT`.
 	 *
-	 * @param path - the base path for this textdomain
+	 * Alternatively, you can pass a [[`LocaleContainer`]] that holds the
+	 * catalogs in memory.
+	 *
+	 * @param path - the base path or [[`LocaleContainer`]] for this textdomain
 	 */
-	bindtextdomain(path?: string | Catalogs): string | Catalogs {
+	bindtextdomain(path?: string | LocaleContainer): string | LocaleContainer {
 		if (typeof path !== 'undefined') {
 			Textdomain.boundDomains[this.domain] = path;
 		}
@@ -520,7 +524,7 @@ ${tp}l${m}x=${f}(l,${a},p){${tc}${rx}(g({${k},${cc}}),p||{});};
 	}
 
 	/**
-	 * Resolve a textdomain, i.e. load the catalogs for this domain and all
+	 * Resolve a textdomain, i.e. load the LocaleContainer for this domain and all
 	 * of its dependencies for the currently selected locale or the locale
 	 * specified.
 	 *
