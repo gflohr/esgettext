@@ -10,6 +10,9 @@ packages/runtime/api-docs
 # dependencies
 node_modules/
 
+# yarn
+yarn.lock
+
 # IDEs and editors
 /.idea
 .project
