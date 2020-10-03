@@ -11,6 +11,17 @@ import { explodeLocale, ExplodedLocale } from './explode-locale';
 
 /* eslint-disable no-console */
 
+export interface Catalogs {
+	// Language code.
+	[key: string]: {
+		// Locale category (alway 'LC_MESSAGES')
+		[key: string]: {
+			// Textdomain
+			[key: string]: Catalog;
+		};
+	};
+}
+
 type PluralFunction = (numItems: number) => number;
 
 function loadCatalog(url: string, format: string): Promise<Catalog> {
@@ -69,6 +80,42 @@ function assemblePath(
 	return `${base}/${id}/LC_MESSAGES/${domainname}.${extender}`;
 }
 
+function loadLanguageFromObject(
+	ids: Array<string>,
+	base: Catalogs,
+	domainname: string,
+): Promise<Catalog> {
+	let catalog: Catalog;
+
+	for (let i = 0; i < ids.length; ++i) {
+		const id = ids[0];
+		// Language exists?
+		if (!Object.prototype.hasOwnProperty.call(base, id)) {
+			continue;
+		}
+		// LC_MESSAGES?
+		if (!Object.prototype.hasOwnProperty.call(base[id], 'LC_MESSAGES')) {
+			continue;
+		}
+		// Textdomain?
+		if (
+			!Object.prototype.hasOwnProperty.call(base[id].LC_MESSAGES, domainname)
+		) {
+			continue;
+		}
+
+		catalog = base[id].LC_MESSAGES[domainname];
+	}
+
+	return new Promise<Catalog>((resolve, reject) => {
+		if (catalog) {
+			resolve(catalog);
+		} else {
+			reject();
+		}
+	});
+}
+
 /*
  * First tries to load a catalog with the specified charset, then with the
  * charset converted to uppercase (if it differs from the original charset),
@@ -76,10 +123,14 @@ function assemblePath(
  */
 async function loadLanguage(
 	ids: Array<string>,
-	base: string,
+	base: string | Catalogs,
 	domainname: string,
 	format: string,
 ): Promise<Catalog> {
+	if (typeof base === 'object' && base !== null) {
+		return loadLanguageFromObject(ids, base, domainname);
+	}
+
 	return new Promise((resolve, reject) => {
 		type CatalogLoader = (url: string) => Promise<Catalog>;
 
@@ -87,7 +138,10 @@ async function loadLanguage(
 
 		ids.forEach(id => {
 			tries.push(() =>
-				loadCatalog(assemblePath(base, id, domainname, format), format),
+				loadCatalog(
+					assemblePath(base as string, id, domainname, format),
+					format,
+				),
 			);
 		});
 
@@ -104,7 +158,7 @@ async function loadLanguage(
 async function loadDomain(
 	exploded: ExplodedLocale,
 	localeKey: string,
-	base: string,
+	base: string | Catalogs,
 	domainname: string,
 	format: string,
 ): Promise<Catalog> {
@@ -199,7 +253,7 @@ function setPluralFunction(catalog: Catalog): Catalog {
 
 export function resolveImpl(
 	domainname: string,
-	path: string,
+	path: string | Catalogs,
 	format: string,
 	localeKey: string,
 ): Promise<Catalog> {

@@ -27,4 +27,5 @@ describe('textdomain', () => {
 		userLocales(locales);
 		expect(Textdomain.userLocales()).toEqual(locales);
 	});
+	describe('bindtextdomain() with object', () => {});
 });

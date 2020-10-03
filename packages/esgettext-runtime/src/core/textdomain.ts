@@ -1,4 +1,4 @@
-import { resolveImpl } from './resolve-impl';
+import { Catalogs, resolveImpl } from './resolve-impl';
 import { CatalogCache } from './catalog-cache';
 import { Catalog } from './catalog';
 import { browserEnvironment } from './browser-environment';
@@ -42,7 +42,7 @@ export class Textdomain {
 	// FIXME! Use a default export instead?
 	private static domains: { [key: string]: Textdomain } = {};
 	private static readonly cache = CatalogCache.getInstance();
-	private static boundDomains: { [key: string]: string } = {};
+	private static boundDomains: { [key: string]: string | Catalogs } = {};
 	private static _locale = 'C';
 
 	private domain: string;
@@ -507,11 +507,11 @@ ${tp}l${m}x=${f}(l,${a},p){${tc}${rx}(g({${k},${cc}}),p||{});};
 	/**
 	 * Bind a textdomain to a certain path or queries the path that a
 	 * textdomain is bound to. The catalog file will be searched
-	 * in `${path}/LOCALE/LC_MESSAGES/${domainname}.EXT`.
+	 * in `${path}/locale/LC_MESSAGES/${domainname}.EXT`.
 	 *
 	 * @param path - the base path for this textdomain
 	 */
-	bindtextdomain(path?: string): string {
+	bindtextdomain(path?: string | Catalogs): string | Catalogs {
 		if (typeof path !== 'undefined') {
 			Textdomain.boundDomains[this.domain] = path;
 		}

@@ -7,7 +7,13 @@ import { germanicPlural } from './germanic-plural';
 import { pathSeparator } from './path-separator';
 import { Catalog } from './catalog';
 
-// FIXME! Use the method, not the function!
+const defaultCatalog: Catalog = {
+	major: 0,
+	minor: 0,
+	pluralFunction: germanicPlural,
+	entries: {},
+};
+
 describe('resolve', () => {
 	beforeEach(() => {
 		CatalogCache.clear();
@@ -130,6 +136,70 @@ describe('resolve', () => {
 				// correctly, see https://github.com/jameslnewell/xhr-mock/issues/104
 				// expect(data).toEqual(catalog);
 				expect(data).toBeDefined();
+			});
+		});
+
+		it('should get a catalog from an object', async () => {
+			const path = {
+				de: {
+					LC_MESSAGES: {
+						http: catalog,
+					},
+				},
+			};
+
+			gtx.bindtextdomain(path);
+
+			return gtx.resolve().then(data => {
+				expect(data).toEqual(catalog);
+			});
+		});
+
+		it('should fail getting a catalog from an object with an unsupported language', async () => {
+			const path = {
+				fr: {
+					LC_MESSAGES: {
+						http: catalog,
+					},
+				},
+			};
+
+			gtx.bindtextdomain(path);
+
+			return gtx.resolve().then(data => {
+				expect(data).toEqual(defaultCatalog);
+			});
+		});
+
+		it('should fail getting a catalog from an object without LC_MESSAGES', async () => {
+			const path = {
+				de: {
+					LC_CURRENCY: {
+						http: catalog,
+					},
+				},
+			};
+
+			gtx.bindtextdomain(path);
+
+			return gtx.resolve().then(data => {
+				expect(data).toEqual(defaultCatalog);
+			});
+		});
+
+		it('should fail getting a catalog from an object without textdomain', async () => {
+			const path = {
+				de: {
+					LC_MESSAGES: {
+						telnet: catalog,
+					},
+				},
+			};
+
+			gtx.bindtextdomain(path);
+
+			return gtx.resolve().then(data => {
+				expect(data).toEqual(defaultCatalog);
 			});
 		});
 	});
