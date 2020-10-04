@@ -1,4 +1,5 @@
 import { Textdomain } from '@esgettext/runtime';
+import { number } from 'yargs';
 import { MsgmergeAll } from '../msgmerge-all/msgmerge-all';
 import { Getopt, OptionGroup } from './getopt';
 
@@ -39,20 +40,30 @@ gtx.resolve().then(() => {
 							"search '.po' files in DIRECTORY",
 						),
 					},
-				}
+				},
 			],
 		},
 		{
 			description: gtx._('Mode of operation:'),
 			options: [
 				{
-					name: 'msgmerge-options',
+					name: 'msgmerge',
+					yargsOptions: {
+						type: 'string',
+						default: 'msgmerge',
+						describe: gtx._(
+							"msgmerge program if not in PATH",
+						),
+					},
+				},
+				{
+					name: 'options',
 					flags: {
 						multiple: true,
 					},
 					yargsOptions: {
-						alias: 'D',
 						type: 'string',
+						default: '--quiet',
 						describe: gtx._(
 							"options to pass to msgmerge",
 						),
@@ -85,5 +96,5 @@ gtx.resolve().then(() => {
 		process.exit(2);
 	}
 
-	process.exit(msgmergeAll.run());
+	msgmergeAll.run().then(exitCode => process.exit(exitCode));
 });
