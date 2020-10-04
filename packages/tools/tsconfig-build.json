@@ -1,10 +1,7 @@
 {
 	"extends": "../../tsconfig.json",
 	"compilerOptions": {
-		"baseUrl": ".",
-		"paths": {
-			"@esgettext/runtime": ["../runtime/src"]
-		}
+		"outDir": "dist"
 	},
 	"includes": ["./src"]
 }

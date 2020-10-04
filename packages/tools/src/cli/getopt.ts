@@ -3,6 +3,7 @@ import yargs from 'yargs';
 /* eslint-disable-next-line import/default */
 import camelCase from 'camelcase';
 import { Textdomain } from '@esgettext/runtime';
+import { Package } from '../package';
 
 const gtx = Textdomain.getInstance('tools');
 
@@ -179,8 +180,8 @@ export class Getopt {
 		const infoOptions = this.hasVerboseOption
 			? ['version', 'help', 'verbose']
 			: ['version', 'help'];
-		const version = require(__dirname + '/../../../../lerna.json').version;
-		const packageName = require(__dirname + '/../../../../package.json').name;
+		const version = Package.getVersion();
+		const packageName = Package.getName();
 		const versionString =
 			`${this.programName} (${packageName}) ${version}\n` +
 			gtx._('LICENSE: WTFPL <http://www.wtfpl.net/about/>\n') +

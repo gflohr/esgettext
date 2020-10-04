@@ -14,12 +14,14 @@
 		"dist/"
 	],
 	"bin": {
-		"gtx-i18n-xgettext": "bin/gtx-i18n-xgettext.js",
-		"mo2json": "bin/mo2json"
+		"esgettext-xgettext": "./bin/esgettext-xgettext.js",
+		"esgettext-mo2json": "./bin/esgettext-mo2json.js"
 	},
 	"scripts": {
-		"build": "yarn run clean && tsc",
+		"build": "yarn run clean && tsc --project tsconfig-build.json",
+		"prebuild": "node ./write-package.js >src/package.ts",
 		"watch": "tsc --watch",
+		"prewatch": "node ./write-package.js >src/package.ts",
 		"clean": "shx rm -rf ./dist",
 		"lint": "eslint './src/**/*.ts'",
 		"lint:fix": "eslint --fix './src/**/*.ts'",

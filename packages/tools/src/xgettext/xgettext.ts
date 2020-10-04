@@ -7,7 +7,7 @@ import { JavaScriptParser } from '../parser/javascript';
 import { TypeScriptParser } from '../parser/typescript';
 import { Parser, ParserOptions } from '../parser/parser';
 import { PoParser } from '../parser/po';
-import { Keyword } from '../../src/pot/keyword';
+import { Keyword } from '../pot/keyword';
 import { FilesCollector } from './files-collector';
 
 /* eslint-disable no-console */
