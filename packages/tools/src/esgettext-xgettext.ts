@@ -1,1 +1,0 @@
-import './cli/xgettext-cli';
