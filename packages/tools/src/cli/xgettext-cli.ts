@@ -294,9 +294,7 @@ gtx
 			},
 		];
 
-		const usage = gtx._x('[OPTIONS] [INPUTFILE]...', {
-			progName: process.argv[1],
-		});
+		const usage = gtx._x('[OPTIONS] [INPUTFILE]...');
 
 		const description = gtx._(
 			'Extract translatable strings from given input files',

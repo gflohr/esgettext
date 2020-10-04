@@ -1,3 +1,5 @@
 #! /usr/bin/env node
 
-require('../dist/tools/src/cli/mo2json-cli');
+const path = require('path');
+
+require(path.resolve(__dirname, '../dist/cli/mo2json-cli'));

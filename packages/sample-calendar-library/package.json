@@ -18,7 +18,8 @@
 		"clean:lib": "shx rm -rf lib",
 		"clean:lib-esm": "shx rm -rf lib-esm",
 		"clean:webpack": "shx rm -rf dist",
-		"po:POTFILES": "cd po; git ls-files .. | grep \"\\.ts\\$\" >POTFILES",
+		"po:POTFILES": "cd po && git ls-files .. | grep \"\\.ts\\$\" >POTFILES",
+		"po:pot": "esgettext-xgettext --output=po/com.cantanea.sample-calendar-library.pot --from-code=utf-8 --add-comments=TRANSLATORS: --directory=po --files-from=po/POTFILES --package-json=package.json",
 		"format": "prettier --write 'src/**/*.ts' 'test/**/*.ts'",
 		"watch": "tsc --watch",
 		"lint": "eslint './src/**/*.ts'",
@@ -58,6 +59,7 @@
 		"@esgettext/runtime": "^0.1.0"
 	},
 	"devDependencies": {
+		"@esgettext/tools": "^0.1.0",
 		"eslint": "^6.8.0",
 		"jest": "^25.5.2",
 		"null-loader": "^4.0.0",

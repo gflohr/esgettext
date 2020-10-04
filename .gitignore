@@ -6,6 +6,7 @@ dist/
 /tmp
 /out-tsc
 packages/runtime/api-docs
+packages/tools/src/package.ts
 
 # dependencies
 node_modules/
@@ -49,3 +50,5 @@ Thumbs.db
 
 # lerna
 /lerna-debug.log
+
+write-package.json
