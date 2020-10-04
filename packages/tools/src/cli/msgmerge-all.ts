@@ -1,5 +1,4 @@
 import { Textdomain } from '@esgettext/runtime';
-import { number } from 'yargs';
 import { MsgmergeAll } from '../msgmerge-all/msgmerge-all';
 import { Getopt, OptionGroup } from './getopt';
 
@@ -63,7 +62,6 @@ gtx.resolve().then(() => {
 					},
 					yargsOptions: {
 						type: 'string',
-						default: '--quiet',
 						describe: gtx._(
 							"options to pass to msgmerge",
 						),

@@ -1,5 +1,6 @@
 import * as path from 'path';
 import { writeFileSync, readFileSync } from 'fs';
+import { readFileSync as readJsonFileSync } from 'jsonfile';
 import { Textdomain } from '@esgettext/runtime';
 import { Catalog, CatalogProperties, RenderOptions } from '../pot/catalog';
 import { Options } from '../cli/getopt';
@@ -9,7 +10,6 @@ import { Parser, ParserOptions } from '../parser/parser';
 import { PoParser } from '../parser/po';
 import { Keyword } from '../pot/keyword';
 import { FilesCollector } from './files-collector';
-import { readFileSync as readJsonFileSync } from 'jsonfile';
 
 /* eslint-disable no-console */
 

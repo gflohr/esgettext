@@ -65,21 +65,38 @@ export class MsgmergeAll {
 
 			args.push(oldPoFile, this.refPot, '-o', poFile);
 
+			const out: Array<[number, Buffer]> = [];
+
 			const msgmerge = spawn(this.options.msgmerge, args, {
 				windowsHide: true,
 			});
 
-			msgmerge.stderr.on('data', data => console.error(data.toString()));
+			msgmerge.stdout.on('data', data => out.push([1, data.toString()]));
+			msgmerge.stderr.on('data', data => out.push([2, data.toString()]));
+
 			msgmerge.on('close', code => {
+				console.log(gtx._x("Merging '{pot}' into '{po}'.", {
+					pot: this.refPot,
+					po: poFile,
+				}));
+
+				for (let i = 0; i < out.length; ++i) {
+					const chunk = out[i];
+					if (chunk[0] === 1) {
+						console.log(chunk[1].toString());
+					} else {
+						console.error(chunk[1].toString());
+					}
+				}
+
 				if (code) {
 					reject(code)
 				} else {
-					console.log(gtx._x('msgmerge for {locale} successful', {
-						locale
-					}));
 					unlinkSync(oldPoFile);
+					resolve(0);
 				}
 			});
+
 			msgmerge.on('error', err => {
 				throw new Error(gtx._x("Failed to run '{prg}': {err}", {
 					prg: this.options.msgmerge,
