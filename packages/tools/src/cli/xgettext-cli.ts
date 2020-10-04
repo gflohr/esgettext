@@ -233,6 +233,13 @@ gtx
 						},
 					},
 					{
+						name: 'package-json',
+						yargsOptions: {
+							type: 'string',
+							describe: gtx._('read package information from PACKAGE_JSON'),
+						}
+					},
+					{
 						name: 'copyright-holder',
 						yargsOptions: {
 							type: 'string',
@@ -254,10 +261,17 @@ gtx
 						},
 					},
 					{
-						name: 'package-name',
+						name: 'package-version',
 						yargsOptions: {
 							type: 'string',
-							describe: gtx._('set package version in output'),
+							describe: gtx._('set package name in output'),
+						},
+					},
+					{
+						name: 'msgid-bugs-address',
+						yargsOptions: {
+							type: 'string',
+							describe: gtx._('set report address for msgid bugs'),
 						},
 					},
 					{

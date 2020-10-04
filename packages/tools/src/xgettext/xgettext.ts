@@ -9,6 +9,7 @@ import { Parser, ParserOptions } from '../parser/parser';
 import { PoParser } from '../parser/po';
 import { Keyword } from '../pot/keyword';
 import { FilesCollector } from './files-collector';
+import { readFileSync as readJsonFileSync } from 'jsonfile';
 
 /* eslint-disable no-console */
 
@@ -25,6 +26,27 @@ export class XGettext {
 	/* The date is passed only for testing. */
 	constructor(private readonly options: Options, date?: string) {
 		const catalogProperties: CatalogProperties = { date };
+
+		if (typeof options.packageJson !== 'undefined') {
+			const pkg = readJsonFileSync(options.packageJson);
+			catalogProperties.package = pkg.name;
+			catalogProperties.version = pkg.version;
+			catalogProperties.msgidBugsAddress = pkg['msgid-bugs-address'];
+			if (typeof catalogProperties.msgidBugsAddress === 'undefined'
+			    && typeof pkg.bugs !== 'undefined') {
+				catalogProperties.msgidBugsAddress = pkg.bugs.url;
+			}
+		}
+
+		if (typeof options.packageName !== 'undefined') {
+			catalogProperties.package = options.packageName;
+		}
+		if (typeof options.packageVersion !== 'undefined') {
+			catalogProperties.version = options.version;
+		}
+		if (typeof options.msgidBugsAddress !== 'undefined') {
+			catalogProperties.msgidBugsAddress = options.msgidBugsAddress;
+		}
 
 		this.catalog = new Catalog(catalogProperties);
 

@@ -11,6 +11,7 @@ interface Cache {
 export interface CatalogProperties {
 	package?: string;
 	version?: string;
+	copyrightHolder?: string;
 	msgidBugsAddress?: string;
 	foreignUser?: boolean;
 	date?: string;
@@ -34,14 +35,19 @@ export class Catalog {
 		this.entries = new Array<POTEntry>();
 
 		if (typeof properties.package === 'undefined') {
-			properties.package = 'PACKAGE';
+			properties.package = 'PACKAGE VERSION';
+		} else if (typeof properties.version !== 'undefined') {
+			properties.package += ' ' + properties.version;
 		}
-		if (typeof properties.version === 'undefined') {
-			properties.version = 'VERSION';
+
+		if (typeof properties.copyrightHolder === 'undefined') {
+			properties.copyrightHolder = "THE PACKAGE'S COPYRIGHT HOLDER";
 		}
+
 		if (typeof properties.msgidBugsAddress === 'undefined') {
 			properties.msgidBugsAddress = 'MSGID_BUGS_ADDRESS';
 		}
+
 		if (typeof properties.date === 'undefined') {
 			const now = new Date();
 
@@ -74,10 +80,10 @@ export class Catalog {
 		}
 
 		const pkg = properties.package.replace(/\n/g, '\\n');
-		const version = properties.version.replace(/\n/g, '\\n');
 		const msgidBugsAddress = properties.msgidBugsAddress.replace(/\n/g, '\\n');
+		const copyrightHolder = properties.copyrightHolder.replace(/\n/g, '\\n');
 
-		const header = `Project-Id-Version: ${pkg} ${version}
+		const header = `Project-Id-Version: ${pkg}
 Report-Msgid-Bugs-To: ${msgidBugsAddress}
 POT-Creation-Date: ${properties.date}
 PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE
@@ -97,7 +103,7 @@ FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 `;
 		} else {
 			comment = `SOME DESCRIPTIVE TITLE
-Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+Copyright (C) YEAR ${copyrightHolder}
 This file is distributed under the same license as the PACKAGE package.
 FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 `;

@@ -21,12 +21,17 @@ describe('translation catalog', () => {
 		});
 
 		it('should honor the package option', () => {
-			const catalog = new Catalog({ date, package: 'foobar' });
+			const catalog = new Catalog({ date, package: 'foobar 23.4' });
+			expect(catalog.toString()).toMatchSnapshot();
+		});
+
+		it('should ignore a lone version option', () => {
+			const catalog = new Catalog({ date, version: '23.4' });
 			expect(catalog.toString()).toMatchSnapshot();
 		});
 
 		it('should honor the version option', () => {
-			const catalog = new Catalog({ date, version: '23.4.89' });
+			const catalog = new Catalog({ date, package: 'foobar', version: '23.4.89' });
 			expect(catalog.toString()).toMatchSnapshot();
 		});
 
