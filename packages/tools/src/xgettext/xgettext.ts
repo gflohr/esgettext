@@ -32,6 +32,7 @@ export class XGettext {
 			catalogProperties.package = pkg.name;
 			catalogProperties.version = pkg.version;
 			catalogProperties.msgidBugsAddress = pkg['msgid-bugs-address'];
+			catalogProperties.copyrightHolder = pkg['author'];
 			if (typeof catalogProperties.msgidBugsAddress === 'undefined'
 			    && typeof pkg.bugs !== 'undefined') {
 				catalogProperties.msgidBugsAddress = pkg.bugs.url;

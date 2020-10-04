@@ -33,11 +33,16 @@ export class Catalog {
 
 	constructor(readonly properties: CatalogProperties = {}) {
 		this.entries = new Array<POTEntry>();
+		let barePkg: string;
 
 		if (typeof properties.package === 'undefined') {
+			barePkg = 'PACKAGE';
 			properties.package = 'PACKAGE VERSION';
-		} else if (typeof properties.version !== 'undefined') {
-			properties.package += ' ' + properties.version;
+		} else {
+			barePkg = properties.package.replace(/\n/g, '\\n');;
+			if (typeof properties.version !== 'undefined') {
+				properties.package += ' ' + properties.version;
+			}
 		}
 
 		if (typeof properties.copyrightHolder === 'undefined') {
@@ -104,7 +109,7 @@ FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 		} else {
 			comment = `SOME DESCRIPTIVE TITLE
 Copyright (C) YEAR ${copyrightHolder}
-This file is distributed under the same license as the PACKAGE package.
+This file is distributed under the same license as the ${barePkg} package.
 FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 `;
 		}
