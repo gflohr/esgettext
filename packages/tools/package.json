@@ -16,6 +16,7 @@
 	"bin": {
 		"esgettext-xgettext": "./bin/esgettext-xgettext.js",
 		"esgettext-mo2json": "./bin/esgettext-mo2json.js",
+		"esgettext-msgfmt-all": "./bin/esgettext-msgfmt-all.js",
 		"esgettext-msgmerge-all": "./bin/esgettext-msgmerge-all.js"
 	},
 	"scripts": {
