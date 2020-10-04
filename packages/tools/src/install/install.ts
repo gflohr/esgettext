@@ -1,6 +1,7 @@
-import { spawn } from 'child_process';
-import { Textdomain } from '@esgettext/runtime';
+import { copyFile, existsSync } from 'fs';
 import { readFileSync as readJsonFileSync } from 'jsonfile';
+import * as mkdirp from 'mkdirp';
+import { Textdomain } from '@esgettext/runtime';
 import { Options } from '../cli/getopt';
 
 /* eslint-disable no-console */
@@ -46,13 +47,19 @@ export class Install {
 		}
 	}
 
-	private installJsonLocale(_inFile: string, _outFile: string): Promise<number> {
-		return new Promise<number>((_resolve, reject) => {
-			reject('todo json');
+	private installMoLocale(inFile: string, outFile: string): Promise<number> {
+		return new Promise<number>((resolve, reject) => {
+			copyFile(inFile, outFile, err => {
+				if (err) {
+					reject(err);
+				} else {
+					resolve(0);
+				}
+			});
 		});
 	}
 
-	private installMoLocale(_inFile: string, _outFile: string): Promise<number> {
+	private installJsonLocale(_inFile: string, _outFile: string): Promise<number> {
 		return new Promise<number>((_resolve, reject) => {
 			reject('todo mo');
 		});
@@ -62,6 +69,10 @@ export class Install {
 		const directory = this.options.outputDirectory + '/' + locale + 'LC_MESSAGES';
 		const outFile = directory + '/' + 'domain' + '.' + this.options.outputFormat;
 		const inFile = this.options.directory + '/' + locale + '.' + this.options.inputFormat;
+
+		if (!existsSync(directory)) {
+			mkdirp.sync(directory);
+		}
 
 		if (this.options.outputFormat === 'json') {
 			return this.installJsonLocale(inFile, outFile);
