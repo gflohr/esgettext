@@ -1,8 +1,9 @@
-import { copyFile, existsSync } from 'fs';
+import { copyFile, existsSync, readFileSync, writeFile } from 'fs';
 import { readFileSync as readJsonFileSync } from 'jsonfile';
 import * as mkdirp from 'mkdirp';
 import { Textdomain } from '@esgettext/runtime';
 import { Options } from '../cli/getopt';
+import { parseMoCatalog } from '../../../runtime/lib';
 
 /* eslint-disable no-console */
 
@@ -59,9 +60,19 @@ export class Install {
 		});
 	}
 
-	private installJsonLocale(_inFile: string, _outFile: string): Promise<number> {
-		return new Promise<number>((_resolve, reject) => {
-			reject('todo mo');
+	private installJsonLocale(inFile: string, outFile: string): Promise<number> {
+		return new Promise<number>((resolve, reject) => {
+			const input = readFileSync(inFile);
+			const catalog = parseMoCatalog(input);
+			const json = JSON.stringify(catalog);
+
+			writeFile(outFile, json, err => {
+				if (err) {
+					reject(err);
+				} else {
+					resolve(0);
+				}
+			});
 		});
 	}
 
