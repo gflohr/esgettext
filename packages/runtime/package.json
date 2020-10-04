@@ -18,7 +18,7 @@
 		"clean": "yarn run clean:lib && yarn run clean:lib-esm && yarn run clean:webpack",
 		"clean:lib": "shx rm -rf lib",
 		"clean:lib-esm": "shx rm -rf lib-esm",
-		"clean:webpack": "shx rm -rf _bundles",
+		"clean:webpack": "shx rm -rf dist",
 		"format": "prettier --write 'src/**/*.ts' 'test/**/*.ts'",
 		"watch": "tsc --watch",
 		"lint": "eslint './src/**/*.ts'",
