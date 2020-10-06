@@ -1,4 +1,4 @@
-# runtime <!-- omit in toc -->
+# @esgettext/runtime <!-- omit in toc -->
 
 GNU gettext-alike translation runtime library.
 

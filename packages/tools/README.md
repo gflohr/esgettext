@@ -1,4 +1,4 @@
-# tools
+# @esgettext/tools
 
 Supporting ools for https://github.com/gflohr/runtime.
 
