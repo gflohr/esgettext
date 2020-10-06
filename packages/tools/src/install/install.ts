@@ -51,10 +51,16 @@ export class Install {
 	}
 
 	private installMoLocale(inFile: string, outFile: string): Promise<number> {
-		return new Promise<number>((resolve, reject) => {
+		return new Promise<number>(resolve => {
+			if (this.options.verbose) {
+				console.log(gtx._x("Installing '{inFile}' as '{outFile}' ...", {
+					inFile, outFile,
+				}));
+			}
+
 			copyFile(inFile, outFile, err => {
 				if (err) {
-					reject(err);
+					throw err;
 				} else {
 					resolve(0);
 				}
@@ -63,14 +69,20 @@ export class Install {
 	}
 
 	private installJsonLocale(inFile: string, outFile: string): Promise<number> {
-		return new Promise<number>((resolve, reject) => {
+		return new Promise<number>(resolve => {
+			if (this.options.verbose) {
+				console.log(gtx._x("Compiling '{inFile}' into '{outFile}' ...", {
+					inFile, outFile,
+				}));
+			}
+
 			const input = readFileSync(inFile);
 			const catalog = parseMoCatalog(input);
 			const json = JSON.stringify(catalog);
 
 			writeFile(outFile, json, err => {
 				if (err) {
-					reject(err);
+					throw err;
 				} else {
 					resolve(0);
 				}
@@ -79,41 +91,47 @@ export class Install {
 	}
 
 	private installLocale(locale: string): Promise<number> {
-		const directory = this.options.outputDirectory + '/' + locale + 'LC_MESSAGES';
-		const outFile = directory + '/' + 'domain' + '.' + this.options.outputFormat;
-		const inFile = this.options.directory + '/' + locale + '.' + this.options.inputFormat;
+		try {
+			const directory = this.options.outputDirectory + '/' + locale + '/LC_MESSAGES';
+			const outFile = directory + '/' + 'domain' + '.' + this.options.outputFormat;
+			const inFile = this.options.directory + '/' + locale + '.' + this.options.inputFormat;
 
-		if (!existsSync(directory)) {
-			mkdirp.sync(directory);
-		}
+			if (!existsSync(directory)) {
+				mkdirp.sync(directory);
+			}
 
-		if (this.options.outputFormat === 'json') {
-			return this.installJsonLocale(inFile, outFile);
-		} else {
-			return this.installMoLocale(inFile, outFile);
-		}
+			if (this.options.outputFormat === 'json') {
+				return this.installJsonLocale(inFile, outFile);
+			} else {
+				return this.installMoLocale(inFile, outFile);
+			}
+		} catch(err) {
+			console.error(err);
+			throw err;
+		};
 	}
 
 	public run(): Promise<number> {
-		return new Promise((resolve, reject) => {
+		return new Promise(resolve => {
 			const promises: Array<Promise<number>> = [];
 
 			for (let i = 0; i < this.locales.length; ++i) {
 				const locale = this.locales[i];
-				promises.push(this.installLocale(locale));
+				promises.push(this.installLocale(locale))
 			}
 
 			Promise.all(promises)
 			.then((codes) => {
 				const failures = codes.filter(v => v !== 0);
 				if (failures.length) {
-					reject(1);
+					resolve(1);
 				} else {
 					resolve(0);
 				}
 			})
-			.catch(() => {
-				reject(1);
+			.catch(err => {
+				console.error(err);
+				resolve(1);
 			});
 		});
 	}
