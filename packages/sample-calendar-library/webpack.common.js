@@ -32,7 +32,7 @@ module.exports = {
 		extensions: ['.ts', '.tsx', '.js'],
 	},
 	output: {
-		path: path.resolve(__dirname, '_bundles'),
+		path: path.resolve(__dirname, 'dist'),
 		filename: '[name].js',
 		libraryTarget: 'umd',
 		library: 'esgettext',
