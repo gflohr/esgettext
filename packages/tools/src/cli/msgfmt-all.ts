@@ -89,7 +89,9 @@ gtx.resolve().then(() => {
 
 	const usage = gtx._('[OPTIONS] ref.pot');
 	const description = gtx._("Invoke 'msgmerge' for multiple files.");
-	const getopt = new Getopt(usage, description, optionGroups);
+	const getopt = new Getopt(usage, description, optionGroups, {
+		hasVerboseOption: true,
+	});
 
 	let msgfmtAll;
 

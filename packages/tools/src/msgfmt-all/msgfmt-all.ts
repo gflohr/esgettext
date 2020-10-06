@@ -69,10 +69,12 @@ export class MsgfmtAll {
 			msgfmt.stderr.on('data', data => out.push([2, data.toString()]));
 
 			msgfmt.on('close', code => {
-				console.log(gtx._x("Compiling '{po}' into '{mo}'.", {
-					po: poFile,
-					mo: moFile,
-				}));
+				if (this.options.verbose) {
+					console.log(gtx._x("Compiling '{po}' into '{mo}'.", {
+						po: poFile,
+						mo: moFile,
+					}));
+				}
 
 				for (let i = 0; i < out.length; ++i) {
 					const chunk = out[i];
@@ -100,7 +102,7 @@ export class MsgfmtAll {
 	}
 
 	public run(): Promise<number> {
-		return new Promise((resolve, reject) => {
+		return new Promise(resolve => {
 			const promises: Array<Promise<number>> = [];
 
 			for (let i = 0; i < this.locales.length; ++i) {
@@ -112,13 +114,13 @@ export class MsgfmtAll {
 			.then((codes) => {
 				const failures = codes.filter(v => v !== 0);
 				if (failures.length) {
-					reject(1);
+					resolve(1);
 				} else {
 					resolve(0);
 				}
 			})
 			.catch(() => {
-				reject(1);
+				resolve(1);
 			});
 		});
 	}
