@@ -22,7 +22,7 @@ export class MsgmergeAll {
 		this.refPot = options._[0];
 
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		let pkg: any;
+		let pkg: any = {};
 
 		if (typeof options.packageJson !== 'undefined') {
 			pkg = readJsonFileSync(options.packageJson);
@@ -31,6 +31,7 @@ export class MsgmergeAll {
 		if (!options.locale) {
 			options.locale = pkg.locales;
 		}
+
 		if (!options.locale || !options.locale.length) {
 			throw new Error(gtx._("no locales given"))
 		}
@@ -40,6 +41,7 @@ export class MsgmergeAll {
 		}
 
 		this.locales = [];
+
 		for (let i = 0; i < options.locale.length; ++i) {
 			const locales = options.locale[i].split(/[ \t]*,[ \t]*/);
 			for (let j = 0; j < locales.length; ++j) {

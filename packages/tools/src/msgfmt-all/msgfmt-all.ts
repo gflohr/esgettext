@@ -16,7 +16,7 @@ export class MsgfmtAll {
 		}
 
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		let pkg: any;
+		let pkg: any = {};
 
 		if (typeof options.packageJson !== 'undefined') {
 			pkg = readJsonFileSync(options.packageJson);
@@ -25,6 +25,7 @@ export class MsgfmtAll {
 		if (!options.locale) {
 			options.locale = pkg.locales;
 		}
+
 		if (!options.locale || !options.locale.length) {
 			throw new Error(gtx._("no locales given"))
 		}
@@ -34,6 +35,7 @@ export class MsgfmtAll {
 		}
 
 		this.locales = [];
+
 		for (let i = 0; i < options.locale.length; ++i) {
 			const locales = options.locale[i].split(/[ \t]*,[ \t]*/);
 			for (let j = 0; j < locales.length; ++j) {
