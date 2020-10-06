@@ -67,9 +67,14 @@ export class Getopt {
 		this.allowedKeys.set('help', this.defaultFlags);
 		this.allowedKeys.set('h', this.defaultFlags);
 		this.allowedKeys.set('version', this.defaultFlags);
-		this.allowedKeys.set('v', this.defaultFlags);
+		this.allowedKeys.set('V', this.defaultFlags);
 		this.allowedKeys.set('_', this.defaultFlags);
 		this.allowedKeys.set('$0', this.defaultFlags);
+
+		if (this.hasVerboseOption) {
+			this.allowedKeys.set('verbose', this.defaultFlags);
+			this.allowedKeys.set('v', this.defaultFlags);
+		}
 
 		for (let i = 0; i < optionGroups.length; ++i) {
 			const group = optionGroups[i];
