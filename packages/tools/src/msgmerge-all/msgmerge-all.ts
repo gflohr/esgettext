@@ -17,7 +17,8 @@ export class MsgmergeAll {
 		let pkg: any = {};
 
 		if (typeof options.packageJson !== 'undefined') {
-			const p = readJsonFileSync(options.packageJson);
+			const filename = options.packageJson.length ? options.packageJson : 'package.json';
+			const p = readJsonFileSync(filename);
 			if (p && p.esgettext) {
 				pkg = p.esgettext;
 			}
