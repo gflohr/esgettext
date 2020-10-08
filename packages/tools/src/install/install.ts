@@ -21,8 +21,14 @@ export class Install {
 		let pkg: any = {};
 
 		if (typeof options.packageJson !== 'undefined') {
-			pkg = readJsonFileSync(options.packageJson);
+			const filename = options.packageJson.length ? options.packageJson : 'package.json';
+			const p = readJsonFileSync(filename);
+			if (p && p.esgettext) {
+				pkg = p.esgettext;
+			}
 		}
+
+		console.log(pkg);
 
 		if (!options.locale) {
 			options.locale = pkg.locales;

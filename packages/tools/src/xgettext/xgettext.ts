@@ -28,7 +28,15 @@ export class XGettext {
 		const catalogProperties: CatalogProperties = { date };
 
 		if (typeof options.packageJson !== 'undefined') {
-			const pkg = readJsonFileSync(options.packageJson);
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			let pkg: any = {};
+
+			const filename = options.packageJson.length ? options.packageJson : 'package.json';
+			const p = readJsonFileSync(filename);
+			if (p && p.esgettext) {
+				pkg = p.esgettext;
+			}
+
 			catalogProperties.package = pkg.name;
 			catalogProperties.version = pkg.version;
 			catalogProperties.msgidBugsAddress = pkg['msgid-bugs-address'];

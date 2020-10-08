@@ -14,7 +14,7 @@ gtx.resolve().then(() => {
 					name: 'package-json',
 					yargsOptions: {
 						type: 'string',
-						describe: gtx._('read package information from PACKAGE_JSON'),
+						describe: gtx._("read package information from PACKAGE_JSON (or 'package.json' without an argument)"),
 					}
 				},
 				{

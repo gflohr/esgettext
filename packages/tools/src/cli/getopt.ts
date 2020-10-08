@@ -113,6 +113,7 @@ export class Getopt {
 		if (typeof args === 'undefined') {
 			args = this.cli.argv;
 		}
+
 		const keys = Object.keys(args);
 
 		if (keys.includes('help')) {

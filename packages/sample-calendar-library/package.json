@@ -20,6 +20,7 @@
 		"clean:webpack": "shx rm -rf dist",
 		"po:POTFILES": "cd po && git ls-files .. | grep \"\\.ts\\$\" >POTFILES",
 		"po:pot": "esgettext-xgettext --output=po/com.cantanea.sample-calendar-library.pot --from-code=utf-8 --add-comments=TRANSLATORS: --directory=po --files-from=po/POTFILES --package-json=package.json",
+		"po:update-po": "esgettext-msgmerge-all --verbose --package-json=package.json",
 		"format": "prettier --write 'src/**/*.ts' 'test/**/*.ts'",
 		"watch": "tsc --watch",
 		"lint": "eslint './src/**/*.ts'",
@@ -33,6 +34,11 @@
 	},
 	"author": "Guido Flohr <guido.flohr@cantanea.com> (http://www.guido.flohr.net/)",
 	"license": "WTFPL",
+	"esgettext": {
+		"locales": ["ar", "bg", "cs", "de-at", "de", "el", "fi", "fr", "ga", "it", "nl", "pt-br", "pt", "ru"],
+		"textdomain": "com.github.gflohr.esgettext.sample-calendar-library",
+		"directory": "po"
+	},
 	"husky": {
 		"hooks": {
 			"pre-commit": "yarn run lint:staged --concurrency 1 --stream --since origin/master"

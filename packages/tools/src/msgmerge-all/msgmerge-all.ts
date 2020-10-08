@@ -13,31 +13,40 @@ export class MsgmergeAll {
 	private readonly locales: Array<string>;
 
 	constructor(private readonly options: Options) {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		let pkg: any = {};
+
+		if (typeof options.packageJson !== 'undefined') {
+			const p = readJsonFileSync(options.packageJson);
+			if (p && p.esgettext) {
+				pkg = p.esgettext;
+			}
+		}
+
+		if (typeof options.directory === 'undefined') {
+			if (pkg.directory.length) {
+				options.directory = pkg.directory.length;
+			} else {
+				options.directory = '.';
+			}
+		}
+
+		if (!options._.length && pkg.textdomain.length) {
+			options._.push(options.directory + '/' + pkg.textdomain + '.pot');
+		}
+
 		if (!options._.length) {
 			throw new Error(gtx._("no input file given"));
 		} else if (options._.length !== 1) {
 			throw new Error(gtx._("exactly one input file is required"));
 		}
 
-		this.refPot = options._[0];
-
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		let pkg: any = {};
-
-		if (typeof options.packageJson !== 'undefined') {
-			pkg = readJsonFileSync(options.packageJson);
-		}
-
-		if (!options.locale) {
+		if (!options.locale && pkg.locales) {
 			options.locale = pkg.locales;
 		}
 
 		if (!options.locale || !options.locale.length) {
 			throw new Error(gtx._("no locales given"))
-		}
-
-		if (typeof options.directory === 'undefined') {
-			options.directory = '.';
 		}
 
 		this.locales = [];
