@@ -115,7 +115,7 @@ export class MsgmergeAll {
 				console.error(err);
 				resolve(1);
 			}
-		})
+		});
 	}
 
 	public run(): Promise<number> {

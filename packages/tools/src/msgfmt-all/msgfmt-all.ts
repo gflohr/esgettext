@@ -1,3 +1,4 @@
+import { unlinkSync } from 'fs';
 import { spawn } from 'child_process';
 import { Textdomain } from '@esgettext/runtime';
 import { readFileSync as readJsonFileSync } from 'jsonfile';
@@ -62,70 +63,59 @@ export class MsgfmtAll {
 			}
 
 			args.push('-o', moFile, poFile);
-
-			const out: Array<[number, Buffer]> = [];
-
-			const msgfmt = spawn(this.options.msgfmt, args, {
-				windowsHide: true,
-			});
-
-			msgfmt.stdout.on('data', data => out.push([1, data.toString()]));
-			msgfmt.stderr.on('data', data => out.push([2, data.toString()]));
-
-			msgfmt.on('close', code => {
-				if (this.options.verbose) {
-					console.log(gtx._x("Compiling '{po}' into '{mo}'.", {
-						po: poFile,
-						mo: moFile,
-					}));
-				}
-
-				for (let i = 0; i < out.length; ++i) {
-					const chunk = out[i];
-					if (chunk[0] === 1) {
-						console.log(chunk[1].toString());
-					} else {
-						console.error(chunk[1].toString());
-					}
-				}
-
-				if (code) {
-					reject(code)
-				} else {
-					resolve(0);
-				}
-			});
-
-			msgfmt.on('error', err => {
-				throw new Error(gtx._x("Failed to run '{prg}': {err}", {
-					prg: this.options.msgfmt,
-					err
+			if (this.options.verbose) {
+				console.log(gtx._x("Compiling '{po}' into '{mo}'.", {
+					po: poFile,
+					mo: moFile,
 				}));
-			});
-		})
+			}
+
+			try {
+				const msgfmt = spawn(this.options.msgfmt, args, {
+					windowsHide: true,
+				});
+				msgfmt.stdout.on('data', data => process.stdout.write(data.toString()));
+				msgfmt.stderr.on('data', data => process.stderr.write(data.toString()));
+				msgfmt.on('close', code => {
+					if (code) {
+						unlinkSync(moFile);
+						resolve(1)
+					} else {
+						resolve(0);
+					}
+				});
+
+				msgfmt.on('error', err => {
+					throw new Error(gtx._x("Failed to run '{prg}': {err}", {
+						prg: this.options.msgfmt,
+						err
+					}));
+				});
+			} catch(err) {
+				try {
+					unlinkSync(moFile);
+				} catch(err1) {
+					console.error(err1);
+				}
+				console.error(err);
+				resolve(1);
+			}
+		});
 	}
 
 	public run(): Promise<number> {
 		return new Promise(resolve => {
-			const promises: Array<Promise<number>> = [];
-
-			for (let i = 0; i < this.locales.length; ++i) {
-				const locale = this.locales[i];
-				promises.push(this.msgfmtLocale(locale));
-			}
-
-			Promise.all(promises)
-			.then((codes) => {
-				const failures = codes.filter(v => v !== 0);
-				if (failures.length) {
-					resolve(1);
-				} else {
-					resolve(0);
-				}
-			})
-			.catch(() => {
-				resolve(1);
-			});
+			// We merge one locale at a time.  It would be more efficient to
+			// do everything asynchronously but that makes error recovery
+			// too hard.
+			this.locales.reduce(
+				(promise, locale) => promise.then(
+					() => this.msgfmtLocale(locale)
+				), Promise.resolve())
+			.then(
+				() => resolve(0),
+				() => resolve(1),
+			);
 		});
 	}
 }
