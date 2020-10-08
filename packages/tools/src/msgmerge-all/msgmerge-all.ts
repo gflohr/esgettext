@@ -78,7 +78,7 @@ export class MsgmergeAll {
 
 			args.push(oldPoFile, this.refPot, '-o', poFile);
 			if (this.options.verbose) {
-				console.log(gtx._x("Merging '{pot}' into '{po}'.", {
+				process.stdout.write(gtx._x("Merging '{pot}' into '{po}'.", {
 					pot: this.refPot,
 					po: poFile,
 				}));
@@ -95,8 +95,8 @@ export class MsgmergeAll {
 						err
 					}));
 				});
-				msgmerge.stdout.on('data', data => console.log(data.toString()));
-				msgmerge.stderr.on('data', data => console.error(data.toString()));
+				msgmerge.stdout.on('data', data => process.stdout.write(data.toString()));
+				msgmerge.stderr.on('data', data => process.stderr.write(data.toString()));
 				msgmerge.on('close', code => {
 					if (code) {
 						renameSync(oldPoFile, poFile);
