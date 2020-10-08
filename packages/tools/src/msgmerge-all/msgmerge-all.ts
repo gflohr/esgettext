@@ -1,5 +1,6 @@
 import { renameSync, unlinkSync } from 'fs';
 import { spawn } from 'child_process';
+import { join } from 'path';
 import { Textdomain } from '@esgettext/runtime';
 import { readFileSync as readJsonFileSync } from 'jsonfile';
 import { Options } from '../cli/getopt';
@@ -26,14 +27,14 @@ export class MsgmergeAll {
 
 		if (typeof options.directory === 'undefined') {
 			if (pkg.directory.length) {
-				options.directory = pkg.directory.length;
+				options.directory = pkg.directory;
 			} else {
 				options.directory = '.';
 			}
 		}
 
 		if (!options._.length && pkg.textdomain.length) {
-			options._.push(options.directory + '/' + pkg.textdomain + '.pot');
+			options._.push(join(options.directory, pkg.textdomain + '.pot'));
 		}
 
 		if (!options._.length) {
@@ -41,6 +42,8 @@ export class MsgmergeAll {
 		} else if (options._.length !== 1) {
 			throw new Error(gtx._("exactly one input file is required"));
 		}
+
+		this.refPot = this.options._[0];
 
 		if (!options.locale && pkg.locales) {
 			options.locale = pkg.locales;
@@ -61,13 +64,11 @@ export class MsgmergeAll {
 	}
 
 	private async msgmergeLocale(locale: string): Promise<number> {
-		return new Promise((resolve, reject) => {
+		return new Promise(resolve => {
 			const args: Array<string> = [];
 
 			const poFile = this.options.directory + '/' + locale + '.po';
 			const oldPoFile = this.options.directory + '/' + locale + '.old.po';
-
-			renameSync(poFile, oldPoFile);
 
 			if (this.options.options) {
 				for (let j = 0; j < this.options.options.length; ++j) {
@@ -76,71 +77,60 @@ export class MsgmergeAll {
 			}
 
 			args.push(oldPoFile, this.refPot, '-o', poFile);
-
-			const out: Array<[number, Buffer]> = [];
-
-			const msgmerge = spawn(this.options.msgmerge, args, {
-				windowsHide: true,
-			});
-
-			msgmerge.stdout.on('data', data => out.push([1, data.toString()]));
-			msgmerge.stderr.on('data', data => out.push([2, data.toString()]));
-
-			msgmerge.on('close', code => {
-				if (this.options.verbose) {
-					console.log(gtx._x("Merging '{pot}' into '{po}'.", {
-						pot: this.refPot,
-						po: poFile,
-					}));
-				}
-
-				for (let i = 0; i < out.length; ++i) {
-					const chunk = out[i];
-					if (chunk[0] === 1) {
-						console.log(chunk[1].toString());
-					} else {
-						console.error(chunk[1].toString());
-					}
-				}
-
-				if (code) {
-					reject(code)
-				} else {
-					unlinkSync(oldPoFile);
-					resolve(0);
-				}
-			});
-
-			msgmerge.on('error', err => {
-				throw new Error(gtx._x("Failed to run '{prg}': {err}", {
-					prg: this.options.msgmerge,
-					err
+			if (this.options.verbose) {
+				console.log(gtx._x("Merging '{pot}' into '{po}'.", {
+					pot: this.refPot,
+					po: poFile,
 				}));
-			});
+			}
+
+			try {
+				renameSync(poFile, oldPoFile);
+				const msgmerge = spawn(this.options.msgmerge, args, {
+					windowsHide: true,
+				});
+				msgmerge.on('error', err => {
+					throw new Error(gtx._x("Failed to run '{prg}': {err}", {
+						prg: this.options.msgmerge,
+						err
+					}));
+				});
+				msgmerge.stdout.on('data', data => console.log(data.toString()));
+				msgmerge.stderr.on('data', data => console.error(data.toString()));
+				msgmerge.on('close', code => {
+					if (code) {
+						renameSync(oldPoFile, poFile);
+						resolve(1)
+					} else {
+						unlinkSync(oldPoFile);
+						resolve(0);
+					}
+				});
+			} catch(err) {
+				try {
+					renameSync(oldPoFile, poFile);
+				} catch(err1) {
+					console.error(err1);
+				}
+				console.error(err);
+				resolve(1);
+			}
 		})
 	}
 
 	public run(): Promise<number> {
 		return new Promise(resolve => {
-			const promises: Array<Promise<number>> = [];
-
-			for (let i = 0; i < this.locales.length; ++i) {
-				const locale = this.locales[i];
-				promises.push(this.msgmergeLocale(locale));
-			}
-
-			Promise.all(promises)
-			.then((codes) => {
-				const failures = codes.filter(v => v !== 0);
-				if (failures.length) {
-					resolve(1);
-				} else {
-					resolve(0);
-				}
-			})
-			.catch(() => {
-				resolve(1);
-			});
+			// We merge one locale at a time.  It would be more efficient to
+			// do everything asynchronously but that makes error recovery
+			// too hard.
+			this.locales.reduce(
+				(promise, locale) => promise.then(
+					() => this.msgmergeLocale(locale)
+				), Promise.resolve())
+			.then(
+				() => resolve(0),
+				() => resolve(1),
+			);
 		});
 	}
 }

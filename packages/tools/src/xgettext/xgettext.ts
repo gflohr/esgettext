@@ -32,18 +32,34 @@ export class XGettext {
 			let pkg: any = {};
 
 			const filename = options.packageJson.length ? options.packageJson : 'package.json';
-			const p = readJsonFileSync(filename);
-			if (p && p.esgettext) {
-				pkg = p.esgettext;
+			pkg = readJsonFileSync(filename);
+			if (!Object.hasOwnProperty.call(pkg, 'esgettext')) {
+				pkg.esgettext = {};
 			}
 
 			catalogProperties.package = pkg.name;
 			catalogProperties.version = pkg.version;
-			catalogProperties.msgidBugsAddress = pkg['msgid-bugs-address'];
+			catalogProperties.msgidBugsAddress = pkg.esgettext['msgid-bugs-address'];
 			catalogProperties.copyrightHolder = pkg['author'];
 			if (typeof catalogProperties.msgidBugsAddress === 'undefined'
 			    && typeof pkg.bugs !== 'undefined') {
 				catalogProperties.msgidBugsAddress = pkg.bugs.url;
+			}
+
+			if (typeof options.directory === 'undefined') {
+				options.directory = [pkg.esgettext.directory];
+			}
+
+			if (typeof options.output === 'undefined'
+			    && typeof pkg.esgettext.textdomain !== 'undefined') {
+				if (typeof options.directory === 'undefined') {
+					options.output = pkg.esgettext.textdomain + '.pot';
+				} else {
+					options.output = path.join(
+						options.directory[0],
+						pkg.esgettext.textdomain + '.pot'
+					);
+				}
 			}
 		}
 
@@ -70,6 +86,8 @@ export class XGettext {
 			}
 			this.options.language = language;
 		}
+
+		console.log(this.options);
 	}
 
 	/**
@@ -326,6 +344,7 @@ export class XGettext {
 				? ''
 				: this.options.outputDir;
 
+console.log(path.join(outputDir, filename));
 		writeFileSync(path.join(outputDir, filename), po);
 	}
 
