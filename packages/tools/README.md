@@ -47,7 +47,7 @@ Supporting tools for https://github.com/gflohr/esgettext.
 			- [`--copyright-holder`](#--copyright-holder)
 			- [`--foreign-user`](#--foreign-user)
 			- [`--package-name`](#--package-name)
-			- [`--package-name`](#--package-name-1)
+			- [`--package-version`](#--package-version)
 			- [`--msgid-bugs-address`](#--msgid-bugs-address)
 			- [`-m[STRING], --msgstr-prefix[=STRING]`](#-mstring---msgstr-prefixstring)
 			- [`-m[STRING], --msgstr-suffix[=STRING]`](#-mstring---msgstr-suffixstring)
@@ -195,16 +195,25 @@ If an input file is `-`, standard input is read.
 
 Add `DIRECTORY` to the list of directories to search for input files.
 
+You can also specify this as `esgettext.directory` in `package.json` with
+the option [`--package-json`](#--package-jsonfilename).
+
 #### Output File Location
 
 ##### `-d, --default-domain=NAME`
 
 Use `NAME.po` as output (instead of `messages.po`).
 
+You can also specify this as `esgettext.textdomain` in `package.json` with
+the option [`--package-json`](#--package-jsonfilename).
+
 ##### `-o, --output=FILE`
 
 Write output to the specified file. If the output file is `-`, output is
 written to standard output.
+
+The value will be intelligently guessed from your `package.json` with
+the option [`--package-json`](#--package-jsonfilename).
 
 ##### `-p, --output-dir=DIR`
 
@@ -449,6 +458,9 @@ by [GNU xgettext](https://www.gnu.org/software/gettext/manual/html_node/xgettext
 
 Set copyright holder in output.
 
+You can also specify this as `author` in `package.json` with
+the option [`--package-json`](#--package-jsonfilename).
+
 ##### `--foreign-user`
 
 Omit Free Software Foundation (FSF) copyright in output for foreign user.
@@ -457,13 +469,22 @@ Omit Free Software Foundation (FSF) copyright in output for foreign user.
 
 Set the package name in output.
 
-##### `--package-name`
+You can also specify this as `name` in `package.json` with
+the option [`--package-json`](#--package-jsonfilename).
+
+##### `--package-version`
 
 Set the package version in output.
+
+You can also specify this as `version` in `package.json` with
+the option [`--package-json`](#--package-jsonfilename).
 
 ##### `--msgid-bugs-address`
 
 Set report address for msgid bugs
+
+You can also specify this as `esgettext.msgid-bugs-address` or `bugs.url`
+in `package.json` with the option [`--package-json`](#--package-jsonfilename).
 
 ##### `-m[STRING], --msgstr-prefix[=STRING]`
 
