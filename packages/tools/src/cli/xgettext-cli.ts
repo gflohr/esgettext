@@ -83,7 +83,7 @@ gtx
 				],
 			},
 			{
-				description: gtx._('Interpretation of input files.'),
+				description: gtx._('Interpretation of input files:'),
 				options: [
 					{
 						name: 'from-code',
@@ -229,7 +229,7 @@ gtx
 						name: 'omit-header',
 						yargsOptions: {
 							type: 'boolean',
-							describe: gtx._("don't write header with msgid '\"\"' header"),
+							describe: gtx._("don't write header with msgid '\"\"' entry"),
 						},
 					},
 					{

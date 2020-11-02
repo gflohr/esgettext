@@ -23,7 +23,7 @@ describe('keywords', () => {
 			expect(k.toString()).toEqual('_npx:1c,2,3,4t,"perl-brace-format"');
 		});
 
-		it('should detect meansings for arguments', () => {
+		it('should detect meanings for arguments', () => {
 			expect(() => new Keyword('_', ['1c', '1'])).toThrow(
 				new Error('Multiple meanings for argument #1 for function "_"!'),
 			);
