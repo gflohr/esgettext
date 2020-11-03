@@ -2,19 +2,7 @@
 
 Supporting tools for https://github.com/gflohr/esgettext.
 
-## Table of Contents <!-- omit in toc -->
-
-- [Status](#status)
-- [Prerequisites](#prerequisites)
-	- [Un*x/Linux](#unxlinux)
-	- [Mac OS X](#mac-os-x)
-		- [MacPorts](#macports)
-		- [HomeBrew](#homebrew)
-	- [MS-DOS (Microsoft Windows)](#ms-dos-microsoft-windows)
-- [Installation](#installation)
-- [The Tools](#the-tools)
-	- [esgettext-gettextize](#esgettext-gettextize)
-	- [`esgettext-xgettext`](#esgettext-xgettext)
+- [Description](#description)
 - [Copyright](#copyright)
 
 ## Description
