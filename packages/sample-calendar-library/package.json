@@ -1,0 +1,82 @@
+{
+	"name": "@esgettext/sample-calendar-library",
+	"version": "0.1.0",
+	"description": "Example library internationalized with esgettext",
+	"main": "lib/index.js",
+	"types": "lib/index.d.ts",
+	"repository": "https://github.com/gflohr/esgettext",
+	"bugs": {
+		"url": "https://github.com/gflohr/esgettext/issues"
+	},
+	"homepage": "https://github.com/gflohr/esgettext/packages/sample-calendar-library",
+	"scripts": {
+		"build": "yarn run build:lib && yarn run build:lib-esm && yarn run build:webpack",
+		"build:lib": "yarn run clean:lib && tsc",
+		"build:lib-esm": "yarn run clean:lib-esm && tsc -m es6 --outDir lib-esm",
+		"build:webpack": "yarn run clean:webpack && webpack --config webpack.dev.js && webpack --config webpack.prod.js",
+		"clean": "yarn run clean:lib && yarn run clean:lib-esm && yarn run clean:webpack",
+		"clean:lib": "shx rm -rf lib",
+		"clean:lib-esm": "shx rm -rf lib-esm",
+		"clean:webpack": "shx rm -rf dist",
+		"po:POTFILES": "cd po && git ls-files .. | grep \"\\.ts\\$\" >POTFILES",
+		"po:pot": "esgettext-xgettext --package-json --add-comments=TRANSLATORS: --files-from=po/POTFILES",
+		"po:update-po": "esgettext-msgmerge-all --verbose --package-json=package.json",
+		"po:update-mo": "esgettext-msgfmt-all --verbose --package-json=package.json",
+		"po:update-install": "esgettext-install --verbose --package-json=package.json",
+		"format": "prettier --write 'src/**/*.ts' 'test/**/*.ts'",
+		"watch": "tsc --watch",
+		"lint": "eslint './src/**/*.ts'",
+		"lint:fix": "eslint --fix './src/**/*.ts'",
+		"lint:fix-dry-run": "eslint --fix './src/**/*.ts'",
+		"lint:staged": "lint-staged",
+		"test": "jest",
+		"test:watch": "jest --watch",
+		"test:cov": "jest --coverage",
+		"test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand"
+	},
+	"author": "Guido Flohr <guido.flohr@cantanea.com> (http://www.guido.flohr.net/)",
+	"license": "WTFPL",
+	"esgettext": {
+		"fromCode": "utf-8",
+		"locales": ["ar", "bg", "cs", "de-at", "de", "el", "fi", "fr", "ga", "it", "nl", "pt-br", "pt", "ru"],
+		"textdomain": "com.github.gflohr.esgettext.sample-calendar-library",
+		"directory": "po"
+	},
+	"husky": {
+		"hooks": {
+			"pre-commit": "yarn run lint:staged --concurrency 1 --stream --since origin/master"
+		}
+	},
+	"jest": {
+		"moduleFileExtensions": [
+			"js",
+			"json",
+			"ts"
+		],
+		"moduleNameMapper": {
+			"^@esgettext/runtime$": "<rootDir>/../../runtime/src"
+		},
+		"rootDir": "src",
+		"testRegex": ".spec.ts$",
+		"transform": {
+			"^.+\\.ts$": "ts-jest"
+		},
+		"coverageDirectory": "../coverage",
+		"testEnvironment": "node"
+	},
+	"dependencies": {
+		"@esgettext/runtime": "^0.1.0"
+	},
+	"devDependencies": {
+		"@esgettext/tools": "^0.1.0",
+		"eslint": "^6.8.0",
+		"jest": "^25.5.2",
+		"null-loader": "^4.0.0",
+		"shx": "^0.3.2",
+		"tsc": "^1.20150623.0",
+		"tsconfig-paths-webpack-plugin": "^3.2.0",
+		"typescript": "^3.8.3",
+		"webpack": "^4.43.0",
+		"webpack-cli": "^3.3.11"
+	}
+}

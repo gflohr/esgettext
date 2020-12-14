@@ -1,0 +1,9 @@
+{
+	"files.exclude": {
+		"**/_bundles": true,
+		"**/lib": true,
+		"**/lib-esm": true,
+		"**/node_modules": true,
+		"**/dist": true
+	}
+}
