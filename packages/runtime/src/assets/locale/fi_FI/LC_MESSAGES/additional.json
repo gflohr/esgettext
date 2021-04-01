@@ -1,0 +1,17 @@
+{
+	"major": 0,
+	"minor": 0,
+	"entries": {
+		"": [
+			"Project-Id-Version: libintl-perl-text 0.01\nPOT-Creation-Date: 2002-07-13 11:47+02:00\nPO-Revision-Date: 1999-02-16 21:14+01:00\nLast-Translator: Guido Flohr <guido.flohr@cantanea.com>\nLanguage-Team: German <de@li.org>\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8-bit\nPlural-Forms: nplurals=2; plural=(n != 1)\n"
+		],
+		"Friday": ["Perjantai"],
+		"Monday": ["Maanantai"],
+		"Saturday": ["Lauantai"],
+		"Singular": ["Yksikkö", "Monikko"],
+		"Sunday": ["Sunnuntai"],
+		"Thursday": ["Torstai"],
+		"Tuesday": ["Tiistai"],
+		"Wednesday": ["Keskiviikko"]
+	}
+}

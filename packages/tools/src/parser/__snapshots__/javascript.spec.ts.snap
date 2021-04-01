@@ -1,0 +1,56 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`JavaScript parser comments should extract all kinds of comments 1`] = `
+"#. Single-line comment.
+#: example.js:3
+msgid \\"single line\\"
+msgstr \\"\\"
+
+#. Block comment.
+#: example.js:6
+msgid \\"block\\"
+msgstr \\"\\"
+
+#. Single-line
+#. and block combined.
+#: example.js:10
+msgid \\"single + block\\"
+msgstr \\"\\"
+
+#. Block
+#. and single-line combined.
+#: example.js:14
+msgid \\"block + single\\"
+msgstr \\"\\"
+
+#. But catch this.
+#: example.js:19
+msgid \\"only immediately preceding\\"
+msgstr \\"\\"
+
+#. Only for one string.
+#: example.js:22
+msgid \\"catcher\\"
+msgstr \\"\\"
+
+#: example.js:22
+msgid \\"loser\\"
+msgstr \\"\\"
+"
+`;
+
+exports[`JavaScript parser strings should extract all kinds of strings 1`] = `
+"#: example.js:3
+msgid \\"double-quoted string\\"
+msgstr \\"\\"
+
+#: example.js:6
+msgid \\"single-quoted string\\"
+msgstr \\"\\"
+
+#: example.js:9
+#, perl-brace-format
+msgid \\"Hello, {name}!\\"
+msgstr \\"\\"
+"
+`;

@@ -1,0 +1,108 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: libintl-perl-text 1.12\n"
+"POT-Creation-Date: 2002-07-13 11:47+02:00\n"
+"PO-Revision-Date: 2020-05-06 16:27+0300\n"
+"Last-Translator: Guido Flohr <guido.flohr@cantanea.com>\n"
+"Language-Team: German <de@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: fi_FI\n"
+"X-Generator: Poedit 2.3\n"
+
+msgid "Singular"
+msgid_plural "Plural"
+msgstr[0] "Yksittäinen"
+msgstr[1] "Monikko"
+
+msgid "January"
+msgstr "Tammikuu"
+
+msgid "February"
+msgstr "Helmikuu"
+
+msgid "March"
+msgstr "Maaliskuu"
+
+msgid "April"
+msgstr "Huhtikuu"
+
+msgid "May"
+msgstr "Toukokuu"
+
+msgid "June"
+msgstr "Kesäkuu"
+
+msgid "July"
+msgstr "Heinäkuu"
+
+msgid "August"
+msgstr "Elokuu"
+
+msgid "September"
+msgstr "Syyskuu"
+
+msgid "October"
+msgstr "Lokakuu"
+
+msgid "November"
+msgstr "Marraskuu"
+
+msgid "December"
+msgstr "Joulukuu"
+
+msgid "View"
+msgstr "Näytä"
+
+msgctxt "Which folder would you like to view?"
+msgid "View"
+msgstr "Näytä"
+
+msgctxt "Which folder would you like to view? (2)"
+msgid "View"
+msgstr "Näytä 2"
+
+msgctxt "Context here (2)"
+msgid "Singular"
+msgid_plural "Plural"
+msgstr[0] "Yksittäinen 2"
+msgstr[1] "Mehrzahl 2"
+
+msgctxt "Context here (3)"
+msgid "Singular 3"
+msgid_plural "Plural 3"
+msgstr[0] "Yksittäinen 3"
+msgstr[1] "Mehrzahl 3"
+
+#, perl-brace-format
+msgid "The colors are {color1}, {color2}, and {color3}."
+msgstr "Värit ovat {color1}, {color2} ja {color3}."
+
+#, perl-brace-format
+msgctxt "colon"
+msgid "The colors are {color1}, {color2}, and {color3}."
+msgstr "Värit ovat: {color1}, {color2} ja {color3}."
+
+msgid "red"
+msgstr "punainen"
+
+msgid "green"
+msgstr "vihreä"
+
+msgid "blue"
+msgstr "sininen"
+
+#, perl-brace-format
+msgid "One directory has been deleted."
+msgid_plural "{num} directories have been deleted."
+msgstr[0] "Yksi hakemisto on poistettu."
+msgstr[1] "{num} hakemistoa on poistettu."
+
+#, perl-brace-format
+msgctxt "Windows"
+msgid "One directory has been deleted."
+msgid_plural "{num} directories have been deleted."
+msgstr[0] "Yksi kansio on poistettu."
+msgstr[1] "{num} kansiota on poistettu."

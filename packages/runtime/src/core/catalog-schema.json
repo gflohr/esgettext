@@ -1,0 +1,40 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema",
+	"$id": "http://www.cantanea.com/schemas/message-catalog.json",
+	"type": "object",
+	"title": "JSON Message Catalog",
+	"description": "A schema for a message catalog.",
+	"additionalProperties": false,
+	"required": ["major", "minor", "entries"],
+	"properties": {
+		"major": {
+			"$id": "#/properties/major",
+			"type": "integer",
+			"title": "The Major revision number. Catalogs with a higher number than 00 should be discarded.",
+			"description": "Currently always 0.",
+			"examples": [0]
+		},
+		"minor": {
+			"$id": "#/properties/minor",
+			"type": "integer",
+			"title": "The Minor revision number.",
+			"description": "Currently maximum 1.",
+			"examples": [1]
+		},
+		"entries": {
+			"$id": "#/properties/entries",
+			"type": "object",
+			"title": "The catalog entries",
+			"description": "All entries in the catalog.",
+			"patternProperties": {
+				"^.*$": {
+					"type": "array",
+					"description": "One or more translations for the msgid",
+					"items": {
+						"type": "string"
+					}
+				}
+			}
+		}
+	}
+}

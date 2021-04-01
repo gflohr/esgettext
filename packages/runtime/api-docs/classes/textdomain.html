@@ -1,0 +1,1963 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Textdomain | @esgettext/runtime</title>
+	<meta name="description" content="Documentation for @esgettext/runtime">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="../assets/js/search.json" data-base="..">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="../index.html" class="title">@esgettext/runtime</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="../globals.html">Globals</a>
+				</li>
+				<li>
+					<a href="textdomain.html">Textdomain</a>
+				</li>
+			</ul>
+			<h1>Class Textdomain</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>A Textdomain is a container for an esgettext configuration and all loaded
+						LocaleContainer for the textual domain selected.</p>
+					</div>
+					<p>The actual translation methods have quite funny names like <code>_()</code> or
+						<code>_x()</code>. The purpose of this naming convention is to make the
+						internationalization of your programs as little obtrusive as possible.
+					Most of the times you just have to exchange</p>
+					<pre><code><span class="hljs-keyword">do</span><span class="hljs-constructor">Something(&#x27;Hello, <span class="hljs-params">world</span>!&#x27;)</span>;</code></pre><p>with</p>
+					<pre><code><span class="hljs-keyword">do</span><span class="hljs-constructor">Something(<span class="hljs-params">gtx</span>.<span class="hljs-params">_</span>(&#x27;Hello, <span class="hljs-params">world</span>!&#x27;)</span>);</code></pre><p>Besides, depending on the string extractor you are using, it may be useful
+					that the method names do not collide with method names from other packages.</p>
+				</div>
+			</section>
+			<section class="tsd-panel tsd-hierarchy">
+				<h3>Hierarchy</h3>
+				<ul class="tsd-hierarchy">
+					<li>
+						<span class="target">Textdomain</span>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel-group tsd-index-group">
+				<h2>Index</h2>
+				<section class="tsd-panel tsd-index-panel">
+					<div class="tsd-index-content">
+						<section class="tsd-index-section ">
+							<h3>Properties</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="textdomain.html#_" class="tsd-kind-icon">_</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="textdomain.html#_l" class="tsd-kind-icon">_l</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="textdomain.html#_ln" class="tsd-kind-icon">_ln</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="textdomain.html#_lnp" class="tsd-kind-icon">_lnp</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="textdomain.html#_lnpx" class="tsd-kind-icon">_lnpx</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="textdomain.html#_lnx" class="tsd-kind-icon">_lnx</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="textdomain.html#_lp" class="tsd-kind-icon">_lp</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="textdomain.html#_lpx" class="tsd-kind-icon">_lpx</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="textdomain.html#_lx" class="tsd-kind-icon">_lx</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="textdomain.html#_n" class="tsd-kind-icon">_n</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="textdomain.html#_np" class="tsd-kind-icon">_np</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="textdomain.html#_npx" class="tsd-kind-icon">_npx</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="textdomain.html#_nx" class="tsd-kind-icon">_nx</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="textdomain.html#_p" class="tsd-kind-icon">_p</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="textdomain.html#_px" class="tsd-kind-icon">_px</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="textdomain.html#_x" class="tsd-kind-icon">_x</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="textdomain.html#getinstance" class="tsd-kind-icon">get<wbr>Instance</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Accessors</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="textdomain.html#catalogformat" class="tsd-kind-icon">catalog<wbr>Format</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-static"><a href="textdomain.html#locale" class="tsd-kind-icon">locale</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Methods</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="textdomain.html#n_" class="tsd-kind-icon">N_</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="textdomain.html#n_p" class="tsd-kind-icon">N_<wbr>p</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="textdomain.html#n_px" class="tsd-kind-icon">N_<wbr>px</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="textdomain.html#n_x" class="tsd-kind-icon">N_<wbr>x</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="textdomain.html#bindtextdomain" class="tsd-kind-icon">bindtextdomain</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="textdomain.html#resolve" class="tsd-kind-icon">resolve</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="textdomain.html#textdomain-1" class="tsd-kind-icon">textdomain</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="textdomain.html#n_-1" class="tsd-kind-icon">N_</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="textdomain.html#n_p-1" class="tsd-kind-icon">N_<wbr>p</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="textdomain.html#n_px-1" class="tsd-kind-icon">N_<wbr>px</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="textdomain.html#n_x-1" class="tsd-kind-icon">N_<wbr>x</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="textdomain.html#clearinstances" class="tsd-kind-icon">clear<wbr>Instances</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="textdomain.html#forgetinstances" class="tsd-kind-icon">forget<wbr>Instances</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="textdomain.html#selectlocale" class="tsd-kind-icon">select<wbr>Locale</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="textdomain.html#userlocales" class="tsd-kind-icon">user<wbr>Locales</a></li>
+							</ul>
+						</section>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="_" class="tsd-anchor"></a>
+					<h3>_</h3>
+					<div class="tsd-signature tsd-kind-icon">_<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>msgid<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/gflohr/esgettext/blob/2738702/packages/runtime/src/core/textdomain.ts#L72">src/core/textdomain.ts:72</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Retrieve a translation for a string.</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>param</dt>
+							<dd><p>the string to translate</p>
+							</dd>
+							<dt>returns</dt>
+							<dd><p>the translated string</p>
+							</dd>
+						</dl>
+					</div>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-signature">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-property">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>msgid<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
+											<li>
+												<h5>msgid: <span class="tsd-signature-type">string</span></h5>
+											</li>
+										</ul>
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="_l" class="tsd-anchor"></a>
+					<h3>_l</h3>
+					<div class="tsd-signature tsd-kind-icon">_l<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>locale<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, msgid<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/gflohr/esgettext/blob/2738702/packages/runtime/src/core/textdomain.ts#L195">src/core/textdomain.ts:195</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Retrieve a translation for a string with a fixed locale.</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>param</dt>
+							<dd><p>the locale identifier</p>
+							</dd>
+							<dt>param</dt>
+							<dd><p>the string to translate</p>
+							</dd>
+							<dt>returns</dt>
+							<dd><p>the translated string</p>
+							</dd>
+						</dl>
+					</div>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-signature">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-property">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>locale<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, msgid<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
+											<li>
+												<h5>locale: <span class="tsd-signature-type">string</span></h5>
+											</li>
+											<li>
+												<h5>msgid: <span class="tsd-signature-type">string</span></h5>
+											</li>
+										</ul>
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="_ln" class="tsd-anchor"></a>
+					<h3>_ln</h3>
+					<div class="tsd-signature tsd-kind-icon">_ln<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>locale<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, msgid<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, msgidPlural<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, numItems<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/gflohr/esgettext/blob/2738702/packages/runtime/src/core/textdomain.ts#L210">src/core/textdomain.ts:210</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Retrieve a translation for a string containing a possible plural with
+								a fixed locale.
+								You will almost always want to call <a href="textdomain.html#_nx"><code>_nx</code></a> instead so that
+							you can interpolate the number of items into the strings.</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>param</dt>
+							<dd><p>the locale identifier</p>
+							</dd>
+							<dt>param</dt>
+							<dd><p>the string in the singular</p>
+							</dd>
+							<dt>param</dt>
+							<dd><p>the string in the plural</p>
+							</dd>
+							<dt>param</dt>
+							<dd><p>the number of items</p>
+							</dd>
+							<dt>returns</dt>
+							<dd><p>the translated string</p>
+							</dd>
+						</dl>
+					</div>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-signature">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-property">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>locale<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, msgid<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, msgidPlural<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, numItems<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
+											<li>
+												<h5>locale: <span class="tsd-signature-type">string</span></h5>
+											</li>
+											<li>
+												<h5>msgid: <span class="tsd-signature-type">string</span></h5>
+											</li>
+											<li>
+												<h5>msgidPlural: <span class="tsd-signature-type">string</span></h5>
+											</li>
+											<li>
+												<h5>numItems: <span class="tsd-signature-type">number</span></h5>
+											</li>
+										</ul>
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="_lnp" class="tsd-anchor"></a>
+					<h3>_lnp</h3>
+					<div class="tsd-signature tsd-kind-icon">_lnp<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>locale<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, msgctxt<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, msgid<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, msgidPlural<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, numItems<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/gflohr/esgettext/blob/2738702/packages/runtime/src/core/textdomain.ts#L240">src/core/textdomain.ts:240</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The method <code>_lnp()</code> combines <code>_ln()</code> with <code>_lp()</code>.
+								You will almost always want to call <a href="textdomain.html#_npx"><code>_npx</code></a> instead so that
+							you can interpolate the number of items into the strings.</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>param</dt>
+							<dd><p>the locale identifier</p>
+							</dd>
+							<dt>param</dt>
+							<dd><p>the message context</p>
+							</dd>
+							<dt>param</dt>
+							<dd><p>the message id</p>
+							</dd>
+							<dt>param</dt>
+							<dd><p>a dictionary with placehoders</p>
+							</dd>
+							<dt>returns</dt>
+							<dd><p>the translated string</p>
+							</dd>
+						</dl>
+					</div>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-signature">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-property">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>locale<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, msgctxt<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, msgid<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, msgidPlural<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, numItems<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
+											<li>
+												<h5>locale: <span class="tsd-signature-type">string</span></h5>
+											</li>
+											<li>
+												<h5>msgctxt: <span class="tsd-signature-type">string</span></h5>
+											</li>
+											<li>
+												<h5>msgid: <span class="tsd-signature-type">string</span></h5>
+											</li>
+											<li>
+												<h5>msgidPlural: <span class="tsd-signature-type">string</span></h5>
+											</li>
+											<li>
+												<h5>numItems: <span class="tsd-signature-type">number</span></h5>
+											</li>
+										</ul>
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="_lnpx" class="tsd-anchor"></a>
+					<h3>_lnpx</h3>
+					<div class="tsd-signature tsd-kind-icon">_lnpx<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>locale<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, msgctxt<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, msgid<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, msgidPlural<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, numItems<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, placeholders<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Placeholders</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/gflohr/esgettext/blob/2738702/packages/runtime/src/core/textdomain.ts#L305">src/core/textdomain.ts:305</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The method <code>_lnpx()</code> brings it all together. It combines <code>_ln()</code> and
+							_lp()<code>and</code>_lx()`.</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>param</dt>
+							<dd><p>the locale identifier</p>
+							</dd>
+							<dt>param</dt>
+							<dd><p>the message context</p>
+							</dd>
+							<dt>param</dt>
+							<dd><p>the message id</p>
+							</dd>
+							<dt>param</dt>
+							<dd><p>the plural string</p>
+							</dd>
+							<dt>param</dt>
+							<dd><p>the number of items</p>
+							</dd>
+							<dt>param</dt>
+							<dd><p>an optional dictionary with placehoders</p>
+							</dd>
+							<dt>returns</dt>
+							<dd><p>the translated string</p>
+							</dd>
+						</dl>
+					</div>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-signature">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-property">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>locale<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, msgctxt<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, msgid<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, msgidPlural<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, numItems<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, placeholders<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Placeholders</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
+											<li>
+												<h5>locale: <span class="tsd-signature-type">string</span></h5>
+											</li>
+											<li>
+												<h5>msgctxt: <span class="tsd-signature-type">string</span></h5>
+											</li>
+											<li>
+												<h5>msgid: <span class="tsd-signature-type">string</span></h5>
+											</li>
+											<li>
+												<h5>msgidPlural: <span class="tsd-signature-type">string</span></h5>
+											</li>
+											<li>
+												<h5>numItems: <span class="tsd-signature-type">number</span></h5>
+											</li>
+											<li>
+												<h5><span class="tsd-flag ts-flagOptional">Optional</span> placeholders: <span class="tsd-signature-type">Placeholders</span></h5>
+											</li>
+										</ul>
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="_lnx" class="tsd-anchor"></a>
+					<h3>_lnx</h3>
+					<div class="tsd-signature tsd-kind-icon">_lnx<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>locale<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, msgid<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, msgidPlural<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, numItems<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, placeholders<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Placeholders</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/gflohr/esgettext/blob/2738702/packages/runtime/src/core/textdomain.ts#L274">src/core/textdomain.ts:274</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Translate a string with a plural expression with placeholders into a
+							fixed locale.</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>param</dt>
+							<dd><p>the locale identifier</p>
+							</dd>
+							<dt>param</dt>
+							<dd><p>the string in the singular</p>
+							</dd>
+							<dt>param</dt>
+							<dd><p>the string in the plural</p>
+							</dd>
+							<dt>param</dt>
+							<dd><p>the number of items</p>
+							</dd>
+							<dt>param</dt>
+							<dd><p>an optional dictionary of placeholders</p>
+							</dd>
+							<dt>returns</dt>
+							<dd><p>the translated string</p>
+							</dd>
+						</dl>
+					</div>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-signature">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-property">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>locale<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, msgid<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, msgidPlural<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, numItems<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, placeholders<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Placeholders</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
+											<li>
+												<h5>locale: <span class="tsd-signature-type">string</span></h5>
+											</li>
+											<li>
+												<h5>msgid: <span class="tsd-signature-type">string</span></h5>
+											</li>
+											<li>
+												<h5>msgidPlural: <span class="tsd-signature-type">string</span></h5>
+											</li>
+											<li>
+												<h5>numItems: <span class="tsd-signature-type">number</span></h5>
+											</li>
+											<li>
+												<h5><span class="tsd-flag ts-flagOptional">Optional</span> placeholders: <span class="tsd-signature-type">Placeholders</span></h5>
+											</li>
+										</ul>
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="_lp" class="tsd-anchor"></a>
+					<h3>_lp</h3>
+					<div class="tsd-signature tsd-kind-icon">_lp<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>locale<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, msgctxt<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, msgid<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/gflohr/esgettext/blob/2738702/packages/runtime/src/core/textdomain.ts#L226">src/core/textdomain.ts:226</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Translate a string with a context with a fixed locale.</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>param</dt>
+							<dd><p>the locale identifier</p>
+							</dd>
+							<dt>param</dt>
+							<dd><p>the message context</p>
+							</dd>
+							<dt>param</dt>
+							<dd><p>the string to translate</p>
+							</dd>
+							<dt>returns</dt>
+							<dd><p>the translated string</p>
+							</dd>
+						</dl>
+					</div>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-signature">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-property">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>locale<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, msgctxt<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, msgid<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
+											<li>
+												<h5>locale: <span class="tsd-signature-type">string</span></h5>
+											</li>
+											<li>
+												<h5>msgctxt: <span class="tsd-signature-type">string</span></h5>
+											</li>
+											<li>
+												<h5>msgid: <span class="tsd-signature-type">string</span></h5>
+											</li>
+										</ul>
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="_lpx" class="tsd-anchor"></a>
+					<h3>_lpx</h3>
+					<div class="tsd-signature tsd-kind-icon">_lpx<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>msgctxt<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, msgid<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, placeholders<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Placeholders</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/gflohr/esgettext/blob/2738702/packages/runtime/src/core/textdomain.ts#L291">src/core/textdomain.ts:291</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The method <code>_lpx()</code> combines <code>_lp()</code> with <code>_lx()</code>.</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>param</dt>
+							<dd><p>the locale identifier</p>
+							</dd>
+							<dt>param</dt>
+							<dd><p>the message context</p>
+							</dd>
+							<dt>param</dt>
+							<dd><p>the message id</p>
+							</dd>
+							<dt>param</dt>
+							<dd><p>an optional dictionary with placehoders</p>
+							</dd>
+							<dt>returns</dt>
+							<dd><p>the translated string</p>
+							</dd>
+						</dl>
+					</div>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-signature">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-property">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>msgctxt<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, msgid<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, placeholders<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Placeholders</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
+											<li>
+												<h5>msgctxt: <span class="tsd-signature-type">string</span></h5>
+											</li>
+											<li>
+												<h5>msgid: <span class="tsd-signature-type">string</span></h5>
+											</li>
+											<li>
+												<h5><span class="tsd-flag ts-flagOptional">Optional</span> placeholders: <span class="tsd-signature-type">Placeholders</span></h5>
+											</li>
+										</ul>
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="_lx" class="tsd-anchor"></a>
+					<h3>_lx</h3>
+					<div class="tsd-signature tsd-kind-icon">_lx<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>locale<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, msgid<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, placeholders<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Placeholders</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/gflohr/esgettext/blob/2738702/packages/runtime/src/core/textdomain.ts#L260">src/core/textdomain.ts:260</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Translate a string with placeholders for a fixed locale.
+								The placeholders should be
+								wrapped into curly braces and must match the regular expression
+							&quot;[_a-zA-Z][_a-zA-Z0-9]*&quot;.</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>param</dt>
+							<dd><p>the locale identifier</p>
+							</dd>
+							<dt>param</dt>
+							<dd><p>the msgid to translate</p>
+							</dd>
+							<dt>param</dt>
+							<dd><p>an optional dictionary of placeholders</p>
+							</dd>
+							<dt>returns</dt>
+							<dd><p>the translated string with placeholders expanded</p>
+							</dd>
+						</dl>
+					</div>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-signature">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-property">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>locale<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, msgid<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, placeholders<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Placeholders</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
+											<li>
+												<h5>locale: <span class="tsd-signature-type">string</span></h5>
+											</li>
+											<li>
+												<h5>msgid: <span class="tsd-signature-type">string</span></h5>
+											</li>
+											<li>
+												<h5><span class="tsd-flag ts-flagOptional">Optional</span> placeholders: <span class="tsd-signature-type">Placeholders</span></h5>
+											</li>
+										</ul>
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="_n" class="tsd-anchor"></a>
+					<h3>_n</h3>
+					<div class="tsd-signature tsd-kind-icon">_n<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>msgid<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, msgidPlural<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, numItems<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/gflohr/esgettext/blob/2738702/packages/runtime/src/core/textdomain.ts#L85">src/core/textdomain.ts:85</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Retrieve a translation for a string containing a possible plural.
+								You will almost always want to call <a href="textdomain.html#_nx"><code>_nx</code></a> instead so that
+							you can interpolate the number of items into the strings.</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>param</dt>
+							<dd><p>the string in the singular</p>
+							</dd>
+							<dt>param</dt>
+							<dd><p>the string in the plural</p>
+							</dd>
+							<dt>param</dt>
+							<dd><p>the number of items</p>
+							</dd>
+							<dt>returns</dt>
+							<dd><p>the translated string</p>
+							</dd>
+						</dl>
+					</div>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-signature">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-property">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>msgid<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, msgidPlural<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, numItems<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
+											<li>
+												<h5>msgid: <span class="tsd-signature-type">string</span></h5>
+											</li>
+											<li>
+												<h5>msgidPlural: <span class="tsd-signature-type">string</span></h5>
+											</li>
+											<li>
+												<h5>numItems: <span class="tsd-signature-type">number</span></h5>
+											</li>
+										</ul>
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="_np" class="tsd-anchor"></a>
+					<h3>_np</h3>
+					<div class="tsd-signature tsd-kind-icon">_np<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>msgctxt<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, msgid<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, msgidPlural<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, numItems<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/gflohr/esgettext/blob/2738702/packages/runtime/src/core/textdomain.ts#L108">src/core/textdomain.ts:108</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The method <code>_np()</code> combines <code>_n()</code> with <code>_p()</code>.
+								You will almost always want to call <a href="textdomain.html#_npx"><code>_npx</code></a> instead so that
+							you can interpolate the number of items into the strings.</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>param</dt>
+							<dd><p>the message context</p>
+							</dd>
+							<dt>param</dt>
+							<dd><p>the message id</p>
+							</dd>
+							<dt>param</dt>
+							<dd><p>a dictionary with placehoders</p>
+							</dd>
+							<dt>returns</dt>
+							<dd><p>the translated string</p>
+							</dd>
+						</dl>
+					</div>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-signature">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-property">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>msgctxt<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, msgid<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, msgidPlural<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, numItems<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
+											<li>
+												<h5>msgctxt: <span class="tsd-signature-type">string</span></h5>
+											</li>
+											<li>
+												<h5>msgid: <span class="tsd-signature-type">string</span></h5>
+											</li>
+											<li>
+												<h5>msgidPlural: <span class="tsd-signature-type">string</span></h5>
+											</li>
+											<li>
+												<h5>numItems: <span class="tsd-signature-type">number</span></h5>
+											</li>
+										</ul>
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="_npx" class="tsd-anchor"></a>
+					<h3>_npx</h3>
+					<div class="tsd-signature tsd-kind-icon">_npx<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>msgctxt<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, msgid<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, msgidPlural<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, numItems<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, placeholders<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Placeholders</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/gflohr/esgettext/blob/2738702/packages/runtime/src/core/textdomain.ts#L165">src/core/textdomain.ts:165</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The method <code>_npx()</code> brings it all together. It combines <code>_n()</code> and
+							_p()<code>and</code>_x()`.</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>param</dt>
+							<dd><p>the message context</p>
+							</dd>
+							<dt>param</dt>
+							<dd><p>the message id</p>
+							</dd>
+							<dt>param</dt>
+							<dd><p>the plural string</p>
+							</dd>
+							<dt>param</dt>
+							<dd><p>the number of items</p>
+							</dd>
+							<dt>param</dt>
+							<dd><p>an optional dictionary with placehoders</p>
+							</dd>
+							<dt>returns</dt>
+							<dd><p>the translated string</p>
+							</dd>
+						</dl>
+					</div>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-signature">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-property">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>msgctxt<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, msgid<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, msgidPlural<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, numItems<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, placeholders<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Placeholders</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
+											<li>
+												<h5>msgctxt: <span class="tsd-signature-type">string</span></h5>
+											</li>
+											<li>
+												<h5>msgid: <span class="tsd-signature-type">string</span></h5>
+											</li>
+											<li>
+												<h5>msgidPlural: <span class="tsd-signature-type">string</span></h5>
+											</li>
+											<li>
+												<h5>numItems: <span class="tsd-signature-type">number</span></h5>
+											</li>
+											<li>
+												<h5><span class="tsd-flag ts-flagOptional">Optional</span> placeholders: <span class="tsd-signature-type">Placeholders</span></h5>
+											</li>
+										</ul>
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="_nx" class="tsd-anchor"></a>
+					<h3>_nx</h3>
+					<div class="tsd-signature tsd-kind-icon">_nx<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>msgid<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, msgidPlural<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, numItems<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, placeholders<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Placeholders</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/gflohr/esgettext/blob/2738702/packages/runtime/src/core/textdomain.ts#L137">src/core/textdomain.ts:137</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Translate a string with a plural expression with placeholders.</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>param</dt>
+							<dd><p>the string in the singular</p>
+							</dd>
+							<dt>param</dt>
+							<dd><p>the string in the plural</p>
+							</dd>
+							<dt>param</dt>
+							<dd><p>the number of items</p>
+							</dd>
+							<dt>param</dt>
+							<dd><p>an optional dictionary of placeholders</p>
+							</dd>
+							<dt>returns</dt>
+							<dd><p>the translated string</p>
+							</dd>
+						</dl>
+					</div>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-signature">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-property">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>msgid<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, msgidPlural<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, numItems<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, placeholders<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Placeholders</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
+											<li>
+												<h5>msgid: <span class="tsd-signature-type">string</span></h5>
+											</li>
+											<li>
+												<h5>msgidPlural: <span class="tsd-signature-type">string</span></h5>
+											</li>
+											<li>
+												<h5>numItems: <span class="tsd-signature-type">number</span></h5>
+											</li>
+											<li>
+												<h5><span class="tsd-flag ts-flagOptional">Optional</span> placeholders: <span class="tsd-signature-type">Placeholders</span></h5>
+											</li>
+										</ul>
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="_p" class="tsd-anchor"></a>
+					<h3>_p</h3>
+					<div class="tsd-signature tsd-kind-icon">_p<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>msgctxt<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, msgid<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/gflohr/esgettext/blob/2738702/packages/runtime/src/core/textdomain.ts#L95">src/core/textdomain.ts:95</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Translate a string with a context.</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>param</dt>
+							<dd><p>the message context</p>
+							</dd>
+							<dt>param</dt>
+							<dd><p>the string to translate</p>
+							</dd>
+							<dt>returns</dt>
+							<dd><p>the translated string</p>
+							</dd>
+						</dl>
+					</div>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-signature">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-property">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>msgctxt<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, msgid<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
+											<li>
+												<h5>msgctxt: <span class="tsd-signature-type">string</span></h5>
+											</li>
+											<li>
+												<h5>msgid: <span class="tsd-signature-type">string</span></h5>
+											</li>
+										</ul>
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="_px" class="tsd-anchor"></a>
+					<h3>_px</h3>
+					<div class="tsd-signature tsd-kind-icon">_px<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>msgctxt<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, msgid<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, placeholders<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Placeholders</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/gflohr/esgettext/blob/2738702/packages/runtime/src/core/textdomain.ts#L152">src/core/textdomain.ts:152</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The method <code>_px()</code> combines <code>_p()</code> with <code>_x()</code>.</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>param</dt>
+							<dd><p>the message context</p>
+							</dd>
+							<dt>param</dt>
+							<dd><p>the message id</p>
+							</dd>
+							<dt>param</dt>
+							<dd><p>an optional dictionary with placehoders</p>
+							</dd>
+							<dt>returns</dt>
+							<dd><p>the translated string</p>
+							</dd>
+						</dl>
+					</div>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-signature">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-property">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>msgctxt<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, msgid<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, placeholders<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Placeholders</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
+											<li>
+												<h5>msgctxt: <span class="tsd-signature-type">string</span></h5>
+											</li>
+											<li>
+												<h5>msgid: <span class="tsd-signature-type">string</span></h5>
+											</li>
+											<li>
+												<h5><span class="tsd-flag ts-flagOptional">Optional</span> placeholders: <span class="tsd-signature-type">Placeholders</span></h5>
+											</li>
+										</ul>
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="_x" class="tsd-anchor"></a>
+					<h3>_x</h3>
+					<div class="tsd-signature tsd-kind-icon">_x<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>msgid<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, placeholders<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Placeholders</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/gflohr/esgettext/blob/2738702/packages/runtime/src/core/textdomain.ts#L125">src/core/textdomain.ts:125</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Translate a string with placeholders. The placeholders should be
+								wrapped into curly braces and must match the regular expression
+							&quot;[_a-zA-Z][_a-zA-Z0-9]*&quot;.</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>param</dt>
+							<dd><p>the msgid to translate</p>
+							</dd>
+							<dt>param</dt>
+							<dd><p>an optional dictionary of placeholders</p>
+							</dd>
+							<dt>returns</dt>
+							<dd><p>the translated string with placeholders expanded</p>
+							</dd>
+						</dl>
+					</div>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-signature">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-property">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>msgid<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, placeholders<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Placeholders</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
+											<li>
+												<h5>msgid: <span class="tsd-signature-type">string</span></h5>
+											</li>
+											<li>
+												<h5><span class="tsd-flag ts-flagOptional">Optional</span> placeholders: <span class="tsd-signature-type">Placeholders</span></h5>
+											</li>
+										</ul>
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="getinstance" class="tsd-anchor"></a>
+					<h3>get<wbr>Instance</h3>
+					<div class="tsd-signature tsd-kind-icon">get<wbr>Instance<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>textdomain<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><a href="textdomain.html" class="tsd-signature-type">Textdomain</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/gflohr/esgettext/blob/2738702/packages/runtime/src/core/textdomain.ts#L63">src/core/textdomain.ts:63</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Instantiate a Textdomain object. Textdomain objects are singletons
+							for each textdomain identifier.</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>param</dt>
+							<dd><p>the textdomain of your application or library.</p>
+							</dd>
+						</dl>
+					</div>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-signature">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-property">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>textdomain<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="textdomain.html" class="tsd-signature-type">Textdomain</a></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
+											<li>
+												<h5>textdomain: <span class="tsd-signature-type">string</span></h5>
+											</li>
+										</ul>
+										<h4 class="tsd-returns-title">Returns <a href="textdomain.html" class="tsd-signature-type">Textdomain</a></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Accessors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="catalogformat" class="tsd-anchor"></a>
+					<h3>catalog<wbr>Format</h3>
+					<ul class="tsd-signatures tsd-kind-accessor tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> catalogFormat<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">set</span> catalogFormat<span class="tsd-signature-symbol">(</span>format<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/gflohr/esgettext/blob/2738702/packages/runtime/src/core/textdomain.ts#L583">src/core/textdomain.ts:583</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Get the catalog format in use.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+							<p>one of &#39;json&#39; or &#39;mo&#39; (default is &#39;json&#39;)</p>
+						</li>
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/gflohr/esgettext/blob/2738702/packages/runtime/src/core/textdomain.ts#L592">src/core/textdomain.ts:592</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Set the catalog format to use.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>format: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>one of &#39;json&#39; or &#39;mo&#39;</p>
+										</div>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+							<p>one of &#39;json&#39; or &#39;mo&#39; (default is &#39;json&#39;)</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class tsd-is-static">
+					<a name="locale" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> locale</h3>
+					<ul class="tsd-signatures tsd-kind-accessor tsd-parent-kind-class tsd-is-static">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> locale<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">set</span> locale<span class="tsd-signature-symbol">(</span>locale<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/gflohr/esgettext/blob/2738702/packages/runtime/src/core/textdomain.ts#L431">src/core/textdomain.ts:431</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Query the locale in use.</p>
+								</div>
+								<p>For the web you can use all valid language identifier tags that
+									<a href="https://tools.ietf.org/html/bcp47">BCP47</a> allows
+								(and actually a lot more). The tag is always used unmodified.</p>
+								<p>For server environments, the locale identifier has to match the following
+								scheme:</p>
+								<p>  <code>ll_CC.charset\@modifier</code></p>
+								<ul>
+									<li><code>ll</code> is the two- or three-letter language code.</li>
+									<li><code>CC</code> is the optional two-letter country code.</li>
+									<li><code>charset</code> is an optional character set (letters, digits, and the hyphen).</li>
+									<li><code>modifier</code> is an optional variant (letters and digits).</li>
+								</ul>
+								<p>The language code is always converted to lowercase, the country code is
+								converted to uppercase, variant and charset are used as is.</p>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+							<p>the locale in use</p>
+						</li>
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/gflohr/esgettext/blob/2738702/packages/runtime/src/core/textdomain.ts#L458">src/core/textdomain.ts:458</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Change the locale.</p>
+								</div>
+								<p>For the web you can use all valid language identifier tags that
+									<a href="https://tools.ietf.org/html/bcp47">BCP47</a> allows
+								(and actually a lot more). The tag is always used unmodified.</p>
+								<p>For server environments, the locale identifier has to match the following
+								scheme:</p>
+								<p>  <code>ll_CC.charset\@modifier</code></p>
+								<ul>
+									<li><code>ll</code> is the two- or three-letter language code.</li>
+									<li><code>CC</code> is the optional two-letter country code.</li>
+									<li><code>charset</code> is an optional character set (letters, digits, and the hyphen).</li>
+									<li><code>modifier</code> is an optional variant (letters and digits).</li>
+								</ul>
+								<p>The language code is always converted to lowercase, the country code is
+								converted to uppercase, variant and charset are used as is.</p>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>locale: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>the locale identifier</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+							<p>the locale in use</p>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="n_" class="tsd-anchor"></a>
+					<h3>N_</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">N_<span class="tsd-signature-symbol">(</span>msgid<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/gflohr/esgettext/blob/2738702/packages/runtime/src/core/textdomain.ts#L691">src/core/textdomain.ts:691</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Does the same as the static method <code>N_()</code>.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>msgid: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>the message id</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+							<p>the original string</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="n_p" class="tsd-anchor"></a>
+					<h3>N_<wbr>p</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">N_<wbr>p<span class="tsd-signature-symbol">(</span>_msgctxt<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, msgid<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/gflohr/esgettext/blob/2738702/packages/runtime/src/core/textdomain.ts#L724">src/core/textdomain.ts:724</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Same as <code>N_()</code> but with context.</p>
+								</div>
+								<dl class="tsd-comment-tags">
+									<dt>params</dt>
+									<dd><p>_msgctxt - the message context</p>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>_msgctxt: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5>msgid: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>the message id</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+							<p>the original string</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="n_px" class="tsd-anchor"></a>
+					<h3>N_<wbr>px</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">N_<wbr>px<span class="tsd-signature-symbol">(</span>_msgctxt<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, msgid<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, placeholders<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Placeholders</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/gflohr/esgettext/blob/2738702/packages/runtime/src/core/textdomain.ts#L747">src/core/textdomain.ts:747</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Same as <code>N_()</code> but with context and placeholder expansion.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>_msgctxt: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5>msgid: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>the message id</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> placeholders: <span class="tsd-signature-type">Placeholders</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>a dictionary of placeholders</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+							<p>the original string with placeholders expanded</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="n_x" class="tsd-anchor"></a>
+					<h3>N_<wbr>x</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">N_<wbr>x<span class="tsd-signature-symbol">(</span>msgid<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, placeholders<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Placeholders</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/gflohr/esgettext/blob/2738702/packages/runtime/src/core/textdomain.ts#L702">src/core/textdomain.ts:702</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Same as <code>N_()</code> but with placeholder expansion.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>msgid: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>the message id</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> placeholders: <span class="tsd-signature-type">Placeholders</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>a dictionary of placeholders</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+							<p>the original string with placeholders expanded</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="bindtextdomain" class="tsd-anchor"></a>
+					<h3>bindtextdomain</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">bindtextdomain<span class="tsd-signature-symbol">(</span>path<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/localecontainer.html" class="tsd-signature-type">LocaleContainer</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/localecontainer.html" class="tsd-signature-type">LocaleContainer</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/gflohr/esgettext/blob/2738702/packages/runtime/src/core/textdomain.ts#L518">src/core/textdomain.ts:518</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Bind a textdomain to a certain path or queries the path that a
+										textdomain is bound to. The catalog file will be searched
+									in <code>${path}/locale/LC_MESSAGES/${domainname}.EXT</code>.</p>
+								</div>
+								<p>Alternatively, you can pass a <a href="../interfaces/localecontainer.html"><code>LocaleContainer</code></a> that holds the
+								catalogs in memory.</p>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> path: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/localecontainer.html" class="tsd-signature-type">LocaleContainer</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>the base path or <a href="../interfaces/localecontainer.html"><code>LocaleContainer</code></a> for this textdomain</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/localecontainer.html" class="tsd-signature-type">LocaleContainer</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="resolve" class="tsd-anchor"></a>
+					<h3>resolve</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">resolve<span class="tsd-signature-symbol">(</span>locale<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/catalog.html" class="tsd-signature-type">Catalog</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/gflohr/esgettext/blob/2738702/packages/runtime/src/core/textdomain.ts#L538">src/core/textdomain.ts:538</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Resolve a textdomain, i.e. load the LocaleContainer for this domain and all
+										of its dependencies for the currently selected locale or the locale
+									specified.</p>
+								</div>
+								<p>The promise will always resolve. If no catalog was found, an empty
+								catalog will be returned that is still usable.</p>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> locale: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>an optional locale identifier, defaults to Textdomain.locale</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/catalog.html" class="tsd-signature-type">Catalog</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>a promise for a Catalog that will always resolve.</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="textdomain-1" class="tsd-anchor"></a>
+					<h3>textdomain</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">textdomain<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/gflohr/esgettext/blob/2738702/packages/runtime/src/core/textdomain.ts#L504">src/core/textdomain.ts:504</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>A textdomain is an identifier for your application or library. It is
+										the basename of your translation files which are either TEXTDOMAIN.json
+									or TEXTDOMAIN.mo, depending on the format you have chosen.</p>
+								</div>
+								<p>FIXME! This should be a getter!</p>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+							<p>the textdomain</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
+					<a name="n_-1" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> N_</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
+						<li class="tsd-signature tsd-kind-icon">N_<span class="tsd-signature-symbol">(</span>msgid<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/gflohr/esgettext/blob/2738702/packages/runtime/src/core/textdomain.ts#L681">src/core/textdomain.ts:681</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>A no-op method for string marking.</p>
+								</div>
+								<p>Sometimes you want to mark strings for translation but do not actually
+									want to translate them, at least not at the time of their definition.
+								This is often the case, when you have to preserve the original string.</p>
+								<p>Take this example:</p>
+								<pre><code><span class="hljs-attr">orangeColors</span> = [gtx.N_(<span class="hljs-string">&#x27;coral&#x27;</span>), gtx.N_(<span class="hljs-string">&#x27;tomato&#x27;</span>), gtx.N_(<span class="hljs-string">&#x27;orangered&#x27;</span>),
+                gtx.N_(<span class="hljs-string">&#x27;gold&#x27;</span>), gtx.N_(<span class="hljs-string">&#x27;orange&#x27;</span>), gtx.N_(<span class="hljs-string">&#x27;darkorange&#x27;</span>)]</code></pre><p>These are standard CSS colors, and you cannot translate them inside
+								CSS styles. But for presentation you may want to translate them later:</p>
+								<pre><code><span class="hljs-selector-tag">console</span><span class="hljs-selector-class">.log</span>(gtx._x(<span class="hljs-string">&quot;The css color &#x27;{color}&#x27; is {translated}.&quot;</span>,
+                   {
+                       <span class="hljs-attribute">color</span>: orangeColors[<span class="hljs-number">2</span>],
+                       <span class="hljs-attribute">translated</span>: gtx._(orangeColors[<span class="hljs-number">2</span>]),
+                   }
+           )
+);</code></pre><p>In other words: The method just marks strings for translation, so that
+									the extractor <code>esgettext-xgettext</code> finds them but it does not actually
+								translate anything.</p>
+								<p>Similar methods are available for other cases (with placeholder
+									expansion, context, or both). They are <em>not</em> available for plural
+								methods because that would not make sense.</p>
+								<p>Note that all of these methods are also available as instance methods.</p>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>msgid: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>the message id</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+							<p>the original string</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
+					<a name="n_p-1" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> N_<wbr>p</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
+						<li class="tsd-signature tsd-kind-icon">N_<wbr>p<span class="tsd-signature-symbol">(</span>_msgctxt<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, msgid<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/gflohr/esgettext/blob/2738702/packages/runtime/src/core/textdomain.ts#L735">src/core/textdomain.ts:735</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Does the same as the static method <code>N_p()</code>.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>_msgctxt: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5>msgid: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>the message id</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+							<p>the original string with placeholders expanded</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
+					<a name="n_px-1" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> N_<wbr>px</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
+						<li class="tsd-signature tsd-kind-icon">N_<wbr>px<span class="tsd-signature-symbol">(</span>_msgctxt<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, msgid<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, placeholders<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Placeholders</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/gflohr/esgettext/blob/2738702/packages/runtime/src/core/textdomain.ts#L759">src/core/textdomain.ts:759</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Does the same as the static method <code>N_px()</code>.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>_msgctxt: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5>msgid: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>the message id</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> placeholders: <span class="tsd-signature-type">Placeholders</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>a dictionary of placeholders</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+							<p>the original string with placeholders expanded</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
+					<a name="n_x-1" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> N_<wbr>x</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
+						<li class="tsd-signature tsd-kind-icon">N_<wbr>x<span class="tsd-signature-symbol">(</span>msgid<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, placeholders<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Placeholders</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/gflohr/esgettext/blob/2738702/packages/runtime/src/core/textdomain.ts#L713">src/core/textdomain.ts:713</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Does the same as the static method <code>N_x()</code>.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>msgid: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>the message id</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> placeholders: <span class="tsd-signature-type">Placeholders</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>a dictionary of placeholders</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+							<p>the original string with placeholders expanded</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
+					<a name="clearinstances" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> clear<wbr>Instances</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
+						<li class="tsd-signature tsd-kind-icon">clear<wbr>Instances<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/gflohr/esgettext/blob/2738702/packages/runtime/src/core/textdomain.ts#L416">src/core/textdomain.ts:416</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Delete all existing singletons. This method should usually be called
+									only, when you want to free memory.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
+					<a name="forgetinstances" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> forget<wbr>Instances</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
+						<li class="tsd-signature tsd-kind-icon">forget<wbr>Instances<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/gflohr/esgettext/blob/2738702/packages/runtime/src/core/textdomain.ts#L423">src/core/textdomain.ts:423</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>This method is used for testing.  Do not use it yourself!</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
+					<a name="selectlocale" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> select<wbr>Locale</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
+						<li class="tsd-signature tsd-kind-icon">select<wbr>Locale<span class="tsd-signature-symbol">(</span>supported<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span>, requested<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/gflohr/esgettext/blob/2738702/packages/runtime/src/core/textdomain.ts#L631">src/core/textdomain.ts:631</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Select one of the supported locales from a list of locales accepted by
+									the user.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>supported: <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>the list of locales supported by the application</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> requested: <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>the list of locales accepted by the user</p>
+										<p>If called with just one argument, then the list of requested locales
+										is determined by calling <a href="textdomain.html#userlocales">Textdomain.userLocales</a>.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+							<p>the negotiated locale or &#39;C&#39; if not possible.</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
+					<a name="userlocales" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> user<wbr>Locales</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
+						<li class="tsd-signature tsd-kind-icon">user<wbr>Locales<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/gflohr/esgettext/blob/2738702/packages/runtime/src/core/textdomain.ts#L615">src/core/textdomain.ts:615</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Queries the user&#39;s preferred locales. On the server it queries the
+										environment variables <code>LANGUAGE</code>, <code>LC_ALL</code>, <code>LANG</code>, and <code>LC_MESSAGES</code>
+										(in that order). In the browser, it parses it checks the user preferences
+										in the variables <code>navigator.languages</code>, <code>navigator.language</code>,
+										<code>navigator.userLanguage</code>, <code>navigator.browserLanguage</code>, and
+									<code>navigator.systemLanguage</code>.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>the set of locales in order of preference</p>
+							<p>Added in @runtime 0.1.0.</p>
+						</li>
+					</ul>
+				</section>
+			</section>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="../globals.html"><em>Globals</em></a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-class">
+						<a href="textdomain.html" class="tsd-kind-icon">Textdomain</a>
+						<ul>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="textdomain.html#_" class="tsd-kind-icon">_</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="textdomain.html#_l" class="tsd-kind-icon">_l</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="textdomain.html#_ln" class="tsd-kind-icon">_ln</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="textdomain.html#_lnp" class="tsd-kind-icon">_lnp</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="textdomain.html#_lnpx" class="tsd-kind-icon">_lnpx</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="textdomain.html#_lnx" class="tsd-kind-icon">_lnx</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="textdomain.html#_lp" class="tsd-kind-icon">_lp</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="textdomain.html#_lpx" class="tsd-kind-icon">_lpx</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="textdomain.html#_lx" class="tsd-kind-icon">_lx</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="textdomain.html#_n" class="tsd-kind-icon">_n</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="textdomain.html#_np" class="tsd-kind-icon">_np</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="textdomain.html#_npx" class="tsd-kind-icon">_npx</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="textdomain.html#_nx" class="tsd-kind-icon">_nx</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="textdomain.html#_p" class="tsd-kind-icon">_p</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="textdomain.html#_px" class="tsd-kind-icon">_px</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="textdomain.html#_x" class="tsd-kind-icon">_x</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="textdomain.html#getinstance" class="tsd-kind-icon">get<wbr>Instance</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="textdomain.html#catalogformat" class="tsd-kind-icon">catalog<wbr>Format</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class tsd-is-static">
+								<a href="textdomain.html#locale" class="tsd-kind-icon">locale</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="textdomain.html#n_" class="tsd-kind-icon">N_</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="textdomain.html#n_p" class="tsd-kind-icon">N_<wbr>p</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="textdomain.html#n_px" class="tsd-kind-icon">N_<wbr>px</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="textdomain.html#n_x" class="tsd-kind-icon">N_<wbr>x</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="textdomain.html#bindtextdomain" class="tsd-kind-icon">bindtextdomain</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="textdomain.html#resolve" class="tsd-kind-icon">resolve</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="textdomain.html#textdomain-1" class="tsd-kind-icon">textdomain</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
+								<a href="textdomain.html#n_-1" class="tsd-kind-icon">N_</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
+								<a href="textdomain.html#n_p-1" class="tsd-kind-icon">N_<wbr>p</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
+								<a href="textdomain.html#n_px-1" class="tsd-kind-icon">N_<wbr>px</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
+								<a href="textdomain.html#n_x-1" class="tsd-kind-icon">N_<wbr>x</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
+								<a href="textdomain.html#clearinstances" class="tsd-kind-icon">clear<wbr>Instances</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
+								<a href="textdomain.html#forgetinstances" class="tsd-kind-icon">forget<wbr>Instances</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
+								<a href="textdomain.html#selectlocale" class="tsd-kind-icon">select<wbr>Locale</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
+								<a href="textdomain.html#userlocales" class="tsd-kind-icon">user<wbr>Locales</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="after-current">
+					<li class=" tsd-kind-interface">
+						<a href="../interfaces/catalog.html" class="tsd-kind-icon">Catalog</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="../interfaces/catalogentries.html" class="tsd-kind-icon">Catalog<wbr>Entries</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="../interfaces/localecontainer.html" class="tsd-kind-icon">Locale<wbr>Container</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class"><span class="tsd-kind-icon">Accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="../assets/js/main.js"></script>
+</body>
+</html>

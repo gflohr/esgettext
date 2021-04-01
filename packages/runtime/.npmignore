@@ -1,0 +1,10 @@
+.*
+**/tsconfig.json
+**/webpack.config.js
+/src
+/node_modules
+/coverage
+**/*.spec.ts
+/po
+/src/po-test
+*.mo

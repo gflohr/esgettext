@@ -1,0 +1,19 @@
+{
+	"compilerOptions": {
+		"allowSyntheticDefaultImports": true,
+		"noImplicitAny": true,
+		"noImplicitReturns": true,
+		"noImplicitThis": true,
+		"noImplicitUseStrict": true,
+		"removeComments": true,
+		"declaration": true,
+		"target": "es5",
+		"lib": ["es2015", "dom"],
+		"module": "commonjs",
+		"sourceMap": true,
+		"typeRoots": ["node_modules/@types"],
+		"esModuleInterop": true,
+		"moduleResolution": "node"
+	},
+	"exclude": [ "node_modules" ]
+}

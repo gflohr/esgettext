@@ -1,0 +1,436 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>@esgettext/runtime</title>
+	<meta name="description" content="Documentation for @esgettext/runtime">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="assets/js/search.json" data-base=".">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="index.html" class="title">@esgettext/runtime</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="globals.html">Globals</a>
+				</li>
+			</ul>
+			<h1>@esgettext/runtime</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<div class="tsd-panel tsd-typography">
+				<a href="#esgettextruntime-" id="esgettextruntime-" style="color: inherit; text-decoration: none;">
+					<h1>@esgettext/runtime <!-- omit in toc --></h1>
+				</a>
+				<p>GNU gettext-alike translation runtime library.</p>
+				<a href="#table-of-contents-" id="table-of-contents-" style="color: inherit; text-decoration: none;">
+					<h2>Table of Contents <!-- omit in toc --></h2>
+				</a>
+				<ul>
+					<li><a href="#api-documentation">API Documentation</a></li>
+					<li><a href="#internationalizing-hello-world">Internationalizing Hello World</a><ul>
+							<li><a href="#choosing-a-textdomain">Choosing a Textdomain</a></li>
+							<li><a href="#install-the-library">Install the Library</a></li>
+							<li><a href="#import-the-library">Import the Library</a></li>
+							<li><a href="#prepare-your-sources">Prepare Your Sources</a></li>
+							<li><a href="#translation-methods">Translation Methods</a><ul>
+									<li><a href="#simple-translations-with-_">Simple Translations With <code>_()</code></a></li>
+									<li><a href="#variable-interpolation-with-_x">Variable Interpolation With <code>_x()</code></a></li>
+									<li><a href="#plural-forms-with-_nx">Plural Forms With <code>_nx()</code></a></li>
+									<li><a href="#message-context-with-_p">Message Context With <code>_p()</code></a></li>
+									<li><a href="#specific-locale-with-_l">Specific Locale with <code>_l</code></a></li>
+									<li><a href="#todo-gender-specific-translations">TODO: Gender-Specific Translations</a></li>
+								</ul>
+							</li>
+							<li><a href="#selecting-the-preferred-language-with-selectlocale">Selecting the Preferred Language with <code>selectLocale()</code></a></li>
+						</ul>
+					</li>
+					<li><a href="#internationalizing-a-library">Internationalizing a Library</a></li>
+					<li><a href="#frequently-asked-questions">Frequently-Asked Questions</a><ul>
+							<li><a href="#why-do-template-strings-not-work">Why do Template Strings not Work?</a></li>
+							<li><a href="#what-does-the-error-template-literals-with-embedded-expressions-are-not-allowed-as-arguments-to-gettext-functions-because-they-are-not-constant-mean">What Does the Error &quot;template literals with embedded expressions are not allowed as arguments to gettext functions because they are not constant&quot; Mean?</a></li>
+						</ul>
+					</li>
+					<li><a href="#copyright">Copyright</a></li>
+				</ul>
+				<a href="#api-documentation" id="api-documentation" style="color: inherit; text-decoration: none;">
+					<h2>API Documentation</h2>
+				</a>
+				<p>If you are already familiar with the concepts of the esgettext runtime library,
+				you can go straight to the <a href="https://gflohr.github.io/esgettext/packages/runtime/api-docs/globals.html">API documentation</a>.</p>
+				<a href="#internationalizing-hello-world" id="internationalizing-hello-world" style="color: inherit; text-decoration: none;">
+					<h2>Internationalizing Hello World</h2>
+				</a>
+				<p>You have written this little piece of JavaScript:</p>
+				<pre><code class="language-javascript"><span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;Hello, world!&#x27;</span>);</code></pre>
+				<p>What are the steps needed to internationalize it with this library?</p>
+				<a href="#choosing-a-textdomain" id="choosing-a-textdomain" style="color: inherit; text-decoration: none;">
+					<h3>Choosing a Textdomain</h3>
+				</a>
+				<p>First, you have to choose a unique identifier for your project so that the
+					translation catalogs will have a unique name. You are almost free
+					in what you are choosing but you have to keep in mind that the textdomain
+				will be part of a URI or filename and therefore a couple of rules apply:</p>
+				<ul>
+					<li>A textdomain <em>must not</em> contain a slash (&quot;/&quot;).</li>
+					<li>A textdomain <em>should not</em> contain a colon (&quot;:&quot;), because of Windows.</li>
+					<li>A textdomain <em>should not</em> contain a backslash (&quot;:&quot;), because of Windows.</li>
+					<li>A textdomain <em>should not</em> contain binary characters, because of common sense.</li>
+				</ul>
+				<p>In general, you should only use lowercase characters that are valid inside
+				hostnames, namely &quot;a-z&quot;, &quot;0-9&quot;, the hyphen &quot;-&quot;, and the dot &quot;.&quot;.</p>
+				<p>If possible, follow this advice:</p>
+				<ol>
+					<li>If your organization has a domain, use the reverse(!) domain name followed by the name of your product for example &quot;com.example.hello&quot;</li>
+					<li>Otherwise, if your project sources are publicly hosted use the reverse domain name of your hoster followed by an identifier of your project. For example, the textdomain for <code>https://github.com/gflohr/esgettext</code> would then be &quot;com.github.gflohr.esgettext&quot;.</li>
+					<li>Otherwise, use common sense.</li>
+				</ol>
+				<p>We will use the the third rule and pick the textdomain &quot;hello&quot;.</p>
+				<a href="#install-the-library" id="install-the-library" style="color: inherit; text-decoration: none;">
+					<h3>Install the Library</h3>
+				</a>
+				<p>You normally install the library with <code>npm</code> or <code>yarn</code>.</p>
+				<p>With <code>npm</code>:</p>
+				<pre><code class="language-shell"><span class="hljs-meta">$</span><span class="bash"> npm install --save esgettext</span></code></pre>
+				<p>Or with <code>yarn</code>:</p>
+				<pre><code class="language-shell"><span class="hljs-meta">$</span><span class="bash"> yarn add esgettext</span></code></pre>
+				<a href="#import-the-library" id="import-the-library" style="color: inherit; text-decoration: none;">
+					<h3>Import the Library</h3>
+				</a>
+				<p>How to import the library, depends on your environment.</p>
+				<p>If you have the <code>import</code> keyword:</p>
+				<pre><code class="language-javascript"><span class="hljs-keyword">import</span> Textdomain <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@esgettext/runtime&#x27;</span>;</code></pre>
+				<p>If you can use <code>require</code>:</p>
+				<pre><code class="language-javascript"><span class="hljs-keyword">const</span> esgettext = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;@esgettext/runtime&#x27;</span>);
+<span class="hljs-keyword">const</span> Textdomain = esgettext.Textdomain;</code></pre>
+				<p><em>FIXME! Is this correct?</em></p>
+				<p>If you are writing javascript loaded by a browser:</p>
+				<pre><code class="language-html"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;https://cdn.jsdelivr.net/npm/@esgettext/runtime/_bundles/runtime.min.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript">
+    <span class="hljs-keyword">var</span> Textdomain = esgettext.Textdomain;
+    <span class="hljs-comment">// ... your code follows.</span>
+</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></code></pre>
+				<p>If you want a specific version, you can do like this:</p>
+				<pre><code class="language-html"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;https://cdn.jsdelivr.net/npm/@esgettext/runtime@0.1.0/_bundles/runtime.min.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript">
+    <span class="hljs-keyword">var</span> Textdomain = esgettext.Textdomain;
+    <span class="hljs-comment">// ... your code follows.</span>
+</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></code></pre>
+				<a href="#prepare-your-sources" id="prepare-your-sources" style="color: inherit; text-decoration: none;">
+					<h3>Prepare Your Sources</h3>
+				</a>
+				<p>Change your <code>hello.js</code> to read like this:</p>
+				<pre><code class="language-javascript"><span class="hljs-keyword">import</span> { Textdomain } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@esgettext/runtime&#x27;</span>;
+
+Textdomain.locale = <span class="hljs-string">&#x27;fr&#x27;</span>;
+<span class="hljs-keyword">const</span> gtx = Textdomain.getInstance(<span class="hljs-string">&#x27;hello&#x27;</span>);
+gtx.bindtextdomain(<span class="hljs-string">&#x27;/assets/locale&#x27;</span>);
+gtx.resolve().then(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-built_in">console</span>.log(gtx._(<span class="hljs-string">&#x27;Hello, world!&#x27;</span>));
+});</code></pre>
+				<p><em>Hint:</em> If you cannot use <code>import</code>, use one of the other techniques shown
+				above to make the <code>Textdomain</code> class available in your source!</p>
+				<p>What is happening here?</p>
+				<p>First, you set the locale (resp. language) to the desired value. Here we
+					choose &quot;fr&quot; for French. See the section <a href="#selecting-the-preferred-language-with-selectlocale">Selecting the Preferred Language with <code>selectLocale()</code></a>
+				for a more flexible way to select the user&#39;s locale.</p>
+				<p>You then get an instance of a <code>Textdomain</code> object. You cannot use the regular
+					constructor because it is private! The argument to the
+					<a href="https://gflohr.github.io/esgettext/packages/runtime/api-docs/classes/textdomain.html#getinstance"><code>getInstance()</code></a> class
+				method is the textdomain you have chosen.</p>
+				<p>You then have to tell the library where to find translations for the &quot;hello&quot;
+					textdomain. You do that with the instance method
+					<a href="https://gflohr.github.io/esgettext/packages/runtime/api-docs/classes/textdomain.html#bindtextdomain"><code>bindtextdomain()</code></a> that
+					receives a (base) directory as its argument. The actual translation catalog
+					would then be searched at <code>/assets/locale/fr/LC_MESSAGES/hello.json</code> (or
+				<code>hello.mo</code> depending on your environment).</p>
+				<p>Don&#39;t worry that there are no translations at the moment. Failure is handled
+					gracefully by the library falling back to using the original, untranslated
+					strings. See the <a href="../tools/README.md">docs for tools</a> for
+				instructions on how to create translation catalogs.</p>
+				<p>You then have to <a href="https://gflohr.github.io/esgettext/packages/runtime/api-docs/classes/textdomain.html#resolve"><code>resolve()</code></a> the translations. The method returns a promise,
+				and your actual code should be moved into the promise&#39;s <code>then()</code> method.</p>
+				<p>Now that everything is loaded you can translate all messages by replacing
+				<code>&#39;some string&#39;</code> with <code>gtx._(&#39;some string&#39;)</code>. That&#39;s it!</p>
+				<a href="#translation-methods" id="translation-methods" style="color: inherit; text-decoration: none;">
+					<h3>Translation Methods</h3>
+				</a>
+				<p>The method <a href="https://gflohr.github.io/esgettext/packages/runtime/api-docs/classes/textdomain.html#_"><code>_()</code></a> is the simplest but by far not the only translation method
+				that esgettext has to offer.</p>
+				<a href="#simple-translations-with-_" id="simple-translations-with-_" style="color: inherit; text-decoration: none;">
+					<h4>Simple Translations With <a href="https://gflohr.github.io/esgettext/packages/runtime/api-docs/classes/textdomain.html#_"><code>_()</code></a></h4>
+				</a>
+				<p>The method <a href="https://gflohr.github.io/esgettext/packages/runtime/api-docs/classes/textdomain.html#_"><code>_()</code></a> has already been introduced:</p>
+				<pre><code class="language-javascript"><span class="hljs-built_in">console</span>.log(gtx._(<span class="hljs-string">&#x27;Hello, world!&#x27;</span>));</code></pre>
+				<p>It returns the translation of its argument or just the argument if no
+				translation can be found.</p>
+				<a href="#variable-interpolation-with-_x" id="variable-interpolation-with-_x" style="color: inherit; text-decoration: none;">
+					<h4>Variable Interpolation With <a href="https://gflohr.github.io/esgettext/packages/runtime/api-docs/classes/textdomain.html#_x"><code>_x()</code></a></h4>
+				</a>
+				<p>Imagine you want to express RGB colors in human-readable form. The esgettext
+				way to do that goes like this:</p>
+				<pre><code class="language-javascript"><span class="hljs-built_in">console</span>.log(gtx._x(
+    <span class="hljs-string">&#x27;red: {r}, green: {g}, blue: {b}&#x27;</span>, {
+        <span class="hljs-attr">r</span>: red,
+        <span class="hljs-attr">g</span>: green,
+        <span class="hljs-attr">b</span>: blue
+    }
+);</code></pre>
+				<p>You use placeholders surrounded by curly braces (<code>{}</code>), and provide an object
+					as an additional argument where the keys are the placeholder names and the
+				values, the respective values to be interpolated.</p>
+				<p>Placeholder names must be valid C identifiers: They must begin with a
+					lower- or uppercase letter (&quot;a&quot; to &quot;z&quot;, &quot;A&quot; to &quot;Z&quot;) or an underscore (&quot;_&quot;)
+					followed by an arbitrary number of characters from the same set or decimal
+				digits (&quot;0&quot; to &quot;9&quot;). In regular espression syntax: <code>/^[_a-zA-Z][_a-zA-Z0-9]*$/</code>.</p>
+				<a href="#plural-forms-with-_nx" id="plural-forms-with-_nx" style="color: inherit; text-decoration: none;">
+					<h4>Plural Forms With <a href="https://gflohr.github.io/esgettext/packages/runtime/api-docs/classes/textdomain.html#_nx"><code>_nx()</code></a></h4>
+				</a>
+				<p>Translating a string with plural expressions is unfortunately somewhat
+				convoluted:</p>
+				<pre><code class="language-javascript"><span class="hljs-built_in">console</span>.log(
+    gtx._nx(<span class="hljs-string">&#x27;One file copied&#x27;</span>, <span class="hljs-string">&#x27;{count} files copied.&#x27;</span>, count, {
+        <span class="hljs-attr">count</span>: count,
+    }),
+);</code></pre>
+				<p>Count, count, count, count.</p>
+				<p>If the variable <code>count</code> has the value 42, the above would yield in English:
+					&quot;42 files copied.&quot;. If <code>count</code> had the value 1, it would yield: &quot;One file
+				copied.&quot;.</p>
+				<p>The method <a href="https://gflohr.github.io/esgettext/packages/runtime/api-docs/classes/textdomain.html#_"><code>_nx()</code></a> has this signature:</p>
+				<pre><code class="language-javascript">_nx(
+    (msgid: string),
+    (msgidPlural: string),
+    (numberOfItems: number),
+    (placeholders: <span class="hljs-built_in">Object</span>),
+);</code></pre>
+				<p>Many times, the placeholder name will equal the variable name, so that you see
+					that name once inside the plural string as the placeholder, then as the
+					argument <code>numberOfItems</code>, then as the key in the placeholder hash, and again
+				as the value for that key.</p>
+				<p>Note that there is also a method <a href="https://gflohr.github.io/esgettext/packages/runtime/api-docs/classes/textdomain.html#_n"><code>_n()</code></a> that does the same as <a href="https://gflohr.github.io/esgettext/packages/runtime/api-docs/classes/textdomain.html#_nx"><code>_nx()</code></a> but
+					without inpterpolation but it only exists for completeness and is useless for
+				practical purposes.</p>
+				<a href="#message-context-with-_p" id="message-context-with-_p" style="color: inherit; text-decoration: none;">
+					<h4>Message Context With <a href="https://gflohr.github.io/esgettext/packages/runtime/api-docs/classes/textdomain.html#_p"><code>_p()</code></a></h4>
+				</a>
+				<p>It is sometimes possible that one English sentence can have multiple, different
+					meanings in another language. For example &quot;Sun&quot; can mean our planet&#39;s star or
+					the abbreviation of &quot;Sunday&quot;. In order to allow translators to provide
+					accurate translations for each meaning, you can distinguish them by message
+				context:</p>
+				<pre><code class="language-javascript">weekday = gtx._p(<span class="hljs-string">&#x27;wday&#x27;</span>, <span class="hljs-string">&#x27;Sun&#x27;</span>);
+star = gtx._p(<span class="hljs-string">&#x27;star&#x27;</span>, <span class="hljs-string">&#x27;Sun&#x27;</span>);</code></pre>
+				<p>The first argument is the context (a free-form string), the second is the
+				string to translate.</p>
+				<p>It is actually sufficient to use a context just for one of the two cases.</p>
+				<p>There are also methods <a href="https://gflohr.github.io/esgettext/packages/runtime/api-docs/classes/textdomain.html#_px"><code>_px()</code></a>, when you need placeholders or <a href="https://gflohr.github.io/esgettext/packages/runtime/api-docs/classes/textdomain.html#_npx"><code>_npx()</code></a>, when
+				you need placeholders and plural forms in addition to a message context.</p>
+				<a href="#specific-locale-with-_l" id="specific-locale-with-_l" style="color: inherit; text-decoration: none;">
+					<h4>Specific Locale with <a href="https://gflohr.github.io/esgettext/packages/runtime/api-docs/classes/textdomain.html#_l"><code>_l</code></a></h4>
+				</a>
+				<p>Most of the time, the locale resp. language is set just once by setting the
+				static property <code>locale</code>:</p>
+				<pre><code class="language-javascript">Textdomain.locale = <span class="hljs-string">&#x27;fr&#x27;</span>;
+<span class="hljs-built_in">console</span>.log(gtx._(<span class="hljs-string">&#x27;Hello, world!&#x27;</span>));</code></pre>
+				<p>Alternatively, you can pass the locale with every call to a translation
+				method:</p>
+				<pre><code class="language-javascript"><span class="hljs-built_in">console</span>.log(gtx._l(<span class="hljs-string">&#x27;fr&#x27;</span>, <span class="hljs-string">&#x27;Hello, world!&#x27;</span>));</code></pre>
+				<p>There is not just <a href="https://gflohr.github.io/esgettext/packages/runtime/api-docs/classes/textdomain.html#_l"><code>_l()</code></a>, but actually all of the above mentioned methods have
+					versions with a leading <code>_l</code>, like
+					<a href="https://gflohr.github.io/esgettext/packages/runtime/api-docs/classes/textdomain.html#_lx"><code>_lx()</code></a>
+					or as complicated as
+				<a href="https://gflohr.github.io/esgettext/packages/runtime/api-docs/classes/textdomain.html#_lnpx"><code>_lnpx()</code></a>.</p>
+				<p>One use-case for the
+					<a href="https://gflohr.github.io/esgettext/packages/runtime/api-docs/classes/textdomain.html#_l"><code>_l()</code></a>
+					family of methods
+					would be a web server. A web server handles requests asynchronously, and a
+					global locale doesn&#39;t make sense. Instead, the language is typically bound
+				to the request or response and should be taken from there.</p>
+				<a href="#todo-gender-specific-translations" id="todo-gender-specific-translations" style="color: inherit; text-decoration: none;">
+					<h4>TODO: Gender-Specific Translations</h4>
+				</a>
+				<p>This is on the todo list for a future version. You will be able to do something
+				like:</p>
+				<pre><code class="language-javascript">msg = gtx._g(
+    user.gender,
+    <span class="hljs-string">&#x27;They have liked your photo.&#x27;</span>,
+    <span class="hljs-string">&#x27;She has liked your photo.&#x27;</span>,
+);</code></pre>
+				<a href="#selecting-the-preferred-language-with-selectlocale" id="selecting-the-preferred-language-with-selectlocale" style="color: inherit; text-decoration: none;">
+					<h3>Selecting the Preferred Language with <a href="https://gflohr.github.io/esgettext/packages/runtime/api-docs/classes/textdomain.html#selectLocale"><code>selectLocale()</code></a></h3>
+				</a>
+				<p>Negotiating the preferred locale can be performed with the help of esgettext.
+					If your application supports the locales &quot;en-US&quot;, &quot;en-GB&quot;, &quot;fr-FR&quot;, and
+					&quot;de-DE&quot;, you can select a suitable locale for the current user by calling
+				<a href="https://gflohr.github.io/esgettext/packages/runtime/api-docs/classes/textdomain.html#selectLocale"><code>Textdomain.selectlocale</code></a></p>
+				<pre><code class="language-javascript">Textdomain.locale = Textdomain.selectLocale([<span class="hljs-string">&#x27;en-US&#x27;</span>, <span class="hljs-string">&#x27;en-GB&#x27;</span>, <span class="hljs-string">&#x27;fr-FR&#x27;</span>]);</code></pre>
+				<p><a href="https://gflohr.github.io/esgettext/packages/runtime/api-docs/classes/textdomain.html#selectLocale"><code>Textdomain.selectLocale()</code></a>
+					will return the most suitable locale for the current user. For browser code,
+					the browser will be queried for the user language preferences, for server
+					code the environment variables <code>LANGUAGE</code>, <code>LC_ALL</code>, <code>LANG</code>, and <code>LC_MESSAGES</code>
+				will be queried in that order.</p>
+				<p>You can also explicitly specify, which locales the user has requested by
+				passing a second argument:</p>
+				<pre><code class="language-javascript">Textdomain.locale = Textdomain.selectLocale(
+    [<span class="hljs-string">&#x27;en-US&#x27;</span>, <span class="hljs-string">&#x27;en-GB&#x27;</span>, <span class="hljs-string">&#x27;fr-FR&#x27;</span>], <span class="hljs-comment">// Supported by the application.</span>
+    [<span class="hljs-string">&#x27;de-DE&#x27;</span>, <span class="hljs-string">&#x27;fr-FR&#x27;</span>],
+); <span class="hljs-comment">// Requested by the user.</span></code></pre>
+				<a href="#internationalizing-a-library" id="internationalizing-a-library" style="color: inherit; text-decoration: none;">
+					<h2>Internationalizing a Library</h2>
+				</a>
+				<p>Internationalizing a library is very simple. Take this sample library:</p>
+				<pre><code class="language-javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">greet</span>(<span class="hljs-params">name</span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-string">`Hello, <span class="hljs-subst">${name}</span>`</span>;
+}</code></pre>
+				<p>Internationalized, it would look like this:</p>
+				<pre><code class="language-javascript"><span class="hljs-keyword">import</span> { Textdomain } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@esgettext/runtime&#x27;</span>;
+
+<span class="hljs-keyword">const</span> gtx = Textdomain.getInstance(<span class="hljs-string">&#x27;hello-library&#x27;</span>);
+gtx.bindtextdomain(<span class="hljs-string">&#x27;/assets/locale&#x27;</span>);
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">greet</span>(<span class="hljs-params">name</span>) </span>{
+    <span class="hljs-keyword">return</span> gtx._x(<span class="hljs-string">&#x27;Hello, {name}&#x27;</span>, { <span class="hljs-attr">name</span>: name });
+}</code></pre>
+				<p>The main differences to an internationalized application are:</p>
+				<ul>
+					<li>You do not set <a href="https://gflohr.github.io/esgettext/packages/runtime/api-docs/classes/textdomain.html#locale">Textdomain.locale</a> because the main application (the application that loads your library) does it.</li>
+					<li>You do not call <a href="https://gflohr.github.io/esgettext/packages/runtime/api-docs/classes/textdomain.html#resolve">resolve()</a> because whenever the main application calls <code>resolve()</code>, the catalogs for your library will also be loaded.</li>
+				</ul>
+				<a href="#frequently-asked-questions" id="frequently-asked-questions" style="color: inherit; text-decoration: none;">
+					<h2>Frequently-Asked Questions</h2>
+				</a>
+				<a href="#why-do-template-strings-not-work" id="why-do-template-strings-not-work" style="color: inherit; text-decoration: none;">
+					<h3>Why do Template Strings not Work?</h3>
+				</a>
+				<p>A common error is to use template strings with interpolations as arguments to
+				the translation functions, for example:</p>
+				<pre><code class="language-javascript"><span class="hljs-built_in">console</span>.log(gtx._(<span class="hljs-string">`red: <span class="hljs-subst">${red}</span>, green: <span class="hljs-subst">${green}</span>, blue: <span class="hljs-subst">${blue}</span>`</span>);</code></pre>
+				<p>That seems to work for English but the string never gets translated.</p>
+				<p>The reason is that the argument to
+					<a href="https://gflohr.github.io/esgettext/packages/runtime/api-docs/classes/textdomain.html#_"><code>_()</code></a>
+					is the lookup key into the translation database but that key has to be constant.
+					The method receives an argument like &quot;red: 127, green: 63, blue: 31&quot; because
+					the JavaScript engine has already interpolated the variables into the string.
+				But that string does not exist in the database.</p>
+				<p>You have to use
+					<a href="https://gflohr.github.io/esgettext/packages/runtime/api-docs/classes/textdomain.html#_x"><code>_x()</code></a>
+				instead:</p>
+				<pre><code class="language-javascript"><span class="hljs-built_in">console</span>.log(gtx._x(
+    <span class="hljs-string">&#x27;red: {r}, green: {g}, blue: {b}&#x27;</span>, {
+        <span class="hljs-attr">r</span>: red,
+        <span class="hljs-attr">g</span>: green,
+        <span class="hljs-attr">b</span>: blue
+    }
+);</code></pre>
+				<a href="#what-does-the-error-quottemplate-literals-with-embedded-expressions-are-not-allowed-as-arguments-to-gettext-functions-because-they-are-not-constantquot-mean" id="what-does-the-error-quottemplate-literals-with-embedded-expressions-are-not-allowed-as-arguments-to-gettext-functions-because-they-are-not-constantquot-mean" style="color: inherit; text-decoration: none;">
+					<h3>What Does the Error &quot;template literals with embedded expressions are not allowed as arguments to gettext functions because they are not constant&quot; Mean?</h3>
+				</a>
+				<p>See <a href="#why-do-template-strings-not-work">Why do Template Strings not Work?</a>
+					above! The extractor <code>esgettext-xgettext</code> complains that you are using a
+				template string with interpolated expressions.</p>
+				<a href="#copyright" id="copyright" style="color: inherit; text-decoration: none;">
+					<h2>Copyright</h2>
+				</a>
+				<p>Copyright (C) 2020 Guido Flohr <a href="mailto:&#x67;&#117;&#x69;&#x64;&#111;&#46;&#102;&#108;&#x6f;&#104;&#114;&#64;&#x63;&#97;&#110;&#116;&#x61;&#x6e;&#101;&#97;&#x2e;&#99;&#111;&#x6d;">&#x67;&#117;&#x69;&#x64;&#111;&#46;&#102;&#108;&#x6f;&#104;&#114;&#64;&#x63;&#97;&#110;&#116;&#x61;&#x6e;&#101;&#97;&#x2e;&#99;&#111;&#x6d;</a>, all
+				rights reserved.</p>
+				<p>This software is available under the terms and conditions of the
+				<a href="http://www.wtfpl.net/about">WTFPL</a>.</p>
+			</div>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="globals.html"><em>Globals</em></a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+					<li class=" tsd-kind-class">
+						<a href="classes/textdomain.html" class="tsd-kind-icon">Textdomain</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/catalog.html" class="tsd-kind-icon">Catalog</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/catalogentries.html" class="tsd-kind-icon">Catalog<wbr>Entries</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/localecontainer.html" class="tsd-kind-icon">Locale<wbr>Container</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class"><span class="tsd-kind-icon">Accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="assets/js/main.js"></script>
+</body>
+</html>

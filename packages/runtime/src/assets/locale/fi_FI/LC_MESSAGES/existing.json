@@ -1,0 +1,44 @@
+{
+	"major": 0,
+	"minor": 0,
+	"entries": {
+		"": [
+			"Project-Id-Version: libintl-perl-text 1.12\nPOT-Creation-Date: 2002-07-13 11:47+02:00\nPO-Revision-Date: 2020-05-06 16:27+0300\nLast-Translator: Guido Flohr <guido.flohr@cantanea.com>\nLanguage-Team: German <de@li.org>\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=2; plural=(n != 1);\nLanguage: fi_FI\nX-Generator: Poedit 2.3\n"
+		],
+		"April": ["Huhtikuu"],
+		"August": ["Elokuu"],
+		"Context here (2)\u0004Singular": ["Yksittäinen 2", "Mehrzahl 2"],
+		"Context here (3)\u0004Singular 3": ["Yksittäinen 3", "Mehrzahl 3"],
+		"December": ["Joulukuu"],
+		"February": ["Helmikuu"],
+		"January": ["Tammikuu"],
+		"July": ["Heinäkuu"],
+		"June": ["Kesäkuu"],
+		"March": ["Maaliskuu"],
+		"May": ["Toukokuu"],
+		"November": ["Marraskuu"],
+		"October": ["Lokakuu"],
+		"One directory has been deleted.": [
+			"Yksi hakemisto on poistettu.",
+			"{num} hakemistoa on poistettu."
+		],
+		"September": ["Syyskuu"],
+		"Singular": ["Yksittäinen", "Monikko"],
+		"The colors are {color1}, {color2}, and {color3}.": [
+			"Värit ovat {color1}, {color2} ja {color3}."
+		],
+		"View": ["Näytä"],
+		"Which folder would you like to view?\u0004View": ["Näytä"],
+		"Which folder would you like to view? (2)\u0004View": ["Näytä 2"],
+		"Windows\u0004One directory has been deleted.": [
+			"Yksi kansio on poistettu.",
+			"{num} kansiota on poistettu."
+		],
+		"blue": ["sininen"],
+		"colon\u0004The colors are {color1}, {color2}, and {color3}.": [
+			"Värit ovat: {color1}, {color2} ja {color3}."
+		],
+		"green": ["vihreä"],
+		"red": ["punainen"]
+	}
+}
