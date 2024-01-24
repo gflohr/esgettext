@@ -3,7 +3,8 @@
 	"compilerOptions": {
 		"resolveJsonModule": true,
 		"outDir": "lib",
-		"baseUrl": "."
+		"baseUrl": ".",
+		"sourceMap": true
 	},
 	"includes": ["./src"]
 }
