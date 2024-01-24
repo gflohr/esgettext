@@ -71,5 +71,8 @@
 		"webpack-cli": "^3.3.11",
 		"webpack-merge": "^4.2.2",
 		"xhr-mock": "^2.5.1"
+	},
+	"dependencies": {
+		"@types/jsonfile": "^6.1.4"
 	}
 }
