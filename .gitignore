@@ -11,9 +11,6 @@ packages/tools/src/package.ts
 # dependencies
 node_modules/
 
-# yarn
-yarn.lock
-
 # IDEs and editors
 /.idea
 .project

@@ -21,7 +21,7 @@
 		"esgettext-xgettext": "./bin/esgettext-xgettext.js"
 	},
 	"scripts": {
-		"build": "yarn run clean && tsc --project tsconfig-build.json",
+		"build": "npm run clean && tsc --project tsconfig-build.json",
 		"prebuild": "node ./write-package.js >src/package.ts",
 		"watch": "tsc --watch",
 		"prewatch": "node ./write-package.js >src/package.ts",

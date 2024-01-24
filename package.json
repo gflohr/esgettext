@@ -30,8 +30,8 @@
 	},
 	"husky": {
 		"hooks": {
-			"pre-commit": "yarn lerna run lint:staged --concurrency 1 --stream --since origin/main",
-			"pre-push": "yarn test:cov --since origin/main --include-dependents"
+			"pre-commit": "npx lerna run lint:staged --concurrency 1 --stream --since origin/main",
+			"pre-push": "npm run test:cov --since origin/main --include-dependents"
 		}
 	},
 	"lint-staged": {
