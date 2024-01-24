@@ -381,7 +381,7 @@ export class Textdomain {
 				const tp = 'Textdomain.prototype._';
 				const f = 'function';
 				const c = 'catalog:this.catalog';
-				const tc = 'catalog=Textdomain.getCatalog(l,this.textdomain());';
+				const tc = 'const catalog=Textdomain.getCatalog(l,this.textdomain());';
 				const cc = 'catalog:catalog';
 				const rg = 'return g';
 				const rx = 'return x';
