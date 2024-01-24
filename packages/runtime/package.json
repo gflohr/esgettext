@@ -57,7 +57,6 @@
 	},
 	"devDependencies": {
 		"eslint": "^6.8.0",
-		"jest": "^25.5.2",
 		"null-loader": "^4.0.0",
 		"shx": "^0.3.2",
 		"terser-webpack-plugin": "^5.3.10",
