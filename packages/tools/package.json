@@ -57,7 +57,7 @@
 		"testEnvironment": "node"
 	},
 	"dependencies": {
-		"@babel/parser": "7.23.6",
+		"@babel/parser": "^7.23.6",
 		"@babel/traverse": "^7.23.7",
 		"@esgettext/runtime": "file:../runtime",
 		"camelcase": "^6.0.0",
