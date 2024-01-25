@@ -221,6 +221,7 @@ function pluralExpression(str: string): PluralFunction {
 	const code = 'var nplurals = 1, plural = 0;' + str + '; return 0 + plural';
 
 	// This may throw an exception!
+	/* eslint-disable @typescript-eslint/no-implied-eval */
 	return new Function('n', code) as PluralFunction;
 }
 

@@ -9,16 +9,16 @@ export interface SplitLocale {
 }
 
 export function splitLocale(locale: string): SplitLocale | null {
-	let charset, modifier;
+	let charset: string, modifier: string;
 
 	const underscoreSeparator = locale.includes('_');
 
-	locale = locale.replace(/@([a-z]+)$/i, (_, match) => {
+	locale = locale.replace(/@([a-z]+)$/i, (_, match: string) => {
 		modifier = match;
 		return '';
 	});
 
-	locale = locale.replace(/\.([-0-9a-z]+)$/i, (_, match) => {
+	locale = locale.replace(/\.([-0-9a-z]+)$/i, (_, match: string) => {
 		charset = match;
 		return '';
 	});
