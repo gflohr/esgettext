@@ -1,7 +1,5 @@
 import yargs from 'yargs';
 
-/* eslint-disable-next-line import/default */
-import camelCase from 'camelcase';
 import { Textdomain } from '@esgettext/runtime';
 import { Package } from '../package';
 
@@ -84,8 +82,9 @@ export class Getopt {
 			for (let j = 0; j < options.length; ++j) {
 				const option = options[j];
 				const flags = option.flags || this.defaultFlags;
+				const name = option.name.replace(/[-_]./, m => m[1].toUpperCase());
 				this.allowedKeys.set(option.name, flags);
-				this.allowedKeys.set(camelCase(option.name), flags);
+				this.allowedKeys.set(name, flags); // Camel case!!!
 				const alias =
 					typeof option.yargsOptions.alias === 'string'
 						? [option.yargsOptions.alias]
