@@ -1,1 +1,1 @@
-npm run test:cov --since origin/main
+npm run test:cov -- --since origin/main
