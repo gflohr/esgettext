@@ -86,8 +86,6 @@ export class XGettext {
 			}
 			this.options.language = language;
 		}
-
-		console.log(this.options);
 	}
 
 	/**
@@ -344,7 +342,6 @@ export class XGettext {
 				? ''
 				: this.options.outputDir;
 
-console.log(path.join(outputDir, filename));
 		writeFileSync(path.join(outputDir, filename), po);
 	}
 
