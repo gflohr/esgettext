@@ -9,7 +9,7 @@ describe('parse JSON catalogs', () => {
 			);
 		});
 		it('should reject arrays', () => {
-			const arr = (new Array<string>() as unknown) as Catalog;
+			const arr = new Array<string>() as unknown as Catalog;
 			expect(() => validateJsonCatalog(arr)).toThrow(
 				'catalog must be a dictionary',
 			);
@@ -24,7 +24,7 @@ describe('parse JSON catalogs', () => {
 			);
 		});
 		it('should reject catalogs without entries', () => {
-			const arr = (new Array<string>() as unknown) as CatalogEntries;
+			const arr = new Array<string>() as unknown as CatalogEntries;
 			const catalog = {
 				major: 0,
 				minor: 0,
@@ -35,13 +35,13 @@ describe('parse JSON catalogs', () => {
 			);
 		});
 		it('should reject entries whose values are not arrays', () => {
-			const catalog = ({
+			const catalog = {
 				major: 0,
 				minor: 0,
 				entries: {
 					Saturday: 'Lauantai',
 				},
-			} as unknown) as Catalog;
+			} as unknown as Catalog;
 			expect(() => validateJsonCatalog(catalog)).toThrow(
 				"catalog entry for key 'Saturday' is not an array",
 			);

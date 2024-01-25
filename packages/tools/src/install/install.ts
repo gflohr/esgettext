@@ -14,14 +14,16 @@ export class Install {
 
 	constructor(private readonly options: Options) {
 		if (options._.length) {
-			throw new Error(gtx._("no additional arguments allowed"));
+			throw new Error(gtx._('no additional arguments allowed'));
 		}
 
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		let pkg: any = {};
 
 		if (typeof options.packageJson !== 'undefined') {
-			const filename = options.packageJson.length ? options.packageJson : 'package.json';
+			const filename = options.packageJson.length
+				? options.packageJson
+				: 'package.json';
 			const p = readJsonFileSync(filename);
 			if (p && p.esgettext) {
 				pkg = p.esgettext;
@@ -35,11 +37,13 @@ export class Install {
 		}
 
 		if (!options.locale || !options.locale.length) {
-			throw new Error(gtx._("no locales given"))
+			throw new Error(gtx._('no locales given'));
 		}
 
 		if (options.outputFormat !== 'json' && options.outputFormat !== 'mo') {
-			throw new Error(gtx._("only 'json' and 'mo' are allowed as output formats"))
+			throw new Error(
+				gtx._("only 'json' and 'mo' are allowed as output formats"),
+			);
 		}
 
 		if (typeof options.directory === 'undefined') {
@@ -59,9 +63,12 @@ export class Install {
 	private installMoLocale(inFile: string, outFile: string): Promise<number> {
 		return new Promise<number>(resolve => {
 			if (this.options.verbose) {
-				console.log(gtx._x("Installing '{inFile}' as '{outFile}' ...", {
-					inFile, outFile,
-				}));
+				console.log(
+					gtx._x("Installing '{inFile}' as '{outFile}' ...", {
+						inFile,
+						outFile,
+					}),
+				);
 			}
 
 			copyFile(inFile, outFile, err => {
@@ -77,9 +84,12 @@ export class Install {
 	private installJsonLocale(inFile: string, outFile: string): Promise<number> {
 		return new Promise<number>(resolve => {
 			if (this.options.verbose) {
-				console.log(gtx._x("Compiling '{inFile}' into '{outFile}' ...", {
-					inFile, outFile,
-				}));
+				console.log(
+					gtx._x("Compiling '{inFile}' into '{outFile}' ...", {
+						inFile,
+						outFile,
+					}),
+				);
 			}
 
 			const input = readFileSync(inFile);
@@ -98,9 +108,12 @@ export class Install {
 
 	private installLocale(locale: string): Promise<number> {
 		try {
-			const directory = this.options.outputDirectory + '/' + locale + '/LC_MESSAGES';
-			const outFile = directory + '/' + 'domain' + '.' + this.options.outputFormat;
-			const inFile = this.options.directory + '/' + locale + '.' + this.options.inputFormat;
+			const directory =
+				this.options.outputDirectory + '/' + locale + '/LC_MESSAGES';
+			const outFile =
+				directory + '/' + 'domain' + '.' + this.options.outputFormat;
+			const inFile =
+				this.options.directory + '/' + locale + '.' + this.options.inputFormat;
 
 			if (!existsSync(directory)) {
 				mkdirp.sync(directory);
@@ -111,10 +124,10 @@ export class Install {
 			} else {
 				return this.installMoLocale(inFile, outFile);
 			}
-		} catch(err) {
+		} catch (err) {
 			console.error(err);
 			throw err;
-		};
+		}
 	}
 
 	public run(): Promise<number> {
@@ -123,22 +136,22 @@ export class Install {
 
 			for (let i = 0; i < this.locales.length; ++i) {
 				const locale = this.locales[i];
-				promises.push(this.installLocale(locale))
+				promises.push(this.installLocale(locale));
 			}
 
 			Promise.all(promises)
-			.then((codes) => {
-				const failures = codes.filter(v => v !== 0);
-				if (failures.length) {
+				.then(codes => {
+					const failures = codes.filter(v => v !== 0);
+					if (failures.length) {
+						resolve(1);
+					} else {
+						resolve(0);
+					}
+				})
+				.catch(err => {
+					console.error(err);
 					resolve(1);
-				} else {
-					resolve(0);
-				}
-			})
-			.catch(err => {
-				console.error(err);
-				resolve(1);
-			});
+				});
 		});
 	}
 }

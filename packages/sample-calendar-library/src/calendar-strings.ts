@@ -16,7 +16,7 @@ export class CalendarStrings {
 			Textdomain.N_('September'),
 			Textdomain.N_('October'),
 			Textdomain.N_('November'),
-			Textdomain.N_('December')
+			Textdomain.N_('December'),
 		];
 
 		if (id < 0 || id > months.length) {

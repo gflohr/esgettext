@@ -23,7 +23,7 @@
 		"po:update-po": "esgettext-msgmerge-all --verbose --package-json=package.json",
 		"po:update-mo": "esgettext-msgfmt-all --verbose --package-json=package.json",
 		"po:update-install": "esgettext-install --verbose --package-json=package.json",
-		"format": "prettier --write 'src/**/*.ts' 'test/**/*.ts'",
+		"format": "prettier --write 'src/**/*.ts'",
 		"watch": "tsc --watch",
 		"lint": "eslint './src/**/*.ts'",
 		"lint:fix": "eslint --fix './src/**/*.ts'",

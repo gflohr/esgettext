@@ -39,7 +39,7 @@ export class Catalog {
 			barePkg = 'PACKAGE';
 			properties.package = 'PACKAGE VERSION';
 		} else {
-			barePkg = properties.package.replace(/\n/g, '\\n');;
+			barePkg = properties.package.replace(/\n/g, '\\n');
 			if (typeof properties.version !== 'undefined') {
 				properties.package += ' ' + properties.version;
 			}

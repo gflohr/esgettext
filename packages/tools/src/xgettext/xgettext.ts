@@ -24,14 +24,19 @@ export class XGettext {
 	private exclude: ExclusionCatalog;
 
 	/* The date is passed only for testing. */
-	constructor(private readonly options: Options, date?: string) {
+	constructor(
+		private readonly options: Options,
+		date?: string,
+	) {
 		const catalogProperties: CatalogProperties = { date };
 
 		if (typeof options.packageJson !== 'undefined') {
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			let pkg: any = {};
 
-			const filename = options.packageJson.length ? options.packageJson : 'package.json';
+			const filename = options.packageJson.length
+				? options.packageJson
+				: 'package.json';
 			pkg = readJsonFileSync(filename);
 			if (!Object.hasOwnProperty.call(pkg, 'esgettext')) {
 				pkg.esgettext = {};
@@ -41,8 +46,10 @@ export class XGettext {
 			catalogProperties.version = pkg.version;
 			catalogProperties.msgidBugsAddress = pkg.esgettext['msgid-bugs-address'];
 			catalogProperties.copyrightHolder = pkg['author'];
-			if (typeof catalogProperties.msgidBugsAddress === 'undefined'
-			    && typeof pkg.bugs !== 'undefined') {
+			if (
+				typeof catalogProperties.msgidBugsAddress === 'undefined' &&
+				typeof pkg.bugs !== 'undefined'
+			) {
 				catalogProperties.msgidBugsAddress = pkg.bugs.url;
 			}
 
@@ -50,14 +57,16 @@ export class XGettext {
 				options.directory = [pkg.esgettext.directory];
 			}
 
-			if (typeof options.output === 'undefined'
-			    && typeof pkg.esgettext.textdomain !== 'undefined') {
+			if (
+				typeof options.output === 'undefined' &&
+				typeof pkg.esgettext.textdomain !== 'undefined'
+			) {
 				if (typeof options.directory === 'undefined') {
 					options.output = pkg.esgettext.textdomain + '.pot';
 				} else {
 					options.output = path.join(
 						options.directory[0],
-						pkg.esgettext.textdomain + '.pot'
+						pkg.esgettext.textdomain + '.pot',
 					);
 				}
 			}

@@ -14,8 +14,10 @@ gtx.resolve().then(() => {
 					name: 'package-json',
 					yargsOptions: {
 						type: 'string',
-						describe: gtx._("read package information from PACKAGE_JSON (or 'package.json' without an argument)"),
-					}
+						describe: gtx._(
+							"read package information from PACKAGE_JSON (or 'package.json' without an argument)",
+						),
+					},
 				},
 				{
 					name: 'locale',
@@ -25,9 +27,7 @@ gtx.resolve().then(() => {
 					yargsOptions: {
 						alias: 'l',
 						type: 'array',
-						describe: gtx._(
-							"list of locales",
-						),
+						describe: gtx._('list of locales'),
 					},
 				},
 				{
@@ -35,9 +35,7 @@ gtx.resolve().then(() => {
 					yargsOptions: {
 						alias: 'D',
 						type: 'string',
-						describe: gtx._(
-							"search '.gmo' files in DIRECTORY",
-						),
+						describe: gtx._("search '.gmo' files in DIRECTORY"),
 					},
 				},
 				{
@@ -45,9 +43,7 @@ gtx.resolve().then(() => {
 					yargsOptions: {
 						type: 'string',
 						default: 'gmo',
-						describe: gtx._(
-							"input file type format",
-						),
+						describe: gtx._('input file type format'),
 					},
 				},
 			],
@@ -60,9 +56,7 @@ gtx.resolve().then(() => {
 					yargsOptions: {
 						type: 'string',
 						default: 'assets/locale',
-						describe: gtx._(
-							"output directory",
-						),
+						describe: gtx._('output directory'),
 					},
 				},
 				{
@@ -70,9 +64,7 @@ gtx.resolve().then(() => {
 					yargsOptions: {
 						type: 'string',
 						default: 'json',
-						describe: gtx._(
-							"output file type format",
-						),
+						describe: gtx._('output file type format'),
 					},
 				},
 			],
@@ -80,7 +72,7 @@ gtx.resolve().then(() => {
 	];
 
 	const usage = gtx._('[OPTIONS] ref.pot');
-	const description = gtx._("Install translation catalogs.");
+	const description = gtx._('Install translation catalogs.');
 	const getopt = new Getopt(usage, description, optionGroups, {
 		hasVerboseOption: true,
 	});

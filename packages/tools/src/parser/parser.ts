@@ -88,7 +88,7 @@ export abstract class Parser {
 					},
 					end: null,
 					filename,
-					identifierName: null
+					identifierName: null,
 				};
 
 				// Find the offending character.
@@ -347,7 +347,7 @@ export abstract class Parser {
 	private addEntry(props: EntryProperties): void {
 		props.flag = new Array<string>();
 
-		const dict: { [key: string]: string } = (props.loc as unknown) as {
+		const dict: { [key: string]: string } = props.loc as unknown as {
 			[key: string]: string;
 		};
 		let references: Array<string> = [];
@@ -613,7 +613,7 @@ export abstract class Parser {
 			},
 			end: null,
 			filename: '',
-			identifierName: ''
+			identifierName: '',
 		};
 		while (i < buf.length) {
 			if (

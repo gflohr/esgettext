@@ -13,7 +13,10 @@ export class DataViewlet {
 	 * @param array - a `Unit8Array` view on the binary buffer
 	 * @param encoding - encoding of strings, defaults to utf-8
 	 */
-	constructor(private readonly array: Uint8Array, encoding = 'utf-8') {
+	constructor(
+		private readonly array: Uint8Array,
+		encoding = 'utf-8',
+	) {
 		this.decoder = new TextDecoder(encoding);
 		this._encoding = encoding;
 	}
