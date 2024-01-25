@@ -19,7 +19,7 @@
 		"clean:lib": "shx rm -rf lib",
 		"clean:lib-esm": "shx rm -rf lib-esm",
 		"clean:webpack": "shx rm -rf dist",
-		"format": "prettier --write 'src/**/*.ts' 'test/**/*.ts'",
+		"format": "prettier --write 'src/**/*.ts'",
 		"watch": "tsc --watch",
 		"lint": "eslint './src/**/*.ts'",
 		"lint:fix": "eslint --fix './src/**/*.ts'",

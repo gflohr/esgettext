@@ -23,6 +23,7 @@
 	"scripts": {
 		"build": "npm run clean && tsc --project tsconfig-build.json",
 		"prebuild": "node ./write-package.js >src/package.ts",
+		"format": "prettier --write 'src/**/*.ts'",
 		"watch": "tsc --watch",
 		"prewatch": "node ./write-package.js >src/package.ts",
 		"clean": "shx rm -rf ./dist",
