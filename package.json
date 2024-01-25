@@ -16,12 +16,14 @@
 	"scripts": {
 		"format": "prettier --write *.js *.json *.md && lerna run format",
 		"lint": "lerna run lint",
-		"lint:fix": "lerna run lint",
+		"lint:fix": "lerna run lint:fix",
 		"lint:fix-dry-run": "lerna run lint:fix-dry-run",
 		"lint:staged": "lerna run lint:staged",
 		"test": "lerna run test",
 		"test:cov": "lerna run test:cov",
+		"test:watch": "lerna watch -- lerna run test --scope=\\$LERNA_PACKAGE_NAME",
 		"posttest:cov": "node merge-lcov.js packages/*",
+		"clean": "lerna run clean",
 		"prepare": "husky"
 	},
 	"devDependencies": {
