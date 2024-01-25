@@ -10,11 +10,31 @@ import { userLocales } from './user-locales';
 import { selectLocale } from './select-locale';
 import { LocaleContainer } from './locale-container';
 
-/* eslint-disable @typescript-eslint/camelcase, tsdoc/syntax */
-
-interface Placeholders {
+/**
+ * Represents a mapping of placeholder strings to the values that they should be replaced with.
+ * Placeholders must match the regular expression `/^[_a-zA-Z][_a-zA-Z0-9]*$/.
+ * @remarks
+ * Placeholders provide a way to dynamically replace certain strings in a translatable message.
+ *
+ * @example
+ * ```typescript
+ * const placeholders: Placeholders = {
+ * 	'name': 'John Doe',
+ * 	'age': 30,
+ * 	// Add more placeholders as needed
+ * };
+ * ```
+ *
+ * A typical call would look like this:
+ *
+ * ```typescript
+ * console.log(gtx._x('User {name} is {age} years old.'));
+ * ```
+ * @public
+ */
+export interface Placeholders {
 	/* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-	[key: string]: any;
+	[placeholder: string]: any;
 }
 
 /**
@@ -315,7 +335,7 @@ export class Textdomain {
 		msg: string,
 		placeholders: { [key: string]: string },
 	): string {
-		return msg.replace(/\{([a-zA-Z][0-9a-zA-Z]*)\}/g, (_, match) => {
+		return msg.replace(/\{([a-zA-Z][0-9a-zA-Z]*)\}/g, (_, match: string) => {
 			if (Object.prototype.hasOwnProperty.call(placeholders, match)) {
 				return placeholders[match];
 			} else {
@@ -717,7 +737,7 @@ ${tp}l${m}x=${f}(l,${a},p){${tc}${rx}(g({${k},${cc}}),p||{});};
 	/**
 	 * Same as `N_()` but with context.
 	 *
-	 * @params _msgctxt - the message context
+	 * @params _msgctxt - the message context (not used)
 	 * @param msgid - the message id
 	 * @returns the original string
 	 */
@@ -728,8 +748,8 @@ ${tp}l${m}x=${f}(l,${a},p){${tc}${rx}(g({${k},${cc}}),p||{});};
 	/**
 	 * Does the same as the static method `N_p()`.
 	 *
+	 * @params _msgctxt - the message context (not used)
 	 * @param msgid - the message id
-	 * @param placeholders - a dictionary of placeholders
 	 * @returns the original string with placeholders expanded
 	 */
 	static N_p(_msgctxt: string, msgid: string): string {
@@ -739,7 +759,7 @@ ${tp}l${m}x=${f}(l,${a},p){${tc}${rx}(g({${k},${cc}}),p||{});};
 	/**
 	 * Same as `N_()` but with context and placeholder expansion.
 	 *
-	 * @param msgctxt - the message context
+	 * @param _msgctxt - the message context (not used)
 	 * @param msgid - the message id
 	 * @param placeholders - a dictionary of placeholders
 	 * @returns the original string with placeholders expanded
@@ -751,7 +771,7 @@ ${tp}l${m}x=${f}(l,${a},p){${tc}${rx}(g({${k},${cc}}),p||{});};
 	/**
 	 * Does the same as the static method `N_px()`.
 	 *
-	 * @param msgctxt - the message context
+	 * @param _msgctxt - the message context (not used)
 	 * @param msgid - the message id
 	 * @param placeholders - a dictionary of placeholders
 	 * @returns the original string with placeholders expanded
