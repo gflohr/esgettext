@@ -15,16 +15,14 @@
 	],
 	"scripts": {
 		"format": "prettier --write *.js *.json *.md && lerna run format",
+		"lint": "lerna run lint",
+		"lint:fix": "lerna run lint",
+		"lint:fix-dry-run": "lerna run lint:fix-dry-run",
+		"lint:staged": "lerna run lint:staged",
 		"test": "lerna run test",
+		"test:cov": "lerna run test:cov",
+		"posttest:cov": "node merge-lcov.js packages/*",
 		"prepare": "husky"
-	},
-	"lint-staged": {
-		"*.{js,ts,json,scss,css,md}": [
-			"prettier --write"
-		],
-		"src/**/*.ts": [
-			"eslint"
-		]
 	},
 	"devDependencies": {
 		"@types/jest": "^29.5.11",

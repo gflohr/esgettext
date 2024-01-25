@@ -16,7 +16,7 @@ dirs.forEach(dir => {
 
 try {
 	fs.mkdirSync('coverage');
-} catch(e) {
+} catch (e) {
 	/* ignore */
 }
 fs.writeFileSync('coverage/lcov.info', output, 'utf-8');

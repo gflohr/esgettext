@@ -74,10 +74,13 @@
 		"coverageDirectory": "../coverage",
 		"testEnvironment": "node"
 	},
-	"husky": {
-		"hooks": {
-			"pre-commit": "npm run lint:staged --concurrency 1 --stream --since origin/master"
-		}
+	"lint-staged": {
+		"*.{js,ts,json,scss,css,md}": [
+			"prettier --write"
+		],
+		"src/**/*.ts": [
+			"eslint"
+		]
 	},
 	"dependencies": {
 		"@esgettext/runtime": "file:../runtime"

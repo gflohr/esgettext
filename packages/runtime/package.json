@@ -33,11 +33,6 @@
 	},
 	"author": "Guido Flohr <guido.flohr@cantanea.com> (http://www.guido.flohr.net/)",
 	"license": "WTFPL",
-	"husky": {
-		"hooks": {
-			"pre-commit": "npm run lint:staged --concurrency 1 --stream --since origin/master"
-		}
-	},
 	"jest": {
 		"moduleFileExtensions": [
 			"js",
@@ -54,6 +49,14 @@
 		],
 		"coverageDirectory": "../coverage",
 		"testEnvironment": "node"
+	},
+	"lint-staged": {
+		"*.{js,ts,json,scss,css,md}": [
+			"prettier --write"
+		],
+		"src/**/*.ts": [
+			"eslint"
+		]
 	},
 	"devDependencies": {
 		"ts-loader": "^9.5.1",
