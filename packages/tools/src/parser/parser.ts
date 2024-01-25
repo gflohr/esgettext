@@ -83,8 +83,8 @@ export abstract class Parser {
 				const loc: t.SourceLocation = {
 					start: {
 						line: 1,
-						column: pos,
-						index: 0
+						column: 1,
+						index: 0,
 					},
 					end: null,
 					filename,
@@ -100,6 +100,7 @@ export abstract class Parser {
 						++loc.start.column;
 					}
 				}
+
 				this.error(
 					gtx._(
 						'Non-ASCII character.\n' +
@@ -608,7 +609,7 @@ export abstract class Parser {
 			start: {
 				line: 1,
 				column: 1,
-				index: 0
+				index: 0,
 			},
 			end: null,
 			filename: '',
