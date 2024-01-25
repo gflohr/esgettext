@@ -335,7 +335,11 @@ export abstract class Parser {
 			t.isStringLiteral(parentPath.node.left) &&
 			t.isStringLiteral(parentPath.node.right)
 		) {
-			parentPath.replaceWithSourceString(parentPath.node.left.value + parentPath.node.right.value);
+			const node = t.stringLiteral(
+				parentPath.node.left.value + parentPath.node.right.value,
+			);
+			node.loc = parentPath.node.loc;
+			parentPath.replaceInline(node);
 		}
 	}
 
@@ -345,8 +349,11 @@ export abstract class Parser {
 		const dict: { [key: string]: string } = (props.loc as unknown) as {
 			[key: string]: string;
 		};
-		const filename = '-' === dict.filename ? '[stdin]' : dict.filename;
-		const references = [`${filename}:${props.loc.start.line}`];
+		let references: Array<string> = [];
+		if (dict != null) {
+			const filename = '-' === dict.filename ? '[stdin]' : dict.filename;
+			references = [`${filename}:${props.loc.start.line}`];
+		}
 
 		const commentBlocks = this.findPrecedingComments(props.loc);
 		let extractedComments = commentBlocks.map(block => block.value.trim());
