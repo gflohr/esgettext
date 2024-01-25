@@ -14,16 +14,16 @@
 		"packages/*"
 	],
 	"scripts": {
-		"format": "prettier --write *.js *.json *.md && lerna run format",
-		"lint": "lerna run lint",
-		"lint:fix": "lerna run lint:fix",
-		"lint:fix-dry-run": "lerna run lint:fix-dry-run",
-		"lint:staged": "lerna run lint:staged",
-		"test": "lerna run test",
-		"test:cov": "lerna run test:cov",
-		"test:watch": "lerna watch -- lerna run test --scope=\\$LERNA_PACKAGE_NAME",
+		"format": "prettier --write *.js *.json *.md && lerna run format --stream",
+		"lint": "lerna run lint --stream",
+		"lint:fix": "lerna run lint:fix --stream",
+		"lint:fix-dry-run": "lerna run lint:fix-dry-run --stream",
+		"lint:staged": "lerna run lint:staged --stream",
+		"test": "lerna run test --stream",
+		"test:cov": "lerna run test:cov --stream",
+		"test:watch": "lerna watch -- lerna run test --scope=\\$LERNA_PACKAGE_NAME --stream",
 		"posttest:cov": "node merge-lcov.js packages/*",
-		"clean": "lerna run clean",
+		"clean": "lerna run clean --stream",
 		"prepare": "husky"
 	},
 	"devDependencies": {
