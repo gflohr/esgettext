@@ -129,7 +129,7 @@ async function loadLanguage(
 		ids.forEach(id => {
 			tries.push(() =>
 				loadCatalog(
-					assemblePath(base as string, id, domainname, format),
+					assemblePath(base , id, domainname, format),
 					format,
 				),
 			);

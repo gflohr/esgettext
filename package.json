@@ -14,6 +14,7 @@
 		"packages/*"
 	],
 	"scripts": {
+		"build": "lerna run build --stream",
 		"format": "prettier --write *.js *.json *.md && lerna run format --stream",
 		"lint": "lerna run lint --stream",
 		"lint:fix": "lerna run lint:fix --stream",

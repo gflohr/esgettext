@@ -53,7 +53,7 @@ export class CatalogCache {
 	public static lookup(
 		localeKey: string,
 		textdomain: string,
-	): Catalog | Promise<Catalog> {
+	): Catalog | Promise<Catalog> | null {
 		if (CatalogCache.cache[localeKey]) {
 			const ptr = CatalogCache.cache[localeKey];
 			if (Object.prototype.hasOwnProperty.call(ptr, textdomain)) {
