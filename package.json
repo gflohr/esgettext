@@ -1,39 +1,40 @@
 {
-  "name": "esgettext",
-  "description": "gettext like runtime and tools for EcmaScript/JavaScript",
-  "keywords": [
-    "i18n",
-    "l10n",
-    "internationalization",
-    "localization",
-    "javascript",
-    "gettext",
-    "xgettext"
-  ],
-  "workspaces": [
-    "packages/*"
-  ],
-  "scripts": {
-    "format": "lerna run format",
-    "test": "lerna run test",
-    "prepare": "husky"
-  },
-  "lint-staged": {
-    "*.{js,ts,json,scss,css,md}": [
-      "prettier --write"
-    ],
-    "src/**/*.ts": [
-      "eslint"
-    ]
-  },
-  "devDependencies": {
-    "@types/jest": "^29.5.11",
-    "husky": "9.0.3",
-    "jest": "^29.7.0",
-    "jest-cli": "^29.7.0",
-    "lerna": "^8.0.2",
-    "lint-staged": "^15.2.0",
-    "prettier": "^3.2.4",
-    "ts-jest": "^29.1.2"
-  }
+	"name": "esgettext",
+	"description": "gettext like runtime and tools for EcmaScript/JavaScript",
+	"keywords": [
+		"i18n",
+		"l10n",
+		"internationalization",
+		"localization",
+		"javascript",
+		"gettext",
+		"xgettext"
+	],
+	"workspaces": [
+		"packages/*"
+	],
+	"scripts": {
+		"format": "prettier --write *.js *.json *.md && lerna run format",
+		"test": "lerna run test",
+		"prepare": "husky"
+	},
+	"lint-staged": {
+		"*.{js,ts,json,scss,css,md}": [
+			"prettier --write"
+		],
+		"src/**/*.ts": [
+			"eslint"
+		]
+	},
+	"devDependencies": {
+		"@types/jest": "^29.5.11",
+		"eslint": "^8.56.0",
+		"husky": "9.0.3",
+		"jest": "^29.7.0",
+		"jest-cli": "^29.7.0",
+		"lerna": "^8.0.2",
+		"lint-staged": "^15.2.0",
+		"prettier": "^3.2.4",
+		"ts-jest": "^29.1.2"
+	}
 }
