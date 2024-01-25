@@ -111,7 +111,7 @@ export class Getopt {
 	 */
 	argv(args?: { [x: string]: unknown; _: string[]; $0: string }): Options {
 		if (typeof args === 'undefined') {
-			args = this.cli.argv;
+			args = this.cli.argv as { [x: string]: unknown; _: string[]; $0: string };
 		}
 
 		const keys = Object.keys(args);

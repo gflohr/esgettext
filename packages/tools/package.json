@@ -57,21 +57,20 @@
 		"testEnvironment": "node"
 	},
 	"dependencies": {
-		"@babel/parser": "^7.9.6",
-		"@esgettext/runtime": "^0.1.0",
+		"@babel/parser": "7.23.6",
+		"@babel/traverse": "^7.23.7",
+		"@esgettext/runtime": "file:../runtime",
 		"camelcase": "^6.0.0",
 		"iconv-lite": "^0.5.1",
 		"jsonfile": "^6.0.1",
-		"mkdirp": "^1.0.4",
-		"typescript": "^3.8.3",
+		"mkdirp": "^3.0.1",
 		"yargs": "^15.3.1"
 	},
 	"devDependencies": {
-		"@types/jsonfile": "^6.0.0",
-		"@types/mkdirp": "^1.0.1",
-		"@types/node": "^13.13.2",
-		"@types/yargs": "^15.0.4",
-		"eslint": "^6.8.0",
-		"shx": "^0.3.2"
+		"@babel/types": "7.23.6",
+		"@types/jsonfile": "^6.1.4",
+		"@types/node": "^20.11.6",
+		"@types/yargs": "^17.0.32",
+		"shx": "^0.3.4"
 	}
 }

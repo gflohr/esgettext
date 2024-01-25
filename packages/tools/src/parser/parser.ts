@@ -83,9 +83,12 @@ export abstract class Parser {
 				const loc: t.SourceLocation = {
 					start: {
 						line: 1,
-						column: 1,
+						column: pos,
+						index: 0
 					},
 					end: null,
+					filename,
+					identifierName: null
 				};
 
 				// Find the offending character.
@@ -332,11 +335,7 @@ export abstract class Parser {
 			t.isStringLiteral(parentPath.node.left) &&
 			t.isStringLiteral(parentPath.node.right)
 		) {
-			const node = t.stringLiteral(
-				parentPath.node.left.value + parentPath.node.right.value,
-			);
-			node.loc = parentPath.node.loc;
-			parentPath.replaceWith(node);
+			parentPath.replaceWithSourceString(parentPath.node.left.value + parentPath.node.right.value);
 		}
 	}
 
@@ -602,8 +601,11 @@ export abstract class Parser {
 			start: {
 				line: 1,
 				column: 1,
+				index: 0
 			},
 			end: null,
+			filename: '',
+			identifierName: ''
 		};
 		while (i < buf.length) {
 			if (

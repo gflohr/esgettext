@@ -50,8 +50,11 @@ export class PoParser extends Parser {
 			start: {
 				line: 0,
 				column: 1,
+				index: 0,
 			},
 			end: null,
+			filename,
+			identifierName: '',
 		};
 		this.msgType = null;
 		this.seen = {};
