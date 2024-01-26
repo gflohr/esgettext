@@ -410,10 +410,10 @@ export abstract class Parser {
 	private methodFromMemberExpression(
 		me: t.MemberExpression,
 		instance: Array<string> = [],
-	): string {
+	): string | null {
 		if (t.isIdentifier(me.object)) {
 			if (t.isLiteral(me.property) && me.computed) {
-				instance.push(this.literalValue(me.property));
+				instance.push(this.literalValue(me.property) as string);
 				instance.push(me.object.name);
 				return instance[0];
 			} else if (t.isIdentifier(me.property) && !me.computed) {
@@ -437,7 +437,7 @@ export abstract class Parser {
 			me.computed
 		) {
 			// Recurse.
-			instance.push(this.literalValue(me.property));
+			instance.push(this.literalValue(me.property) as string);
 			return this.methodFromMemberExpression(me.object, instance);
 		} else {
 			return null;
