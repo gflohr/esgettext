@@ -44,7 +44,7 @@ export class PoParser extends Parser {
 			typeof encoding === 'undefined' ? buf.toString() : decode(buf, encoding);
 
 		// Reset parser.
-		this.entry = undefined;
+		this.entry = undefined as unknown as POTEntry;
 		this.filename = filename;
 		this.loc = {
 			start: {
@@ -52,11 +52,15 @@ export class PoParser extends Parser {
 				column: 1,
 				index: 0,
 			},
-			end: null,
+			end: {
+				line: 0,
+				column: 0,
+				index: 0,
+			},
 			filename,
 			identifierName: '',
 		};
-		this.msgType = null;
+		this.msgType = undefined as unknown as string;
 		this.seen = {};
 		this.errors = 0;
 
@@ -163,7 +167,7 @@ export class PoParser extends Parser {
 		throw new Error('not implemented');
 	}
 
-	private extractCharset(header: string): string {
+	private extractCharset(header: string): string | null {
 		const headers: { [key: string]: string } = {};
 
 		header
@@ -207,12 +211,12 @@ export class PoParser extends Parser {
 
 	private flushEntry(): void {
 		if (this.errors) {
-			this.entry = undefined;
+			this.entry = undefined as unknown as POTEntry;
 			return;
 		}
 
 		if (this.entry) {
-			const msgctxt = this.entry.properties.msgctxt;
+			const msgctxt = this.entry.properties.msgctxt as string;
 			const msgid = this.entry.properties.msgid;
 			if (typeof msgid === 'undefined') {
 				// TRANSLATORS: Do not translate "msgid".
@@ -234,7 +238,7 @@ export class PoParser extends Parser {
 			this.seen[msgctxt][msgid] = this.copyLocation(this.entryLoc);
 			this.catalog.addEntry(this.entry);
 		}
-		this.entry = undefined;
+		this.entry = undefined as unknown as POTEntry;
 	}
 
 	private parseCommentLine(line: string): void {
@@ -476,7 +480,13 @@ export class PoParser extends Parser {
 				line: loc.start.line,
 				column: loc.start.column,
 			},
-			end: null,
+			end: {
+				line: 0,
+				column: 0,
+				index: 0,
+			},
+			filename: '',
+			identifierName: null,
 		} as SourceLocation;
 	}
 }
