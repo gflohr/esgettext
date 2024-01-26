@@ -66,16 +66,16 @@
 		]
 	},
 	"dependencies": {
-		"@babel/parser": "^7.23.6",
-		"@babel/traverse": "^7.23.7",
+		"@babel/parser": "^7.23.9",
+		"@babel/traverse": "^7.23.9",
 		"@esgettext/runtime": "file:../runtime",
 		"iconv-lite": "^0.6.3",
 		"jsonfile": "^6.0.1",
 		"mkdirp": "^3.0.1",
-		"yargs": "^15.4.1"
+		"yargs": "^17.7.2"
 	},
 	"devDependencies": {
-		"@babel/types": "7.23.6",
+		"@babel/types": "^7.23.9",
 		"@types/jsonfile": "^6.1.4",
 		"@types/node": "^20.11.6",
 		"@types/yargs": "^17.0.32",
