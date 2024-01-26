@@ -84,7 +84,7 @@ export abstract class Parser {
 					start: {
 						line: 1,
 						column: 1,
-						index: 0,
+						index: 1,
 					},
 					end: {
 						line: 0,
@@ -125,7 +125,7 @@ export abstract class Parser {
 		} else {
 			// Convert.
 			try {
-				input = decode(buf, this.options.fromCode);
+				input = decode(buf, this.options.fromCode as string);
 			} catch (e) {
 				const usedFilename =
 					'-' === filename ? gtx._('[standard input]') : filename;
@@ -174,7 +174,7 @@ export abstract class Parser {
 			StringLiteral: path => {
 				if (!t.isBinaryExpression(path.parentPath.node)) {
 					const loc = path.node.loc;
-					this.addEntry({ msgid: path.node.value, loc });
+					this.addEntry({ msgid: path.node.value, loc: loc as t.SourceLocation });
 				}
 			},
 		});
