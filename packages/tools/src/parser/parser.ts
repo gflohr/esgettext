@@ -355,7 +355,7 @@ export abstract class Parser {
 			[key: string]: string;
 		};
 		let references: Array<string> = [];
-		if (dict != null) {
+		if (dict !== null && typeof dict !== 'undefined') {
 			const filename = '-' === dict.filename ? '[stdin]' : dict.filename;
 			references = [`${filename}:${props.loc.start.line}`];
 		}
