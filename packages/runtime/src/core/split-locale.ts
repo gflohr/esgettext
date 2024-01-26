@@ -9,16 +9,16 @@ export interface SplitLocale {
 }
 
 export function splitLocale(locale: string): SplitLocale | null {
-	let charset, modifier;
+	let charset: string = '', modifier: string = '';
 
 	const underscoreSeparator = locale.includes('_');
 
-	locale = locale.replace(/@([a-z]+)$/i, (_, match) => {
+	locale = locale.replace(/@([a-z]+)$/i, (_, match: string) => {
 		modifier = match;
 		return '';
 	});
 
-	locale = locale.replace(/\.([-0-9a-z]+)$/i, (_, match) => {
+	locale = locale.replace(/\.([-0-9a-z]+)$/i, (_, match: string) => {
 		charset = match;
 		return '';
 	});
@@ -38,11 +38,11 @@ export function splitLocale(locale: string): SplitLocale | null {
 
 	const split: SplitLocale = { tags: tags, underscoreSeparator };
 
-	if (typeof charset !== 'undefined') {
+	if (charset.length) {
 		split.charset = charset;
 	}
 
-	if (typeof modifier !== 'undefined') {
+	if (modifier.length) {
 		split.modifier = modifier;
 	}
 

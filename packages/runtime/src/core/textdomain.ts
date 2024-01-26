@@ -10,11 +10,31 @@ import { userLocales } from './user-locales';
 import { selectLocale } from './select-locale';
 import { LocaleContainer } from './locale-container';
 
-/* eslint-disable @typescript-eslint/camelcase, tsdoc/syntax */
-
-interface Placeholders {
+/**
+ * Represents a mapping of placeholder strings to the values that they should be replaced with.
+ * Placeholders must match the regular expression `/^[_a-zA-Z][_a-zA-Z0-9]*$/`.
+ * @remarks
+ * Placeholders provide a way to dynamically replace certain strings in a translatable message.
+ *
+ * @example
+ * ```typescript
+ * const placeholders: Placeholders = {
+ * 	'name': 'John Doe',
+ * 	'age': 30,
+ * 	// Add more placeholders as needed
+ * };
+ * ```
+ *
+ * A typical call would look like this:
+ *
+ * ```typescript
+ * console.log(gtx._x('User {name} is {age} years old.'));
+ * ```
+ * @public
+ */
+export interface Placeholders {
 	/* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-	[key: string]: any;
+	[placeholder: string]: any;
 }
 
 /**
@@ -73,7 +93,7 @@ export class Textdomain {
 
 	/**
 	 * Retrieve a translation for a string containing a possible plural.
-	 * You will almost always want to call {@linkcode _nx} instead so that
+	 * You will almost always want to call {@link _nx} instead so that
 	 * you can interpolate the number of items into the strings.
 	 *
 	 * @param msgid - the string in the singular
@@ -96,13 +116,13 @@ export class Textdomain {
 
 	/**
 	 * The method `_np()` combines `_n()` with `_p()`.
-	 * You will almost always want to call {@linkcode _npx} instead so that
+	 * You will almost always want to call {@link _npx} instead so that
 	 * you can interpolate the number of items into the strings.
 
 	 *
 	 * @param msgctxt - the message context
 	 * @param msgid - the message id
-	 * @param placeholders a dictionary with placehoders
+	 * @param placeholders - a dictionary with placehoders
 	 * @returns the translated string
 	 */
 	_np: (
@@ -146,20 +166,20 @@ export class Textdomain {
 	 *
 	 * @param msgctxt - the message context
 	 * @param msgid - the message id
-	 * @param placeholders an optional dictionary with placehoders
+	 * @param placeholders - an optional dictionary with placehoders
 	 * @returns the translated string
 	 */
 	_px: (msgctxt: string, msgid: string, placeholders?: Placeholders) => string;
 
 	/**
 	 * The method `_npx()` brings it all together. It combines `_n()` and
-	 * _p()` and `_x()`.
+	 * `_p()` and `_x()`.
 	 *
 	 * @param msgctxt - the message context
 	 * @param msgid - the message id
 	 * @param msgidPlural - the plural string
 	 * @param numItems - the number of items
-	 * @param placeholders an optional dictionary with placehoders
+	 * @param placeholders - an optional dictionary with placehoders
 	 * @returns the translated string
 	 */
 	_npx: (
@@ -197,7 +217,7 @@ export class Textdomain {
 	/**
 	 * Retrieve a translation for a string containing a possible plural with
 	 * a fixed locale.
-	 * You will almost always want to call {@linkcode _nx} instead so that
+	 * You will almost always want to call {@link _nx} instead so that
 	 * you can interpolate the number of items into the strings.
 	 *
 	 * @param locale - the locale identifier
@@ -227,14 +247,14 @@ export class Textdomain {
 
 	/**
 	 * The method `_lnp()` combines `_ln()` with `_lp()`.
-	 * You will almost always want to call {@linkcode _npx} instead so that
+	 * You will almost always want to call {@link _npx} instead so that
 	 * you can interpolate the number of items into the strings.
 
 	 *
 	 * @param locale - the locale identifier
 	 * @param msgctxt - the message context
 	 * @param msgid - the message id
-	 * @param placeholders a dictionary with placehoders
+	 * @param placeholders - a dictionary with placehoders
 	 * @returns the translated string
 	 */
 	_lnp: (
@@ -285,21 +305,21 @@ export class Textdomain {
 	 * @param locale - the locale identifier
 	 * @param msgctxt - the message context
 	 * @param msgid - the message id
-	 * @param placeholders an optional dictionary with placehoders
+	 * @param placeholders - an optional dictionary with placehoders
 	 * @returns the translated string
 	 */
 	_lpx: (msgctxt: string, msgid: string, placeholders?: Placeholders) => string;
 
 	/**
 	 * The method `_lnpx()` brings it all together. It combines `_ln()` and
-	 * _lp()` and `_lx()`.
+	 * `_lp()` and `_lx()`.
 	 *
 	 * @param locale - the locale identifier
 	 * @param msgctxt - the message context
 	 * @param msgid - the message id
 	 * @param msgidPlural - the plural string
 	 * @param numItems - the number of items
-	 * @param placeholders an optional dictionary with placehoders
+	 * @param placeholders - an optional dictionary with placehoders
 	 * @returns the translated string
 	 */
 	_lnpx: (
@@ -315,7 +335,7 @@ export class Textdomain {
 		msg: string,
 		placeholders: { [key: string]: string },
 	): string {
-		return msg.replace(/\{([a-zA-Z][0-9a-zA-Z]*)\}/g, (_, match) => {
+		return msg.replace(/\{([a-zA-Z][0-9a-zA-Z]*)\}/g, (_, match: string) => {
 			if (Object.prototype.hasOwnProperty.call(placeholders, match)) {
 				return placeholders[match];
 			} else {
@@ -381,7 +401,7 @@ export class Textdomain {
 				const tp = 'Textdomain.prototype._';
 				const f = 'function';
 				const c = 'catalog:this.catalog';
-				const tc = 'catalog=Textdomain.getCatalog(l,this.textdomain());';
+				const tc = 'const catalog=Textdomain.getCatalog(l,this.textdomain());';
 				const cc = 'catalog:catalog';
 				const rg = 'return g';
 				const rx = 'return x';
@@ -634,7 +654,7 @@ ${tp}l${m}x=${f}(l,${a},p){${tc}${rx}(g({${k},${cc}}),p||{});};
 	): string {
 		return selectLocale(
 			supported,
-			requested === null ? Textdomain.userLocales() : requested,
+			requested ?? Textdomain.userLocales(),
 		);
 	}
 
@@ -700,7 +720,7 @@ ${tp}l${m}x=${f}(l,${a},p){${tc}${rx}(g({${k},${cc}}),p||{});};
 	 * @returns the original string with placeholders expanded
 	 */
 	N_x(msgid: string, placeholders?: Placeholders): string {
-		return Textdomain.expand(msgid, placeholders);
+		return Textdomain.expand(msgid, placeholders ?? {});
 	}
 
 	/**
@@ -711,13 +731,13 @@ ${tp}l${m}x=${f}(l,${a},p){${tc}${rx}(g({${k},${cc}}),p||{});};
 	 * @returns the original string with placeholders expanded
 	 */
 	static N_x(msgid: string, placeholders?: Placeholders): string {
-		return Textdomain.expand(msgid, placeholders);
+		return Textdomain.expand(msgid, placeholders ?? {});
 	}
 
 	/**
 	 * Same as `N_()` but with context.
 	 *
-	 * @params _msgctxt - the message context
+	 * @param _msgctxt - the message context (not used)
 	 * @param msgid - the message id
 	 * @returns the original string
 	 */
@@ -728,8 +748,8 @@ ${tp}l${m}x=${f}(l,${a},p){${tc}${rx}(g({${k},${cc}}),p||{});};
 	/**
 	 * Does the same as the static method `N_p()`.
 	 *
+	 * @param _msgctxt - the message context (not used)
 	 * @param msgid - the message id
-	 * @param placeholders - a dictionary of placeholders
 	 * @returns the original string with placeholders expanded
 	 */
 	static N_p(_msgctxt: string, msgid: string): string {
@@ -739,19 +759,19 @@ ${tp}l${m}x=${f}(l,${a},p){${tc}${rx}(g({${k},${cc}}),p||{});};
 	/**
 	 * Same as `N_()` but with context and placeholder expansion.
 	 *
-	 * @param msgctxt - the message context
+	 * @param _msgctxt - the message context (not used)
 	 * @param msgid - the message id
 	 * @param placeholders - a dictionary of placeholders
 	 * @returns the original string with placeholders expanded
 	 */
 	N_px(_msgctxt: string, msgid: string, placeholders?: Placeholders): string {
-		return Textdomain.expand(msgid, placeholders);
+		return Textdomain.expand(msgid, placeholders ?? {});
 	}
 
 	/**
 	 * Does the same as the static method `N_px()`.
 	 *
-	 * @param msgctxt - the message context
+	 * @param _msgctxt - the message context (not used)
 	 * @param msgid - the message id
 	 * @param placeholders - a dictionary of placeholders
 	 * @returns the original string with placeholders expanded
@@ -761,6 +781,6 @@ ${tp}l${m}x=${f}(l,${a},p){${tc}${rx}(g({${k},${cc}}),p||{});};
 		msgid: string,
 		placeholders?: Placeholders,
 	): string {
-		return Textdomain.expand(msgid, placeholders);
+		return Textdomain.expand(msgid, placeholders ?? {});
 	}
 }

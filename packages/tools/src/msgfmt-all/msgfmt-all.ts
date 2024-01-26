@@ -13,14 +13,16 @@ export class MsgfmtAll {
 
 	constructor(private readonly options: Options) {
 		if (options._.length) {
-			throw new Error(gtx._("no additional arguments allowed"));
+			throw new Error(gtx._('no additional arguments allowed'));
 		}
 
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		let pkg: any = {};
 
 		if (typeof options.packageJson !== 'undefined') {
-			const filename = options.packageJson.length ? options.packageJson : 'package.json';
+			const filename = options.packageJson.length
+				? options.packageJson
+				: 'package.json';
 			const p = readJsonFileSync(filename);
 			if (p && p.esgettext) {
 				pkg = p.esgettext;
@@ -32,7 +34,7 @@ export class MsgfmtAll {
 		}
 
 		if (!options.locale || !options.locale.length) {
-			throw new Error(gtx._("no locales given"))
+			throw new Error(gtx._('no locales given'));
 		}
 
 		if (typeof options.directory === 'undefined') {
@@ -54,7 +56,8 @@ export class MsgfmtAll {
 			const args: Array<string> = [];
 
 			const poFile = this.options.directory + '/' + locale + '.po';
-			const moFile = this.options.directory + '/' + locale + '.' + this.options.format;
+			const moFile =
+				this.options.directory + '/' + locale + '.' + this.options.format;
 
 			if (this.options.options) {
 				for (let j = 0; j < this.options.options.length; ++j) {
@@ -64,10 +67,12 @@ export class MsgfmtAll {
 
 			args.push('-o', moFile, poFile);
 			if (this.options.verbose) {
-				console.log(gtx._x("Compiling '{po}' into '{mo}'.", {
-					po: poFile,
-					mo: moFile,
-				}));
+				console.log(
+					gtx._x("Compiling '{po}' into '{mo}'.", {
+						po: poFile,
+						mo: moFile,
+					}),
+				);
 			}
 
 			try {
@@ -79,22 +84,24 @@ export class MsgfmtAll {
 				msgfmt.on('close', code => {
 					if (code) {
 						unlinkSync(moFile);
-						resolve(1)
+						resolve(1);
 					} else {
 						resolve(0);
 					}
 				});
 
 				msgfmt.on('error', err => {
-					throw new Error(gtx._x("Failed to run '{prg}': {err}", {
-						prg: this.options.msgfmt,
-						err
-					}));
+					throw new Error(
+						gtx._x("Failed to run '{prg}': {err}", {
+							prg: this.options.msgfmt,
+							err,
+						}),
+					);
 				});
-			} catch(err) {
+			} catch (err) {
 				try {
 					unlinkSync(moFile);
-				} catch(err1) {
+				} catch (err1) {
 					console.error(err1);
 				}
 				console.error(err);
@@ -108,14 +115,15 @@ export class MsgfmtAll {
 			// We merge one locale at a time.  It would be more efficient to
 			// do everything asynchronously but that makes error recovery
 			// too hard.
-			this.locales.reduce(
-				(promise, locale) => promise.then(
-					() => this.msgfmtLocale(locale)
-				), Promise.resolve())
-			.then(
-				() => resolve(0),
-				() => resolve(1),
-			);
+			this.locales
+				.reduce(
+					(promise, locale) => promise.then(() => this.msgfmtLocale(locale)),
+					Promise.resolve(),
+				)
+				.then(
+					() => resolve(0),
+					() => resolve(1),
+				);
 		});
 	}
 }

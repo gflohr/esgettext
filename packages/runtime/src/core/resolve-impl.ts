@@ -4,7 +4,7 @@ import { Transport } from '../transport/transport.interface';
 import { parseJsonCatalog, parseMoCatalog } from '../parser';
 import { browserEnvironment } from './browser-environment';
 import { Catalog, CatalogEntries } from './catalog';
-import { splitLocale } from './split-locale';
+import { SplitLocale, splitLocale } from './split-locale';
 import { germanicPlural } from './germanic-plural';
 import { CatalogCache } from './catalog-cache';
 import { explodeLocale, ExplodedLocale } from './explode-locale';
@@ -125,10 +125,10 @@ async function loadLanguage(
 		type CatalogLoader = (url: string) => Promise<Catalog>;
 
 		const tries = new Array<CatalogLoader>();
-
 		ids.forEach(id => {
 			tries.push(() =>
 				loadCatalog(
+					// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
 					assemblePath(base as string, id, domainname, format),
 					format,
 				),
@@ -221,6 +221,7 @@ function pluralExpression(str: string): PluralFunction {
 	const code = 'var nplurals = 1, plural = 0;' + str + '; return 0 + plural';
 
 	// This may throw an exception!
+	/* eslint-disable @typescript-eslint/no-implied-eval */
 	return new Function('n', code) as PluralFunction;
 }
 
@@ -232,7 +233,7 @@ function setPluralFunction(catalog: Catalog): Catalog {
 	const headers = catalog.entries[''][0].split('\n');
 	headers.forEach(header => {
 		const tokens = header.split(':');
-		if ('plural-forms' === tokens.shift().toLowerCase()) {
+		if ('plural-forms' === (tokens.shift() as string).toLowerCase()) {
 			const code = tokens.join(':');
 			catalog.pluralFunction = pluralExpression(code);
 		}
@@ -259,7 +260,7 @@ export function resolveImpl(
 	}
 
 	return new Promise(resolve => {
-		const exploded = explodeLocale(splitLocale(localeKey), true);
+		const exploded = explodeLocale(splitLocale(localeKey) as SplitLocale, true);
 		loadDomain(exploded, localeKey, path, domainname, format)
 			.then(catalog => {
 				setPluralFunction(catalog);

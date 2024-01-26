@@ -39,7 +39,7 @@ export class Catalog {
 			barePkg = 'PACKAGE';
 			properties.package = 'PACKAGE VERSION';
 		} else {
-			barePkg = properties.package.replace(/\n/g, '\\n');;
+			barePkg = properties.package.replace(/\n/g, '\\n');
 			if (typeof properties.version !== 'undefined') {
 				properties.package += ' ' + properties.version;
 			}
@@ -186,7 +186,7 @@ FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 
 			const splitRef = (ref: string): { filename: string; lineno: number } => {
 				const parts = ref.split(':');
-				const lineno = Number.parseInt(parts.pop(), 10);
+				const lineno = Number.parseInt(parts.pop() as string, 10);
 				const filename = parts.join(':');
 				return { filename, lineno };
 			};
@@ -239,7 +239,7 @@ FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 			body = copy.entries
 				.filter(isNotHeader)
 				.map(entry => {
-					return { refs: splitRefs(entry.properties.references), entry };
+					return { refs: splitRefs(entry.properties.references as string[]), entry };
 				})
 				.sort(compareSplitRefs)
 				.map(split => split.entry)
@@ -268,7 +268,7 @@ FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 	 */
 	addEntry(entry: POTEntry): void {
 		const msgid = entry.properties.msgid;
-		const msgctxt = entry.properties.msgctxt;
+		const msgctxt = entry.properties.msgctxt as string;
 
 		if (!Object.prototype.hasOwnProperty.call(this.cache, msgid)) {
 			this.cache[msgid] = {};
@@ -286,12 +286,12 @@ FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 			return;
 		}
 
-		const entry = this.cache[msgid][msgctxt];
+		const entry = this.cache[msgid][msgctxt as string];
 		if (!entry) {
 			return;
 		}
 
-		delete this.cache[msgid][msgctxt];
+		delete this.cache[msgid][msgctxt as string];
 		this.entries = this.entries.filter(other => other !== entry);
 	}
 

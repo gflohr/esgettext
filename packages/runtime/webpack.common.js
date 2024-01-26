@@ -5,16 +5,10 @@ const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 module.exports = {
 	mode: 'production',
 	devtool: 'source-map',
-	node: {
-		fs: 'empty',
-	},
 	optimization: {
 		minimizer: [
 			new TerserPlugin({
-				cache: true,
 				parallel: true,
-				sourceMap: true,
-				terserOptions: {},
 			}),
 		],
 	},
@@ -30,6 +24,9 @@ module.exports = {
 	resolve: {
 		plugins: [new TsconfigPathsPlugin({ configFile: './tsconfig.json' })],
 		extensions: ['.ts', '.tsx', '.js'],
+		fallback: {
+			fs: false,
+		},
 	},
 	output: {
 		path: path.resolve(__dirname, '_bundles'),

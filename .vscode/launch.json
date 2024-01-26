@@ -2,10 +2,12 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
+			"name": "Debug Jest Tests",
 			"type": "node",
-			"request": "attach",
-			"name": "Attach Debugger",
-			"port": 9229
+			"request": "launch",
+			"runtimeArgs": ["--inspect-brk", "${workspaceRoot}/node_modules/.bin/jest", "--runInBand", "--coverage", "false", "--silent", "false"],
+			"console": "integratedTerminal",
+			"internalConsoleOptions": "neverOpen"
 		}
 	]
 }

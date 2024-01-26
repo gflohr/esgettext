@@ -84,8 +84,15 @@ export abstract class Parser {
 					start: {
 						line: 1,
 						column: 1,
+						index: 1,
 					},
-					end: null,
+					end: {
+						line: 0,
+						column: 0,
+						index: 0,
+					},
+					filename,
+					identifierName: null,
 				};
 
 				// Find the offending character.
@@ -97,6 +104,7 @@ export abstract class Parser {
 						++loc.start.column;
 					}
 				}
+
 				this.error(
 					gtx._(
 						'Non-ASCII character.\n' +
@@ -117,7 +125,7 @@ export abstract class Parser {
 		} else {
 			// Convert.
 			try {
-				input = decode(buf, this.options.fromCode);
+				input = decode(buf, this.options.fromCode as string);
 			} catch (e) {
 				const usedFilename =
 					'-' === filename ? gtx._('[standard input]') : filename;
@@ -166,7 +174,7 @@ export abstract class Parser {
 			StringLiteral: path => {
 				if (!t.isBinaryExpression(path.parentPath.node)) {
 					const loc = path.node.loc;
-					this.addEntry({ msgid: path.node.value, loc });
+					this.addEntry({ msgid: path.node.value, loc: loc as t.SourceLocation });
 				}
 			},
 		});
@@ -204,7 +212,7 @@ export abstract class Parser {
 			method = path.node.callee.name;
 		} else if (t.isMemberExpression(path.node.callee)) {
 			const instance = new Array<string>();
-			method = this.methodFromMemberExpression(path.node.callee, instance);
+			method = this.methodFromMemberExpression(path.node.callee, instance) as string;
 			if (method === null) {
 				return;
 			}
@@ -271,23 +279,22 @@ export abstract class Parser {
 			}
 		}
 
-		this.addEntry({ msgid, loc: path.node.loc, method, msgidPlural, msgctxt });
+		this.addEntry({ msgid: msgid as string, loc: path.node.loc as t.SourceLocation, method, msgidPlural, msgctxt });
 	}
 
-	/* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-	private extractArgument(argument: any): string {
-		if (t.isStringLiteral(argument)) {
-			return argument.value;
-		} else if (t.isBinaryExpression(argument)) {
-			return this.extractBinaryExpression(argument);
-		} else if (t.isTemplateLiteral(argument)) {
-			return this.extractTemplateLiteral(argument);
+	private extractArgument(argument: unknown): string | null | undefined {
+		if (t.isStringLiteral(argument as t.StringLiteral)) {
+			return (argument as t.StringLiteral).value;
+		} else if (t.isBinaryExpression(argument as t.BinaryExpression)) {
+			return this.extractBinaryExpression(argument as t.BinaryExpression);
+		} else if (t.isTemplateLiteral(argument as t.TemplateLiteral)) {
+			return this.extractTemplateLiteral(argument as t.TemplateLiteral);
 		}
 
 		return null;
 	}
 
-	private extractBinaryExpression(exp: t.BinaryExpression): string {
+	private extractBinaryExpression(exp: t.BinaryExpression): string | null {
 		const left = this.extractArgument(exp.left);
 		if (left === null) {
 			return null;
@@ -297,10 +304,10 @@ export abstract class Parser {
 			return null;
 		}
 
-		return left + right;
+		return (left as string) + (right as string);
 	}
 
-	private extractTemplateLiteral(literal: t.TemplateLiteral): string {
+	private extractTemplateLiteral(literal: t.TemplateLiteral): string | null | undefined {
 		if (
 			literal.expressions.length === 0 &&
 			literal.quasis.length === 1 &&
@@ -315,7 +322,7 @@ export abstract class Parser {
 					' allowed as arguments to gettext functions because they' +
 					' are not constant',
 			),
-			literal.loc,
+			literal.loc as t.SourceLocation,
 		);
 
 		return null;
@@ -336,18 +343,21 @@ export abstract class Parser {
 				parentPath.node.left.value + parentPath.node.right.value,
 			);
 			node.loc = parentPath.node.loc;
-			parentPath.replaceWith(node);
+			parentPath.replaceInline(node);
 		}
 	}
 
 	private addEntry(props: EntryProperties): void {
 		props.flag = new Array<string>();
 
-		const dict: { [key: string]: string } = (props.loc as unknown) as {
+		const dict: { [key: string]: string } = props.loc as unknown as {
 			[key: string]: string;
 		};
-		const filename = '-' === dict.filename ? '[stdin]' : dict.filename;
-		const references = [`${filename}:${props.loc.start.line}`];
+		let references: Array<string> = [];
+		if (dict !== null && typeof dict !== 'undefined') {
+			const filename = '-' === dict.filename ? '[stdin]' : dict.filename;
+			references = [`${filename}:${props.loc.start.line}`];
+		}
 
 		const commentBlocks = this.findPrecedingComments(props.loc);
 		let extractedComments = commentBlocks.map(block => block.value.trim());
@@ -366,7 +376,7 @@ export abstract class Parser {
 								validTokens.includes(token) ||
 								/^(?:[a-z]+-)+(?:format|check)$/.exec(token)
 							) {
-								props.flag.push(token);
+								(props.flag as string[]).push(token);
 							}
 						});
 						comment = '';
@@ -399,10 +409,10 @@ export abstract class Parser {
 	private methodFromMemberExpression(
 		me: t.MemberExpression,
 		instance: Array<string> = [],
-	): string {
+	): string | null {
 		if (t.isIdentifier(me.object)) {
 			if (t.isLiteral(me.property) && me.computed) {
-				instance.push(this.literalValue(me.property));
+				instance.push(this.literalValue(me.property) as string);
 				instance.push(me.object.name);
 				return instance[0];
 			} else if (t.isIdentifier(me.property) && !me.computed) {
@@ -426,14 +436,14 @@ export abstract class Parser {
 			me.computed
 		) {
 			// Recurse.
-			instance.push(this.literalValue(me.property));
+			instance.push(this.literalValue(me.property) as string);
 			return this.methodFromMemberExpression(me.object, instance);
 		} else {
 			return null;
 		}
 	}
 
-	private literalValue(node: t.Literal): string {
+	private literalValue(node: t.Literal): string | null | undefined {
 		if (t.isStringLiteral(node)) {
 			return node.value;
 		} else if (
@@ -454,7 +464,7 @@ export abstract class Parser {
 		// Find the last relevant comment, which is the first one that
 		// immediately precedes the location.
 		for (last = 0; last < this.comments.length; ++last) {
-			const commentLocation = this.comments[last].loc;
+			const commentLocation = this.comments[last].loc as t.SourceLocation;
 			if (
 				commentLocation.end.line === loc.start.line ||
 				commentLocation.end.line === loc.start.line - 1
@@ -482,7 +492,7 @@ export abstract class Parser {
 		let first;
 		for (first = preceding.length - 2; first >= 0; --first) {
 			const commentLocation = preceding[first].loc;
-			if (commentLocation.end.line < ptr.start.line - 1) {
+			if (commentLocation && commentLocation.end.line < (ptr as t.SourceLocation).start.line - 1) {
 				break;
 			}
 			ptr = commentLocation;
@@ -553,7 +563,7 @@ export abstract class Parser {
 
 	protected warn(msg: string, loc: t.SourceLocation): void {
 		const start = `${loc.start.line}:${loc.start.column}`;
-		const end = loc.end ? `-${loc.end.line}:${loc.end.column}` : '';
+		const end = loc.end.line > 0 ? `-${loc.end.line}:${loc.end.column}` : '';
 		const filename =
 			'-' === this.filename ? gtx._('[standard input]') : this.filename;
 		const location = `${filename}:${start}${end}`;
@@ -563,7 +573,7 @@ export abstract class Parser {
 	protected error(msg: string, loc: t.SourceLocation): void {
 		++this.errors;
 		const start = `${loc.start.line}:${loc.start.column}`;
-		const end = loc.end ? `-${loc.end.line}:${loc.end.column}` : '';
+		const end = loc.end && loc.end.line > 0 ? `-${loc.end.line}:${loc.end.column}` : '';
 		const filename =
 			'-' === this.filename ? gtx._('[standard input]') : this.filename;
 		const location = `${filename}:${start}${end}`;
@@ -596,14 +606,21 @@ export abstract class Parser {
 		}
 	}
 
-	private findNonUtf8(buf: Buffer): t.SourceLocation {
+	private findNonUtf8(buf: Buffer): t.SourceLocation | null {
 		let i = 0;
 		const loc: t.SourceLocation = {
 			start: {
 				line: 1,
 				column: 1,
+				index: 0,
 			},
-			end: null,
+			end: {
+				line: 0,
+				column: 0,
+				index: 0,
+			},
+			filename: '',
+			identifierName: '',
 		};
 		while (i < buf.length) {
 			if (

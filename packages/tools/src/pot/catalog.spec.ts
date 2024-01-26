@@ -31,7 +31,11 @@ describe('translation catalog', () => {
 		});
 
 		it('should honor the version option', () => {
-			const catalog = new Catalog({ date, package: 'foobar', version: '23.4.89' });
+			const catalog = new Catalog({
+				date,
+				package: 'foobar',
+				version: '23.4.89',
+			});
 			expect(catalog.toString()).toMatchSnapshot();
 		});
 

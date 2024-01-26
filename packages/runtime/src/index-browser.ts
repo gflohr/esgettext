@@ -14,14 +14,16 @@ if (window.navigator.languages) {
 if (typeof window.navigator.language !== 'undefined') {
 	locales.push(window.navigator.language);
 }
-if (typeof (window.navigator as any).userLanguage !== 'undefined') {
-	locales.push((window.navigator as any).userLanguage);
+const nav: { [key: string]: string } = window.navigator as unknown as { [key: string]: string };
+
+if (Object.prototype.hasOwnProperty.call(nav, 'userLanguage') && nav.userLanguage) {
+	locales.push(nav.userLanguage);
 }
-if (typeof (window.navigator as any).browserLanguage !== 'undefined') {
-	locales.push((window.navigator as any).browserLanguage);
+if (Object.prototype.hasOwnProperty.call(nav, 'browserLanguage') && nav['browserLanguage']) {
+	locales.push(nav.browserLanguage);
 }
-if (typeof (window.navigator as any).systemLanguage !== 'undefined') {
-	locales.push((window.navigator as any).systemLanguage);
+if (Object.prototype.hasOwnProperty.call(nav, 'systemLanguage') && nav['systemLanguage']) {
+	locales.push(nav.systemLanguage);
 }
 userLocales(locales);
 

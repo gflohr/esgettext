@@ -9,24 +9,23 @@ GNU gettext-alike runtime and tools for ECMAScript/JavaScript.
 
 This mono-repo contains the following packages:
 
-* [runtime](packages/runtime/README.md)
-* [tools](packages/tools/README.md)
+- [runtime](packages/runtime/README.md)
+- [tools](packages/tools/README.md)
 
 ## Status
 
-in development.
+Work in progress.
 
 ## Setup
 
 ```
-$ yarn install
-$ yarn run bootstrap
+$ npm install
 $ yarn run test
 ```
 
 ## Copyright
 
-Copyright (C) 2020 Guido Flohr <guido.flohr@cantanea.com>, all
+Copyright (C) 2020-2023 Guido Flohr <guido.flohr@cantanea.com>, all
 rights reserved.
 
 This software is available under the terms and conditions of the

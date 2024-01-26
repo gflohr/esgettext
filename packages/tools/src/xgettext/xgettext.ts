@@ -19,30 +19,78 @@ interface ExclusionCatalog {
 	[key: string]: Array<string>;
 }
 
+interface EsgettextPackage {
+	textdomain: string;
+	directory: string;
+	'msgid-bugs-address': string;
+}
+
+interface Package {
+	name: string;
+	version: string;
+	author: string;
+	bugs: {
+		url: string;
+	};
+	esgettext: EsgettextPackage;
+}
+
+interface XGettextOptions {
+	packageJson: string;
+	directory: string[];
+	output: string;
+	packageName: string;
+	packageVersion: string;
+	msgidBugsAddress: string;
+	version: string;
+	language: string;
+	excludeFile: string[];
+	joinExisting: boolean;
+	'$0': string;
+	_: string[];
+	filesFrom: string[];
+	width: number;
+	forcePo: boolean;
+	defaultDomain: string;
+	outputDir: string;
+	fromCode: string;
+	addComments: string[];
+	addAllComments: boolean;
+	extractAll: boolean;
+	keyword: string[];
+}
+
 export class XGettext {
 	private readonly catalog: Catalog;
 	private exclude: ExclusionCatalog;
+	private readonly options = {} as XGettextOptions;
 
 	/* The date is passed only for testing. */
-	constructor(private readonly options: Options, date?: string) {
+	constructor(
+		cmdLineoptions: Options,
+		date?: string,
+	) {
 		const catalogProperties: CatalogProperties = { date };
+		const options = cmdLineoptions as XGettextOptions;
+		this.options = options;
 
 		if (typeof options.packageJson !== 'undefined') {
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			let pkg: any = {};
-
-			const filename = options.packageJson.length ? options.packageJson : 'package.json';
-			pkg = readJsonFileSync(filename);
-			if (!Object.hasOwnProperty.call(pkg, 'esgettext')) {
-				pkg.esgettext = {};
+			const filename = options.packageJson.length
+				? options.packageJson
+				: 'package.json';
+			const pkg = readJsonFileSync(filename) as Package;
+			if (!Object.prototype.hasOwnProperty.call(pkg, 'esgettext')) {
+				pkg.esgettext = {} as EsgettextPackage;
 			}
 
 			catalogProperties.package = pkg.name;
 			catalogProperties.version = pkg.version;
 			catalogProperties.msgidBugsAddress = pkg.esgettext['msgid-bugs-address'];
 			catalogProperties.copyrightHolder = pkg['author'];
-			if (typeof catalogProperties.msgidBugsAddress === 'undefined'
-			    && typeof pkg.bugs !== 'undefined') {
+			if (
+				typeof catalogProperties.msgidBugsAddress === 'undefined' &&
+				typeof pkg.bugs !== 'undefined'
+			) {
 				catalogProperties.msgidBugsAddress = pkg.bugs.url;
 			}
 
@@ -50,14 +98,16 @@ export class XGettext {
 				options.directory = [pkg.esgettext.directory];
 			}
 
-			if (typeof options.output === 'undefined'
-			    && typeof pkg.esgettext.textdomain !== 'undefined') {
+			if (
+				typeof options.output === 'undefined' &&
+				typeof pkg.esgettext.textdomain !== 'undefined'
+			) {
 				if (typeof options.directory === 'undefined') {
 					options.output = pkg.esgettext.textdomain + '.pot';
 				} else {
 					options.output = path.join(
 						options.directory[0],
-						pkg.esgettext.textdomain + '.pot'
+						pkg.esgettext.textdomain + '.pot',
 					);
 				}
 			}
@@ -86,8 +136,6 @@ export class XGettext {
 			}
 			this.options.language = language;
 		}
-
-		console.log(this.options);
 	}
 
 	/**
@@ -105,10 +153,11 @@ export class XGettext {
 					return 1;
 				}
 			} catch (e) {
+				const error = e as Error;
 				console.error(
 					gtx._x('{programName}: error: {message}', {
 						programName: this.options.$0,
-						message: e.message,
+						message: error.message,
 					}),
 				);
 				return 1;
@@ -174,7 +223,7 @@ export class XGettext {
 				console.error(
 					gtx._x('{programName}: {exception}', {
 						programName: this.options['$0'],
-						exception,
+						exception: exception as string,
 					}),
 				);
 				exitCode = 1;
@@ -199,7 +248,7 @@ export class XGettext {
 
 	private readFile(filename: string): Buffer {
 		if ('-' === filename) {
-			return process.stdin.read();
+			return process.stdin.read() as Buffer;
 		}
 		const directories = this.options.directory || [''];
 
@@ -344,7 +393,6 @@ export class XGettext {
 				? ''
 				: this.options.outputDir;
 
-console.log(path.join(outputDir, filename));
 		writeFileSync(path.join(outputDir, filename), po);
 	}
 
@@ -366,10 +414,12 @@ console.log(path.join(outputDir, filename));
 		catalog.deleteEntry('');
 
 		catalog.entries.forEach(entry => {
-			if (typeof this.exclude[entry.properties.msgctxt] === 'undefined') {
-				this.exclude[entry.properties.msgctxt] = [];
+			if (typeof this.exclude[entry.properties.msgctxt as string] === 'undefined') {
+				this.exclude[entry.properties.msgctxt as string] = [];
 			}
-			this.exclude[entry.properties.msgctxt].push(entry.properties.msgid);
+			if (entry.properties.msgid) {
+				this.exclude[entry.properties.msgctxt as string].push(entry.properties.msgid);
+			}
 		});
 
 		return true;
@@ -390,7 +440,7 @@ console.log(path.join(outputDir, filename));
 
 		if (this.options.keyword) {
 			const cookedKeywords = new Array<Keyword>();
-			this.options.keyword.forEach((raw: string) => {
+			this.options.keyword.forEach(raw => {
 				cookedKeywords.push(Keyword.from(raw));
 			});
 			parserOptions.keyword = cookedKeywords;

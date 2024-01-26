@@ -236,8 +236,10 @@ gtx
 						name: 'package-json',
 						yargsOptions: {
 							type: 'string',
-							describe: gtx._("read package information from PACKAGE_JSON (or 'package.json' without an argument)"),
-						}
+							describe: gtx._(
+								"read package information from PACKAGE_JSON (or 'package.json' without an argument)",
+							),
+						},
 					},
 					{
 						name: 'copyright-holder',

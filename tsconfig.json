@@ -4,7 +4,6 @@
 		"noImplicitAny": true,
 		"noImplicitReturns": true,
 		"noImplicitThis": true,
-		"noImplicitUseStrict": true,
 		"removeComments": true,
 		"declaration": true,
 		"target": "es5",
@@ -13,7 +12,11 @@
 		"sourceMap": true,
 		"typeRoots": ["node_modules/@types"],
 		"esModuleInterop": true,
-		"moduleResolution": "node"
+		"moduleResolution": "node",
+		"strictNullChecks": true,
+		"strictBindCallApply": true,
+		"forceConsistentCasingInFileNames": true,
+		"noFallthroughCasesInSwitch": true
 	},
-	"exclude": [ "node_modules" ]
+	"exclude": ["node_modules"],
 }
