@@ -12,7 +12,7 @@ export class PoParser extends Parser {
 	private entry: POTEntry;
 	private loc: SourceLocation;
 	private entryLoc: SourceLocation;
-	private msgType: string = null;
+	private msgType?: string;
 	private seen: {
 		[key: string]: {
 			[key: string]: SourceLocation;
