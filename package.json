@@ -45,6 +45,9 @@
 		"typedoc": "^0.25.7"
 	},
 	"dependencies": {
+		"@babel/parser": "^7.23.9",
+		"@babel/traverse": "^7.23.9",
+		"@babel/types": "^7.23.9",
 		"@types/node": "^20.11.7"
 	}
 }
