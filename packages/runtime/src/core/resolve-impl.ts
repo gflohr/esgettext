@@ -125,11 +125,11 @@ async function loadLanguage(
 		type CatalogLoader = (url: string) => Promise<Catalog>;
 
 		const tries = new Array<CatalogLoader>();
-
 		ids.forEach(id => {
 			tries.push(() =>
 				loadCatalog(
-					assemblePath(base , id, domainname, format),
+					// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+					assemblePath(base as string, id, domainname, format),
 					format,
 				),
 			);
