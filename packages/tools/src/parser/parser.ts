@@ -323,7 +323,7 @@ export abstract class Parser {
 					' allowed as arguments to gettext functions because they' +
 					' are not constant',
 			),
-			literal.loc,
+			literal.loc as t.SourceLocation,
 		);
 
 		return null;
