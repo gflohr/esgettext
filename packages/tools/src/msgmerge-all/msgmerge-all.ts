@@ -9,21 +9,40 @@ import { Options } from '../cli/getopt';
 
 const gtx = Textdomain.getInstance('tools');
 
+interface Package {
+	directory: string;
+	textdomain: string;
+	esgettext: {
+		locales: string[];
+	}
+}
+
+interface MsgmergeAllOptions {
+	packageJson: string;
+	directory: string;
+	_: string[];
+	locale: string[];
+	options: string[];
+	verbose: boolean;
+	msgmerge: string;
+}
+
 export class MsgmergeAll {
 	private readonly refPot: string;
 	private readonly locales: Array<string>;
+	private readonly options = {} as MsgmergeAllOptions;
 
-	constructor(private readonly options: Options) {
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		let pkg: any = {};
+	constructor(cmdLineOptions: Options) {
+		const options = cmdLineOptions as MsgmergeAllOptions;
+		let pkg: Package = {} as Package;
 
 		if (typeof options.packageJson !== 'undefined') {
 			const filename = options.packageJson.length
 				? options.packageJson
 				: 'package.json';
-			const p = readJsonFileSync(filename);
+			const p = readJsonFileSync(filename) as Package;
 			if (p && p.esgettext) {
-				pkg = p.esgettext;
+				pkg = p.esgettext as unknown as Package;
 			}
 		}
 
@@ -47,8 +66,8 @@ export class MsgmergeAll {
 
 		this.refPot = this.options._[0];
 
-		if (!options.locale && pkg.locales) {
-			options.locale = pkg.locales;
+		if (!options.locale && pkg.esgettext.locales) {
+			options.locale = pkg.esgettext.locales;
 		}
 
 		if (!options.locale || !options.locale.length) {
@@ -101,10 +120,10 @@ export class MsgmergeAll {
 						}),
 					);
 				});
-				msgmerge.stdout.on('data', data =>
+				msgmerge.stdout.on('data', (data: Buffer) =>
 					process.stdout.write(data.toString()),
 				);
-				msgmerge.stderr.on('data', data =>
+				msgmerge.stderr.on('data', (data: Buffer) =>
 					process.stderr.write(data.toString()),
 				);
 				msgmerge.on('close', code => {
