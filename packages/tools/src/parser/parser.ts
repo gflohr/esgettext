@@ -465,7 +465,7 @@ export abstract class Parser {
 		// Find the last relevant comment, which is the first one that
 		// immediately precedes the location.
 		for (last = 0; last < this.comments.length; ++last) {
-			const commentLocation = this.comments[last].loc;
+			const commentLocation = this.comments[last].loc as t.SourceLocation;
 			if (
 				commentLocation.end.line === loc.start.line ||
 				commentLocation.end.line === loc.start.line - 1
