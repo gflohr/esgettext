@@ -444,7 +444,7 @@ export abstract class Parser {
 		}
 	}
 
-	private literalValue(node: t.Literal): string {
+	private literalValue(node: t.Literal): string | null | undefined {
 		if (t.isStringLiteral(node)) {
 			return node.value;
 		} else if (
