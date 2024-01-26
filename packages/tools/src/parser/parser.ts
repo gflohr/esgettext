@@ -282,14 +282,13 @@ export abstract class Parser {
 		this.addEntry({ msgid, loc: path.node.loc, method, msgidPlural, msgctxt });
 	}
 
-	/* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-	private extractArgument(argument: any): string {
-		if (t.isStringLiteral(argument)) {
-			return argument.value;
-		} else if (t.isBinaryExpression(argument)) {
-			return this.extractBinaryExpression(argument);
-		} else if (t.isTemplateLiteral(argument)) {
-			return this.extractTemplateLiteral(argument);
+	private extractArgument(argument: unknown): string | null | undefined {
+		if (t.isStringLiteral(argument as t.StringLiteral)) {
+			return (argument as t.StringLiteral).value;
+		} else if (t.isBinaryExpression(argument as t.BinaryExpression)) {
+			return this.extractBinaryExpression(argument as t.BinaryExpression);
+		} else if (t.isTemplateLiteral(argument as t.TemplateLiteral)) {
+			return this.extractTemplateLiteral(argument as t.TemplateLiteral);
 		}
 
 		return null;
