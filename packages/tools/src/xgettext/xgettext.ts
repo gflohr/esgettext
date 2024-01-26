@@ -417,7 +417,9 @@ export class XGettext {
 			if (typeof this.exclude[entry.properties.msgctxt as string] === 'undefined') {
 				this.exclude[entry.properties.msgctxt as string] = [];
 			}
-			this.exclude[entry.properties.msgctxt as string].push(entry.properties.msgid);
+			if (entry.properties.msgid) {
+				this.exclude[entry.properties.msgctxt as string].push(entry.properties.msgid);
+			}
 		});
 
 		return true;
