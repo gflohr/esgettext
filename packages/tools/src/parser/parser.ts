@@ -305,7 +305,7 @@ export abstract class Parser {
 			return null;
 		}
 
-		return left + right;
+		return (left as string) + (right as string);
 	}
 
 	private extractTemplateLiteral(literal: t.TemplateLiteral): string | null | undefined {
