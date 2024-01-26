@@ -86,7 +86,11 @@ export abstract class Parser {
 						column: 1,
 						index: 0,
 					},
-					end: null,
+					end: {
+						line: 0,
+						column: 0,
+						index: 0,
+					},
 					filename,
 					identifierName: null,
 				};
