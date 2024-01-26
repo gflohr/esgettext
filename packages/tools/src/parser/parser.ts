@@ -212,7 +212,7 @@ export abstract class Parser {
 			method = path.node.callee.name;
 		} else if (t.isMemberExpression(path.node.callee)) {
 			const instance = new Array<string>();
-			method = this.methodFromMemberExpression(path.node.callee, instance);
+			method = this.methodFromMemberExpression(path.node.callee, instance) as string;
 			if (method === null) {
 				return;
 			}
@@ -279,7 +279,7 @@ export abstract class Parser {
 			}
 		}
 
-		this.addEntry({ msgid, loc: path.node.loc, method, msgidPlural, msgctxt });
+		this.addEntry({ msgid: msgid as string, loc: path.node.loc as t.SourceLocation, method, msgidPlural, msgctxt });
 	}
 
 	private extractArgument(argument: unknown): string | null | undefined {
