@@ -36,7 +36,7 @@ export class POTEntry {
 		}
 
 		if (typeof this.properties.msgidPlural !== 'undefined') {
-			if (/[\u0000-\u0006\u000e-\u001f]/.exec(properties.msgidPlural)) {
+			if (/[\u0000-\u0006\u000e-\u001f]/.exec(properties.msgidPlural as string)) {
 				throw new Error(
 					gtx._('msgid_plural must not contain control characters.'),
 				);
@@ -73,7 +73,7 @@ export class POTEntry {
 
 	static build(): POTEntry {
 		const entry = new POTEntry({ msgid: 'ignore' });
-		delete entry.properties.msgid;
+		entry.properties.msgid = undefined as unknown as string;
 
 		return entry;
 	}
@@ -190,7 +190,7 @@ export class POTEntry {
 					negated = 'no-' + flag;
 				}
 
-				if (this.properties.flags.includes(negated)) {
+				if ((this.properties.flags as string[]).includes(negated)) {
 					other.warning(
 						gtx._x('flag "{flag}" conflicts with previous flag "{negated}"', {
 							flag,
@@ -395,7 +395,7 @@ export class POTEntry {
 		});
 	}
 
-	private checkDeprecatedControls(str: string): void {
+	private checkDeprecatedControls(str: string | undefined): void {
 		if (typeof str === 'undefined') {
 			return;
 		}
@@ -410,7 +410,7 @@ export class POTEntry {
 		};
 		let matches: Array<string>;
 
-		while ((matches = deprecated.exec(str)) !== null) {
+		while ((matches = deprecated.exec(str) as RegExpExecArray) !== null) {
 			const escape = escapes[matches[0]];
 			if (!escape) {
 				continue;
