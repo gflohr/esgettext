@@ -295,7 +295,7 @@ export abstract class Parser {
 		return null;
 	}
 
-	private extractBinaryExpression(exp: t.BinaryExpression): string {
+	private extractBinaryExpression(exp: t.BinaryExpression): string | null {
 		const left = this.extractArgument(exp.left);
 		if (left === null) {
 			return null;
@@ -308,7 +308,7 @@ export abstract class Parser {
 		return left + right;
 	}
 
-	private extractTemplateLiteral(literal: t.TemplateLiteral): string {
+	private extractTemplateLiteral(literal: t.TemplateLiteral): string | null | undefined {
 		if (
 			literal.expressions.length === 0 &&
 			literal.quasis.length === 1 &&
