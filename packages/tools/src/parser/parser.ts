@@ -570,7 +570,7 @@ export abstract class Parser {
 	protected error(msg: string, loc: t.SourceLocation): void {
 		++this.errors;
 		const start = `${loc.start.line}:${loc.start.column}`;
-		const end = loc.end ? `-${loc.end.line}:${loc.end.column}` : '';
+		const end = loc.end && loc.end.line > 0 ? `-${loc.end.line}:${loc.end.column}` : '';
 		const filename =
 			'-' === this.filename ? gtx._('[standard input]') : this.filename;
 		const location = `${filename}:${start}${end}`;
@@ -611,7 +611,11 @@ export abstract class Parser {
 				column: 1,
 				index: 0,
 			},
-			end: null,
+			end: {
+				line: 0,
+				column: 0,
+				index: 0,
+			},
 			filename: '',
 			identifierName: '',
 		};
