@@ -15,23 +15,24 @@ export function gettextImpl(args: GettextImplArgs): string {
 			? args.msgid
 			: args.msgctxt + '\u0004' + args.msgid;
 	const translations = args.catalog.entries[key];
+	const numItems = args.numItems ?? 1;
 
 	if (translations && translations.length) {
 		if (typeof args.msgidPlural === 'undefined') {
 			return translations[0];
 		} else {
-			let pluralForm = args.catalog.pluralFunction(args.numItems);
+			let pluralForm = args.catalog.pluralFunction(numItems);
 			if (pluralForm >= translations.length) {
 				if (translations.length === 1) {
 					return translations[0];
 				} else {
-					pluralForm = germanicPlural(args.numItems);
+					pluralForm = germanicPlural(numItems);
 				}
 			}
 			return translations[pluralForm];
 		}
 	} else if (typeof args.msgidPlural !== 'undefined') {
-		const pluralform = args.catalog.pluralFunction(args.numItems);
+		const pluralform = args.catalog.pluralFunction(numItems);
 		if (pluralform === 1) {
 			return args.msgidPlural;
 		}

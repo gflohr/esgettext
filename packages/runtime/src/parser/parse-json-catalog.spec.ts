@@ -5,7 +5,7 @@ describe('parse JSON catalogs', () => {
 	describe('validate', () => {
 		it('should reject undefined catalogs', () => {
 			expect(() => validateJsonCatalog(undefined)).toThrow(
-				'catalog is not defined',
+				'catalog is either null or undefined',
 			);
 		});
 		it('should reject arrays', () => {
@@ -20,7 +20,7 @@ describe('parse JSON catalogs', () => {
 				minor: 0,
 			} as Catalog;
 			expect(() => validateJsonCatalog(catalog)).toThrow(
-				'catalog.entries is not defined',
+				'catalog.entries does not exist',
 			);
 		});
 		it('should reject catalogs without entries', () => {

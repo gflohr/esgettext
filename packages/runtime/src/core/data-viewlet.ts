@@ -93,7 +93,7 @@ export class DataViewlet {
 	 *                 buffer if not specified.
 	 */
 	readString(offset = 0, length?: number): string {
-		if (offset + length > this.array.byteLength + this.array.byteOffset) {
+		if (offset + (length as number)> this.array.byteLength + this.array.byteOffset) {
 			throw new Error('read past array end');
 		}
 

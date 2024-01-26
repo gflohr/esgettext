@@ -12,10 +12,11 @@ export function explodeLocale(
 	const hasCharset = typeof locale.charset !== 'undefined';
 	const hasModifier = typeof locale.modifier !== 'undefined';
 
-	const charsets = hasCharset ? [locale.charset] : [''];
+	const charsets = hasCharset ? [locale.charset as string] : [''];
 	if (vary && hasCharset) {
-		const ucCharset = locale.charset.toUpperCase();
-		if (ucCharset !== locale.charset) {
+		const charset = locale.charset as string;
+		const ucCharset = charset.toUpperCase();
+		if (ucCharset !== charset) {
 			charsets.push(ucCharset);
 		}
 		charsets.push('');
