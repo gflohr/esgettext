@@ -607,7 +607,7 @@ export abstract class Parser {
 		}
 	}
 
-	private findNonUtf8(buf: Buffer): t.SourceLocation {
+	private findNonUtf8(buf: Buffer): t.SourceLocation | null {
 		let i = 0;
 		const loc: t.SourceLocation = {
 			start: {
