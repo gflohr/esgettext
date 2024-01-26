@@ -493,7 +493,7 @@ export abstract class Parser {
 		let first;
 		for (first = preceding.length - 2; first >= 0; --first) {
 			const commentLocation = preceding[first].loc;
-			if (commentLocation.end.line < ptr.start.line - 1) {
+			if (commentLocation && commentLocation.end.line < (ptr as t.SourceLocation).start.line - 1) {
 				break;
 			}
 			ptr = commentLocation;
