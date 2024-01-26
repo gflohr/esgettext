@@ -52,7 +52,7 @@ export class Getopt {
 		optionGroups: OptionGroup[],
 		options?: GetoptOptions,
 	) {
-		this.programName = process.argv[1].split(/[\\/]/).pop();
+		this.programName = process.argv[1].split(/[\\/]/).pop() as string;
 		this.buildUsage(usage, description);
 
 		if (!options) {
@@ -145,14 +145,14 @@ export class Getopt {
 			const flags = this.allowedKeys.get(key);
 			const value = args[key];
 			if (Array.isArray(value)) {
-				if (value.length > 1 && !flags.multiple) {
+				if (value.length > 1 && flags && !flags.multiple) {
 					throw new Error(
 						gtx._x("The option '{option}' can be given only once.", {
 							option: key,
 						}),
 					);
 				}
-			} else if (flags.multiple) {
+			} else if (flags && flags.multiple) {
 				args[key] = [value];
 			}
 		}
