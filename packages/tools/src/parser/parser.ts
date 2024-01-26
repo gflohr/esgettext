@@ -377,7 +377,7 @@ export abstract class Parser {
 								validTokens.includes(token) ||
 								/^(?:[a-z]+-)+(?:format|check)$/.exec(token)
 							) {
-								props.flag.push(token);
+								(props.flag as string[]).push(token);
 							}
 						});
 						comment = '';
