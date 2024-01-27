@@ -48,8 +48,8 @@ export default {
 								plugins: [
 									[
 										purgecss({
-											content: ['./_site/**/*.html'],
-											safelist: [/language/, /line-numbers/, /bi-/, /do-not-purge-me/],
+											content: ['../../docs/**/*.html'],
+											safelist: [/language/, /line-numbers/],
 										}),
 										postcssPresetEnv({}),
 									],
@@ -95,7 +95,7 @@ export default {
 			this.apply = (compiler) => {
 				compiler.hooks.done.tap("Copy when done", () => {
 					const srcdir = __dirname + '/site';
-					const destdir = __dirname + '/_site/site';
+					const destdir = __dirname + '../../docs/site';
 					fse.copy(srcdir, destdir, { overwrite: true })
 						.then(() => console.log('updated assets'))
 						.catch(err => console.error(err));
