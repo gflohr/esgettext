@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>esgettext</title>
+		<link rel="alternate" hreflang="en" href="/en/">
+		<meta http-equiv="refresh" content="1;URL='/en/'" />
+	</head>
+	<body>
+<script>
+		var lingua;
+				supported = { en: true };
+
+		for (i = 0;
+				 navigator.languages != null && i < navigator.languages.length;
+				 ++i) {
+				var lang = navigator.languages[i].substr(0, 2);
+				if (supported[lang]) {
+						lingua = lang;
+						break;
+				}
+		}
+
+		if (lingua == null) {
+				lingua = navigator.language || navigator.userLanguage;
+				if (lingua != null) {
+						lingua = lingua.substr(0, 2);
+				}
+		}
+
+		if (!supported[lingua])
+				lingua = 'en';
+
+		document.location.href = '/' + lingua + '/';
+		</script>
+	</body
+</html>
