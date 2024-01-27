@@ -3,6 +3,7 @@
 import './scss/bootstrap.scss';
 import '@popperjs/core';
 import 'bootstrap';
+import 'bootstrap-icons/font/bootstrap-icons.css';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Prism } from 'prismjs';

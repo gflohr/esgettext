@@ -49,7 +49,7 @@ export default {
 									[
 										purgecss({
 											content: ['./_site/**/*.html'],
-											safelist: [/language/, /line-numbers/],
+											safelist: [/language/, /line-numbers/, /bi-/, /do-not-purge-me/],
 										}),
 										postcssPresetEnv({}),
 									],

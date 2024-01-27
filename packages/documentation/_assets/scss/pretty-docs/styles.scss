@@ -1,4 +1,4 @@
-/*   
+/*
  * Template Name: PrettyDocs - Bootstrap 5 Template for documentations
  * Version: BS5 v2.0
  * Author: Xiaoying Riley
@@ -42,3 +42,19 @@ $github: #444;
 @import "base";
 @import "doc";
 @import "landing";
+
+do-not-purge-me,
+.bi::before,
+[class^="bi-"]::before,
+[class*=" bi-"]::before {
+	display: inline-block;
+	font-family: bootstrap-icons !important;
+	font-style: normal;
+	font-weight: normal !important;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+	vertical-align: -.125em;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
