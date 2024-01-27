@@ -3,5 +3,5 @@
   "trailingComma": "all",
   "printWidth": 80,
   "useTabs": true,
-  "arrowParens": "avoid",
+  "arrowParens": "avoid"
 }
