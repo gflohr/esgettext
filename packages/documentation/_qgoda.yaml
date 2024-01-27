@@ -1,0 +1,6 @@
+exclude:
+  - package.json
+precious:
+  - /api-docs
+paths:
+  site: '../../docs'

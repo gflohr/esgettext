@@ -52,3 +52,4 @@ Thumbs.db
 /lerna-debug.log
 
 write-package.json
+/.nx
