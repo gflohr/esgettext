@@ -79,4 +79,8 @@ module.exports = {
 			},
 		},
 	],
+	ignorePatterns: [
+		'/node_modules',
+		'webpack.config.mjs'
+	],
 };

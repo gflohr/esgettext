@@ -1,0 +1,3 @@
+[%- USE q = Qgoda -%]
+[%- site = config.site -%]
+[%- css.main = q.loadJSON('_assets/scss/styles.scss.json').kebapSnake -%]

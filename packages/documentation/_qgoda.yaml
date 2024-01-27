@@ -1,0 +1,25 @@
+site:
+  scripts:
+  - '/site/bundle.min.js'
+  styles:
+  - '/site/bundle.min.css'
+linguas: [en]
+defaults:
+- files:
+  - en
+  values:
+    lingua: en
+po:
+  textdomain: com.cantanea.esgettext
+exclude:
+- /package.json
+- /package.lock.json
+- /node_modules
+- /webpack.config.js
+- /postcss.config.js
+- /README.md
+precious:
+  - /api-docs
+paths:
+  site: '../../docs'
+title: esgettext - gettext for the web
