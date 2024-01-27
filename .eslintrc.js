@@ -81,6 +81,7 @@ module.exports = {
 	],
 	ignorePatterns: [
 		'/node_modules',
-		'webpack.config.mjs'
+		'webpack.config.mjs',
+		'/packages/documentation/_assets/**/*.js'
 	],
 };
