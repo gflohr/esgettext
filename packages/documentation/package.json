@@ -1,12 +1,12 @@
 {
-  "name": "docs",
-  "version": "0.1.0",
-  "description": "The website for esgettext.",
-  "main": "index.js",
-  "scripts": {
-    "test": "exit 0"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+	"name": "docs",
+	"version": "0.1.0",
+	"description": "The website for esgettext.",
+	"main": "index.js",
+	"scripts": {
+		"test": "exit 0"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC"
 }

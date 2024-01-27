@@ -1,0 +1,10 @@
+[% USE q = Qgoda %]
+[% seen = {} %]
+[% FOREACH style IN site.styles %]
+  [%- NEXT IF seen.$style; seen.$style = 1 %]
+  [%- IF (style.match('^(/)')) %]
+  <link href="[% q.bustCache(style) | url %]" rel="stylesheet" />
+  [%- ELSE %]
+  <style>[% style %]</style>
+  [%- END %]
+[% END %]
