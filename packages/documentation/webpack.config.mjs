@@ -1,13 +1,18 @@
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const TerserPlugin = require('terser-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
-const fse = require('fs-extra');
-const CompressionPlugin = require('compression-webpack-plugin');
-const postcssPresetEnv = require('postcss-preset-env');
-const purgecss = require('@fullhuman/postcss-purgecss');
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { CleanWebpackPlugin } from 'clean-webpack-plugin';
+import TerserPlugin from 'terser-webpack-plugin';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
+import fse from 'fs-extra';
+import CompressionPlugin from 'compression-webpack-plugin';
+import postcssPresetEnv from 'postcss-preset-env';
+import purgecss from '@fullhuman/postcss-purgecss';
 
-module.exports = {
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+export default {
 	mode: 'production',
 		watchOptions: {
 			ignored: '**/*.json'
