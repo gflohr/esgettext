@@ -10,7 +10,7 @@ export class TransportHttp implements Transport {
 			xhr.open('GET', url, true);
 			xhr.onload = () => {
 				if (xhr.readyState === 4 && xhr.status === 200) {
-					resolve(xhr.response);
+					resolve(xhr.response as ArrayBuffer);
 				} else {
 					reject(new Error('get failed with status ' + xhr.status));
 				}

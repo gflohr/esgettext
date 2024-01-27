@@ -9,19 +9,40 @@ import { Options } from '../cli/getopt';
 
 const gtx = Textdomain.getInstance('tools');
 
+interface Package {
+	directory: string;
+	textdomain: string;
+	esgettext: {
+		locales: string[];
+	}
+}
+
+interface MsgmergeAllOptions {
+	packageJson: string;
+	directory: string;
+	_: string[];
+	locale: string[];
+	options: string[];
+	verbose: boolean;
+	msgmerge: string;
+}
+
 export class MsgmergeAll {
 	private readonly refPot: string;
 	private readonly locales: Array<string>;
+	private readonly options = {} as MsgmergeAllOptions;
 
-	constructor(private readonly options: Options) {
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		let pkg: any = {};
+	constructor(cmdLineOptions: Options) {
+		const options = cmdLineOptions as MsgmergeAllOptions;
+		let pkg: Package = {} as Package;
 
 		if (typeof options.packageJson !== 'undefined') {
-			const filename = options.packageJson.length ? options.packageJson : 'package.json';
-			const p = readJsonFileSync(filename);
+			const filename = options.packageJson.length
+				? options.packageJson
+				: 'package.json';
+			const p = readJsonFileSync(filename) as Package;
 			if (p && p.esgettext) {
-				pkg = p.esgettext;
+				pkg = p.esgettext as unknown as Package;
 			}
 		}
 
@@ -38,19 +59,19 @@ export class MsgmergeAll {
 		}
 
 		if (!options._.length) {
-			throw new Error(gtx._("no input file given"));
+			throw new Error(gtx._('no input file given'));
 		} else if (options._.length !== 1) {
-			throw new Error(gtx._("exactly one input file is required"));
+			throw new Error(gtx._('exactly one input file is required'));
 		}
 
 		this.refPot = this.options._[0];
 
-		if (!options.locale && pkg.locales) {
-			options.locale = pkg.locales;
+		if (!options.locale && pkg.esgettext.locales) {
+			options.locale = pkg.esgettext.locales;
 		}
 
 		if (!options.locale || !options.locale.length) {
-			throw new Error(gtx._("no locales given"))
+			throw new Error(gtx._('no locales given'));
 		}
 
 		this.locales = [];
@@ -78,10 +99,12 @@ export class MsgmergeAll {
 
 			args.push(oldPoFile, this.refPot, '-o', poFile);
 			if (this.options.verbose) {
-				process.stdout.write(gtx._x("Merging '{pot}' into '{po}'.", {
-					pot: this.refPot,
-					po: poFile,
-				}));
+				process.stdout.write(
+					gtx._x("Merging '{pot}' into '{po}'.", {
+						pot: this.refPot,
+						po: poFile,
+					}),
+				);
 			}
 
 			try {
@@ -90,26 +113,32 @@ export class MsgmergeAll {
 					windowsHide: true,
 				});
 				msgmerge.on('error', err => {
-					throw new Error(gtx._x("Failed to run '{prg}': {err}", {
-						prg: this.options.msgmerge,
-						err
-					}));
+					throw new Error(
+						gtx._x("Failed to run '{prg}': {err}", {
+							prg: this.options.msgmerge,
+							err,
+						}),
+					);
 				});
-				msgmerge.stdout.on('data', data => process.stdout.write(data.toString()));
-				msgmerge.stderr.on('data', data => process.stderr.write(data.toString()));
+				msgmerge.stdout.on('data', (data: Buffer) =>
+					process.stdout.write(data.toString()),
+				);
+				msgmerge.stderr.on('data', (data: Buffer) =>
+					process.stderr.write(data.toString()),
+				);
 				msgmerge.on('close', code => {
 					if (code) {
 						renameSync(oldPoFile, poFile);
-						resolve(1)
+						resolve(1);
 					} else {
 						unlinkSync(oldPoFile);
 						resolve(0);
 					}
 				});
-			} catch(err) {
+			} catch (err) {
 				try {
 					renameSync(oldPoFile, poFile);
-				} catch(err1) {
+				} catch (err1) {
 					console.error(err1);
 				}
 				console.error(err);
@@ -123,14 +152,15 @@ export class MsgmergeAll {
 			// We merge one locale at a time.  It would be more efficient to
 			// do everything asynchronously but that makes error recovery
 			// too hard.
-			this.locales.reduce(
-				(promise, locale) => promise.then(
-					() => this.msgmergeLocale(locale)
-				), Promise.resolve())
-			.then(
-				() => resolve(0),
-				() => resolve(1),
-			);
+			this.locales
+				.reduce(
+					(promise, locale) => promise.then(() => this.msgmergeLocale(locale)),
+					Promise.resolve(),
+				)
+				.then(
+					() => resolve(0),
+					() => resolve(1),
+				);
 		});
 	}
 }

@@ -3,7 +3,7 @@ import { Textdomain } from '@esgettext/runtime';
 const gtx = Textdomain.getInstance('com.cantanea.sample-calendar-library');
 
 export class CalendarStrings {
-	public getMonth(id: number): string {
+	public getMonth(id: number): string | null {
 		const months = [
 			Textdomain.N_('January'),
 			Textdomain.N_('February'),
@@ -16,7 +16,7 @@ export class CalendarStrings {
 			Textdomain.N_('September'),
 			Textdomain.N_('October'),
 			Textdomain.N_('November'),
-			Textdomain.N_('December')
+			Textdomain.N_('December'),
 		];
 
 		if (id < 0 || id > months.length) {
@@ -26,7 +26,7 @@ export class CalendarStrings {
 		return gtx._(months[id]);
 	}
 
-	public getAbbreviatedWeekDay(id: number): string {
+	public getAbbreviatedWeekDay(id: number): string | null {
 		const weekDays = [
 			Textdomain.N_('Sun'),
 			Textdomain.N_('Mon'),

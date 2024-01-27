@@ -21,8 +21,9 @@
 		"esgettext-xgettext": "./bin/esgettext-xgettext.js"
 	},
 	"scripts": {
-		"build": "yarn run clean && tsc --project tsconfig-build.json",
+		"build": "npm run clean && tsc --project tsconfig-build.json",
 		"prebuild": "node ./write-package.js >src/package.ts",
+		"format": "prettier --write 'src/**/*.ts'",
 		"watch": "tsc --watch",
 		"prewatch": "node ./write-package.js >src/package.ts",
 		"clean": "shx rm -rf ./dist",
@@ -30,6 +31,7 @@
 		"lint:fix": "eslint --fix './src/**/*.ts'",
 		"lint:fix-dry-run": "eslint --fix './src/**/*.ts'",
 		"lint:staged": "lint-staged",
+		"pretest": "node ./write-package.js >src/package.ts",
 		"test": "jest",
 		"test:watch": "jest --watch",
 		"test:cov": "jest --coverage",
@@ -55,24 +57,28 @@
 		"coverageDirectory": "../coverage",
 		"testEnvironment": "node"
 	},
+	"lint-staged": {
+		"*.{js,ts,json,scss,css,md}": [
+			"prettier --write"
+		],
+		"src/**/*.ts": [
+			"eslint"
+		]
+	},
 	"dependencies": {
-		"@babel/parser": "^7.9.6",
-		"@esgettext/runtime": "^0.1.0",
-		"camelcase": "^6.0.0",
-		"iconv-lite": "^0.5.1",
+		"@babel/parser": "^7.23.9",
+		"@babel/traverse": "^7.23.9",
+		"@esgettext/runtime": "file:../runtime",
+		"iconv-lite": "^0.6.3",
 		"jsonfile": "^6.0.1",
-		"mkdirp": "^1.0.4",
-		"typescript": "^3.8.3",
-		"yargs": "^15.3.1"
+		"mkdirp": "^3.0.1",
+		"yargs": "^17.7.2"
 	},
 	"devDependencies": {
-		"@types/jsonfile": "^6.0.0",
-		"@types/mkdirp": "^1.0.1",
-		"@types/node": "^13.13.2",
-		"@types/yargs": "^15.0.4",
-		"eslint": "^6.8.0",
-		"jest": "^25.5.2",
-		"shx": "^0.3.2",
-		"ts-node": "^8.10.1"
+		"@babel/types": "^7.23.9",
+		"@types/jsonfile": "^6.1.4",
+		"@types/node": "^20.11.6",
+		"@types/yargs": "^17.0.32",
+		"shx": "^0.3.4"
 	}
 }

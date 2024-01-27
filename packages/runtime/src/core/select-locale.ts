@@ -18,7 +18,7 @@ export function selectLocale(
 	supported: Array<string>,
 	requested: Array<string>,
 ): string {
-	let languageMatch: string;
+	let languageMatch: string = '';
 
 	for (let i = 0; i < requested.length; ++i) {
 		const wanted = splitLocale(requested[i]);
@@ -37,7 +37,7 @@ export function selectLocale(
 			}
 
 			if (
-				typeof languageMatch === 'undefined' &&
+				!languageMatch.length &&
 				wanted.tags[0].toLowerCase() === got.tags[0].toLowerCase()
 			) {
 				languageMatch = supported[j];
@@ -45,7 +45,7 @@ export function selectLocale(
 		}
 	}
 
-	if (typeof languageMatch !== 'undefined') {
+	if (languageMatch.length) {
 		return languageMatch;
 	}
 

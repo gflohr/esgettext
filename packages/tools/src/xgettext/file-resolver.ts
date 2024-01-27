@@ -4,7 +4,7 @@ import { existsSync } from 'fs';
 export class FileResolver {
 	constructor(private readonly directories: Array<string> = ['']) {}
 
-	resolve(filename: string): string {
+	resolve(filename: string): string | null {
 		for (let i = 0; i < this.directories.length; ++i) {
 			const resolved = join(this.directories[i], filename);
 			if (existsSync(resolved)) {

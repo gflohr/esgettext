@@ -6,18 +6,18 @@ import { Catalog } from './catalog';
  *
  * Example, if your textdomain is 'myapp':
  *
- * <pre class="language-javascript"><code class="language-javascript">{
- *         fr: {
- *                 LC_MESSAGES: {
+ * <pre class="language-javascript"><code class="language-javascript">\{
+ *         fr: \{
+ *                 LC_MESSAGES: \{
  * 	                       myapp: catalogs['fr']
- *                 }
- *         },
- *         'de-DE': {
- *                 LC_MESSAGES: {
+ *                 \}
+ *         \},
+ *         'de-DE': \{
+ *                 LC_MESSAGES: \{
  *                         myapp: catalogs['de-DE']
- *                 }
- *         }
- * }
+ *                 \}
+ *         \}
+ * \}
  * </code></pre>
  */
 export interface LocaleContainer {

@@ -1,7 +1,5 @@
 import yargs from 'yargs';
 
-/* eslint-disable-next-line import/default */
-import camelCase from 'camelcase';
 import { Textdomain } from '@esgettext/runtime';
 import { Package } from '../package';
 
@@ -54,7 +52,7 @@ export class Getopt {
 		optionGroups: OptionGroup[],
 		options?: GetoptOptions,
 	) {
-		this.programName = process.argv[1].split(/[\\/]/).pop();
+		this.programName = process.argv[1].split(/[\\/]/).pop() as string;
 		this.buildUsage(usage, description);
 
 		if (!options) {
@@ -84,8 +82,9 @@ export class Getopt {
 			for (let j = 0; j < options.length; ++j) {
 				const option = options[j];
 				const flags = option.flags || this.defaultFlags;
+				const name = option.name.replace(/[-_]./, m => m[1].toUpperCase());
 				this.allowedKeys.set(option.name, flags);
-				this.allowedKeys.set(camelCase(option.name), flags);
+				this.allowedKeys.set(name, flags); // Camel case!!!
 				const alias =
 					typeof option.yargsOptions.alias === 'string'
 						? [option.yargsOptions.alias]
@@ -111,7 +110,7 @@ export class Getopt {
 	 */
 	argv(args?: { [x: string]: unknown; _: string[]; $0: string }): Options {
 		if (typeof args === 'undefined') {
-			args = this.cli.argv;
+			args = this.cli.argv as { [x: string]: unknown; _: string[]; $0: string };
 		}
 
 		const keys = Object.keys(args);
@@ -146,14 +145,14 @@ export class Getopt {
 			const flags = this.allowedKeys.get(key);
 			const value = args[key];
 			if (Array.isArray(value)) {
-				if (value.length > 1 && !flags.multiple) {
+				if (value.length > 1 && flags && !flags.multiple) {
 					throw new Error(
 						gtx._x("The option '{option}' can be given only once.", {
 							option: key,
 						}),
 					);
 				}
-			} else if (flags.multiple) {
+			} else if (flags && flags.multiple) {
 				args[key] = [value];
 			}
 		}

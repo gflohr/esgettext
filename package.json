@@ -10,65 +10,45 @@
 		"gettext",
 		"xgettext"
 	],
+	"workspaces": [
+		"packages/*"
+	],
 	"scripts": {
-		"bootstrap": "lerna bootstrap",
-		"publish": "lerna publish",
 		"build": "lerna run build --stream",
-		"start": "lerna run build --scope @esgettext/runtime && lerna run start --parallel --scope @magic-invoice/tools",
-		"clean": "lerna run clean --stream",
-		"format": "lerna run format --stream",
+		"format": "prettier --write *.js *.json *.md && lerna run format --stream",
 		"lint": "lerna run lint --stream",
 		"lint:fix": "lerna run lint:fix --stream",
+		"lint:fix-dry-run": "lerna run lint:fix-dry-run --stream",
+		"lint:staged": "lerna run lint:staged --stream",
 		"test": "lerna run test --stream",
-		"test:watch": "lerna run test:watch --stream",
 		"test:cov": "lerna run test:cov --stream",
+		"test:watch": "lerna watch -- lerna run test --scope=\\$LERNA_PACKAGE_NAME --stream",
 		"posttest:cov": "node merge-lcov.js packages/*",
-		"test:debug": "lerna run test:debug --stream",
-		"test:e2e": "lerna run test:e2e --stream",
-		"test:ci": "lerna exec --stream -- DOTENV_CONFIG_PATH=./.env.example jest --coverage --ci --reporters=default --reporters=jest-junit --coverage-reporters=text --coverage-reporters=cobertura",
-		"typedoc": "lerna run typedoc --stream"
-	},
-	"husky": {
-		"hooks": {
-			"pre-commit": "yarn lerna run lint:staged --concurrency 1 --stream --since origin/master",
-			"pre-push": "yarn test:cov --since origin/master --include-dependents"
-		}
-	},
-	"lint-staged": {
-		"*.{js,ts,json,scss,css,md}": [
-			"prettier --write"
-		],
-		"{src,apps,libs,test}/**/*.ts": [
-			"eslint"
-		]
+		"clean": "lerna run clean --stream",
+		"typedoc": "lerna run typedoc --stream",
+		"prepare": "husky"
 	},
 	"devDependencies": {
-		"@babel/types": "^7.9.6",
-		"@types/jdataview": "^0.0.30",
-		"@types/jest": "^25.2.1",
-		"@types/superagent": "^4.1.7",
-		"@typescript-eslint/eslint-plugin": "^2.30.0",
-		"@typescript-eslint/parser": "^2.31.0",
-		"coveralls": "^3.1.0",
-		"eslint": "^6.8.0",
-		"eslint-config-prettier": "^6.11.0",
-		"eslint-plugin-import": "^2.20.2",
-		"eslint-plugin-tsdoc": "^0.2.4",
-		"husky": "^4.2.5",
-		"jest": "^25.5.2",
-		"lerna": "^3.22.1",
-		"lint-staged": "^10.2.0",
-		"prettier": "^2.0.5",
-		"shx": "^0.3.2",
-		"terser-webpack-plugin": "^4.1.0",
-		"ts-jest": "^25.4.0",
-		"ts-loader": "^7.0.2",
-		"ts-node": "^8.9.1",
-		"tsconfig-paths": "^3.9.0",
-		"typedoc": "^0.17.6",
-		"typescript": "^3.8.3",
-		"webpack": "^4.43.0",
-		"webpack-cli": "^3.3.11",
-		"webpack-merge": "^4.2.2"
+		"@types/jest": "^29.5.11",
+		"@typescript-eslint/eslint-plugin": "^6.19.1",
+		"eslint": "^8.56.0",
+		"eslint-config-prettier": "^9.1.0",
+		"eslint-plugin-import": "^2.29.1",
+		"eslint-plugin-tsdoc": "^0.2.17",
+		"husky": "^9.0.6",
+		"jest": "^29.7.0",
+		"jest-cli": "^29.7.0",
+		"lerna": "^8.0.2",
+		"lint-staged": "^15.2.0",
+		"prettier": "^3.2.4",
+		"ts-jest": "^29.1.2",
+		"typedoc": "^0.25.7"
+	},
+	"dependencies": {
+		"@babel/parser": "^7.23.9",
+		"@babel/traverse": "^7.23.9",
+		"@babel/types": "^7.23.9",
+		"@types/node": "^20.11.7",
+		"yargs": "^17.7.2"
 	}
 }

@@ -116,7 +116,7 @@ export class Keyword {
 
 			let remainder = spec.replace(
 				/([,:])[\s]*([1-9][0-9]*[ct]?)[\s]*$/,
-				(_, sep, token) => {
+				(_, sep, token: string) => {
 					modified = true;
 
 					tokens.unshift(token);
@@ -137,7 +137,7 @@ export class Keyword {
 
 			remainder = spec.replace(
 				/([,:])[\s]*("[^"]*")[\s]*$/,
-				(_, sep, token) => {
+				(_, sep, token: string) => {
 					modified = true;
 					tokens.unshift(token);
 

@@ -13,7 +13,10 @@ export class DataViewlet {
 	 * @param array - a `Unit8Array` view on the binary buffer
 	 * @param encoding - encoding of strings, defaults to utf-8
 	 */
-	constructor(private readonly array: Uint8Array, encoding = 'utf-8') {
+	constructor(
+		private readonly array: Uint8Array,
+		encoding = 'utf-8',
+	) {
 		this.decoder = new TextDecoder(encoding);
 		this._encoding = encoding;
 	}
@@ -90,7 +93,7 @@ export class DataViewlet {
 	 *                 buffer if not specified.
 	 */
 	readString(offset = 0, length?: number): string {
-		if (offset + length > this.array.byteLength + this.array.byteOffset) {
+		if (offset + (length as number)> this.array.byteLength + this.array.byteOffset) {
 			throw new Error('read past array end');
 		}
 
