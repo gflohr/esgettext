@@ -48,7 +48,7 @@ will be part of a URI or filename and therefore a couple of rules apply:
 
 - A textdomain _must not_ contain a slash ("/").
 - A textdomain _should not_ contain a colon (":"), because of Windows.
-- A textdomain _should not_ contain a backslash (":"), because of Windows.
+- A textdomain _should not_ contain a backslash ("\"), because of Windows.
 - A textdomain _should not_ contain binary characters, because of common sense.
 
 In general, you should only use lowercase characters that are valid inside
