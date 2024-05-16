@@ -1,0 +1,37 @@
+{
+	"name": "@esgettext/documentation",
+	"version": "0.1.0",
+	"description": "The website for esgettext.",
+	"main": "index.js",
+	"scripts": {
+		"prebuild": "npm install",
+		"build": "webpack",
+		"prestart": "npm install",
+		"start": "webpack --watch",
+		"server": "browser-sync start --server _site --files _timestamp",
+		"test": "exit 0"
+	},
+	"keywords": [],
+	"author": "Guido Flohr <www.guido-flohr.net>",
+	"license": "WTFPL",
+	"devDependencies": {
+		"@fullhuman/postcss-purgecss": "^5.0.0",
+		"@popperjs/core": "^2.11.8",
+		"bootstrap": "^5.3.2",
+		"bootstrap-icons": "^1.11.3",
+		"browser-sync": "^3.0.2",
+		"clean-webpack-plugin": "^4.0.0",
+		"compression-webpack-plugin": "^11.0.0",
+		"css-loader": "^6.9.1",
+		"css-minimizer-webpack-plugin": "^6.0.0",
+		"gumshoejs": "github:cferdinandi/gumshoe",
+		"mini-css-extract-plugin": "^2.7.7",
+		"postcss-loader": "^8.0.0",
+		"postcss-preset-env": "^9.3.0",
+		"prismjs": "^1.29.0",
+		"sass": "^1.70.0",
+		"sass-loader": "^14.0.0",
+		"webpack": "^5.90.0",
+		"webpack-cli": "^5.1.4"
+	}
+}
