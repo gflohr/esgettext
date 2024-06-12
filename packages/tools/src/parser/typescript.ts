@@ -18,6 +18,7 @@ export class TypeScriptParser extends Parser {
 				'classProperties',
 				'classPrivateMethods',
 				'classPrivateProperties',
+				'decorators',
 			],
 		});
 
