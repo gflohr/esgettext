@@ -55,6 +55,8 @@ export class Getopt {
 		this.programName = process.argv[1].split(/[\\/]/).pop() as string;
 		this.buildUsage(usage, description);
 
+		yargs.version(false);
+
 		if (!options) {
 			options = {};
 		}
