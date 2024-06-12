@@ -1,7 +1,10 @@
 {
 	"name": "@esgettext/tools",
-	"version": "1.0.0",
+	"version": "0.1.0",
 	"description": "Gettext-like po creation and manipulation",
+	"publishConfig": {
+		"access": "public"
+	},
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"repository": "https://github.com/gflohr/esgettext",
@@ -68,7 +71,7 @@
 	"dependencies": {
 		"@babel/parser": "^7.24.7",
 		"@babel/traverse": "^7.24.7",
-		"@esgettext/runtime": "file:../runtime",
+		"@esgettext/runtime": "^1.0.0",
 		"iconv-lite": "^0.6.3",
 		"jsonfile": "^6.1.0",
 		"mkdirp": "^3.0.1",
@@ -80,5 +83,6 @@
 		"@types/node": "^20.14.2",
 		"@types/yargs": "^17.0.32",
 		"shx": "^0.3.4"
-	}
+	},
+	"gitHead": "06da3816341dc5530d8a48db7716efe510719645"
 }
