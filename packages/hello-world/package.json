@@ -1,0 +1,72 @@
+{
+	"name": "@esgettext/hello-world",
+	"version": "0.1.0",
+	"description": "Example application internationalized with esgettext",
+	"main": "src/index.js",
+	"private": true,
+	"repository": "https://github.com/gflohr/esgettext",
+	"bugs": {
+		"url": "https://github.com/gflohr/esgettext/issues"
+	},
+	"homepage": "https://github.com/gflohr/esgettext/packages/hello-world",
+	"scripts": {
+		"build": "echo nothing to build",
+		"format": "prettier --write 'src/**/*.ts'",
+		"watch": "tsc --watch",
+		"lint": "eslint './src/**/*.ts'",
+		"lint:fix": "eslint --fix'./src/**/*.ts'",
+		"lint:fix-dry-run": "eslint --fix --dry-run './src/**/*.ts'",
+		"lint:staged": "lint-staged",
+		"test": "echo no tests defined",
+		"test:cov": "echo no tests defined",
+		"test:watch": "echo no tests defined",
+		"clean": "echo nothing to clean",
+		"po:POTFILES": "cd po && git ls-files ../src | grep \"src.hello-world\\.*\" >POTFILES",
+		"po:pot": "esgettext-xgettext --package-json --add-comments=TRANSLATORS: --files-from=po/POTFILES",
+		"po:update-po": "esgettext-msgmerge-all --verbose --package-json",
+		"po:update-mo": "esgettext-msgfmt-all --verbose --package-json",
+		"po:install": "esgettext-install --verbose --package-json",
+		"typedoc": "echo no documentation"
+	},
+	"author": "Guido Flohr <guido.flohr@cantanea.com> (http://www.guido.flohr.net/)",
+	"license": "WTFPL",
+	"esgettext": {
+		"fromCode": "utf-8",
+		"locales": [
+			"de"
+		],
+		"textdomain": "hello-world",
+		"directory": "po"
+	},
+	"jest": {
+		"moduleFileExtensions": [
+			"js",
+			"json",
+			"ts"
+		],
+		"moduleNameMapper": {
+			"^@esgettext/runtime$": "<rootDir>/../../runtime/src"
+		},
+		"rootDir": "src",
+		"testRegex": ".spec.ts$",
+		"transform": {
+			"^.+\\.ts$": "ts-jest"
+		},
+		"coverageDirectory": "../coverage",
+		"testEnvironment": "node"
+	},
+	"lint-staged": {
+		"*.{js,ts,json,scss,css,md}": [
+			"prettier --write"
+		],
+		"src/**/*.ts": [
+			"eslint"
+		]
+	},
+	"dependencies": {
+		"@esgettext/runtime": "file:../runtime"
+	},
+	"devDependencies": {
+		"@esgettext/tools": "file:../tools"
+	}
+}

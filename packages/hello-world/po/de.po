@@ -1,0 +1,23 @@
+# German translations for @esgettext/hello-world package
+# German translation for @esgettext/hello-world
+# Copyright (C) 2024 Guido Flohr <guido.flohr@cantanea.com> (http://www.guido.flohr.net/)
+# This file is distributed under the same license as the @esgettext/hello-world package.
+# Guido Flohr <guido.flohr@cantanea.com>, 2024.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: @esgettext/hello-world 0.1.0\n"
+"Report-Msgid-Bugs-To: https://github.com/gflohr/esgettext/issues\n"
+"POT-Creation-Date: 2024-06-12 16:38+0300\n"
+"PO-Revision-Date: 2024-06-12 17:20+0300\n"
+"Last-Translator: Guido Flohr <guido.flohr@cantanea.com>\n"
+"Language-Team: German <translation-team-de@lists.sourceforge.net>\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: ../src/hello-world.ts:7
+msgid "Hello, world!"
+msgstr "Hello, world!"
