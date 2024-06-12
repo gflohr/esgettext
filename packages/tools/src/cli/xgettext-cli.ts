@@ -309,7 +309,7 @@ gtx
 
 		try {
 			xgettext = new XGettext(getopt.argv());
-		} catch (error) {
+		} catch (error: unknown) {
 			console.warn(
 				gtx._x('{programName}: {error}', {
 					error,
@@ -326,7 +326,7 @@ gtx
 
 		process.exit(xgettext.run());
 	})
-	.catch(exception => {
+	.catch((exception: Error) => {
 		console.error(
 			gtx._x('{programName}: unhandled exception: {exception}', {
 				programName: 'esgettext-xgettext',
