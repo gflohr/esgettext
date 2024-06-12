@@ -4,18 +4,11 @@ import { join } from 'path';
 import { Textdomain } from '@esgettext/runtime';
 import { readFileSync as readJsonFileSync } from 'jsonfile';
 import { Options } from '../cli/getopt';
+import { EsgettextPackageJson, PackageJson } from '../esgettext-package-json';
 
 /* eslint-disable no-console */
 
 const gtx = Textdomain.getInstance('tools');
-
-interface Package {
-	directory: string;
-	textdomain: string;
-	esgettext: {
-		locales: string[];
-	}
-}
 
 interface MsgmergeAllOptions {
 	packageJson: string;
@@ -34,27 +27,29 @@ export class MsgmergeAll {
 
 	constructor(cmdLineOptions: Options) {
 		const options = cmdLineOptions as MsgmergeAllOptions;
-		let pkg: Package = {} as Package;
+		this.options = options;
+
+		let pkg = {} as EsgettextPackageJson;
 
 		if (typeof options.packageJson !== 'undefined') {
 			const filename = options.packageJson.length
 				? options.packageJson
 				: 'package.json';
-			const p = readJsonFileSync(filename) as Package;
+			const p = readJsonFileSync(filename) as PackageJson;
 			if (p && p.esgettext) {
-				pkg = p.esgettext as unknown as Package;
+				pkg = p.esgettext as unknown as EsgettextPackageJson;
 			}
 		}
 
 		if (typeof options.directory === 'undefined') {
-			if (pkg.directory.length) {
+			if (pkg.directory?.length) {
 				options.directory = pkg.directory;
 			} else {
 				options.directory = '.';
 			}
 		}
 
-		if (!options._.length && pkg.textdomain.length) {
+		if (!options._.length && pkg.textdomain?.length) {
 			options._.push(join(options.directory, pkg.textdomain + '.pot'));
 		}
 
@@ -64,10 +59,10 @@ export class MsgmergeAll {
 			throw new Error(gtx._('exactly one input file is required'));
 		}
 
-		this.refPot = this.options._[0];
+		this.refPot = options._[0];
 
-		if (!options.locale && pkg.esgettext.locales) {
-			options.locale = pkg.esgettext.locales;
+		if (!options.locale && pkg.locales) {
+			options.locale = pkg.locales;
 		}
 
 		if (!options.locale || !options.locale.length) {

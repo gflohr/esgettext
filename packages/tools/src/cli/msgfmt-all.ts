@@ -104,5 +104,15 @@ gtx.resolve().then(() => {
 		process.exit(2);
 	}
 
-	msgfmtAll.run().then(exitCode => process.exit(exitCode));
+	msgfmtAll.run()
+	.then(exitCode => process.exit(exitCode))
+	.catch(error => { throw(error) });
+}).catch((exception: Error) => {
+	console.error(
+		gtx._x('{programName}: unhandled exception: {exception}', {
+			programName: 'esgettext-xgettext',
+			exception,
+		}),
+	);
 });
+;

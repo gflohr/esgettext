@@ -9,6 +9,7 @@ import { TypeScriptParser } from '../parser/typescript';
 import { Parser, ParserOptions } from '../parser/parser';
 import { PoParser } from '../parser/po';
 import { Keyword } from '../pot/keyword';
+import { EsgettextPackageJson, PackageJson } from '../esgettext-package-json';
 import { FilesCollector } from './files-collector';
 
 /* eslint-disable no-console */
@@ -17,22 +18,6 @@ const gtx = Textdomain.getInstance('tools');
 
 interface ExclusionCatalog {
 	[key: string]: Array<string>;
-}
-
-interface EsgettextPackage {
-	textdomain: string;
-	directory: string;
-	'msgid-bugs-address': string;
-}
-
-interface Package {
-	name: string;
-	version: string;
-	author: string;
-	bugs: {
-		url: string;
-	};
-	esgettext: EsgettextPackage;
 }
 
 interface XGettextOptions {
@@ -78,14 +63,14 @@ export class XGettext {
 			const filename = options.packageJson.length
 				? options.packageJson
 				: 'package.json';
-			const pkg = readJsonFileSync(filename) as Package;
+			const pkg = readJsonFileSync(filename) as PackageJson;
 			if (!Object.prototype.hasOwnProperty.call(pkg, 'esgettext')) {
-				pkg.esgettext = {} as EsgettextPackage;
+				pkg.esgettext = {} as EsgettextPackageJson;
 			}
 
 			catalogProperties.package = pkg.name;
 			catalogProperties.version = pkg.version;
-			catalogProperties.msgidBugsAddress = pkg.esgettext['msgid-bugs-address'];
+			catalogProperties.msgidBugsAddress = pkg.esgettext ? pkg.esgettext['msgid-bugs-address'] : undefined;
 			catalogProperties.copyrightHolder = pkg['author'];
 			if (
 				typeof catalogProperties.msgidBugsAddress === 'undefined' &&
@@ -94,13 +79,13 @@ export class XGettext {
 				catalogProperties.msgidBugsAddress = pkg.bugs.url;
 			}
 
-			if (typeof options.directory === 'undefined') {
+			if (typeof options.directory === 'undefined' && pkg.esgettext?.directory) {
 				options.directory = [pkg.esgettext.directory];
 			}
 
 			if (
 				typeof options.output === 'undefined' &&
-				typeof pkg.esgettext.textdomain !== 'undefined'
+				typeof pkg.esgettext?.textdomain !== 'undefined'
 			) {
 				if (typeof options.directory === 'undefined') {
 					options.output = pkg.esgettext.textdomain + '.pot';
