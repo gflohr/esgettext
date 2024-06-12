@@ -3,6 +3,7 @@
 	"version": "0.1.0",
 	"description": "The website for esgettext.",
 	"main": "index.js",
+	"private": true,
 	"scripts": {
 		"prebuild": "npm install",
 		"build": "webpack",

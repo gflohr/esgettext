@@ -3,6 +3,7 @@
 	"version": "0.1.0",
 	"description": "Example library internationalized with esgettext",
 	"main": "lib/index.js",
+	"private": true,
 	"types": "lib/index.d.ts",
 	"repository": "https://github.com/gflohr/esgettext",
 	"bugs": {
