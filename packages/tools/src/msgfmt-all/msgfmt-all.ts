@@ -3,33 +3,48 @@ import { spawn } from 'child_process';
 import { Textdomain } from '@esgettext/runtime';
 import { readFileSync as readJsonFileSync } from 'jsonfile';
 import { Options } from '../cli/getopt';
+import { EsgettextPackageJson, PackageJson } from '../esgettext-package-json';
 
 /* eslint-disable no-console */
 
 const gtx = Textdomain.getInstance('tools');
 
+type MsgfmtAllOptions = {
+	_: string[];
+	packageJson?: string;
+	locale?: string[];
+	directory?: string;
+	format: 'gmo' | 'json';
+	msgfmt: string;
+	options: string[];
+	verbose?: boolean;
+};
+
 export class MsgfmtAll {
 	private readonly locales: Array<string>;
+	private readonly options: MsgfmtAllOptions;
 
-	constructor(private readonly options: Options) {
+	constructor(cmdLineOptions: Options) {
+		const options = cmdLineOptions as MsgfmtAllOptions;
+		this.options = options;
+
 		if (options._.length) {
 			throw new Error(gtx._('no additional arguments allowed'));
 		}
 
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		let pkg: any = {};
+		let pkg = {} as EsgettextPackageJson;
 
 		if (typeof options.packageJson !== 'undefined') {
 			const filename = options.packageJson.length
 				? options.packageJson
 				: 'package.json';
-			const p = readJsonFileSync(filename);
+			const p = readJsonFileSync(filename) as PackageJson;
 			if (p && p.esgettext) {
-				pkg = p.esgettext;
+				pkg = p.esgettext as unknown as EsgettextPackageJson;
 			}
 		}
 
-		if (!options.locale) {
+		if (!options.locale && pkg.locales) {
 			options.locale = pkg.locales;
 		}
 
@@ -38,7 +53,11 @@ export class MsgfmtAll {
 		}
 
 		if (typeof options.directory === 'undefined') {
-			options.directory = '.';
+			if (pkg.directory?.length) {
+				options.directory = pkg.directory;
+			} else {
+				options.directory = '.';
+			}
 		}
 
 		this.locales = [];
