@@ -47,8 +47,8 @@ gtx.resolve().then(() => {
 					name: 'format',
 					yargsOptions: {
 						type: 'string',
-						default: 'json',
-						describe: gtx._('output file type format'),
+						default: 'gmo',
+						describe: gtx._('output file type format (extender)'),
 					},
 				},
 			],

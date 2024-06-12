@@ -14,7 +14,7 @@ type MsgfmtAllOptions = {
 	packageJson?: string;
 	locale?: string[];
 	directory?: string;
-	format: 'gmo' | 'json';
+	format: string;
 	msgfmt: string;
 	options: string[];
 	verbose?: boolean;
