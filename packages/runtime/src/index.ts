@@ -1,7 +1,3 @@
-import { sep } from 'path';
-import { pathSeparator } from './core/path-separator';
-pathSeparator(sep);
-
 import { userLocales } from './core/user-locales';
 // FIXME! Windows!
 if (typeof process.env.LANGUAGE !== 'undefined') {

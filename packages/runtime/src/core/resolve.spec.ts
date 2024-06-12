@@ -4,7 +4,7 @@ import { Textdomain } from './textdomain';
 import { CatalogCache } from './catalog-cache';
 import { browserEnvironment } from './browser-environment';
 import { germanicPlural } from './germanic-plural';
-import { pathSeparator } from './path-separator';
+import { pathSeparator } from './platform';
 import { Catalog } from './catalog';
 
 const defaultCatalog: Catalog = {
@@ -247,9 +247,7 @@ describe('special cases', () => {
 
 		const url = 'mailto:guido.flohr@cantanea.com';
 
-		const path = [url, 'de', 'LC_MESSAGES', 'mailto.json'].join(
-			pathSeparator(),
-		);
+		const path = [url, 'de', 'LC_MESSAGES', 'mailto.json'].join(pathSeparator);
 
 		it('should use the fs transport', async () => {
 			const loadFile = jest.fn();

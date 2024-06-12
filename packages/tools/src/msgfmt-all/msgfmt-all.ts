@@ -71,7 +71,7 @@ export class MsgfmtAll {
 	}
 
 	private async msgfmtLocale(locale: string): Promise<number> {
-		return new Promise((resolve, reject) => {
+		return new Promise(resolve => {
 			const args: Array<string> = [];
 
 			const poFile = this.options.directory + '/' + locale + '.po';
@@ -98,8 +98,12 @@ export class MsgfmtAll {
 				const msgfmt = spawn(this.options.msgfmt, args, {
 					windowsHide: true,
 				});
-				msgfmt.stdout.on('data', data => process.stdout.write(data.toString()));
-				msgfmt.stderr.on('data', data => process.stderr.write(data.toString()));
+				msgfmt.stdout.on('data', (data: string) =>
+					process.stdout.write(data.toString()),
+				);
+				msgfmt.stderr.on('data', (data: string) =>
+					process.stderr.write(data.toString()),
+				);
 				msgfmt.on('close', code => {
 					if (code) {
 						unlinkSync(moFile);

@@ -29,7 +29,7 @@ export class FilesCollector {
 	private getFilesFromFile(filename: string): Array<string> {
 		let content: Buffer;
 		if ('-' === filename) {
-			content = process.stdin.read();
+			content = process.stdin.read() as Buffer;
 		} else {
 			content = readFileSync(filename);
 		}

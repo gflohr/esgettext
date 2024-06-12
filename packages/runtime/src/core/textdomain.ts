@@ -5,7 +5,7 @@ import { browserEnvironment } from './browser-environment';
 import { gettextImpl } from './gettext-impl';
 import { germanicPlural } from './germanic-plural';
 import { splitLocale } from './split-locale';
-import { pathSeparator } from './path-separator';
+import { pathSeparator } from './platform';
 import { userLocales } from './user-locales';
 import { selectLocale } from './select-locale';
 import { LocaleContainer } from './locale-container';
@@ -578,7 +578,7 @@ ${tp}l${m}x=${f}(l,${a},p){${tc}${rx}(g({${k},${cc}}),p||{});};
 			const parts = browserEnvironment()
 				? ['', 'assets', 'locale']
 				: ['src', 'assets', 'locale'];
-			path = parts.join(pathSeparator());
+			path = parts.join(pathSeparator);
 		}
 
 		const resolvedLocale = locale ? locale : Textdomain.locale;
@@ -652,10 +652,7 @@ ${tp}l${m}x=${f}(l,${a},p){${tc}${rx}(g({${k},${cc}}),p||{});};
 		supported: Array<string>,
 		requested?: Array<string>,
 	): string {
-		return selectLocale(
-			supported,
-			requested ?? Textdomain.userLocales(),
-		);
+		return selectLocale(supported, requested ?? Textdomain.userLocales());
 	}
 
 	/**

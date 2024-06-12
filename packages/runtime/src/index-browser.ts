@@ -1,9 +1,6 @@
 import { browserEnvironment } from './core/browser-environment';
 browserEnvironment(true);
 
-import { pathSeparator } from './core/path-separator';
-pathSeparator('/');
-
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { userLocales } from './core/user-locales';
@@ -14,15 +11,26 @@ if (window.navigator.languages) {
 if (typeof window.navigator.language !== 'undefined') {
 	locales.push(window.navigator.language);
 }
-const nav: { [key: string]: string } = window.navigator as unknown as { [key: string]: string };
+const nav: { [key: string]: string } = window.navigator as unknown as {
+	[key: string]: string;
+};
 
-if (Object.prototype.hasOwnProperty.call(nav, 'userLanguage') && nav.userLanguage) {
+if (
+	Object.prototype.hasOwnProperty.call(nav, 'userLanguage') &&
+	nav.userLanguage
+) {
 	locales.push(nav.userLanguage);
 }
-if (Object.prototype.hasOwnProperty.call(nav, 'browserLanguage') && nav['browserLanguage']) {
+if (
+	Object.prototype.hasOwnProperty.call(nav, 'browserLanguage') &&
+	nav['browserLanguage']
+) {
 	locales.push(nav.browserLanguage);
 }
-if (Object.prototype.hasOwnProperty.call(nav, 'systemLanguage') && nav['systemLanguage']) {
+if (
+	Object.prototype.hasOwnProperty.call(nav, 'systemLanguage') &&
+	nav['systemLanguage']
+) {
 	locales.push(nav.systemLanguage);
 }
 userLocales(locales);

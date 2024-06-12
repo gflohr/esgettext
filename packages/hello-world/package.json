@@ -3,6 +3,7 @@
 	"version": "0.1.0",
 	"description": "Example application internationalized with esgettext",
 	"main": "src/index.js",
+	"type": "module",
 	"private": true,
 	"repository": "https://github.com/gflohr/esgettext",
 	"bugs": {
