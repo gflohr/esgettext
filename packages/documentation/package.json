@@ -16,9 +16,9 @@
 	"author": "Guido Flohr <www.guido-flohr.net>",
 	"license": "WTFPL",
 	"devDependencies": {
-		"@fullhuman/postcss-purgecss": "^5.0.0",
+		"@fullhuman/postcss-purgecss": "^6.0.0",
 		"@popperjs/core": "^2.11.8",
-		"bootstrap": "^5.3.2",
+		"bootstrap": "^5.3.3",
 		"bootstrap-icons": "^1.11.3",
 		"browser-sync": "^3.0.2",
 		"clean-webpack-plugin": "^4.0.0",
