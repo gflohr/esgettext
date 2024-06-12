@@ -1,6 +1,6 @@
 {
 	"name": "@esgettext/runtime",
-	"version": "1.0.0",
+	"version": "0.1.0",
 	"description": "A gettext-like translation runtime for JavaScript aka EcmaScript",
 	"main": "lib/index.js",
 	"browser": "lib/index-browser.js",
