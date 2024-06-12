@@ -6,22 +6,22 @@ GNU gettext-alike translation runtime library.
 
 - [API Documentation](#api-documentation)
 - [Internationalizing Hello World](#internationalizing-hello-world)
-  - [Choosing a Textdomain](#choosing-a-textdomain)
-  - [Install the Library](#install-the-library)
-  - [Import the Library](#import-the-library)
-  - [Prepare Your Sources](#prepare-your-sources)
-  - [Translation Methods](#translation-methods)
-    - [Simple Translations With `_()`](#simple-translations-with-_)
-    - [Variable Interpolation With `_x()`](#variable-interpolation-with-_x)
-    - [Plural Forms With `_nx()`](#plural-forms-with-_nx)
-    - [Message Context With `_p()`](#message-context-with-_p)
-    - [Specific Locale with `_l`](#specific-locale-with-_l)
-    - [TODO: Gender-Specific Translations](#todo-gender-specific-translations)
-  - [Selecting the Preferred Language with `selectLocale()`](#selecting-the-preferred-language-with-selectlocale)
+	- [Choosing a Textdomain](#choosing-a-textdomain)
+	- [Install the Library](#install-the-library)
+	- [Import the Library](#import-the-library)
+	- [Prepare Your Sources](#prepare-your-sources)
+	- [Translation Methods](#translation-methods)
+		- [Simple Translations With `_()`](#simple-translations-with-_)
+		- [Variable Interpolation With `_x()`](#variable-interpolation-with-_x)
+		- [Plural Forms With `_nx()`](#plural-forms-with-_nx)
+		- [Message Context With `_p()`](#message-context-with-_p)
+		- [Specific Locale with `_l`](#specific-locale-with-_l)
+		- [TODO: Gender-Specific Translations](#todo-gender-specific-translations)
+	- [Selecting the Preferred Language with `selectLocale()`](#selecting-the-preferred-language-with-selectlocale)
 - [Internationalizing a Library](#internationalizing-a-library)
 - [Frequently-Asked Questions](#frequently-asked-questions)
-  - [Why do Template Strings not Work?](#why-do-template-strings-not-work)
-  - [What Does the Error "template literals with embedded expressions are not allowed as arguments to gettext functions because they are not constant" Mean?](#what-does-the-error-template-literals-with-embedded-expressions-are-not-allowed-as-arguments-to-gettext-functions-because-they-are-not-constant-mean)
+	- [Why do Template Strings not Work?](#why-do-template-strings-not-work)
+	- [What Does the Error "template literals with embedded expressions are not allowed as arguments to gettext functions because they are not constant" Mean?](#what-does-the-error-template-literals-with-embedded-expressions-are-not-allowed-as-arguments-to-gettext-functions-because-they-are-not-constant-mean)
 - [Copyright](#copyright)
 
 ## API Documentation
@@ -69,13 +69,13 @@ You normally install the library with `npm` or `yarn`.
 With `npm`:
 
 ```shell
-$ npm install --save esgettext
+$ npm install --save @esgettext/runtime
 ```
 
 Or with `yarn`:
 
 ```shell
-$ yarn add esgettext
+$ yarn add @esgettext/runtime
 ```
 
 ### Import the Library
@@ -85,7 +85,7 @@ How to import the library, depends on your environment.
 If you have the `import` keyword:
 
 ```javascript
-import Textdomain from '@esgettext/runtime';
+import { Textdomain } from '@esgettext/runtime';
 ```
 
 If you can use `require`:
