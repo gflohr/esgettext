@@ -1,5 +1,6 @@
 #! /usr/bin/env node
 
-const path = require('path');
+import * as path from 'path';
 
-require(path.resolve(__dirname, '../dist/cli/install'));
+require(path.resolve(__dirname, '../src/cli/install'));
+

@@ -163,6 +163,7 @@ export class PoParser extends Parser {
 		return true;
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	doParse(_input: string, _filename: string): boolean {
 		throw new Error('not implemented');
 	}
