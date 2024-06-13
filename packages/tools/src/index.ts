@@ -1,14 +1,18 @@
-import { Command } from 'commander';
+import { Command as Program } from 'commander';
 import { Package } from './package';
 import { Textdomain } from '@esgettext/runtime';
+import { Command } from './command';
+import { Install } from './commands/install';
+
+const commands: { [key: string]: Command } = {
+	install: new Install(),
+};
 
 const gtx = Textdomain.getInstance('tools');
 gtx
 	.resolve()
 	.then(() => {
-		const description =
-			gtx._('Command-line utilities for esgettext.') +
-			'\n\n' +
+		const commonDescription =
 			gtx._(
 				'Mandatory arguments to long options are mandatory for short options too.',
 			) +
@@ -16,13 +20,21 @@ gtx
 			gtx._('Similarly for optional arguments.') +
 			'\n\n' +
 			gtx._('Arguments to options are referred to in CAPS in the description.');
+		const description =
+			'Command-line tools for esgettext.' + '\n\n' + commonDescription;
 
-		const program = new Command();
+		let program = new Program();
 
-		program
+		program = program
 			.name(Package.getName())
 			.version(Package.getVersion())
 			.description(description);
+
+		Object.values(commands).forEach(command => {
+			console.log(`command: ${command}`);
+			const c = command.configure(commonDescription);
+			program = program.addCommand(c);
+		});
 
 		program.parse();
 	})

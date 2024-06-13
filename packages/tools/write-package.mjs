@@ -12,7 +12,7 @@ const pkg = JSON.parse(readFileSync(packageJsonPath, 'utf8'));
 
 console.log(`export class Package {
 	public static getName(): string {
-		return '${pkg.name}';
+		return 'esgettext';
 	}
 
 	public static getVersion(): string {
