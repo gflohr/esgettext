@@ -15,6 +15,10 @@ console.log(`export class Package {
 		return 'esgettext';
 	}
 
+	public static getBugTrackerUrl(): string {
+		return '${pkg.bugs.url}';
+	}
+
 	public static getVersion(): string {
 		return '${pkg.version}';
 	}

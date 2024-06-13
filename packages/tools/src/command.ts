@@ -1,5 +1,8 @@
-import { Command as Program } from 'commander';
+import yargs from 'yargs';
 
 export interface Command {
-	configure(commonDescription: string): Program;
+	synopsis(): string;
+	description(): string;
+	options(): { [key: string]: yargs.Options };
+	run(argv: yargs.Arguments): void;
 }

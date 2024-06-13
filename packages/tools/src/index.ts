@@ -1,8 +1,11 @@
-import { Command as Program } from 'commander';
+import yargs from 'yargs';
+
 import { Package } from './package';
 import { Textdomain } from '@esgettext/runtime';
 import { Command } from './command';
 import { Install } from './commands/install';
+
+const commandNames = ['install'];
 
 const commands: { [key: string]: Command } = {
 	install: new Install(),
@@ -12,31 +15,29 @@ const gtx = Textdomain.getInstance('tools');
 gtx
 	.resolve()
 	.then(() => {
-		const commonDescription =
-			gtx._(
-				'Mandatory arguments to long options are mandatory for short options too.',
-			) +
-			'\n' +
-			gtx._('Similarly for optional arguments.') +
-			'\n\n' +
-			gtx._('Arguments to options are referred to in CAPS in the description.');
-		const description =
-			'Command-line tools for esgettext.' + '\n\n' + commonDescription;
+		const program = yargs(process.argv.slice(2))
+			.locale('en_US') // FIXME!
+			.strict()
+			.scriptName(Package.getName());
 
-		let program = new Program();
+		for (const name of commandNames) {
+			const command = commands[name];
 
-		program = program
-			.name(Package.getName())
-			.version(Package.getVersion())
-			.description(description);
-
-		Object.values(commands).forEach(command => {
-			console.log(`command: ${command}`);
-			const c = command.configure(commonDescription);
-			program = program.addCommand(c);
-		});
-
-		program.parse();
+			program.command({
+				command: name,
+				describe: command.description(),
+				builder: (argv: yargs.Argv) => {
+					return argv.options(command.options());
+				},
+				handler: (argv: yargs.Arguments) => command.run(argv),
+			});
+		}
+		program
+			.help()
+			.epilogue(
+				gtx._x('Report bugs at {url}!', { url: Package.getBugTrackerUrl() }),
+			)
+			.parse();
 	})
 	.catch((exception: Error) => {
 		console.error(gtx._x('{programName}: unhandled exception: {exception}'), {

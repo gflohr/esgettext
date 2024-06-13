@@ -31,7 +31,7 @@ interface XGettextOptions {
 	language: string;
 	excludeFile: string[];
 	joinExisting: boolean;
-	'$0': string;
+	$0: string;
 	_: string[];
 	filesFrom: string[];
 	width: number;
@@ -51,10 +51,7 @@ export class XGettext {
 	private readonly options = {} as XGettextOptions;
 
 	/* The date is passed only for testing. */
-	constructor(
-		cmdLineoptions: Options,
-		date?: string,
-	) {
+	constructor(cmdLineoptions: Options, date?: string) {
 		const catalogProperties: CatalogProperties = { date };
 		const options = cmdLineoptions as XGettextOptions;
 		this.options = options;
@@ -70,7 +67,9 @@ export class XGettext {
 
 			catalogProperties.package = pkg.name;
 			catalogProperties.version = pkg.version;
-			catalogProperties.msgidBugsAddress = pkg.esgettext ? pkg.esgettext['msgid-bugs-address'] : undefined;
+			catalogProperties.msgidBugsAddress = pkg.esgettext
+				? pkg.esgettext['msgid-bugs-address']
+				: undefined;
 			catalogProperties.copyrightHolder = pkg['author'];
 			if (
 				typeof catalogProperties.msgidBugsAddress === 'undefined' &&
@@ -79,7 +78,10 @@ export class XGettext {
 				catalogProperties.msgidBugsAddress = pkg.bugs.url;
 			}
 
-			if (typeof options.directory === 'undefined' && pkg.esgettext?.directory) {
+			if (
+				typeof options.directory === 'undefined' &&
+				pkg.esgettext?.directory
+			) {
 				options.directory = [pkg.esgettext.directory];
 			}
 
@@ -399,11 +401,15 @@ export class XGettext {
 		catalog.deleteEntry('');
 
 		catalog.entries.forEach(entry => {
-			if (typeof this.exclude[entry.properties.msgctxt as string] === 'undefined') {
+			if (
+				typeof this.exclude[entry.properties.msgctxt as string] === 'undefined'
+			) {
 				this.exclude[entry.properties.msgctxt as string] = [];
 			}
 			if (entry.properties.msgid) {
-				this.exclude[entry.properties.msgctxt as string].push(entry.properties.msgid);
+				this.exclude[entry.properties.msgctxt as string].push(
+					entry.properties.msgid,
+				);
 			}
 		});
 

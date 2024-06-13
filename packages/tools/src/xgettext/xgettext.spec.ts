@@ -272,8 +272,12 @@ describe('xgettext command-line options and arguments', () => {
 				expect(xgettext.run()).toEqual(1);
 				expect(writeFileSync).not.toHaveBeenCalled();
 				expect(readFileSync).toHaveBeenCalledTimes(2);
-				expect((readFileSync.mock.calls[0] as string[])[0]).toEqual('here/option-output.js');
-				expect((readFileSync.mock.calls[1] as string[])[0]).toEqual('there/option-output.js');
+				expect((readFileSync.mock.calls[0] as string[])[0]).toEqual(
+					'here/option-output.js',
+				);
+				expect((readFileSync.mock.calls[1] as string[])[0]).toEqual(
+					'there/option-output.js',
+				);
 				expect(warnSpy).not.toHaveBeenCalled();
 				expect(errorSpy).toHaveBeenCalledTimes(2);
 			});
@@ -353,10 +357,18 @@ describe('xgettext command-line options and arguments', () => {
 				const xgettext = new XGettext(argv, date);
 				expect(xgettext.run()).toEqual(0);
 				expect(readFileSync).toHaveBeenCalledTimes(4);
-				expect((readFileSync.mock.calls[0] as string[])[0]).toEqual('POTFILES-1');
-				expect((readFileSync.mock.calls[1] as string[])[0]).toEqual('POTFILES-2');
-				expect((readFileSync.mock.calls[2] as string[])[0]).toEqual('files-from1.js');
-				expect((readFileSync.mock.calls[3] as string[])[0]).toEqual('files-from2.js');
+				expect((readFileSync.mock.calls[0] as string[])[0]).toEqual(
+					'POTFILES-1',
+				);
+				expect((readFileSync.mock.calls[1] as string[])[0]).toEqual(
+					'POTFILES-2',
+				);
+				expect((readFileSync.mock.calls[2] as string[])[0]).toEqual(
+					'files-from1.js',
+				);
+				expect((readFileSync.mock.calls[3] as string[])[0]).toEqual(
+					'files-from2.js',
+				);
 				expect(writeFileSync).toHaveBeenCalledTimes(1);
 				expect(warnSpy).not.toHaveBeenCalled();
 				expect(errorSpy).not.toHaveBeenCalled();
@@ -409,8 +421,12 @@ files-from-2.js
 				expect(stdinSpy).toHaveBeenCalledTimes(1);
 				stdinSpy.mockReset();
 				expect(readFileSync).toHaveBeenCalledTimes(2);
-				expect((readFileSync.mock.calls[0] as string[])[0]).toEqual('files-from-1.js');
-				expect((readFileSync.mock.calls[1] as string[])[0]).toEqual('files-from-2.js');
+				expect((readFileSync.mock.calls[0] as string[])[0]).toEqual(
+					'files-from-1.js',
+				);
+				expect((readFileSync.mock.calls[1] as string[])[0]).toEqual(
+					'files-from-2.js',
+				);
 				expect(writeFileSync).toHaveBeenCalledTimes(1);
 				expect(warnSpy).not.toHaveBeenCalled();
 				expect(errorSpy).not.toHaveBeenCalled();
@@ -465,7 +481,9 @@ files-from-2.js
 				const xgettext = new XGettext(argv, date);
 				expect(xgettext.run()).toEqual(0);
 				expect(writeFileSync).toHaveBeenCalledTimes(1);
-				expect((writeFileSync.mock.calls[0] as string[])[0]).toEqual('option-output.pot');
+				expect((writeFileSync.mock.calls[0] as string[])[0]).toEqual(
+					'option-output.pot',
+				);
 				expect(warnSpy).not.toHaveBeenCalled();
 				expect(errorSpy).not.toHaveBeenCalled();
 			});
@@ -510,7 +528,9 @@ files-from-2.js
 
 				expect(xgettext.run()).toEqual(0);
 				expect(writeFileSync).toHaveBeenCalledTimes(1);
-				expect((writeFileSync.mock.calls[0] as string[])[0]).toEqual('messages.po');
+				expect((writeFileSync.mock.calls[0] as string[])[0]).toEqual(
+					'messages.po',
+				);
 				expect(warnSpy).not.toHaveBeenCalled();
 				expect(errorSpy).not.toHaveBeenCalled();
 			});
@@ -527,7 +547,9 @@ files-from-2.js
 
 				expect(xgettext.run()).toEqual(0);
 				expect(writeFileSync).toHaveBeenCalledTimes(1);
-				expect((writeFileSync.mock.calls[0] as string[])[0]).toEqual('strings.po');
+				expect((writeFileSync.mock.calls[0] as string[])[0]).toEqual(
+					'strings.po',
+				);
 				expect(warnSpy).not.toHaveBeenCalled();
 				expect(errorSpy).not.toHaveBeenCalled();
 			});
@@ -550,7 +572,9 @@ files-from-2.js
 
 				expect(xgettext.run()).toEqual(0);
 				expect(writeFileSync).toHaveBeenCalledTimes(1);
-				expect((writeFileSync.mock.calls[0] as string[])[0]).toEqual('po/messages.po');
+				expect((writeFileSync.mock.calls[0] as string[])[0]).toEqual(
+					'po/messages.po',
+				);
 				expect(warnSpy).not.toHaveBeenCalled();
 				expect(errorSpy).not.toHaveBeenCalled();
 			});
@@ -665,7 +689,9 @@ msgstr ""
 				expect(xgettext.run()).toEqual(0);
 				expect(readFileSync).toHaveBeenCalledTimes(2);
 				expect(writeFileSync).toHaveBeenCalledTimes(1);
-				expect((writeFileSync.mock.calls[0] as string[])[0]).toEqual('package.pot');
+				expect((writeFileSync.mock.calls[0] as string[])[0]).toEqual(
+					'package.pot',
+				);
 				expect((writeFileSync.mock.calls[0] as string[])[1]).toMatchSnapshot();
 				expect(warnSpy).not.toHaveBeenCalled();
 				expect(errorSpy).not.toHaveBeenCalled();
