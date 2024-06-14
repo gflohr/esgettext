@@ -4,6 +4,5 @@ export interface Command {
 	synopsis(): string;
 	description(): string;
 	args(): { [key: string]: yargs.Options };
-	init(argv: yargs.Arguments): void;
-	run(): Promise<number>;
+	run(argv: yargs.Arguments): Promise<number>;
 }

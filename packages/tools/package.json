@@ -83,9 +83,11 @@
 		"@babel/parser": "^7.24.7",
 		"@babel/traverse": "^7.24.7",
 		"@esgettext/runtime": "file:../runtime",
+		"@valibot/i18n": "^0.15.0",
 		"iconv-lite": "^0.6.3",
 		"jsonfile": "^6.1.0",
 		"mkdirp": "^3.0.1",
+		"valibot": "^0.31.1",
 		"yargs": "^17.7.2"
 	}
 }

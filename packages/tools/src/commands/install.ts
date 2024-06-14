@@ -2,9 +2,8 @@ import { copyFile, existsSync, readFileSync, writeFile } from 'fs';
 import { Command } from '../command';
 import { Textdomain, parseMoCatalog } from '@esgettext/runtime';
 import yargs from 'yargs';
-import { readFileSync as readJsonFileSync } from 'jsonfile';
-import { EsgettextPackageJson, PackageJson } from '../esgettext-package-json';
 import * as mkdirp from 'mkdirp';
+import { Configuration } from '../configuration';
 
 type InstallOptions = {
 	_: string[];
@@ -23,6 +22,11 @@ const gtx = Textdomain.getInstance('com.cantanea.esgettext-tools');
 export class Install implements Command {
 	private locales: Array<string>;
 	private options: InstallOptions;
+	private readonly configuration: Configuration;
+
+	constructor(configuration: Configuration) {
+		this.configuration = configuration;
+	}
 
 	synopsis(): string {
 		return gtx._('[OPTIONS]');
@@ -34,30 +38,26 @@ export class Install implements Command {
 
 	args(): { [key: string]: yargs.Options } {
 		return {
-			'package-json': {
-				type: 'boolean',
-				describe: gtx._('Read package information from this file'),
-				default: 'package.json',
-				group: gtx._('Input file options:'),
-			},
 			locales: {
 				alias: 'l',
 				type: 'array',
 				describe: gtx._('List of locale identifiers'),
 				demandOption: true,
+				default: this.configuration.po?.locales,
 				group: gtx._('Input file options:'),
 			},
 			directory: {
 				alias: 'D',
 				type: 'string',
 				describe: gtx._('Where to search message catalog files'),
-				default: '.',
+				default: this.configuration.po?.directory ?? '.',
 				group: gtx._('Input file options:'),
 			},
 			'input-format': {
 				type: 'string',
 				describe: gtx._('Input file type'),
 				default: 'gmo',
+				choices: ['gmo', 'mo'],
 				group: gtx._('Input file options:'),
 			},
 			'output-directory': {
@@ -81,41 +81,34 @@ export class Install implements Command {
 		};
 	}
 
-	init(argv: yargs.Arguments) {
+	private init(argv: yargs.Arguments) {
 		const options = argv as unknown as InstallOptions;
 		this.options = options;
+		const conf = this.configuration;
 
-		let pkg = {} as EsgettextPackageJson;
-
-		if (typeof options.packageJson !== 'undefined') {
-			const filename = options.packageJson.length
-				? options.packageJson
-				: 'package.json';
-			const p = readJsonFileSync(filename) as PackageJson;
-			if (p && p.esgettext) {
-				pkg = p.esgettext as unknown as EsgettextPackageJson;
-			}
-		}
-
-		if (!options.locales && pkg.locales) {
-			options.locales = pkg.locales;
+		if (!options.locales && this.configuration.po?.locales) {
+			options.locales = conf.po?.locales;
 		}
 
 		if (!options.locales || !options.locales.length) {
 			throw new Error(gtx._('no locales given'));
 		}
 
-		if (options.outputFormat !== 'mo.json'
-		    && options.outputFormat !== 'mo'
-		    && options.outputFormat !== 'json') {
+		if (
+			options.outputFormat !== 'mo.json' &&
+			options.outputFormat !== 'mo' &&
+			options.outputFormat !== 'json'
+		) {
 			throw new Error(
-				gtx._("only 'mo.json', 'mo', and 'json' are allowed as output formats!"),
+				gtx._(
+					"only 'mo.json', 'mo', and 'json' are allowed as output formats!",
+				),
 			);
 		}
 
 		if (typeof options.directory === 'undefined') {
-			if (pkg.directory?.length) {
-				options.directory = pkg.directory;
+			if (conf.po?.directory?.length) {
+				options.directory = conf.po.directory;
 			} else {
 				options.directory = '.';
 			}
@@ -129,11 +122,11 @@ export class Install implements Command {
 				this.locales.push(locales[j]);
 			}
 		}
-
-		return this;
 	}
 
-	public run(): Promise<number> {
+	public run(argv: yargs.Arguments): Promise<number> {
+		this.init(argv);
+
 		return new Promise(resolve => {
 			const promises: Array<Promise<number>> = [];
 
@@ -179,7 +172,10 @@ export class Install implements Command {
 		});
 	}
 
-	private installMoJsonLocale(inFile: string, outFile: string): Promise<number> {
+	private installMoJsonLocale(
+		inFile: string,
+		outFile: string,
+	): Promise<number> {
 		return new Promise<number>(resolve => {
 			if (this.options.verbose) {
 				console.log(
@@ -196,9 +192,12 @@ export class Install implements Command {
 
 			writeFile(outFile, json, err => {
 				if (err) {
-					console.error(gtx._x("{outfile}: write error: {err}", {
-						outFile, err,
-					}));
+					console.error(
+						gtx._x('{outfile}: write error: {err}', {
+							outFile,
+							err,
+						}),
+					);
 					resolve(1);
 				} else {
 					resolve(0);
@@ -224,7 +223,12 @@ export class Install implements Command {
 			for (const msgid in catalog.entries) {
 				const msgstr = catalog.entries[msgid];
 				if (msgstr.length > 1) {
-					console.error(gtx._x("{inFile}: plural expressions are not allowed for '.json' output!", { inFile }));
+					console.error(
+						gtx._x(
+							"{inFile}: plural expressions are not allowed for '.json' output!",
+							{ inFile },
+						),
+					);
 					resolve(1);
 					return;
 				}
@@ -235,9 +239,12 @@ export class Install implements Command {
 
 			writeFile(outFile, json, err => {
 				if (err) {
-					console.error(gtx._x("{outfile}: write error: {err}", {
-						outFile, err,
-					}));
+					console.error(
+						gtx._x('{outfile}: write error: {err}', {
+							outFile,
+							err,
+						}),
+					);
 					resolve(1);
 				} else {
 					resolve(0);

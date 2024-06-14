@@ -4,23 +4,25 @@ import { Package } from './package';
 import { Textdomain } from '@esgettext/runtime';
 import { Command } from './command';
 import { Install } from './commands/install';
+import { ConfigurationFactory } from './configuration';
 
 const commandNames = ['install'];
-
-const commands: { [key: string]: Command } = {
-	install: new Install(),
-};
 
 const gtx = Textdomain.getInstance('com.cantanea.esgettext-tools');
 gtx
 	.resolve()
-	.then(() => {
-		const locale = Textdomain.selectLocale(['en-US', 'en-GB', 'de']).replace(
-			'-',
-			'_',
-		);
+	.then(async () => {
+		const locale = 'de-DE'; //Textdomain.selectLocale(['en-US', 'en-GB', 'de']);
+		const ulocale = locale.replace('-', '_');
+		const configuration = await ConfigurationFactory.create(locale);
+		if (!configuration) process.exit(1);
+
+		const commands: { [key: string]: Command } = {
+			install: new Install(configuration),
+		};
+
 		const program = yargs(process.argv.slice(2))
-			.locale(locale)
+			.locale(ulocale)
 			.strict()
 			.scriptName(Package.getName());
 		const epilogue = gtx._x('Report bugs in the bugtracker at {url}!', {
@@ -38,8 +40,8 @@ gtx
 					return argv.options(command.args());
 				},
 				handler: async (argv: yargs.Arguments) => {
-					argv._.shift();  // Remove the command name.
-					const exitCode = await command.init(argv).run();
+					argv._.shift(); // Remove the command name.
+					const exitCode = await command.run(argv);
 					process.exit(exitCode);
 				},
 			});
