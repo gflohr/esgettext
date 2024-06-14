@@ -11,7 +11,7 @@ const commands: { [key: string]: Command } = {
 	install: new Install(),
 };
 
-const gtx = Textdomain.getInstance('tools');
+const gtx = Textdomain.getInstance('com.cantanea.esgettext-tools');
 gtx
 	.resolve()
 	.then(() => {
@@ -35,9 +35,13 @@ gtx
 				describe: command.description(),
 				builder: (argv: yargs.Argv) => {
 					argv.epilogue(epilogue);
-					return argv.options(command.options());
+					return argv.options(command.args());
 				},
-				handler: (argv: yargs.Arguments) => command.run(argv),
+				handler: async (argv: yargs.Arguments) => {
+					argv._.shift();  // Remove the command name.
+					const exitCode = await command.init(argv).run();
+					process.exit(exitCode);
+				},
 			});
 		}
 		program.help().epilogue(epilogue).parse();
