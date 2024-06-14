@@ -19,6 +19,9 @@ gtx
 			.locale('en_US') // FIXME!
 			.strict()
 			.scriptName(Package.getName());
+		const epilogue = gtx._x('Report bugs at {url}!', {
+			url: Package.getBugTrackerUrl(),
+		});
 
 		for (const name of commandNames) {
 			const command = commands[name];
@@ -27,17 +30,13 @@ gtx
 				command: name,
 				describe: command.description(),
 				builder: (argv: yargs.Argv) => {
+					argv.epilogue(epilogue);
 					return argv.options(command.options());
 				},
 				handler: (argv: yargs.Arguments) => command.run(argv),
 			});
 		}
-		program
-			.help()
-			.epilogue(
-				gtx._x('Report bugs at {url}!', { url: Package.getBugTrackerUrl() }),
-			)
-			.parse();
+		program.help().epilogue(epilogue).parse();
 	})
 	.catch((exception: Error) => {
 		console.error(gtx._x('{programName}: unhandled exception: {exception}'), {
