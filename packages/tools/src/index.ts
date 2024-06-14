@@ -15,8 +15,12 @@ const gtx = Textdomain.getInstance('tools');
 gtx
 	.resolve()
 	.then(() => {
+		const locale = Textdomain.selectLocale(['en-US', 'en-GB', 'de']).replace(
+			'-',
+			'_',
+		);
 		const program = yargs(process.argv.slice(2))
-			.locale('en_US') // FIXME!
+			.locale(locale)
 			.strict()
 			.scriptName(Package.getName());
 		const epilogue = gtx._x('Report bugs at {url}!', {
