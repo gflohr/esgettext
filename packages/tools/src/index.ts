@@ -23,7 +23,7 @@ gtx
 			.locale(locale)
 			.strict()
 			.scriptName(Package.getName());
-		const epilogue = gtx._x('Report bugs at {url}!', {
+		const epilogue = gtx._x('Report bugs in the bugtracker at {url}!', {
 			url: Package.getBugTrackerUrl(),
 		});
 
