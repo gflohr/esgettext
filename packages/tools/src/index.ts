@@ -27,7 +27,13 @@ gtx
 			.locale(ulocale)
 			.strict()
 			.scriptName(Package.getName());
-		const epilogue = gtx._x('Report bugs in the bugtracker at {url}!', {
+		let epilogue = configuration.files.length ?
+			gtx._x("Additional defaults read from: {files}.",
+				{ files: configuration.files.join(', ') },
+			) + '\n\n'
+			: '';
+
+		epilogue += gtx._x('Report bugs in the bugtracker at {url}!', {
 			url: Package.getBugTrackerUrl(),
 		});
 

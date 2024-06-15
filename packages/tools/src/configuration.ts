@@ -93,11 +93,16 @@ export const ConfigurationSchema = v.strictObject({
 	po: v.optional(
 		v.strictObject({
 			directory: v.optional(
-				v.string("The field 'po.directory' must be a string!"),
+				v.string(gtx._x("The field '{field}' must be a string!",
+					{ field: 'po.directory' },
+				)),
 			),
 			locales: v.optional(
 				v.array(
-					v.pipe(v.string(), v.nonEmpty('Locale entries must not be empty!')),
+					v.pipe(
+						v.string(gtx._("The entries in 'po.locales' must be strings!")),
+						v.nonEmpty(gtx._("The entries in 'po.locales' must not be empty!")),
+					),
 				),
 			),
 		}),
@@ -109,6 +114,7 @@ export const ConfigurationSchema = v.strictObject({
 			),
 		}),
 	),
+	files: v.array(v.string()),
 });
 
 export type Configuration = v.InferInput<typeof ConfigurationSchema>;
@@ -144,6 +150,7 @@ export class ConfigurationFactory {
 		const rootPath = process.cwd();
 
 		let configuration: Configuration | null = null;
+		const files: Array<string> = [];
 
 		for (const file of jsConfigFiles) {
 			const filePath = path.join(rootPath, file);
@@ -151,6 +158,7 @@ export class ConfigurationFactory {
 				const data = await this.loadFile(filePath);
 				if (data) {
 					configuration = data;
+					configuration.files = [file];
 					jsConfigFilePath = filePath;
 
 					if (configuration.package?.['msgid-bugs-address']
@@ -171,6 +179,7 @@ export class ConfigurationFactory {
 					) {
 						versionFilePath = filePath;
 					}
+
 					break;
 				}
 			}
@@ -191,12 +200,15 @@ export class ConfigurationFactory {
 				const packageJson = JSON.parse(
 					fs.readFileSync(packageJsonPath, 'utf-8'),
 				) as PackageJson;
+				let fileUsed = false;
 				if (!configuration && packageJson.esgettext
 				) {
-					configuration = packageJson.esgettext;
+					configuration = packageJson.esgettext as Configuration;
+					configuration.files = [];
+					fileUsed = true;
 				}
 
-				if (!configuration) configuration = {};
+				if (!configuration) configuration = { files: [] };
 
 				if (!configuration.package?.['msgid-bugs-address']) {
 					if (packageJson.bugs?.email) {
@@ -204,11 +216,13 @@ export class ConfigurationFactory {
 						configuration.package['msgid-bugs-address'] =
 							packageJson.bugs.email;
 						msgidBugsAddressFilePath = 'package.json';
+						fileUsed = true;
 					} else if (packageJson.bugs?.url) {
 						configuration.package ??= {};
 						configuration.package['msgid-bugs-address'] =
 							packageJson.bugs.url;
 						msgidBugsAddressFilePath = 'package.json';
+						fileUsed = true;
 					}
 				}
 
@@ -217,6 +231,7 @@ export class ConfigurationFactory {
 						configuration.package ??= {};
 						configuration.package.name = packageJson.name;
 						nameFilePath = 'package.json';
+						fileUsed = true;
 					}
 				}
 
@@ -226,6 +241,7 @@ export class ConfigurationFactory {
 						configuration.package ??= {};
 						configuration.package['copyright-holder']= packageJson.people.author;
 						copyrightHolderFilePath = 'package.json';
+						fileUsed = true;
 					}
 				}
 
@@ -234,12 +250,17 @@ export class ConfigurationFactory {
 						configuration.package ??= {};
 						configuration.package.version = packageJson.version;
 						nameFilePath = 'package.json';
+						fileUsed = true;
 					}
+				}
+
+				if (fileUsed) {
+					configuration.files.push('package.json');
 				}
 			}
 		}
 
-		if (!configuration) configuration = {};
+		if (!configuration) configuration = { files: [] };
 
 		const result = v.safeParse(ConfigurationSchema, configuration, { lang });
 		if (!result.success) {
