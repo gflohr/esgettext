@@ -12,12 +12,12 @@ type PackageJson = {
 	bugs?: {
 		url?: string;
 		email?: string;
-	}
+	};
 	people: {
 		author: string;
 	};
 	esgettext: {};
-}
+};
 
 const bugsAddressSchema = v.union([
 	v.pipe(
@@ -49,43 +49,59 @@ export const ConfigurationSchema = v.strictObject({
 		v.strictObject({
 			textdomain: v.optional(
 				v.pipe(
-					v.string(gtx._x("The field '{field}' must be a string!",
-						{ field: 'package.textdomain' },
-					)),
-					v.nonEmpty(gtx._x("The field '{field}' must not be empty!",
-						{ field: 'package.textdomain' },
-					)),
+					v.string(
+						gtx._x("The field '{field}' must be a string!", {
+							field: 'package.textdomain',
+						}),
+					),
+					v.nonEmpty(
+						gtx._x("The field '{field}' must not be empty!", {
+							field: 'package.textdomain',
+						}),
+					),
 				),
 			),
 			'msgid-bugs-address': v.optional(bugsAddressSchema),
-			'name': v.optional(
+			name: v.optional(
 				v.pipe(
-					v.string(gtx._x("The field '{field}' must be a string!",
-						{ field: 'package.name' },
-					)),
-					v.nonEmpty(gtx._x("The field '{field}' must not be empty!",
-						{ field: 'package.name' },
-					)),
+					v.string(
+						gtx._x("The field '{field}' must be a string!", {
+							field: 'package.name',
+						}),
+					),
+					v.nonEmpty(
+						gtx._x("The field '{field}' must not be empty!", {
+							field: 'package.name',
+						}),
+					),
 				),
 			),
-			'version': v.optional(
+			version: v.optional(
 				v.pipe(
-					v.string(gtx._x("The field '{field}' must be a string!",
-						{ field: 'package.version' },
-					)),
-					v.nonEmpty(gtx._x("The field '{field}' must not be empty!",
-						{ field: 'package.version' },
-					)),
+					v.string(
+						gtx._x("The field '{field}' must be a string!", {
+							field: 'package.version',
+						}),
+					),
+					v.nonEmpty(
+						gtx._x("The field '{field}' must not be empty!", {
+							field: 'package.version',
+						}),
+					),
 				),
 			),
 			'copyright-holder': v.optional(
 				v.pipe(
-					v.string(gtx._x("The field '{field}' must be a string!",
-						{ field: 'package.copyright-holder' },
-					)),
-					v.nonEmpty(gtx._x("The field '{field}' must not be empty!",
-						{ field: 'package.copyright-holder' },
-					)),
+					v.string(
+						gtx._x("The field '{field}' must be a string!", {
+							field: 'package.copyright-holder',
+						}),
+					),
+					v.nonEmpty(
+						gtx._x("The field '{field}' must not be empty!", {
+							field: 'package.copyright-holder',
+						}),
+					),
 				),
 			),
 		}),
@@ -93,9 +109,11 @@ export const ConfigurationSchema = v.strictObject({
 	po: v.optional(
 		v.strictObject({
 			directory: v.optional(
-				v.string(gtx._x("The field '{field}' must be a string!",
-					{ field: 'po.directory' },
-				)),
+				v.string(
+					gtx._x("The field '{field}' must be a string!", {
+						field: 'po.directory',
+					}),
+				),
 			),
 			locales: v.optional(
 				v.array(
@@ -161,8 +179,7 @@ export class ConfigurationFactory {
 					configuration.files = [file];
 					jsConfigFilePath = filePath;
 
-					if (configuration.package?.['msgid-bugs-address']
-					) {
+					if (configuration.package?.['msgid-bugs-address']) {
 						msgidBugsAddressFilePath = filePath;
 					}
 
@@ -170,13 +187,11 @@ export class ConfigurationFactory {
 						nameFilePath = filePath;
 					}
 
-					if (configuration.package?.['copyright-holder']
-					) {
+					if (configuration.package?.['copyright-holder']) {
 						copyrightHolderFilePath = filePath;
 					}
 
-					if (configuration.package?.version
-					) {
+					if (configuration.package?.version) {
 						versionFilePath = filePath;
 					}
 
@@ -190,10 +205,10 @@ export class ConfigurationFactory {
 		if (
 			!configuration ||
 			!configuration.package ||
-			!configuration.package['msgid-bugs-address']
-			|| !configuration.package['name']
-			|| !configuration.package['copyright-holder']
-			|| !configuration.package['version']
+			!configuration.package['msgid-bugs-address'] ||
+			!configuration.package['name'] ||
+			!configuration.package['copyright-holder'] ||
+			!configuration.package['version']
 		) {
 			const packageJsonPath = path.join(rootPath, 'package.json');
 			if (fs.existsSync(packageJsonPath)) {
@@ -201,8 +216,7 @@ export class ConfigurationFactory {
 					fs.readFileSync(packageJsonPath, 'utf-8'),
 				) as PackageJson;
 				let fileUsed = false;
-				if (!configuration && packageJson.esgettext
-				) {
+				if (!configuration && packageJson.esgettext) {
 					configuration = packageJson.esgettext as Configuration;
 					configuration.files = [];
 					fileUsed = true;
@@ -219,8 +233,7 @@ export class ConfigurationFactory {
 						fileUsed = true;
 					} else if (packageJson.bugs?.url) {
 						configuration.package ??= {};
-						configuration.package['msgid-bugs-address'] =
-							packageJson.bugs.url;
+						configuration.package['msgid-bugs-address'] = packageJson.bugs.url;
 						msgidBugsAddressFilePath = 'package.json';
 						fileUsed = true;
 					}
@@ -235,11 +248,11 @@ export class ConfigurationFactory {
 					}
 				}
 
-				if (!configuration.package?.['copyright-holder']
-				) {
+				if (!configuration.package?.['copyright-holder']) {
 					if (packageJson.people?.author) {
 						configuration.package ??= {};
-						configuration.package['copyright-holder']= packageJson.people.author;
+						configuration.package['copyright-holder'] =
+							packageJson.people.author;
 						copyrightHolderFilePath = 'package.json';
 						fileUsed = true;
 					}
@@ -292,7 +305,7 @@ export class ConfigurationFactory {
 				const message = issue.issues ? issue.issues[0].message : issue.message;
 
 				let filename;
-				switch(path) {
+				switch (path) {
 					case 'package.msgid-bugs-address':
 						filename = msgidBugsAddressFilePath;
 						break;

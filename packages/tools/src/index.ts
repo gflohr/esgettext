@@ -27,10 +27,10 @@ gtx
 			.locale(ulocale)
 			.strict()
 			.scriptName(Package.getName());
-		let epilogue = configuration.files.length ?
-			gtx._x("Additional defaults read from: {files}.",
-				{ files: configuration.files.join(', ') },
-			) + '\n\n'
+		let epilogue = configuration.files.length
+			? gtx._x('Additional defaults read from: {files}.', {
+					files: configuration.files.join(', '),
+				}) + '\n\n'
 			: '';
 
 		epilogue += gtx._x('Report bugs in the bugtracker at {url}!', {
