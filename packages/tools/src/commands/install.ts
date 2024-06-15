@@ -36,6 +36,10 @@ export class Install implements Command {
 		return gtx._('Install translation catalogs.');
 	}
 
+	aliases(): Array<string> {
+		return [];
+	}
+
 	args(): { [key: string]: yargs.Options } {
 		return {
 			locales: {

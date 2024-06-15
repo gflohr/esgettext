@@ -3,21 +3,23 @@ import yargs from 'yargs';
 import { Package } from './package';
 import { Textdomain } from '@esgettext/runtime';
 import { Command } from './command';
+import { XGettext } from './commands/xgettext';
 import { Install } from './commands/install';
 import { ConfigurationFactory } from './configuration';
 
-const commandNames = ['install'];
+const commandNames = ['xgettext', 'install'];
 
 const gtx = Textdomain.getInstance('com.cantanea.esgettext-tools');
 gtx
 	.resolve()
 	.then(async () => {
-		const locale = 'de-DE'; //Textdomain.selectLocale(['en-US', 'en-GB', 'de']);
+		const locale = Textdomain.selectLocale(['en-US', 'en-GB', 'de']);
 		const ulocale = locale.replace('-', '_');
 		const configuration = await ConfigurationFactory.create(locale);
 		if (!configuration) process.exit(1);
 
 		const commands: { [key: string]: Command } = {
+			xgettext: new XGettext(configuration),
 			install: new Install(configuration),
 		};
 
@@ -34,6 +36,7 @@ gtx
 
 			program.command({
 				command: name,
+				aliases: command.aliases(),
 				describe: command.description(),
 				builder: (argv: yargs.Argv) => {
 					argv.epilogue(epilogue);
