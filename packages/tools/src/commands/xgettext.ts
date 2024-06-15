@@ -213,6 +213,7 @@ export class XGettext implements Command {
 				group: gtx._('Output details:'),
 				type: 'string',
 				describe: gtx._('set copyright holder in output'),
+				default: this.configuration.package?.['copyright-holder'],
 			},
 			'foreign-user': {
 				group: gtx._('Output details:'),
@@ -223,16 +224,19 @@ export class XGettext implements Command {
 				group: gtx._('Output details:'),
 				type: 'string',
 				describe: gtx._('set package name in output'),
+				default: this.configuration.package?.name,
 			},
 			'package-version': {
 				group: gtx._('Output details:'),
 				type: 'string',
 				describe: gtx._('set package version in output'),
+				default: this.configuration.package?.version,
 			},
 			'msgid-bugs-address': {
 				group: gtx._('Output details:'),
 				type: 'string',
 				describe: gtx._('set report address for msgid bugs'),
+				default: this.configuration.package?.['msgid-bugs-address'],
 			},
 			'msgstr-prefix': {
 				group: gtx._('Output details:'),

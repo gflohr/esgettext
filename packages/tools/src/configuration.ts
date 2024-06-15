@@ -6,6 +6,19 @@ import '@valibot/i18n/de';
 
 const gtx = Textdomain.getInstance('com.cantanea.esgettext-tools');
 
+type PackageJson = {
+	name?: string;
+	version?: string;
+	bugs?: {
+		url?: string;
+		email?: string;
+	}
+	people: {
+		author: string;
+	};
+	esgettext: {};
+}
+
 const bugsAddressSchema = v.union([
 	v.pipe(
 		v.string(),
@@ -36,13 +49,45 @@ export const ConfigurationSchema = v.strictObject({
 		v.strictObject({
 			textdomain: v.optional(
 				v.pipe(
-					v.string(gtx._("The field 'package.textdomain' must be a string!")),
-					v.nonEmpty(
-						gtx._("The field 'package.textdomain' must not be empty!"),
-					),
+					v.string(gtx._x("The field '{field}' must be a string!",
+						{ field: 'package.textdomain' },
+					)),
+					v.nonEmpty(gtx._x("The field '{field}' must not be empty!",
+						{ field: 'package.textdomain' },
+					)),
 				),
 			),
 			'msgid-bugs-address': v.optional(bugsAddressSchema),
+			'name': v.optional(
+				v.pipe(
+					v.string(gtx._x("The field '{field}' must be a string!",
+						{ field: 'package.name' },
+					)),
+					v.nonEmpty(gtx._x("The field '{field}' must not be empty!",
+						{ field: 'package.name' },
+					)),
+				),
+			),
+			'version': v.optional(
+				v.pipe(
+					v.string(gtx._x("The field '{field}' must be a string!",
+						{ field: 'package.version' },
+					)),
+					v.nonEmpty(gtx._x("The field '{field}' must not be empty!",
+						{ field: 'package.version' },
+					)),
+				),
+			),
+			'copyright-holder': v.optional(
+				v.pipe(
+					v.string(gtx._x("The field '{field}' must be a string!",
+						{ field: 'package.copyright-holder' },
+					)),
+					v.nonEmpty(gtx._x("The field '{field}' must not be empty!",
+						{ field: 'package.copyright-holder' },
+					)),
+				),
+			),
 		}),
 	),
 	po: v.optional(
@@ -91,7 +136,10 @@ export class ConfigurationFactory {
 			'esgettext.config.json',
 		];
 		let jsConfigFilePath;
-		let msgidBugsAddressPath;
+		let msgidBugsAddressFilePath;
+		let nameFilePath;
+		let copyrightHolderFilePath;
+		let versionFilePath;
 
 		const rootPath = process.cwd();
 
@@ -104,11 +152,24 @@ export class ConfigurationFactory {
 				if (data) {
 					configuration = data;
 					jsConfigFilePath = filePath;
-					if (
-						configuration.package &&
-						configuration.package['msgid-bugs-address']
+
+					if (configuration.package?.['msgid-bugs-address']
 					) {
-						msgidBugsAddressPath = filePath;
+						msgidBugsAddressFilePath = filePath;
+					}
+
+					if (configuration.package?.name) {
+						nameFilePath = filePath;
+					}
+
+					if (configuration.package?.['copyright-holder']
+					) {
+						copyrightHolderFilePath = filePath;
+					}
+
+					if (configuration.package?.version
+					) {
+						versionFilePath = filePath;
 					}
 					break;
 				}
@@ -120,39 +181,59 @@ export class ConfigurationFactory {
 		if (
 			!configuration ||
 			!configuration.package ||
-			typeof configuration.package['msgid-bugs-address'] === 'undefined'
+			!configuration.package['msgid-bugs-address']
+			|| !configuration.package['name']
+			|| !configuration.package['copyright-holder']
+			|| !configuration.package['version']
 		) {
 			const packageJsonPath = path.join(rootPath, 'package.json');
 			if (fs.existsSync(packageJsonPath)) {
 				const packageJson = JSON.parse(
 					fs.readFileSync(packageJsonPath, 'utf-8'),
-				);
-				if (
-					!configuration &&
-					packageJson.esgettext !== null &&
-					typeof packageJson.esgettext === 'object'
+				) as PackageJson;
+				if (!configuration && packageJson.esgettext
 				) {
 					configuration = packageJson.esgettext;
 				}
 
 				if (!configuration) configuration = {};
 
-				if (
-					!configuration.package ||
-					!configuration.package['msgid-bugs-address']
+				if (!configuration.package?.['msgid-bugs-address']) {
+					if (packageJson.bugs?.email) {
+						configuration.package ??= {};
+						configuration.package['msgid-bugs-address'] =
+							packageJson.bugs.email;
+						msgidBugsAddressFilePath = 'package.json';
+					} else if (packageJson.bugs?.url) {
+						configuration.package ??= {};
+						configuration.package['msgid-bugs-address'] =
+							packageJson.bugs.url;
+						msgidBugsAddressFilePath = 'package.json';
+					}
+				}
+
+				if (!configuration.package?.name) {
+					if (packageJson.name) {
+						configuration.package ??= {};
+						configuration.package.name = packageJson.name;
+						nameFilePath = 'package.json';
+					}
+				}
+
+				if (!configuration.package?.['copyright-holder']
 				) {
-					if (packageJson.bugs) {
-						if (packageJson.bugs.email) {
-							configuration.package ??= {};
-							configuration.package['msgid-bugs-address'] =
-								packageJson.bugs.email;
-							msgidBugsAddressPath = 'package.json';
-						} else if (packageJson.bugs.url) {
-							configuration.package ??= {};
-							configuration.package['msgid-bugs-address'] =
-								packageJson.bugs.url;
-							msgidBugsAddressPath = 'package.json';
-						}
+					if (packageJson.people?.author) {
+						configuration.package ??= {};
+						configuration.package['copyright-holder']= packageJson.people.author;
+						copyrightHolderFilePath = 'package.json';
+					}
+				}
+
+				if (!configuration.package?.version) {
+					if (packageJson.version) {
+						configuration.package ??= {};
+						configuration.package.version = packageJson.version;
+						nameFilePath = 'package.json';
 					}
 				}
 			}
@@ -189,10 +270,24 @@ export class ConfigurationFactory {
 
 				const message = issue.issues ? issue.issues[0].message : issue.message;
 
-				const filename =
-					path === 'package.msgid-bugs-address'
-						? msgidBugsAddressPath
-						: jsConfigFilePath;
+				let filename;
+				switch(path) {
+					case 'package.msgid-bugs-address':
+						filename = msgidBugsAddressFilePath;
+						break;
+					case 'name':
+						filename = msgidBugsAddressFilePath;
+						break;
+					case 'copyright-holder':
+						filename = copyrightHolderFilePath;
+						break;
+					case 'name':
+						filename = versionFilePath;
+						break;
+					default:
+						filename = jsConfigFilePath;
+						break;
+				}
 
 				console.error(
 					'  ' +
