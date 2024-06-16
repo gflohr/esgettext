@@ -12,4 +12,4 @@ if (typeof process.env.LANGUAGE !== 'undefined') {
 
 export * from './core';
 
-export { parseMoCatalog } from './parser';
+export { parseMoCatalog, parseMoJsonCatalog } from './parser';
