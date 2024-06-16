@@ -1,4 +1,3 @@
-import * as path from 'path';
 import { writeFileSync, readFileSync } from 'fs';
 import yargs from 'yargs';
 
@@ -19,7 +18,6 @@ interface ExclusionCatalog {
 }
 
 interface XGettextOptions {
-	packageJson: string;
 	directory: string[];
 	output: string;
 	packageName: string;
@@ -316,97 +314,108 @@ export class XGettext implements Command {
 		}
 	}
 
+	public doRun(): number {
+		let exitCode = 0;
+
+		this.exclude = {} as ExclusionCatalog;
+		if (this.options.excludeFile) {
+			try {
+				if (!this.fillExclusionCatalog(this.options.excludeFile)) {
+					return 1;
+				}
+			} catch (e) {
+				const error = e as Error;
+				console.error(
+					gtx._x('{programName}: error: {message}', {
+						programName: this.options.$0,
+						message: error.message,
+					}),
+				);
+				return 1;
+			}
+		}
+
+		if (this.options.joinExisting) {
+			if (this.options.output === '-') {
+				console.error(
+					gtx._x(
+						'{programName}: error: --join-existing' +
+							' cannot be used, when output is written to stdout',
+						{
+							programName: this.options.$0,
+						},
+					),
+				);
+				return 1;
+			}
+
+			const parserOptions = this.getParserOptions();
+			const parser = new PoParser(this.catalog, parserOptions);
+			const filename: string = this.options.output;
+			try {
+				if (!parser.parse(this.readFile(filename), filename)) {
+					exitCode = 1;
+				}
+			} catch (msg) {
+				console.error(`${filename}: ${msg}`);
+				exitCode = 1;
+			}
+		}
+
+		let fileCollector;
+		try {
+			fileCollector = new FilesCollector(
+				this.options.filesFrom,
+				this.options._,
+			);
+		} catch (e) {
+			console.error(`${this.options.$0}: ${e}`);
+			return 1;
+		}
+
+		// FIXME! The file collector must interpret all filenames relative to
+		// the files-from file's director.
+		fileCollector.filenames.forEach(filename => {
+			try {
+				if (!this.parse(this.readFile(filename), filename)) {
+					exitCode = 1;
+				}
+			} catch (msg) {
+				if ('-' === filename) {
+					filename = gtx._('[standard input]');
+				}
+				console.error(`${filename}: ${msg}`);
+				exitCode = 1;
+			}
+		});
+
+		if (!exitCode) {
+			try {
+				this.output();
+			} catch (exception) {
+				console.error(
+					gtx._x('{programName}: {exception}', {
+						programName: this.options['$0'],
+						exception: exception as string,
+					}),
+				);
+				exitCode = 1;
+			}
+		}
+
+		return exitCode;
+	}
+
 	public run(argv: yargs.Arguments): Promise<number> {
 		this.init(argv);
 
 		return new Promise(resolve => {
-			let exitCode = 0;
-
-			this.exclude = {} as ExclusionCatalog;
-			if (this.options.excludeFile) {
-				try {
-					if (!this.fillExclusionCatalog(this.options.excludeFile)) {
-						return 1;
-					}
-				} catch (e) {
-					const error = e as Error;
-					console.error(
-						gtx._x('{programName}: error: {message}', {
-							programName: this.options.$0,
-							message: error.message,
-						}),
-					);
-					return 1;
-				}
-			}
-
-			if (this.options.joinExisting) {
-				if (this.options.output === '-') {
-					console.error(
-						gtx._x(
-							'{programName}: error: --join-existing' +
-								' cannot be used, when output is written to stdout',
-							{
-								programName: this.options.$0,
-							},
-						),
-					);
-					return 1;
-				}
-
-				const parserOptions = this.getParserOptions();
-				const parser = new PoParser(this.catalog, parserOptions);
-				const filename: string = this.options.output;
-				try {
-					if (!parser.parse(this.readFile(filename), filename)) {
-						exitCode = 1;
-					}
-				} catch (msg) {
-					console.error(`${filename}: ${msg}`);
-					exitCode = 1;
-				}
-			}
-
-			let fileCollector;
 			try {
-				fileCollector = new FilesCollector(
-					this.options.filesFrom,
-					this.options._,
-				);
-			} catch (e) {
-				console.error(`${this.options.$0}: ${e}`);
-				return 1;
+				resolve(this.doRun());
+			} catch(e) {
+				console.error(e);
+				resolve(1);
 			}
-
-			fileCollector.filenames.forEach(filename => {
-				try {
-					if (!this.parse(this.readFile(filename), filename)) {
-						exitCode = 1;
-					}
-				} catch (msg) {
-					if ('-' === filename) {
-						filename = gtx._('[standard input]');
-					}
-					console.error(`${filename}: ${msg}`);
-					exitCode = 1;
-				}
-			});
-
-			if (!exitCode) {
-				try {
-					this.output();
-				} catch (exception) {
-					console.error(
-						gtx._x('{programName}: {exception}', {
-							programName: this.options['$0'],
-							exception: exception as string,
-						}),
-					);
-					exitCode = 1;
-				}
-			}
-
-			return exitCode;
 		});
 	}
 
