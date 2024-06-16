@@ -6,22 +6,22 @@ GNU gettext-alike translation runtime library.
 
 - [API Documentation](#api-documentation)
 - [Internationalizing Hello World](#internationalizing-hello-world)
-	- [Choosing a Textdomain](#choosing-a-textdomain)
-	- [Install the Library](#install-the-library)
-	- [Import the Library](#import-the-library)
-	- [Prepare Your Sources](#prepare-your-sources)
-	- [Translation Methods](#translation-methods)
-		- [Simple Translations With `_()`](#simple-translations-with-_)
-		- [Variable Interpolation With `_x()`](#variable-interpolation-with-_x)
-		- [Plural Forms With `_nx()`](#plural-forms-with-_nx)
-		- [Message Context With `_p()`](#message-context-with-_p)
-		- [Specific Locale with `_l`](#specific-locale-with-_l)
-		- [TODO: Gender-Specific Translations](#todo-gender-specific-translations)
-	- [Selecting the Preferred Language with `selectLocale()`](#selecting-the-preferred-language-with-selectlocale)
+  - [Choosing a Textdomain](#choosing-a-textdomain)
+  - [Install the Library](#install-the-library)
+  - [Import the Library](#import-the-library)
+  - [Prepare Your Sources](#prepare-your-sources)
+  - [Translation Methods](#translation-methods)
+    - [Simple Translations With `_()`](#simple-translations-with-_)
+    - [Variable Interpolation With `_x()`](#variable-interpolation-with-_x)
+    - [Plural Forms With `_nx()`](#plural-forms-with-_nx)
+    - [Message Context With `_p()`](#message-context-with-_p)
+    - [Specific Locale with `_l`](#specific-locale-with-_l)
+    - [TODO: Gender-Specific Translations](#todo-gender-specific-translations)
+  - [Selecting the Preferred Language with `selectLocale()`](#selecting-the-preferred-language-with-selectlocale)
 - [Internationalizing a Library](#internationalizing-a-library)
 - [Frequently-Asked Questions](#frequently-asked-questions)
-	- [Why do Template Strings not Work?](#why-do-template-strings-not-work)
-	- [What Does the Error "template literals with embedded expressions are not allowed as arguments to gettext functions because they are not constant" Mean?](#what-does-the-error-template-literals-with-embedded-expressions-are-not-allowed-as-arguments-to-gettext-functions-because-they-are-not-constant-mean)
+  - [Why do Template Strings not Work?](#why-do-template-strings-not-work)
+  - [What Does the Error "template literals with embedded expressions are not allowed as arguments to gettext functions because they are not constant" Mean?](#what-does-the-error-template-literals-with-embedded-expressions-are-not-allowed-as-arguments-to-gettext-functions-because-they-are-not-constant-mean)
 - [Copyright](#copyright)
 
 ## API Documentation
@@ -150,8 +150,8 @@ You then have to tell the library where to find translations for the "hello"
 textdomain. You do that with the instance method
 [`bindtextdomain()`](https://gflohr.github.io/esgettext/packages/runtime/api-docs/classes/textdomain.html#bindtextdomain) that
 receives a (base) directory as its argument. The actual translation catalog
-would then be searched at `/assets/locale/fr/LC_MESSAGES/hello.json` (or
-`hello.mo` depending on your environment).
+would then be searched at `/assets/locale/fr/LC_MESSAGES/hello.mo.json` (or
+`hello.mo` or `hello.json`, depending on your environment).
 
 Don't worry that there are no translations at the moment. Failure is handled
 gracefully by the library falling back to using the original, untranslated

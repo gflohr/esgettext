@@ -67,7 +67,7 @@ export class Textdomain {
 	private static _locale = 'C';
 
 	private domain: string;
-	private _catalogFormat = 'json';
+	private _catalogFormat = 'mo.json';
 	private catalog: Catalog;
 
 	/**
@@ -500,7 +500,6 @@ export class Textdomain {
 				const a = slice.join(',');
 				const k = slice.map(a => `${a}:${a}`).join(',');
 
-
 				const code = `
 ${t}${m}=${f}(${a}){${rg}({${k},${c}});};
 ${t}l${m}=${f}(l,${a}){${tc}${rg}({${k},${cc}});};
@@ -516,8 +515,9 @@ ${t}l${m}x=${f}(l,${a},p){${tc}${rx}(g({${k},${cc}}),p||{});};
 
 	/**
 	 * A textdomain is an identifier for your application or library. It is
-	 * the basename of your translation files which are either TEXTDOMAIN.json
-	 * or TEXTDOMAIN.mo, depending on the format you have chosen.
+	 * the basename of your translation files which are either
+	 * TEXTDOMAIN.mo.json or TEXTDOMAIN.mo, depending on the format you have
+	 * chosen.
 	 *
 	 * FIXME! This should be a getter!
 	 *
@@ -600,7 +600,7 @@ ${t}l${m}x=${f}(l,${a},p){${tc}${rx}(g({${k},${cc}}),p||{});};
 	/**
 	 * Get the catalog format in use.
 	 *
-	 * @returns one of 'json' or 'mo' (default is 'json')
+	 * @returns one of 'mo.json' or 'mo' (default is 'mo.json')
 	 */
 	get catalogFormat(): string {
 		return this._catalogFormat;
@@ -609,12 +609,12 @@ ${t}l${m}x=${f}(l,${a},p){${tc}${rx}(g({${k},${cc}}),p||{});};
 	/**
 	 * Set the catalog format to use.
 	 *
-	 * @param format - one of 'json' or 'mo'
+	 * @param format - one of 'mo.json' or 'mo'
 	 */
 	set catalogFormat(format: string) {
 		format = format.toLowerCase();
-		if (format === 'json') {
-			this._catalogFormat = 'json';
+		if (format === 'mo.json') {
+			this._catalogFormat = 'mo.json';
 		} else if (format === 'mo') {
 			this._catalogFormat = 'mo';
 		} else {

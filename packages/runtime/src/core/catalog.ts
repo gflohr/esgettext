@@ -18,8 +18,8 @@ export interface CatalogEntries {
 }
 
 /**
- * A [[`Catalog`]] is a container for a set of translations loaded from a `.json`
- * or a binary `.mo` file.
+ * A [[`Catalog`]] is a container for a set of translations loaded from a
+ * `mo.json` or a binary `.mo` file.
  *
  * This interface is used internally. You will only need it if you want to
  * write your own message retrieval method or want to inspect a loaded

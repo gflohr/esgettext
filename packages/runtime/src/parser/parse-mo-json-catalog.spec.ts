@@ -1,16 +1,16 @@
 import { Catalog, CatalogEntries } from '../core';
-import { validateJsonCatalog } from './parse-json-catalog';
+import { validateMoJsonCatalog } from './parse-mo-json-catalog';
 
 describe('parse JSON catalogs', () => {
 	describe('validate', () => {
 		it('should reject undefined catalogs', () => {
-			expect(() => validateJsonCatalog(undefined)).toThrow(
+			expect(() => validateMoJsonCatalog(undefined)).toThrow(
 				'catalog is either null or undefined',
 			);
 		});
 		it('should reject arrays', () => {
 			const arr = new Array<string>() as unknown as Catalog;
-			expect(() => validateJsonCatalog(arr)).toThrow(
+			expect(() => validateMoJsonCatalog(arr)).toThrow(
 				'catalog must be a dictionary',
 			);
 		});
@@ -19,7 +19,7 @@ describe('parse JSON catalogs', () => {
 				major: 0,
 				minor: 0,
 			} as Catalog;
-			expect(() => validateJsonCatalog(catalog)).toThrow(
+			expect(() => validateMoJsonCatalog(catalog)).toThrow(
 				'catalog.entries does not exist',
 			);
 		});
@@ -30,7 +30,7 @@ describe('parse JSON catalogs', () => {
 				minor: 0,
 				entries: arr,
 			} as Catalog;
-			expect(() => validateJsonCatalog(catalog)).toThrow(
+			expect(() => validateMoJsonCatalog(catalog)).toThrow(
 				'catalog.entries must be a dictionary',
 			);
 		});
@@ -42,7 +42,7 @@ describe('parse JSON catalogs', () => {
 					Saturday: 'Lauantai',
 				},
 			} as unknown as Catalog;
-			expect(() => validateJsonCatalog(catalog)).toThrow(
+			expect(() => validateMoJsonCatalog(catalog)).toThrow(
 				"catalog entry for key 'Saturday' is not an array",
 			);
 		});

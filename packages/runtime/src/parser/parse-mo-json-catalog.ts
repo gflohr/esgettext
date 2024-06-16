@@ -1,6 +1,6 @@
 import { Catalog } from '../core/catalog';
 
-export function validateJsonCatalog(udata: unknown): Catalog {
+export function validateMoJsonCatalog(udata: unknown): Catalog {
 	// We could use ajv but it results in almost 300 k minimized code
 	// for the browser bundle. This validator instead is absolutely
 	// minimalistic, and only avoids exceptions that can occur, when
@@ -40,9 +40,9 @@ export function validateJsonCatalog(udata: unknown): Catalog {
 	return data;
 }
 
-export function parseJsonCatalog(json: ArrayBuffer): Catalog {
+export function parseMoJsonCatalog(json: ArrayBuffer): Catalog {
 	const text = new TextDecoder().decode(json);
 	const data = JSON.parse(text) as unknown;
 
-	return validateJsonCatalog(data);
+	return validateMoJsonCatalog(data);
 }
