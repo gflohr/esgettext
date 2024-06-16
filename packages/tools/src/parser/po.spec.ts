@@ -122,7 +122,7 @@ msgstr ""
 			expect(parser.parse(input, 'example.ts')).toBeFalsy();
 			expect(errorSpy).toHaveBeenCalledTimes(1);
 			expect(errorSpy).toHaveBeenCalledWith(
-				'example.ts:4:1: error: syntax error',
+				'example.ts:4:1: Error: syntax error',
 			);
 			expect(warnSpy).not.toHaveBeenCalled();
 		});
@@ -139,7 +139,7 @@ msgstr ""
 			expect(parser.parse(input, '-')).toBeFalsy();
 			expect(errorSpy).toHaveBeenCalledTimes(1);
 			expect(errorSpy).toHaveBeenCalledWith(
-				'[standard input]:4:1: error: syntax error',
+				'[standard input]:4:1: Error: syntax error',
 			);
 			expect(warnSpy).not.toHaveBeenCalled();
 		});
@@ -158,11 +158,11 @@ msgstr ""
 			expect(errorSpy).toHaveBeenCalledTimes(2);
 			expect(errorSpy).toHaveBeenNthCalledWith(
 				1,
-				'example.ts:4:1: error: keyword "MSGID" unknown',
+				'example.ts:4:1: Error: keyword "MSGID" unknown',
 			);
 			expect(errorSpy).toHaveBeenNthCalledWith(
 				2,
-				'example.ts:4:6: error: syntax error',
+				'example.ts:4:6: Error: syntax error',
 			);
 			expect(warnSpy).not.toHaveBeenCalled();
 
@@ -177,11 +177,11 @@ msgstr ""
 			expect(errorSpy).toHaveBeenCalledTimes(4);
 			expect(errorSpy).toHaveBeenNthCalledWith(
 				3,
-				'example.ts:4:1: error: keyword "nsgid" unknown',
+				'example.ts:4:1: Error: keyword "nsgid" unknown',
 			);
 			expect(errorSpy).toHaveBeenNthCalledWith(
 				4,
-				'example.ts:4:6: error: syntax error',
+				'example.ts:4:6: Error: syntax error',
 			);
 			expect(warnSpy).not.toHaveBeenCalled();
 		});
@@ -199,7 +199,7 @@ msgstr ""
 			expect(errorSpy).toHaveBeenCalledTimes(1);
 			expect(errorSpy).toHaveBeenNthCalledWith(
 				1,
-				'example.ts:4:1: error: syntax error',
+				'example.ts:4:1: Error: syntax error',
 			);
 			expect(warnSpy).not.toHaveBeenCalled();
 		});
@@ -218,7 +218,7 @@ msgstr ""
 			expect(errorSpy).toHaveBeenCalledTimes(1);
 			expect(errorSpy).toHaveBeenNthCalledWith(
 				1,
-				'example.ts:6:1: error: missing "msgid" section',
+				'example.ts:6:1: Error: missing "msgid" section',
 			);
 			expect(warnSpy).not.toHaveBeenCalled();
 		});
@@ -237,11 +237,11 @@ msgstr ""
 			expect(errorSpy).toHaveBeenCalledTimes(2);
 			expect(errorSpy).toHaveBeenNthCalledWith(
 				1,
-				'example.ts:4:1: error: duplicate message definition...',
+				'example.ts:4:1: Error: duplicate message definition...',
 			);
 			expect(errorSpy).toHaveBeenNthCalledWith(
 				2,
-				'example.ts:1:1: error: ...this is the location of the first definition',
+				'example.ts:1:1: Error: ...this is the location of the first definition',
 			);
 			expect(warnSpy).not.toHaveBeenCalled();
 		});
@@ -261,7 +261,7 @@ msgid "okay"
 			expect(errorSpy).toHaveBeenCalledTimes(1);
 			expect(errorSpy).toHaveBeenNthCalledWith(
 				1,
-				'example.ts:6:1: error: duplicate "msgid" section',
+				'example.ts:6:1: Error: duplicate "msgid" section',
 			);
 			expect(warnSpy).not.toHaveBeenCalled();
 		});
@@ -281,7 +281,7 @@ msgstr "okay"
 			expect(errorSpy).toHaveBeenCalledTimes(1);
 			expect(errorSpy).toHaveBeenNthCalledWith(
 				1,
-				'example.ts:6:1: error: duplicate "msgstr" section',
+				'example.ts:6:1: Error: duplicate "msgstr" section',
 			);
 			expect(warnSpy).not.toHaveBeenCalled();
 		});
@@ -303,7 +303,7 @@ msgstr[1] ""
 			expect(errorSpy).toHaveBeenCalledTimes(1);
 			expect(errorSpy).toHaveBeenNthCalledWith(
 				1,
-				'example.ts:6:1: error: duplicate "msgid_plural" section',
+				'example.ts:6:1: Error: duplicate "msgid_plural" section',
 			);
 			expect(warnSpy).not.toHaveBeenCalled();
 		});
@@ -324,7 +324,7 @@ msgstr ""
 			expect(errorSpy).toHaveBeenCalledTimes(1);
 			expect(errorSpy).toHaveBeenNthCalledWith(
 				1,
-				'example.ts:5:1: error: duplicate "msgctxt" section',
+				'example.ts:5:1: Error: duplicate "msgctxt" section',
 			);
 			expect(warnSpy).not.toHaveBeenCalled();
 		});
@@ -344,7 +344,7 @@ msgstr "okay"
 			expect(errorSpy).toHaveBeenCalledTimes(1);
 			expect(errorSpy).toHaveBeenNthCalledWith(
 				1,
-				'example.ts:5:1: error: inconsistent use of #~',
+				'example.ts:5:1: Error: inconsistent use of #~',
 			);
 			expect(warnSpy).not.toHaveBeenCalled();
 		});
@@ -363,7 +363,7 @@ msgstr "okay"
 			expect(errorSpy).toHaveBeenCalledTimes(1);
 			expect(errorSpy).toHaveBeenNthCalledWith(
 				1,
-				'example.ts:4:14: error: syntax error',
+				'example.ts:4:14: Error: syntax error',
 			);
 			expect(warnSpy).not.toHaveBeenCalled();
 		});
@@ -382,7 +382,7 @@ msgstr "okay"
 			expect(errorSpy).toHaveBeenCalledTimes(1);
 			expect(errorSpy).toHaveBeenNthCalledWith(
 				1,
-				'example.ts:4:11: error: end-of-line within string',
+				'example.ts:4:11: Error: end-of-line within string',
 			);
 			expect(warnSpy).not.toHaveBeenCalled();
 		});
@@ -401,7 +401,7 @@ msgstr "okay"
 			expect(errorSpy).toHaveBeenCalledTimes(1);
 			expect(errorSpy).toHaveBeenNthCalledWith(
 				1,
-				'example.ts:4:7: error: end-of-line within string',
+				'example.ts:4:7: Error: end-of-line within string',
 			);
 			expect(warnSpy).not.toHaveBeenCalled();
 		});
@@ -420,7 +420,7 @@ msgstr ""
 			expect(errorSpy).toHaveBeenCalledTimes(1);
 			expect(errorSpy).toHaveBeenNthCalledWith(
 				1,
-				'example.ts:4:18: error: invalid control sequence',
+				'example.ts:4:18: Error: invalid control sequence',
 			);
 			expect(warnSpy).not.toHaveBeenCalled();
 		});

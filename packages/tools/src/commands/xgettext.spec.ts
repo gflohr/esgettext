@@ -14,7 +14,11 @@ const errorSpy = jest.spyOn(global.console, 'error').mockImplementation(() => {
 });
 
 const baseArgv = {
-	$0: 'esgettext-xgettext',
+	$0: 'esgettext',
+};
+
+const baseConfig = {
+	files: [],
 };
 
 function resetMocks(): void {
@@ -30,7 +34,7 @@ describe('xgettext', () => {
 			resetMocks();
 		});
 
-		it('should extract strings from javascript files', () => {
+		it('should extract strings from javascript files', async () => {
 			const hello = `
 console.log(gtx._('Hello, world!'));
 `;
@@ -43,8 +47,8 @@ console.log(gtx._('Goodbye, world!'));
 				.mockReturnValueOnce(Buffer.from(goodbye));
 
 			const argv = { ...baseArgv, _: ['hello1.js', 'goodbye.js'] };
-			const xgettext = new XGettext(argv, date);
-			expect(xgettext.run()).toEqual(0);
+			const xgettext = new XGettext(baseConfig, date);
+			expect(await xgettext.run(argv)).toEqual(0);
 			expect(writeFileSync).toHaveBeenCalledTimes(1);
 
 			const call = writeFileSync.mock.calls[0] as string[];
@@ -54,7 +58,7 @@ console.log(gtx._('Goodbye, world!'));
 			expect(errorSpy).not.toHaveBeenCalled();
 		});
 
-		it('should extract strings from typescript files', () => {
+		it('should extract strings from typescript files', async () => {
 			const hello = `
 const hello: string = gtx._('Hello, world!');
 `;
@@ -67,8 +71,8 @@ const goodbye: string = gtx._('Goodbye, world!');
 				.mockReturnValueOnce(Buffer.from(goodbye));
 
 			const argv = { ...baseArgv, _: ['hello2.ts', 'goodbye.ts'] };
-			const xgettext = new XGettext(argv, date);
-			expect(xgettext.run()).toEqual(0);
+			const xgettext = new XGettext(baseConfig, date);
+			expect(await xgettext.run(argv)).toEqual(0);
 			expect(writeFileSync).toHaveBeenCalledTimes(1);
 
 			const call = writeFileSync.mock.calls[0] as string[];
@@ -78,7 +82,7 @@ const goodbye: string = gtx._('Goodbye, world!');
 			expect(errorSpy).not.toHaveBeenCalled();
 		});
 
-		it('should parse po files', () => {
+		it('should parse po files', async () => {
 			const po = `# SOME DESCRIPTIVE TITLE
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
@@ -108,8 +112,8 @@ msgstr ""
 			readFileSync.mockReturnValueOnce(Buffer.from(po));
 
 			const argv = { ...baseArgv, _: ['de.po'] };
-			const xgettext = new XGettext(argv, date);
-			expect(xgettext.run()).toEqual(0);
+			const xgettext = new XGettext(baseConfig, date);
+			expect(await xgettext.run(argv)).toEqual(0);
 			expect(writeFileSync).toHaveBeenCalledTimes(1);
 
 			const call = writeFileSync.mock.calls[0] as string[];
@@ -119,7 +123,7 @@ msgstr ""
 			expect(errorSpy).not.toHaveBeenCalled();
 		});
 
-		it('should parse pot files', () => {
+		it('should parse pot files', async () => {
 			const pot = `# SOME DESCRIPTIVE TITLE
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
@@ -148,8 +152,8 @@ msgstr ""
 			readFileSync.mockReturnValueOnce(Buffer.from(pot));
 
 			const argv = { ...baseArgv, _: ['package.pot'] };
-			const xgettext = new XGettext(argv, date);
-			expect(xgettext.run()).toEqual(0);
+			const xgettext = new XGettext(baseConfig, date);
+			expect(await xgettext.run(argv)).toEqual(0);
 			expect(writeFileSync).toHaveBeenCalledTimes(1);
 
 			const call = writeFileSync.mock.calls[0] as string[];
@@ -159,7 +163,7 @@ msgstr ""
 			expect(errorSpy).not.toHaveBeenCalled();
 		});
 
-		it('should fall back to the JavaScript parser', () => {
+		it('should fall back to the JavaScript parser', async () => {
 			const pot = `# SOME DESCRIPTIVE TITLE
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
@@ -188,40 +192,40 @@ msgstr ""
 			readFileSync.mockReturnValueOnce(Buffer.from(pot));
 
 			const argv = { ...baseArgv, _: ['package.xyz'] };
-			const xgettext = new XGettext(argv, date);
-			expect(xgettext.run()).toEqual(1);
+			const xgettext = new XGettext(baseConfig, date);
+			expect(await xgettext.run(argv)).toEqual(1);
 			expect(writeFileSync).toHaveBeenCalledTimes(0);
 			expect(warnSpy).toHaveBeenCalledTimes(1);
 			expect(errorSpy).toHaveBeenCalled();
 		});
 
-		it('should fail on errors', () => {
+		it('should fail on errors', async () => {
 			// Template literal is not constant.
 			const hello = 'console.log(gtx._(`Hello, ${name}!`));';
 
 			readFileSync.mockReturnValueOnce(Buffer.from(hello));
 
 			const argv = { ...baseArgv, _: ['hello3.js'] };
-			const xgettext = new XGettext(argv, date);
-			expect(xgettext.run()).toEqual(1);
+			const xgettext = new XGettext(baseConfig, date);
+			expect(await xgettext.run(argv)).toEqual(1);
 			expect(writeFileSync).not.toHaveBeenCalled();
 
 			expect(warnSpy).not.toHaveBeenCalled();
 			expect(errorSpy).toHaveBeenCalledTimes(1);
 			expect(errorSpy).toHaveBeenNthCalledWith(
 				1,
-				'hello3.js:1:18-1:35: error: template literals with embedded expressions are not allowed as arguments to gettext functions because they are not constant',
+				'hello3.js:1:18-1:35: Error: template literals with embedded expressions are not allowed as arguments to gettext functions because they are not constant',
 			);
 		});
 
-		it('should fail on exceptions', () => {
+		it('should fail on exceptions', async () => {
 			readFileSync.mockImplementationOnce(() => {
 				throw new Error('no such file or directory');
 			});
 
 			const argv = { ...baseArgv, _: ['hello4.js'] };
-			const xgettext = new XGettext(argv, date);
-			expect(xgettext.run()).toEqual(1);
+			const xgettext = new XGettext(baseConfig, date);
+			expect(await xgettext.run(argv)).toEqual(1);
 			expect(writeFileSync).not.toHaveBeenCalled();
 
 			expect(warnSpy).not.toHaveBeenCalled();
@@ -232,7 +236,7 @@ msgstr ""
 			);
 		});
 
-		it('should fail on output exceptions', () => {
+		it('should fail on output exceptions', async () => {
 			const code = 'gtx._("Hello, world!");';
 
 			readFileSync.mockReturnValueOnce(Buffer.from(code));
@@ -241,15 +245,15 @@ msgstr ""
 			});
 
 			const argv = { ...baseArgv, _: ['hello5.js'] };
-			const xgettext = new XGettext(argv, date);
-			expect(xgettext.run()).toEqual(1);
+			const xgettext = new XGettext(baseConfig, date);
+			expect(await xgettext.run(argv)).toEqual(1);
 			expect(writeFileSync).toHaveBeenCalledTimes(1);
 
 			expect(warnSpy).not.toHaveBeenCalled();
 			expect(errorSpy).toHaveBeenCalledTimes(1);
 			expect(errorSpy).toHaveBeenNthCalledWith(
 				1,
-				'esgettext-xgettext: Error: no such file or directory',
+				'esgettext: Error: no such file or directory',
 			);
 		});
 	});
@@ -262,14 +266,14 @@ describe('xgettext command-line options and arguments', () => {
 				resetMocks();
 			});
 
-			it('should treat non-options as input file names', () => {
+			it('should treat non-options as input file names', async () => {
 				const argv = {
 					...baseArgv,
 					output: 'option-output.pot',
 					_: ['here/option-output.js', 'there/option-output.js'],
 				};
-				const xgettext = new XGettext(argv, date);
-				expect(xgettext.run()).toEqual(1);
+				const xgettext = new XGettext(baseConfig, date);
+				expect(await xgettext.run(argv)).toEqual(1);
 				expect(writeFileSync).not.toHaveBeenCalled();
 				expect(readFileSync).toHaveBeenCalledTimes(2);
 				expect((readFileSync.mock.calls[0] as string[])[0]).toEqual(
@@ -282,7 +286,7 @@ describe('xgettext command-line options and arguments', () => {
 				expect(errorSpy).toHaveBeenCalledTimes(2);
 			});
 
-			it('should interpret "-" as stdin', () => {
+			it('should interpret "-" as stdin', async () => {
 				const code = 'gtx._("Hello, world!")';
 
 				const argv = {
@@ -294,8 +298,8 @@ describe('xgettext command-line options and arguments', () => {
 					.spyOn(global.process.stdin, 'read')
 					.mockReturnValueOnce(Buffer.from(code));
 
-				const xgettext = new XGettext(argv, date);
-				expect(xgettext.run()).toEqual(0);
+				const xgettext = new XGettext(baseConfig, date);
+				expect(await xgettext.run(argv)).toEqual(0);
 				expect(stdinSpy).toHaveBeenCalledTimes(1);
 				stdinSpy.mockReset();
 				expect(writeFileSync).toHaveBeenCalledTimes(1);
@@ -304,14 +308,14 @@ describe('xgettext command-line options and arguments', () => {
 				expect(warnSpy).toHaveBeenCalledTimes(1);
 				expect(warnSpy).toHaveBeenNthCalledWith(
 					1,
-					'esgettext-xgettext: warning: language for standard' +
+					'esgettext: Warning: language for standard' +
 						' input is unknown without option "--language";' +
 						' will try JavaScript',
 				);
 				expect(errorSpy).toHaveBeenCalledTimes(0);
 			});
 
-			it('should catch errors on stdin', () => {
+			it('should catch errors on stdin', async () => {
 				const argv = {
 					...baseArgv,
 					language: 'JavaScript',
@@ -323,8 +327,8 @@ describe('xgettext command-line options and arguments', () => {
 						throw new Error('I/O error');
 					});
 
-				const xgettext = new XGettext(argv, date);
-				expect(xgettext.run()).toEqual(1);
+				const xgettext = new XGettext(baseConfig, date);
+				expect(await xgettext.run(argv)).toEqual(1);
 				expect(stdinSpy).toHaveBeenCalledTimes(1);
 				stdinSpy.mockReset();
 				expect(writeFileSync).not.toHaveBeenCalled();
@@ -339,7 +343,7 @@ describe('xgettext command-line options and arguments', () => {
 		describe('option --files-from', () => {
 			beforeEach(() => resetMocks());
 
-			it('should accept multiple --files-from options', () => {
+			it('should accept multiple --files-from options', async () => {
 				const potfiles1 = 'files-from1.js';
 				const filesFrom1 = 'gtx._("Hello, world!")';
 				const potfiles2 = 'files-from2.js';
@@ -354,8 +358,8 @@ describe('xgettext command-line options and arguments', () => {
 					filesFrom: ['POTFILES-1', 'POTFILES-2'],
 					_: [] as Array<string>,
 				};
-				const xgettext = new XGettext(argv, date);
-				expect(xgettext.run()).toEqual(0);
+				const xgettext = new XGettext(baseConfig, date);
+				expect(await xgettext.run(argv)).toEqual(0);
 				expect(readFileSync).toHaveBeenCalledTimes(4);
 				expect((readFileSync.mock.calls[0] as string[])[0]).toEqual(
 					'POTFILES-1',
@@ -374,7 +378,7 @@ describe('xgettext command-line options and arguments', () => {
 				expect(errorSpy).not.toHaveBeenCalled();
 			});
 
-			it('should report errors for missing --files-from files', () => {
+			it('should report errors for missing --files-from files', async () => {
 				readFileSync.mockImplementation(filename => {
 					throw new Error(
 						`ENOENT: no such file or directory, open '${filename}'`,
@@ -385,18 +389,18 @@ describe('xgettext command-line options and arguments', () => {
 					filesFrom: ['POTFILES'],
 					_: [] as Array<string>,
 				};
-				const xgettext = new XGettext(argv, date);
-				expect(xgettext.run()).toEqual(1);
+				const xgettext = new XGettext(baseConfig, date);
+				expect(await xgettext.run(argv)).toEqual(1);
 				expect(readFileSync).toHaveBeenCalledTimes(1);
 				expect(readFileSync).toHaveBeenCalledWith('POTFILES');
 				expect(writeFileSync).not.toHaveBeenCalled();
 				expect(warnSpy).not.toHaveBeenCalled();
 				expect(errorSpy).toHaveBeenCalledWith(
-					"esgettext-xgettext: Error: ENOENT: no such file or directory, open 'POTFILES'",
+					"esgettext: Error: ENOENT: no such file or directory, open 'POTFILES'",
 				);
 			});
 
-			it('should treat "-" as standard input', () => {
+			it('should treat "-" as standard input', async () => {
 				const filesFrom1 = 'gtx._("Hello, world!")';
 				const filesFrom2 = 'gtx._("Hello, world!")';
 				readFileSync
@@ -416,8 +420,8 @@ files-from-2.js
 `),
 					);
 
-				const xgettext = new XGettext(argv, date);
-				expect(xgettext.run()).toEqual(0);
+				const xgettext = new XGettext(baseConfig, date);
+				expect(await xgettext.run(argv)).toEqual(0);
 				expect(stdinSpy).toHaveBeenCalledTimes(1);
 				stdinSpy.mockReset();
 				expect(readFileSync).toHaveBeenCalledTimes(2);
@@ -436,7 +440,7 @@ files-from-2.js
 		describe('option --directory', () => {
 			beforeEach(resetMocks);
 
-			it('should search for files in other directories', () => {
+			it('should search for files in other directories', async () => {
 				const argv = {
 					...baseArgv,
 					directory: ['foo', 'bar', 'baz'],
@@ -447,8 +451,8 @@ files-from-2.js
 						`ENOENT: no such file or directory, open '${filename}'`,
 					);
 				});
-				const xgettext = new XGettext(argv, date);
-				expect(xgettext.run()).toEqual(1);
+				const xgettext = new XGettext(baseConfig, date);
+				expect(await xgettext.run(argv)).toEqual(1);
 				expect(readFileSync).toHaveBeenCalledTimes(3);
 				expect(readFileSync).toHaveBeenNthCalledWith(1, 'foo/directory.js');
 				expect(readFileSync).toHaveBeenNthCalledWith(2, 'bar/directory.js');
@@ -470,7 +474,7 @@ files-from-2.js
 				resetMocks();
 			});
 
-			it('should honor the option --output', () => {
+			it('should honor the option --output', async () => {
 				const code = 'console.log(gtx._("Hello, world!"))';
 				readFileSync.mockReturnValueOnce(Buffer.from(code));
 				const argv = {
@@ -478,8 +482,8 @@ files-from-2.js
 					output: 'option-output.pot',
 					_: ['option-output.js'],
 				};
-				const xgettext = new XGettext(argv, date);
-				expect(xgettext.run()).toEqual(0);
+				const xgettext = new XGettext(baseConfig, date);
+				expect(await xgettext.run(argv)).toEqual(0);
 				expect(writeFileSync).toHaveBeenCalledTimes(1);
 				expect((writeFileSync.mock.calls[0] as string[])[0]).toEqual(
 					'option-output.pot',
@@ -488,7 +492,7 @@ files-from-2.js
 				expect(errorSpy).not.toHaveBeenCalled();
 			});
 
-			it('should write to stdout', () => {
+			it('should write to stdout', async () => {
 				const code = 'console.log(gtx._("Hello, world!"))';
 				readFileSync.mockReturnValueOnce(Buffer.from(code));
 				const argv = {
@@ -496,14 +500,14 @@ files-from-2.js
 					output: '-',
 					_: ['option-output.js'],
 				};
-				const xgettext = new XGettext(argv, date);
+				const xgettext = new XGettext(baseConfig, date);
 
 				const stdoutSpy = jest
 					.spyOn(global.process.stdout, 'write')
 					.mockImplementation(() => {
 						return true;
 					});
-				expect(xgettext.run()).toEqual(0);
+				expect(await xgettext.run(argv)).toEqual(0);
 				expect(writeFileSync).toHaveBeenCalledTimes(0);
 				expect(stdoutSpy.mock.calls).toMatchSnapshot();
 				stdoutSpy.mockRestore();
@@ -517,16 +521,16 @@ files-from-2.js
 				resetMocks();
 			});
 
-			it('should default to "messages"', () => {
+			it('should default to "messages"', async () => {
 				const code = 'gtx._("Hello, world")';
 				readFileSync.mockReturnValueOnce(Buffer.from(code));
 				const argv = {
 					...baseArgv,
 					_: ['option-output.js'],
 				};
-				const xgettext = new XGettext(argv, date);
+				const xgettext = new XGettext(baseConfig, date);
 
-				expect(xgettext.run()).toEqual(0);
+				expect(await xgettext.run(argv)).toEqual(0);
 				expect(writeFileSync).toHaveBeenCalledTimes(1);
 				expect((writeFileSync.mock.calls[0] as string[])[0]).toEqual(
 					'messages.po',
@@ -535,7 +539,7 @@ files-from-2.js
 				expect(errorSpy).not.toHaveBeenCalled();
 			});
 
-			it('should be changed to "strings"', () => {
+			it('should be changed to "strings"', async () => {
 				const code = 'gtx._("Hello, world")';
 				readFileSync.mockReturnValueOnce(Buffer.from(code));
 				const argv = {
@@ -543,9 +547,9 @@ files-from-2.js
 					defaultDomain: 'strings',
 					_: ['option-output.js'],
 				};
-				const xgettext = new XGettext(argv, date);
+				const xgettext = new XGettext(baseConfig, date);
 
-				expect(xgettext.run()).toEqual(0);
+				expect(await xgettext.run(argv)).toEqual(0);
 				expect(writeFileSync).toHaveBeenCalledTimes(1);
 				expect((writeFileSync.mock.calls[0] as string[])[0]).toEqual(
 					'strings.po',
@@ -560,7 +564,7 @@ files-from-2.js
 				resetMocks();
 			});
 
-			it('should be changed to "po"', () => {
+			it('should be changed to "po"', async () => {
 				const code = 'gtx._("Hello, world")';
 				readFileSync.mockReturnValueOnce(Buffer.from(code));
 				const argv = {
@@ -568,9 +572,9 @@ files-from-2.js
 					outputDir: 'po',
 					_: ['option-output.js'],
 				};
-				const xgettext = new XGettext(argv, date);
+				const xgettext = new XGettext(baseConfig, date);
 
-				expect(xgettext.run()).toEqual(0);
+				expect(await xgettext.run(argv)).toEqual(0);
 				expect(writeFileSync).toHaveBeenCalledTimes(1);
 				expect((writeFileSync.mock.calls[0] as string[])[0]).toEqual(
 					'po/messages.po',
@@ -587,7 +591,7 @@ files-from-2.js
 				resetMocks();
 			});
 
-			it('should honor the --language option', () => {
+			it('should honor the --language option', async () => {
 				const code = `# SOME DESCRIPTIVE TITLE
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
@@ -621,29 +625,14 @@ msgstr ""
 					language: 'javascript',
 					_: ['hello6.pot'],
 				};
-				const xgettext = new XGettext(argv, date);
-				expect(xgettext.run()).toEqual(1);
+				const xgettext = new XGettext(baseConfig, date);
+				expect(await xgettext.run(argv)).toEqual(1);
 				//expect(writeFileSync).toHaveBeenCalledTimes(0);
 				expect(warnSpy).not.toHaveBeenCalled();
 				expect(errorSpy).toHaveBeenCalled();
 			});
 
-			it('should bail out on unknown languages', () => {
-				const code = `gtx._('Hello, world!)`;
-
-				readFileSync.mockReturnValueOnce(Buffer.from(code));
-
-				const argv = {
-					...baseArgv,
-					language: 'VBScript',
-					_: ['hello7.js'],
-				};
-				expect(() => new XGettext(argv, date)).toThrow(
-					'language "VBScript" unknown',
-				);
-			});
-
-			it('should accept the language typescript', () => {
+			it('should accept the language typescript', async () => {
 				const code = 'gtx._("Hello, world!");';
 
 				readFileSync.mockReturnValueOnce(Buffer.from(code));
@@ -653,8 +642,8 @@ msgstr ""
 					language: 'TypeScript',
 					_: ['hello-language-typescript.ts'],
 				};
-				const xgettext = new XGettext(argv, date);
-				expect(xgettext.run()).toEqual(0);
+				const xgettext = new XGettext(baseConfig, date);
+				expect(await xgettext.run(argv)).toEqual(0);
 				expect(writeFileSync).toHaveBeenCalledTimes(1);
 				expect((writeFileSync.mock.calls[0] as string[])[1]).toMatchSnapshot();
 				expect(warnSpy).not.toHaveBeenCalled();
@@ -667,7 +656,7 @@ msgstr ""
 		describe('option --join-existing', () => {
 			beforeEach(resetMocks);
 
-			it('should merge into the output file regardless of language', () => {
+			it('should merge into the output file regardless of language', async () => {
 				const existing = `
 msgid "existing"
 msgstr ""
@@ -685,8 +674,8 @@ msgstr ""
 					_: ['join-existing1.js'],
 				};
 
-				const xgettext = new XGettext(argv, date);
-				expect(xgettext.run()).toEqual(0);
+				const xgettext = new XGettext(baseConfig, date);
+				expect(await xgettext.run(argv)).toEqual(0);
 				expect(readFileSync).toHaveBeenCalledTimes(2);
 				expect(writeFileSync).toHaveBeenCalledTimes(1);
 				expect((writeFileSync.mock.calls[0] as string[])[0]).toEqual(
@@ -697,7 +686,7 @@ msgstr ""
 				expect(errorSpy).not.toHaveBeenCalled();
 			});
 
-			it('should bail out, when output is stdout', () => {
+			it('should bail out, when output is stdout', async () => {
 				const argv = {
 					...baseArgv,
 					output: '-',
@@ -706,18 +695,18 @@ msgstr ""
 					_: ['join-existing2.js'],
 				};
 
-				const xgettext = new XGettext(argv, date);
-				expect(xgettext.run()).toEqual(1);
+				const xgettext = new XGettext(baseConfig, date);
+				expect(await xgettext.run(argv)).toEqual(1);
 				expect(readFileSync).not.toHaveBeenCalled();
 				expect(writeFileSync).not.toHaveBeenCalled();
 				expect(warnSpy).not.toHaveBeenCalled();
 				expect(errorSpy).toHaveBeenCalledTimes(1);
 				expect(errorSpy).toHaveBeenCalledWith(
-					'esgettext-xgettext: error: --join-existing cannot be used, when output is written to stdout',
+					'esgettext: Error: --join-existing cannot be used, when output is written to stdout',
 				);
 			});
 
-			it('should report exceptions', () => {
+			it('should report exceptions', async () => {
 				const argv = {
 					...baseArgv,
 					output: 'package.pot',
@@ -731,8 +720,8 @@ msgstr ""
 				});
 				readFileSync.mockReturnValueOnce(Buffer.from(''));
 
-				const xgettext = new XGettext(argv, date);
-				expect(xgettext.run()).toEqual(1);
+				const xgettext = new XGettext(baseConfig, date);
+				expect(await xgettext.run(argv)).toEqual(1);
 				expect(readFileSync).toHaveBeenCalledTimes(2);
 				expect(readFileSync).toHaveBeenNthCalledWith(1, 'package.pot');
 				expect(readFileSync).toHaveBeenNthCalledWith(2, 'join-existing3.js');
@@ -744,7 +733,7 @@ msgstr ""
 				);
 			});
 
-			it('should report parser errors', () => {
+			it('should report parser errors', async () => {
 				const existing = `
 msgidError "existing"
 msgstr ""
@@ -762,14 +751,14 @@ msgstr ""
 					_: ['join-existing1.js'],
 				};
 
-				const xgettext = new XGettext(argv, date);
-				expect(xgettext.run()).toEqual(1);
+				const xgettext = new XGettext(baseConfig, date);
+				expect(await xgettext.run(argv)).toEqual(1);
 				expect(readFileSync).toHaveBeenCalledTimes(2);
 				expect(writeFileSync).not.toHaveBeenCalled();
 				expect(warnSpy).not.toHaveBeenCalled();
 				expect(errorSpy).toHaveBeenCalledTimes(1);
 				expect(errorSpy).toHaveBeenCalledWith(
-					'package.pot:2:1: error: keyword "msgidError" unknown',
+					'package.pot:2:1: Error: keyword "msgidError" unknown',
 				);
 			});
 		});
@@ -777,7 +766,7 @@ msgstr ""
 		describe('option --exclude-file', () => {
 			beforeEach(resetMocks);
 
-			it('should exclude entries from the reference pots', () => {
+			it('should exclude entries from the reference pots', async () => {
 				const exclude1 = `
 msgid "exclude 1"
 msgstr ""
@@ -801,8 +790,8 @@ gtx._("catch me!");
 					_: ['exclude-file1.js'],
 				};
 
-				const xgettext = new XGettext(argv, date);
-				expect(xgettext.run()).toEqual(0);
+				const xgettext = new XGettext(baseConfig, date);
+				expect(await xgettext.run(argv)).toEqual(0);
 				expect(readFileSync).toHaveBeenCalledTimes(3);
 				expect(writeFileSync).toHaveBeenCalledTimes(1);
 				expect((writeFileSync.mock.calls[0] as string[])[1]).toMatchSnapshot();
@@ -810,7 +799,7 @@ gtx._("catch me!");
 				expect(errorSpy).not.toHaveBeenCalled();
 			});
 
-			it('should report i/o errors for the reference pots', () => {
+			it('should report i/o errors for the reference pots', async () => {
 				readFileSync.mockImplementation(() => {
 					throw new Error('ouch!');
 				});
@@ -821,19 +810,16 @@ gtx._("catch me!");
 					_: ['exclude-file1.js'],
 				};
 
-				const xgettext = new XGettext(argv, date);
-				expect(xgettext.run()).toEqual(1);
+				const xgettext = new XGettext(baseConfig, date);
+				expect(await xgettext.run(argv)).toEqual(1);
 				expect(readFileSync).toHaveBeenCalledTimes(1);
 				expect(writeFileSync).toHaveBeenCalledTimes(0);
 				expect(warnSpy).not.toHaveBeenCalled();
 				expect(errorSpy).toHaveBeenCalledTimes(1);
-				expect(errorSpy).toHaveBeenNthCalledWith(
-					1,
-					'esgettext-xgettext: error: ouch!',
-				);
+				expect(errorSpy).toHaveBeenNthCalledWith(1, 'esgettext: Error: ouch!');
 			});
 
-			it('should report parsing errors for the reference pots', () => {
+			it('should report parsing errors for the reference pots', async () => {
 				readFileSync.mockReturnValue(Buffer.from('invalid'));
 
 				const argv = {
@@ -842,27 +828,27 @@ gtx._("catch me!");
 					_: ['exclude-file1.js'],
 				};
 
-				const xgettext = new XGettext(argv, date);
-				expect(xgettext.run()).toEqual(1);
+				const xgettext = new XGettext(baseConfig, date);
+				expect(await xgettext.run(argv)).toEqual(1);
 				expect(readFileSync).toHaveBeenCalledTimes(2);
 				expect(writeFileSync).toHaveBeenCalledTimes(0);
 				expect(warnSpy).not.toHaveBeenCalled();
 				expect(errorSpy).toHaveBeenCalledTimes(4);
 				expect(errorSpy).toHaveBeenNthCalledWith(
 					1,
-					'exclude1.pot:1:1: error: keyword "invalid" unknown',
+					'exclude1.pot:1:1: Error: keyword "invalid" unknown',
 				);
 				expect(errorSpy).toHaveBeenNthCalledWith(
 					2,
-					'exclude1.pot:1:8: error: syntax error',
+					'exclude1.pot:1:8: Error: syntax error',
 				);
 				expect(errorSpy).toHaveBeenNthCalledWith(
 					3,
-					'exclude2.pot:1:1: error: keyword "invalid" unknown',
+					'exclude2.pot:1:1: Error: keyword "invalid" unknown',
 				);
 				expect(errorSpy).toHaveBeenNthCalledWith(
 					4,
-					'exclude2.pot:1:8: error: syntax error',
+					'exclude2.pot:1:8: Error: syntax error',
 				);
 			});
 		});
@@ -870,7 +856,7 @@ gtx._("catch me!");
 		describe('add-comments', () => {
 			beforeEach(resetMocks);
 
-			it('should add selected comments', () => {
+			it('should add selected comments', async () => {
 				const code = `
 // TRANSLATORS: The abbreviated day of the week, not our star.
 gtx._("Sun");
@@ -887,8 +873,8 @@ gtx._("Copy & Paste");
 					addComments: ['TRANSLATORS:', 'TESTERS:'],
 					_: ['add-comments.js'],
 				};
-				const xgettext = new XGettext(argv, date);
-				expect(xgettext.run()).toEqual(0);
+				const xgettext = new XGettext(baseConfig, date);
+				expect(await xgettext.run(argv)).toEqual(0);
 				expect(writeFileSync).toHaveBeenCalledTimes(1);
 				expect((writeFileSync.mock.calls[0] as string[])[1]).toMatchSnapshot();
 				expect(warnSpy).not.toHaveBeenCalled();
@@ -899,7 +885,7 @@ gtx._("Copy & Paste");
 		describe('add-all-comments', () => {
 			beforeEach(resetMocks);
 
-			it('should add all comments', () => {
+			it('should add all comments', async () => {
 				const code = `
 // TRANSLATORS: The abbreviated day of the week, not our star.
 gtx._("Sun");
@@ -916,8 +902,8 @@ gtx._("Copy & Paste");
 					addAllComments: true,
 					_: ['add-comments.js'],
 				};
-				const xgettext = new XGettext(argv, date);
-				expect(xgettext.run()).toEqual(0);
+				const xgettext = new XGettext(baseConfig, date);
+				expect(await xgettext.run(argv)).toEqual(0);
 				expect(writeFileSync).toHaveBeenCalledTimes(1);
 				expect((writeFileSync.mock.calls[0] as string[])[1]).toMatchSnapshot();
 				expect(warnSpy).not.toHaveBeenCalled();
@@ -930,7 +916,7 @@ gtx._("Copy & Paste");
 		describe('--extract-all', () => {
 			beforeEach(resetMocks);
 
-			it('should extract all strings', () => {
+			it('should extract all strings', async () => {
 				const code = `
 gtx._("gettext function");
 console.log("non-gettext-function");
@@ -941,8 +927,8 @@ console.log("non-gettext-function");
 					extractAll: true,
 					_: ['extract-all.js'],
 				};
-				const xgettext = new XGettext(argv, date);
-				expect(xgettext.run()).toEqual(0);
+				const xgettext = new XGettext(baseConfig, date);
+				expect(await xgettext.run(argv)).toEqual(0);
 				expect(writeFileSync).toHaveBeenCalledTimes(1);
 				expect((writeFileSync.mock.calls[0] as string[])[1]).toMatchSnapshot();
 				expect(warnSpy).not.toHaveBeenCalled();
@@ -953,7 +939,7 @@ console.log("non-gettext-function");
 		describe('--keyword', () => {
 			beforeEach(resetMocks);
 
-			it('should extract the selected keywords', () => {
+			it('should extract the selected keywords', async () => {
 				const code = `
 gtx._("ignore");
 gettext("catch");
@@ -965,8 +951,8 @@ npgettext("context", "one file", "multiple files", 2304);
 					keyword: ['', 'gettext', 'npgettext:1c,2,3'],
 					_: ['keyword.js'],
 				};
-				const xgettext = new XGettext(argv, date);
-				expect(xgettext.run()).toEqual(0);
+				const xgettext = new XGettext(baseConfig, date);
+				expect(await xgettext.run(argv)).toEqual(0);
 				expect(writeFileSync).toHaveBeenCalledTimes(1);
 				expect((writeFileSync.mock.calls[0] as string[])[1]).toMatchSnapshot();
 				expect(warnSpy).not.toHaveBeenCalled();
@@ -979,21 +965,21 @@ npgettext("context", "one file", "multiple files", 2304);
 		describe('option --force-po', () => {
 			beforeEach(resetMocks);
 
-			it('should not write empty catalogs', () => {
+			it('should not write empty catalogs', async () => {
 				const code = 'console.log("Hello, world!")';
 				readFileSync.mockReturnValueOnce(Buffer.from(code));
 				const argv = {
 					...baseArgv,
 					_: ['force-po1.js'],
 				};
-				const xgettext = new XGettext(argv, date);
-				expect(xgettext.run()).toEqual(0);
+				const xgettext = new XGettext(baseConfig, date);
+				expect(await xgettext.run(argv)).toEqual(0);
 				expect(writeFileSync).not.toHaveBeenCalled();
 				expect(warnSpy).not.toHaveBeenCalled();
 				expect(errorSpy).not.toHaveBeenCalled();
 			});
 
-			it('should write empty catalogs with option --force-po', () => {
+			it('should write empty catalogs with option --force-po', async () => {
 				const code = 'console.log("Hello, world!")';
 				readFileSync.mockReturnValueOnce(Buffer.from(code));
 				const argv = {
@@ -1001,8 +987,8 @@ npgettext("context", "one file", "multiple files", 2304);
 					forcePo: true,
 					_: ['force-po1.js'],
 				};
-				const xgettext = new XGettext(argv, date);
-				expect(xgettext.run()).toEqual(0);
+				const xgettext = new XGettext(baseConfig, date);
+				expect(await xgettext.run(argv)).toEqual(0);
 				expect(writeFileSync).toHaveBeenCalledTimes(1);
 				expect((writeFileSync.mock.calls[0] as string[])[1]).toMatchSnapshot();
 				expect(warnSpy).not.toHaveBeenCalled();
@@ -1013,7 +999,7 @@ npgettext("context", "one file", "multiple files", 2304);
 		describe('option --width', () => {
 			beforeEach(resetMocks);
 
-			it('should honor the option --width', () => {
+			it('should honor the option --width', async () => {
 				const code = 'gtx._("For a very long time! For a very long time!")';
 				readFileSync.mockReturnValue(Buffer.from(code));
 				const argv = {
@@ -1021,8 +1007,8 @@ npgettext("context", "one file", "multiple files", 2304);
 					width: 25,
 					_: ['width.js'],
 				};
-				const xgettext = new XGettext(argv, date);
-				expect(xgettext.run()).toEqual(0);
+				const xgettext = new XGettext(baseConfig, date);
+				expect(await xgettext.run(argv)).toEqual(0);
 				expect(writeFileSync).toHaveBeenCalledTimes(1);
 				expect((writeFileSync.mock.calls[0] as string[])[1]).toMatchSnapshot();
 				expect(warnSpy).not.toHaveBeenCalled();
@@ -1036,7 +1022,7 @@ describe('xgettext encodings', () => {
 	describe('ascii', () => {
 		beforeEach(resetMocks);
 
-		it('should accept plain ascii by default', () => {
+		it('should accept plain ascii by default', async () => {
 			const code = 'gtx._("Hello, world!");';
 
 			readFileSync.mockReturnValueOnce(Buffer.from(code));
@@ -1045,14 +1031,14 @@ describe('xgettext encodings', () => {
 				...baseArgv,
 				_: ['hello-ascii.js'],
 			};
-			const xgettext = new XGettext(argv, date);
-			expect(xgettext.run()).toEqual(0);
+			const xgettext = new XGettext(baseConfig, date);
+			expect(await xgettext.run(argv)).toEqual(0);
 			expect(writeFileSync).toHaveBeenCalledTimes(1);
 			expect(warnSpy).not.toHaveBeenCalled();
 			expect(errorSpy).not.toHaveBeenCalled();
 		});
 
-		it('should complain about 8 bit characters', () => {
+		it('should complain about 8 bit characters', async () => {
 			const code = `
 gtx._("Hello, world!");
 `;
@@ -1064,17 +1050,17 @@ gtx._("Hello, world!");
 				...baseArgv,
 				_: ['hello-ascii.js'],
 			};
-			const xgettext = new XGettext(argv, date);
-			expect(xgettext.run()).toEqual(1);
+			const xgettext = new XGettext(baseConfig, date);
+			expect(await xgettext.run(argv)).toEqual(1);
 			expect(writeFileSync).toHaveBeenCalledTimes(0);
 			expect(warnSpy).not.toHaveBeenCalled();
 			expect(errorSpy).toHaveBeenCalledTimes(1);
 			expect(errorSpy)
-				.toHaveBeenCalledWith(`hello-ascii.js:2:12: error: Non-ASCII character.
+				.toHaveBeenCalledWith(`hello-ascii.js:2:12: Error: Non-ASCII character.
 Please specify the encoding through "--from-code".`);
 		});
 
-		it('should accept 8 bit characters with iso-8859-1', () => {
+		it('should accept 8 bit characters with iso-8859-1', async () => {
 			const code = `
 gtx._("Hello, world!");
 `;
@@ -1087,15 +1073,15 @@ gtx._("Hello, world!");
 				fromCode: 'iso-8859-1',
 				_: ['hello-ascii.js'],
 			};
-			const xgettext = new XGettext(argv, date);
-			expect(xgettext.run()).toEqual(0);
+			const xgettext = new XGettext(baseConfig, date);
+			expect(await xgettext.run(argv)).toEqual(0);
 			expect(warnSpy).not.toHaveBeenCalled();
 			expect(errorSpy).not.toHaveBeenCalled();
 			expect(writeFileSync).toHaveBeenCalledTimes(1);
 			expect(writeFileSync.mock.calls[0]).toMatchSnapshot();
 		});
 
-		it('should accept ASCII-8bit as an alias for ASCII', () => {
+		it('should accept ASCII-8bit as an alias for ASCII', async () => {
 			const code = `gtx._("Hyvää yötä!")`;
 			readFileSync.mockReturnValueOnce(Buffer.from(code));
 
@@ -1103,17 +1089,17 @@ gtx._("Hello, world!");
 				...baseArgv,
 				_: ['hyvää-yötä.js'],
 			};
-			const xgettext = new XGettext(argv, date);
-			expect(xgettext.run()).toEqual(1);
+			const xgettext = new XGettext(baseConfig, date);
+			expect(await xgettext.run(argv)).toEqual(1);
 			expect(writeFileSync).toHaveBeenCalledTimes(0);
 			expect(warnSpy).not.toHaveBeenCalled();
 			expect(errorSpy).toHaveBeenCalledTimes(1);
 			expect(errorSpy)
-				.toHaveBeenCalledWith(`hyvää-yötä.js:1:11: error: Non-ASCII character.
+				.toHaveBeenCalledWith(`hyvää-yötä.js:1:11: Error: Non-ASCII character.
 Please specify the encoding through "--from-code".`);
 		});
 
-		it('should accept US-ASCII as an alias for ASCII', () => {
+		it('should accept US-ASCII as an alias for ASCII', async () => {
 			const code = `gtx._("Hyvää yötä!")`;
 			readFileSync.mockReturnValueOnce(Buffer.from(code));
 
@@ -1122,17 +1108,17 @@ Please specify the encoding through "--from-code".`);
 				fromCode: 'US-ASCII',
 				_: ['hyvää-yötä.js'],
 			};
-			const xgettext = new XGettext(argv, date);
-			expect(xgettext.run()).toEqual(1);
+			const xgettext = new XGettext(baseConfig, date);
+			expect(await xgettext.run(argv)).toEqual(1);
 			expect(writeFileSync).toHaveBeenCalledTimes(0);
 			expect(warnSpy).not.toHaveBeenCalled();
 			expect(errorSpy).toHaveBeenCalledTimes(1);
 			expect(errorSpy)
-				.toHaveBeenCalledWith(`hyvää-yötä.js:1:11: error: Non-ASCII character.
+				.toHaveBeenCalledWith(`hyvää-yötä.js:1:11: Error: Non-ASCII character.
 Please specify the encoding through "--from-code".`);
 		});
 
-		it('should accept ANSI_X3.4-1968 as an alias for ASCII', () => {
+		it('should accept ANSI_X3.4-1968 as an alias for ASCII', async () => {
 			const code = `gtx._("Hyvää yötä!")`;
 			readFileSync.mockReturnValueOnce(Buffer.from(code));
 
@@ -1141,13 +1127,13 @@ Please specify the encoding through "--from-code".`);
 				fromCode: 'ANSI_X3.4-1968',
 				_: ['hyvää-yötä.js'],
 			};
-			const xgettext = new XGettext(argv, date);
-			expect(xgettext.run()).toEqual(1);
+			const xgettext = new XGettext(baseConfig, date);
+			expect(await xgettext.run(argv)).toEqual(1);
 			expect(writeFileSync).toHaveBeenCalledTimes(0);
 			expect(warnSpy).not.toHaveBeenCalled();
 			expect(errorSpy).toHaveBeenCalledTimes(1);
 			expect(errorSpy)
-				.toHaveBeenCalledWith(`hyvää-yötä.js:1:11: error: Non-ASCII character.
+				.toHaveBeenCalledWith(`hyvää-yötä.js:1:11: Error: Non-ASCII character.
 Please specify the encoding through "--from-code".`);
 		});
 	});
@@ -1155,7 +1141,7 @@ Please specify the encoding through "--from-code".`);
 	describe('utf-8', () => {
 		beforeEach(resetMocks);
 
-		it('should accept valid utf-8', () => {
+		it('should accept valid utf-8', async () => {
 			const code = `
 gtx._('Hyvää, yötä!');
 gtx._('Добро, утро!');
@@ -1173,15 +1159,15 @@ gtx._('񈈈􈈈');
 				fromCode: 'utf-8',
 				_: ['hello-ascii.js'],
 			};
-			const xgettext = new XGettext(argv, date);
-			expect(xgettext.run()).toEqual(0);
+			const xgettext = new XGettext(baseConfig, date);
+			expect(await xgettext.run(argv)).toEqual(0);
 			expect(writeFileSync).toHaveBeenCalledTimes(1);
 			expect((writeFileSync.mock.calls[0] as string[])[1]).toMatchSnapshot();
 			expect(warnSpy).not.toHaveBeenCalled();
 			expect(errorSpy).not.toHaveBeenCalled();
 		});
 
-		it('should complain about a lone 8-bit byte', () => {
+		it('should complain about a lone 8-bit byte', async () => {
 			const code = `
 gtx._("Hello, world!");
 `;
@@ -1194,17 +1180,17 @@ gtx._("Hello, world!");
 				fromCode: 'utf-8',
 				_: ['hello-ascii.js'],
 			};
-			const xgettext = new XGettext(argv, date);
-			expect(xgettext.run()).toEqual(1);
+			const xgettext = new XGettext(baseConfig, date);
+			expect(await xgettext.run(argv)).toEqual(1);
 			expect(writeFileSync).toHaveBeenCalledTimes(0);
 			expect(warnSpy).not.toHaveBeenCalled();
 			expect(errorSpy).toHaveBeenCalledTimes(1);
 			expect(errorSpy).toHaveBeenCalledWith(
-				'hello-ascii.js:2:12: error: invalid multibyte sequence',
+				'hello-ascii.js:2:12: Error: invalid multibyte sequence',
 			);
 		});
 
-		it('should complain about invalid charsets', () => {
+		it('should complain about invalid charsets', async () => {
 			const code = `
 gtx._("Hello, world!");
 `;
@@ -1216,14 +1202,14 @@ gtx._("Hello, world!");
 				fromCode: 'no-such-charset',
 				_: ['hello-ascii.js'],
 			};
-			const xgettext = new XGettext(argv, date);
-			expect(xgettext.run()).toEqual(1);
+			const xgettext = new XGettext(baseConfig, date);
+			expect(await xgettext.run(argv)).toEqual(1);
 			expect(writeFileSync).toHaveBeenCalledTimes(0);
 			expect(warnSpy).not.toHaveBeenCalled();
 			expect(errorSpy).toHaveBeenCalledTimes(1);
 		});
 
-		it('should complain about invalid charsets converting stanard input', () => {
+		it('should complain about invalid charsets converting stanard input', async () => {
 			const code = `
 gtx._("Hello, world!");
 `;
@@ -1238,8 +1224,8 @@ gtx._("Hello, world!");
 				.spyOn(global.process.stdin, 'read')
 				.mockReturnValueOnce(Buffer.from(code));
 
-			const xgettext = new XGettext(argv, date);
-			expect(xgettext.run()).toEqual(1);
+			const xgettext = new XGettext(baseConfig, date);
+			expect(await xgettext.run(argv)).toEqual(1);
 			expect(stdinSpy).toHaveBeenCalledTimes(1);
 			stdinSpy.mockReset();
 			expect(writeFileSync).toHaveBeenCalledTimes(0);

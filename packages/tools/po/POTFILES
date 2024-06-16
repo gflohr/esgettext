@@ -20,4 +20,3 @@
 ../src/pot/catalog.ts
 ../src/pot/entry.ts
 ../src/pot/keyword.ts
-../src/xgettext/xgettext.ts

@@ -595,7 +595,7 @@ export abstract class Parser {
 		const filename =
 			'-' === this.filename ? gtx._('[standard input]') : this.filename;
 		const location = `${filename}:${start}${end}`;
-		console.error(gtx._x('{location}: error: {msg}', { location, msg }));
+		console.error(gtx._x('{location}: Error: {msg}', { location, msg }));
 	}
 
 	private canonicalizeEncoding(encoding: string): string {

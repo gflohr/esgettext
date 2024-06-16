@@ -6,19 +6,6 @@ import '@valibot/i18n/de';
 
 const gtx = Textdomain.getInstance('com.cantanea.esgettext-tools');
 
-type PackageJson = {
-	name?: string;
-	version?: string;
-	bugs?: {
-		url?: string;
-		email?: string;
-	};
-	people: {
-		author: string;
-	};
-	esgettext: {};
-};
-
 const bugsAddressSchema = v.union([
 	v.pipe(
 		v.string(),
@@ -137,6 +124,19 @@ export const ConfigurationSchema = v.strictObject({
 
 export type Configuration = v.InferInput<typeof ConfigurationSchema>;
 
+type PackageJson = {
+	name?: string;
+	version?: string;
+	bugs?: {
+		url?: string;
+		email?: string;
+	};
+	people: {
+		author: string;
+	};
+	esgettext: Configuration;
+};
+
 export class ConfigurationFactory {
 	private static instance: Configuration;
 
@@ -168,7 +168,6 @@ export class ConfigurationFactory {
 		const rootPath = process.cwd();
 
 		let configuration: Configuration | null = null;
-		const files: Array<string> = [];
 
 		for (const file of jsConfigFiles) {
 			const filePath = path.join(rootPath, file);
@@ -310,12 +309,12 @@ export class ConfigurationFactory {
 						filename = msgidBugsAddressFilePath;
 						break;
 					case 'name':
-						filename = msgidBugsAddressFilePath;
+						filename = nameFilePath;
 						break;
 					case 'copyright-holder':
 						filename = copyrightHolderFilePath;
 						break;
-					case 'name':
+					case 'version':
 						filename = versionFilePath;
 						break;
 					default:
@@ -325,8 +324,9 @@ export class ConfigurationFactory {
 
 				console.error(
 					'  ' +
-						gtx._x('error: {filename}: {variable}: {message}.', {
+						gtx._x('{programName}: error: {filename}: {variable}: {message}.', {
 							variable: path,
+							programName: 'esgettext',
 							filename,
 							message,
 						}),

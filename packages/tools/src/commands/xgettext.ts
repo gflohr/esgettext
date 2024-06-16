@@ -1,4 +1,5 @@
 import { writeFileSync, readFileSync } from 'fs';
+import * as path from 'path';
 import yargs from 'yargs';
 
 import { Command } from '../command';
@@ -326,7 +327,7 @@ export class XGettext implements Command {
 			} catch (e) {
 				const error = e as Error;
 				console.error(
-					gtx._x('{programName}: error: {message}', {
+					gtx._x('{programName}: Error: {message}', {
 						programName: this.options.$0,
 						message: error.message,
 					}),
@@ -339,7 +340,7 @@ export class XGettext implements Command {
 			if (this.options.output === '-') {
 				console.error(
 					gtx._x(
-						'{programName}: error: --join-existing' +
+						'{programName}: Error: --join-existing' +
 							' cannot be used, when output is written to stdout',
 						{
 							programName: this.options.$0,
@@ -412,7 +413,7 @@ export class XGettext implements Command {
 		return new Promise(resolve => {
 			try {
 				resolve(this.doRun());
-			} catch(e) {
+			} catch (e) {
 				console.error(e);
 				resolve(1);
 			}
@@ -526,7 +527,7 @@ export class XGettext implements Command {
 
 	private warn(msg: string): void {
 		console.warn(
-			gtx._x('{programName}: warning: {msg}', {
+			gtx._x('{programName}: Warning: {msg}', {
 				msg,
 				programName: this.options.$0,
 			}),

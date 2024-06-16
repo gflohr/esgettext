@@ -197,7 +197,7 @@ export class Install implements Command {
 			writeFile(outFile, json, err => {
 				if (err) {
 					console.error(
-						gtx._x('{outfile}: write error: {err}', {
+						gtx._x('{outfile}: Write error: {err}', {
 							outFile,
 							err,
 						}),
@@ -244,7 +244,7 @@ export class Install implements Command {
 			writeFile(outFile, json, err => {
 				if (err) {
 					console.error(
-						gtx._x('{outfile}: write error: {err}', {
+						gtx._x('{outfile}: Write error: {err}', {
 							outFile,
 							err,
 						}),
