@@ -58,7 +58,7 @@ export class XGettext implements Command {
 	}
 
 	synopsis(): string {
-		return gtx._('[OPTIONS] [INPUTFILE]...');
+		return `[${gtx._('INPUTFILE')}...]`;
 	}
 
 	description(): string {
@@ -267,6 +267,8 @@ export class XGettext implements Command {
 			},
 		};
 	}
+
+	additional(_: yargs.Argv) {}
 
 	private init(argv: yargs.Arguments) {
 		const options = argv as unknown as XGettextOptions;

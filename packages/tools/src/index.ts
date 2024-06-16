@@ -3,11 +3,12 @@ import yargs from 'yargs';
 import { Package } from './package';
 import { Textdomain } from '@esgettext/runtime';
 import { Command } from './command';
+import { ConfigurationFactory } from './configuration';
 import { XGettext } from './commands/xgettext';
 import { Install } from './commands/install';
-import { ConfigurationFactory } from './configuration';
+import { Convert } from './commands/convert';
 
-const commandNames = ['xgettext', 'install'];
+const commandNames = ['xgettext', 'install', 'convert'];
 
 const gtx = Textdomain.getInstance('com.cantanea.esgettext-tools');
 gtx
@@ -21,11 +22,18 @@ gtx
 		const commands: { [key: string]: Command } = {
 			xgettext: new XGettext(configuration),
 			install: new Install(configuration),
+			convert: new Convert(configuration),
 		};
 
 		const program = yargs(process.argv.slice(2))
 			.locale(ulocale)
 			.strict()
+			.showHelpOnFail(
+				false,
+				gtx._x("Try {programName} '--help' for more information!", {
+					programName: Package.getName(),
+				}),
+			)
 			.scriptName(Package.getName());
 		let epilogue = configuration.files.length
 			? gtx._x('Additional defaults read from: {files}.', {
@@ -41,11 +49,13 @@ gtx
 			const command = commands[name];
 
 			program.command({
-				command: name,
+				command: `${name} ${command.synopsis()}`,
 				aliases: command.aliases(),
 				describe: command.description(),
 				builder: (argv: yargs.Argv) => {
 					argv.epilogue(epilogue);
+					command.additional(argv);
+
 					return argv.options(command.args());
 				},
 				handler: async (argv: yargs.Arguments) => {

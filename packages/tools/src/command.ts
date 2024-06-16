@@ -5,5 +5,6 @@ export interface Command {
 	description(): string;
 	aliases(): Array<string>;
 	args(): { [key: string]: yargs.Options };
+	additional(argv: yargs.Argv): void;
 	run(argv: yargs.Arguments): Promise<number>;
 }

@@ -7,7 +7,6 @@ import { Configuration } from '../configuration';
 
 type InstallOptions = {
 	_: string[];
-	packageJson?: string;
 	locales?: string[];
 	directory?: string;
 	inputFormat: string;
@@ -84,6 +83,8 @@ export class Install implements Command {
 			},
 		};
 	}
+
+	additional(_: yargs.Argv) {}
 
 	private init(argv: yargs.Arguments) {
 		const options = argv as unknown as InstallOptions;
