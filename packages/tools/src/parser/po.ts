@@ -6,8 +6,6 @@ import { Parser } from './parser';
 
 const gtx = Textdomain.getInstance('tools');
 
-/* eslint-disable no-console */
-
 export class PoParser extends Parser {
 	private entry: POTEntry;
 	private loc: SourceLocation;

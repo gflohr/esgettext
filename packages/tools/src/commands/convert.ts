@@ -143,7 +143,11 @@ export class Convert implements Command {
 						break;
 				}
 
-				const converted = this.convert(catalog, input, outputFormat);
+				const converted = this.convert(
+					catalog,
+					input,
+					outputFormat as CatalogFormat,
+				);
 				if (!converted) {
 					return resolve(1);
 				}

@@ -14,7 +14,7 @@ interface MsgfmtAllOptions {
 	msgfmt: string;
 	options: string[];
 	verbose: boolean;
-	[key: string]: string[] | string | boolean,
+	[key: string]: string[] | string | boolean;
 }
 
 const gtx = Textdomain.getInstance('com.cantanea.esgettext-tools');
@@ -76,7 +76,11 @@ export class MsgfmtAll implements Command {
 					"Options to pass to '{program}' program (without hyphens)",
 					{ program: 'msgfmt' },
 				),
-				default: this.configuration.programs?.msgfmt?.options || ['check', 'statistics', 'verbose'],
+				default: this.configuration.programs?.msgfmt?.options || [
+					'check',
+					'statistics',
+					'verbose',
+				],
 				group: gtx._('Mode of operation:'),
 			},
 			verbose: {

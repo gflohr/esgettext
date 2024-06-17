@@ -210,7 +210,6 @@ export class POTEntry {
 							),
 						);
 						refs.forEach(ref => {
-							/* eslint-disable-next-line no-console */
 							console.warn(`\t${ref}`);
 						});
 					}
@@ -468,7 +467,6 @@ export class POTEntry {
 				location = this.properties.references[0].toString();
 			}
 
-			// eslint-disable-next-line no-console
 			console.warn(gtx._x('{location}: warning: {msg}', { location, msg }));
 		}
 	}
