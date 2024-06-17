@@ -1,7 +1,7 @@
 import { TransportHttp } from '../transport/http';
 import { TransportFs } from '../transport/fs';
 import { Transport } from '../transport/transport.interface';
-import { parseMoJsonCatalog, parseMoCatalog } from '../parser';
+import { parseMoJsonCatalog, parseJsonCatalog, parseMoCatalog } from '../parser';
 import { browserEnvironment } from './browser-environment';
 import { Catalog, CatalogEntries } from './catalog';
 import { SplitLocale, splitLocale } from './split-locale';
@@ -9,8 +9,6 @@ import { germanicPlural } from './germanic-plural';
 import { CatalogCache } from './catalog-cache';
 import { explodeLocale, ExplodedLocale } from './explode-locale';
 import { LocaleContainer } from './locale-container';
-
-/* eslint-disable no-console */
 
 type PluralFunction = (numItems: number) => number;
 
@@ -48,9 +46,12 @@ function loadCatalog(url: string, format: string): Promise<Catalog> {
 	let validator: Validator;
 	if ('mo.json' === format) {
 		validator = parseMoJsonCatalog;
+	} else if ('.json' === format) {
+		validator = parseJsonCatalog;
 	} else {
 		validator = parseMoCatalog;
 	}
+
 	return new Promise<Catalog>((resolve, reject) => {
 		transportInstance
 			.loadFile(url)
