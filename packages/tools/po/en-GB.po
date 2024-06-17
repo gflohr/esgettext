@@ -108,7 +108,7 @@ msgid "[OPTIONS]"
 msgstr ""
 
 #: ../src/cli/mo2json-cli.ts:37
-msgid "Convert .mo files into catalog json."
+msgid "Convert .mo files into catalogue json."
 msgstr ""
 
 #: ../src/cli/mo2json-cli.ts:55 ../src/cli/msgfmt-all.ts:118
@@ -352,7 +352,7 @@ msgid "Extract translatable strings from given input files"
 msgstr ""
 
 #: ../src/commands/install.ts:36
-msgid "Install translation catalogs."
+msgid "Install translation catalogues."
 msgstr ""
 
 #: ../src/commands/install.ts:48
@@ -360,7 +360,7 @@ msgid "List of locale identifiers"
 msgstr ""
 
 #: ../src/commands/install.ts:56
-msgid "Where to search message catalog files"
+msgid "Where to search message catalogue files"
 msgstr ""
 
 #: ../src/commands/install.ts:62
