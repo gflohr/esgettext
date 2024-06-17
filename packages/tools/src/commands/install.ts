@@ -84,6 +84,7 @@ export class Install implements Command {
 		};
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	additional(_: yargs.Argv) {}
 
 	private init(argv: yargs.Arguments) {

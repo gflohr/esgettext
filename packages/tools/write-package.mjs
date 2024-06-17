@@ -22,4 +22,4 @@ console.log(`export class Package {
 	public static getVersion(): string {
 		return '${pkg.version}';
 	}
-};`);
+}`);

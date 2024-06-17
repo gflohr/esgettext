@@ -1,4 +1,3 @@
-import * as path from 'path';
 import * as fs from 'fs';
 import * as childProcess from 'child_process';
 import { Command } from '../command';
@@ -96,8 +95,8 @@ export class MsgfmtAll implements Command {
 		return options;
 	}
 
-	additional(_: yargs.Argv) {
-	}
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	additional(_: yargs.Argv) {}
 
 	private init(argv: yargs.Arguments) {
 		const options = argv as unknown as MsgfmtAllOptions;

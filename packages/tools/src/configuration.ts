@@ -313,7 +313,7 @@ export class ConfigurationFactory {
 			);
 
 			for (const issue of issues) {
-				let path = v.getDotPath(issue) || gtx._('[path not set]');
+				const path = v.getDotPath(issue) || gtx._('[path not set]');
 
 				const message = issue.issues ? issue.issues[0].message : issue.message;
 

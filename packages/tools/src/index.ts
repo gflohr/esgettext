@@ -53,7 +53,7 @@ gtx
 		for (const name of commandNames) {
 			const command = commands[name];
 
-			let commandName = command.synopsis() ?
+			const commandName = command.synopsis() ?
 				`${name} ${command.synopsis()}` : name;
 
 			program.command({
