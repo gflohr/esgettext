@@ -8,8 +8,9 @@ import { XGettext } from './commands/xgettext';
 import { MsgmergeAll } from './commands/msgmerge-all';
 import { Install } from './commands/install';
 import { Convert } from './commands/convert';
+import { MsgfmtAll } from './commands/msgfmt-all';
 
-const commandNames = ['xgettext', 'msgmerge-all', 'install', 'convert'];
+const commandNames = ['xgettext', 'msgmerge-all', 'msgfmt-all', 'install', 'convert'];
 
 const gtx = Textdomain.getInstance('com.cantanea.esgettext-tools');
 gtx
@@ -23,6 +24,7 @@ gtx
 		const commands: { [key: string]: Command } = {
 			xgettext: new XGettext(configuration),
 			'msgmerge-all': new MsgmergeAll(configuration),
+			'msgfmt-all': new MsgfmtAll(configuration),
 			install: new Install(configuration),
 			convert: new Convert(configuration),
 		};
@@ -36,6 +38,7 @@ gtx
 					programName: Package.getName(),
 				}),
 			)
+			.demandCommand(1, gtx._('Error: No command given.'))
 			.scriptName(Package.getName());
 		let epilogue = configuration.files.length
 			? gtx._x('Additional defaults read from: {files}.', {
@@ -50,8 +53,11 @@ gtx
 		for (const name of commandNames) {
 			const command = commands[name];
 
+			let commandName = command.synopsis() ?
+				`${name} ${command.synopsis()}` : name;
+
 			program.command({
-				command: `${name} ${command.synopsis()}`,
+				command: commandName,
 				aliases: command.aliases(),
 				describe: command.description(),
 				builder: (argv: yargs.Argv) => {

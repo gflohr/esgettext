@@ -7,11 +7,12 @@ import yargs from 'yargs';
 import { Configuration } from '../configuration';
 import { Package } from '../package';
 
-interface MsgmergeAllOptions {
+interface MsgfmtAllOptions {
 	_: string[];
 	locales: string[];
 	directory: string;
-	msgmerge: string;
+	format: string;
+	msgfmt: string;
 	options: string[];
 	verbose: boolean;
 	[key: string]: string[] | string | boolean,
@@ -19,33 +20,21 @@ interface MsgmergeAllOptions {
 
 const gtx = Textdomain.getInstance('com.cantanea.esgettext-tools');
 
-export class MsgmergeAll implements Command {
+export class MsgfmtAll implements Command {
 	private locales: Array<string>;
-	private options: MsgmergeAllOptions;
+	private options: MsgfmtAllOptions;
 	private readonly configuration: Configuration;
-	private potfile?: string;
 
 	constructor(configuration: Configuration) {
 		this.configuration = configuration;
-
-		if (
-			configuration.package?.textdomain &&
-			typeof configuration.po?.directory !== 'undefined'
-		) {
-			const filename = `${configuration.package.textdomain}.pot`;
-			const potfile = path.join(configuration.po.directory, filename);
-			if (fs.existsSync(potfile)) {
-				this.potfile = potfile;
-			}
-		}
 	}
 
 	synopsis(): string {
-		return `<${gtx._('POTFILE')}>`;
+		return '';
 	}
 
 	description(): string {
-		return gtx._("Invoke 'msgmerge' for multiple files.");
+		return gtx._("Invoke 'msgfmt' for multiple files.");
 	}
 
 	aliases(): Array<string> {
@@ -69,10 +58,16 @@ export class MsgmergeAll implements Command {
 				default: this.configuration.po?.directory ?? '.',
 				group: gtx._('Input file options:'),
 			},
-			msgmerge: {
+			format: {
 				type: 'string',
-				describe: gtx._('msgmerge program if not in PATH [string]'),
-				default: this.configuration.programs?.msgmerge?.path ?? 'msgmerge',
+				describe: gtx._('Output file format'),
+				default: 'gmo',
+				group: gtx._('Output file options:'),
+			},
+			msgfmt: {
+				type: 'string',
+				describe: gtx._('msgfmt program if not in PATH [string]'),
+				default: this.configuration.programs?.msgfmt?.path ?? 'msgfmt',
 				group: gtx._('Mode of operation:'),
 			},
 			options: {
@@ -80,9 +75,9 @@ export class MsgmergeAll implements Command {
 				array: true,
 				describe: gtx._x(
 					"Options to pass to '{program}' program (without hyphens)",
-					{ program: 'msgmerge' },
+					{ program: 'msgfmt' },
 				),
-				default: this.configuration.programs?.msgfmt?.options,
+				default: this.configuration.programs?.msgfmt?.options || ['check', 'statistics', 'verbose'],
 				group: gtx._('Mode of operation:'),
 			},
 			verbose: {
@@ -101,20 +96,13 @@ export class MsgmergeAll implements Command {
 		return options;
 	}
 
-	additional(argv: yargs.Argv) {
-		argv.positional(gtx._('POTFILE'), {
-			type: 'string',
-			describe: gtx._('Catalog file with up-to-date message ids'),
-			default: this.potfile,
-		});
+	additional(_: yargs.Argv) {
 	}
 
 	private init(argv: yargs.Arguments) {
-		const options = argv as unknown as MsgmergeAllOptions;
+		const options = argv as unknown as MsgfmtAllOptions;
 		this.options = options;
 		const conf = this.configuration;
-
-		this.potfile = options[gtx._('POTFILE')] as unknown as string;
 
 		if (!options.locales && conf.po?.locales) {
 			options.locales = conf.po?.locales;
@@ -143,7 +131,7 @@ export class MsgmergeAll implements Command {
 			// too hard.
 			this.locales
 				.reduce(
-					(promise, locale) => promise.then(() => this.msgmergeLocale(locale)),
+					(promise, locale) => promise.then(() => this.msgfmtLocale(locale)),
 					Promise.resolve(),
 				)
 				.then(
@@ -183,53 +171,55 @@ export class MsgmergeAll implements Command {
 		return errors ? null : msgmergeOptions;
 	}
 
-	private async msgmergeLocale(locale: string): Promise<number> {
+	private async msgfmtLocale(locale: string): Promise<number> {
 		return new Promise(resolve => {
 			const args = this.convertOptions(this.options.options);
 			if (!args) return resolve(1);
 
 			const poFile = this.options.directory + '/' + locale + '.po';
-			const oldPoFile = this.options.directory + '/' + locale + '.old.po';
+			const moFile =
+				this.options.directory + '/' + locale + '.' + this.options.format;
 
-			args.push(oldPoFile, this.potfile as string, '-o', poFile);
-			console.log(
-				gtx._x("Merging '{pot}' into '{po}'.", {
-					pot: this.potfile as string,
-					po: poFile,
-				}),
-			);
+			args.push('-o', moFile, poFile);
+			if (this.options.verbose) {
+				console.log(
+					gtx._x("Compiling '{po}' into '{mo}'.", {
+						po: poFile,
+						mo: moFile,
+					}),
+				);
+			}
 
 			try {
-				fs.renameSync(poFile, oldPoFile);
-				const msgmerge = childProcess.spawn(this.options.msgmerge, args, {
+				const msgfmt = childProcess.spawn(this.options.msgfmt, args, {
 					windowsHide: true,
 				});
-				msgmerge.on('error', err => {
+				msgfmt.stdout.on('data', (data: string) =>
+					process.stdout.write(data.toString()),
+				);
+				msgfmt.stderr.on('data', (data: string) =>
+					process.stderr.write(data.toString()),
+				);
+				msgfmt.on('close', code => {
+					if (code) {
+						fs.unlinkSync(moFile);
+						resolve(1);
+					} else {
+						resolve(0);
+					}
+				});
+
+				msgfmt.on('error', err => {
 					throw new Error(
 						gtx._x("Failed to run '{prg}': {err}", {
-							prg: this.options.msgmerge,
+							prg: this.options.msgfmt,
 							err,
 						}),
 					);
 				});
-				msgmerge.stdout.on('data', (data: Buffer) =>
-					process.stdout.write(data.toString()),
-				);
-				msgmerge.stderr.on('data', (data: Buffer) =>
-					process.stderr.write(data.toString()),
-				);
-				msgmerge.on('close', code => {
-					if (code) {
-						fs.renameSync(oldPoFile, poFile);
-						resolve(1);
-					} else {
-						fs.unlinkSync(oldPoFile);
-						resolve(0);
-					}
-				});
 			} catch (err) {
 				try {
-					fs.renameSync(oldPoFile, poFile);
+					fs.unlinkSync(moFile);
 				} catch (err1) {
 					console.error(err1);
 				}
