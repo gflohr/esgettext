@@ -725,6 +725,12 @@ export class Textdomain {
 
 /* We generate most of the methods dynamically.  This is really
  * ugly but it reduces the size of the bundle significantly.
+ *
+ * The tree-shaking argument also doesn't seem to be valid because except for
+ * trivial/irrelevant cases, the tree-shaking will not remove enought code
+ * to beat our eval version.  But I am open to suggestions on how to improve
+ * this mess if it does not increase the (compressed) bundled size
+ * significantly.
  */
 
 // These closures are called from inside the eval'd code which
