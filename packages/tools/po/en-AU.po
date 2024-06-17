@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: esgettext 1.1.0\n"
-"Report-Msgid-Bugs-To: MSGID_BUGS_ADDRESS\n"
+"Report-Msgid-Bugs-To: guido.flohr@cantanea.com\n"
 "POT-Creation-Date: 2024-06-15 14:47+0300\n"
 "PO-Revision-Date: 2024-06-14 19:15+0300\n"
 "Last-Translator: Guido Flohr <guido.flohr@cantanea.com>\n"
@@ -108,8 +108,8 @@ msgid "[OPTIONS]"
 msgstr ""
 
 #: ../src/cli/mo2json-cli.ts:37
-msgid "Convert .mo files into catalogue json."
-msgstr ""
+msgid "Convert .mo files into catalog json."
+msgstr "Convert .mo files into catalogue json."
 
 #: ../src/cli/mo2json-cli.ts:55 ../src/cli/msgfmt-all.ts:118
 #: ../src/cli/msgmerge-all.ts:102 ../src/cli/xgettext-cli.ts:331
@@ -352,16 +352,16 @@ msgid "Extract translatable strings from given input files"
 msgstr ""
 
 #: ../src/commands/install.ts:36
-msgid "Install translation catalogues."
-msgstr ""
+msgid "Install translation catalogs."
+msgstr "Install translation catalogues."
 
 #: ../src/commands/install.ts:48
 msgid "List of locale identifiers"
 msgstr ""
 
 #: ../src/commands/install.ts:56
-msgid "Where to search message catalogue files"
-msgstr ""
+msgid "Where to search message catalog files"
+msgstr "Where to search message catalogue files"
 
 #: ../src/commands/install.ts:62
 msgid "Input file type"

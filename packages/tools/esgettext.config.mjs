@@ -4,6 +4,6 @@ export default {
 	},
 	po: {
 		directory: 'po',
-		locales: ['de', 'en-AU', 'en-GB' ],
+		locales: ['de', 'en-AU', 'en-CA', 'en-GB', 'en-NZ' ],
 	},
 };

@@ -1,5 +1,5 @@
-# British English translations for the esgettext package
-# British English translation for esgettext.
+# New Zealand English translations for the esgettext package
+# New Zealand English translation for esgettext.
 # Copyright (C) 2024 Guido Flohr <http://www.guido-flohr.net>
 # This file is distributed under the same license as the esgettext package.
 # Guido Flohr <guido.flohr@cantanea.com>, 2024.
@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: esgettext 1.1.0\n"
 "Report-Msgid-Bugs-To: guido.flohr@cantanea.com\n"
 "POT-Creation-Date: 2024-06-15 14:47+0300\n"
-"PO-Revision-Date: 2024-06-14 19:14+0300\n"
+"PO-Revision-Date: 2024-06-14 19:15+0300\n"
 "Last-Translator: Guido Flohr <guido.flohr@cantanea.com>\n"
 "Language-Team: English <translation-team-en@lists.sourceforge.net>\n"
 "Language: en-GB\n"
