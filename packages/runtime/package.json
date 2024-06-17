@@ -1,20 +1,21 @@
 {
 	"name": "@esgettext/runtime",
 	"version": "1.0.0",
+	"type": "module",
 	"description": "A gettext-like translation runtime for JavaScript aka EcmaScript",
-	"main": "lib/index.js",
-	"esm": "lib/index.esm.js",
-	"browser": "lib/index.browser.js",
-	"types": "lib/index.d.ts",
+	"main": "dist/esgettext.cjs.js",
+	"module": "dist/esgettext.esm.js",
+	"browser": "dist/esgettext.min.js",
+	"typings": "dist/index.d.ts",
 	"repository": "https://github.com/gflohr/esgettext",
 	"bugs": {
 		"url": "https://github.com/gflohr/esgettext/issues"
 	},
 	"homepage": "https://github.com/gflohr/esgettext/packages/runtime",
 	"scripts": {
-		"build": "webpack --config=webpack.config.js",
+		"build": "rollup -c",
 		"prepublishOnly": "npm run build",
-		"clean": "rimraf lib",
+		"clean": "rimraf dist",
 		"format": "prettier --write 'src/**/*.ts'",
 		"watch": "tsc --watch",
 		"lint": "eslint './src/**/*.ts'",

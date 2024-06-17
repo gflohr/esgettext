@@ -724,8 +724,8 @@ export class Textdomain {
 }
 
 /* We generate most of the methods dynamically.  This is really
-	* ugly but it reduces the size of the bundle significantly.
-	*/
+ * ugly but it reduces the size of the bundle significantly.
+ */
 
 // These closures are called from inside the eval'd code which
 // outsmarts eslint.
@@ -734,18 +734,6 @@ export class Textdomain {
 const g = gettextImpl;
 // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/unbound-method
 const x = Textdomain['expand'];
-// eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/unbound-method
-const lk = CatalogCache.lookup;
-// eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/unbound-method
-const gc = Textdomain['getCatalog'];
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const e = {
-	major: 0,
-	minor: 0,
-	pluralFunction: germanicPlural,
-	entries: {},
-};
 
 // Arguments in standardized order.
 const argNames = ['msgctxt', 'msgid', 'msgidPlural', 'numItems'];
@@ -779,8 +767,6 @@ ${t}${m}x=${f}(${a},p){${rx}(g({${k},${c}}),p||{});};
 ${t}l${m}x=${f}(l,${a},p){${tc}${rx}(g({${k},${cc}}),p||{});};
 `;
 
-		// It is not possible to shut up rollup about eval being dangerous.
-		// Therefore, we hide it a little bit.
-		(eval)(code);
+		eval(code);
 	}
 }
