@@ -41,7 +41,11 @@ export class MsgmergeAll implements Command {
 	}
 
 	synopsis(): string {
-		return `<${gtx._('POTFILE')}>`;
+		if (typeof this.potfile === 'undefined') {
+			return `<${gtx._('POTFILE')}>`;
+		} else {
+			return `[${gtx._('POTFILE')}]`;
+		}
 	}
 
 	description(): string {
