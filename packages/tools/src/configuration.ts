@@ -132,10 +132,10 @@ export const ConfigurationSchema = v.strictObject({
 			),
 		}),
 	),
-	locale: v.optional(
+	install: v.optional(
 		v.strictObject({
 			directory: v.optional(
-				v.string("The field 'locale.directory' must be a string!"),
+				v.string("The field 'install.directory' must be a string!"),
 			),
 		}),
 	),

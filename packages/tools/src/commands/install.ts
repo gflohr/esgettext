@@ -66,7 +66,7 @@ export class Install implements Command {
 			'output-directory': {
 				type: 'string',
 				describe: gtx._('Output directory'),
-				default: 'assets/locale',
+				default: this.configuration.install?.directory ?? 'src/locale',
 				group: gtx._('Output file options:'),
 			},
 			'output-format': {
