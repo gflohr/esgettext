@@ -16,7 +16,7 @@
 		"esgettext": "./dist/index.js"
 	},
 	"scripts": {
-		"build": "npm run clean && tsc --project tsconfig-build.json",
+		"build": "npm run clean && tsc --project tsconfig-build.json && chmod +x dist/index.js",
 		"prebuild": "node ./write-package.mjs >src/package.ts",
 		"prepublish": "npm run build",
 		"format": "prettier --write 'src/**/*.ts'",
