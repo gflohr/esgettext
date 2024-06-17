@@ -578,12 +578,13 @@ ${t}l${m}x=${f}(l,${a},p){${tc}${rx}(g({${k},${cc}}),p||{});};
 
 		if (typeof path === 'undefined' || path === null) {
 			const parts = browserEnvironment()
-				? ['', 'assets', 'locale']
-				: ['src', 'assets', 'locale'];
+				? ['', 'locale']
+				: ['.', 'locale'];
 			path = parts.join(pathSeparator);
 		}
 
 		const resolvedLocale = locale ? locale : Textdomain.locale;
+
 		return resolveImpl(
 			this.domain,
 			path,
