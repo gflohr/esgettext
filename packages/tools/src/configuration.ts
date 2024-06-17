@@ -31,6 +31,26 @@ const bugsAddressSchema = v.union([
 	),
 ]);
 
+const programSchema = (program: string) => {
+	return v.strictObject({
+		path: v.pipe(
+			v.string(),
+			v.nonEmpty(
+				gtx._x("The field '{field}' must not be empty!", {
+					field: `programs.${program}.path`,
+				}),
+			),
+		),
+		options: v.array(
+			v.pipe(
+				v.string(),
+				v.regex(new RegExp('^(?:[A-Z]|[-a-z]{2,})')),
+				v.nonEmpty(),
+			),
+		),
+	});
+};
+
 export const ConfigurationSchema = v.strictObject({
 	package: v.optional(
 		v.strictObject({
@@ -119,6 +139,12 @@ export const ConfigurationSchema = v.strictObject({
 			),
 		}),
 	),
+	programs: v.optional(
+		v.strictObject({
+			msgmerge: v.optional(programSchema('msgmerge')),
+			msgfmt: v.optional(programSchema('msgfmt')),
+		}),
+	),
 	files: v.array(v.string()),
 });
 
@@ -176,7 +202,7 @@ export class ConfigurationFactory {
 				if (data) {
 					configuration = data;
 					configuration.files = [file];
-					jsConfigFilePath = filePath;
+					jsConfigFilePath = file;
 
 					if (configuration.package?.['msgid-bugs-address']) {
 						msgidBugsAddressFilePath = filePath;
@@ -287,19 +313,7 @@ export class ConfigurationFactory {
 			);
 
 			for (const issue of issues) {
-				let path;
-				if (issue.path) {
-					const keys = [];
-					for (const s of issue.path) {
-						// The type for v.IssuePathItem is broken at the moment.
-						// It contains a 'key' but this is not typed.
-						const segment = s as { key: string };
-						keys.push(segment.key);
-					}
-					path = keys.join('.');
-				} else {
-					path = gtx._('[path not set');
-				}
+				let path = v.getDotPath(issue) || gtx._('[path not set]');
 
 				const message = issue.issues ? issue.issues[0].message : issue.message;
 
