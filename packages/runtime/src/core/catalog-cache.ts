@@ -1,4 +1,4 @@
-import { validateJsonCatalog } from '../parser';
+import { validateMoJsonCatalog } from '../parser';
 import { Catalog } from './catalog';
 
 interface CatalogCacheInterface {
@@ -71,7 +71,7 @@ export class CatalogCache {
 	): void {
 		if (Promise.resolve(entry) !== entry) {
 			// Object.
-			entry = validateJsonCatalog(entry as Catalog);
+			entry = validateMoJsonCatalog(entry as Catalog);
 		}
 
 		if (!CatalogCache.cache[localeKey]) {

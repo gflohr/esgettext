@@ -5,7 +5,7 @@ import { browserEnvironment } from './browser-environment';
 import { gettextImpl } from './gettext-impl';
 import { germanicPlural } from './germanic-plural';
 import { splitLocale } from './split-locale';
-import { pathSeparator } from './path-separator';
+import { pathSeparator } from './platform';
 import { userLocales } from './user-locales';
 import { selectLocale } from './select-locale';
 import { LocaleContainer } from './locale-container';
@@ -67,12 +67,8 @@ export class Textdomain {
 	private static _locale = 'C';
 
 	private domain: string;
-	private _catalogFormat = 'json';
+	private _catalogFormat = 'mo.json';
 	private catalog: Catalog;
-
-	private constructor() {
-		/* Prevent instantiation. */
-	}
 
 	/**
 	 * Instantiate a Textdomain object. Textdomain objects are singletons
@@ -356,8 +352,7 @@ export class Textdomain {
 		if (Object.prototype.hasOwnProperty.call(Textdomain.domains, textdomain)) {
 			return Textdomain.domains[textdomain];
 		} else {
-			const domain = new Textdomain();
-			domain.domain = textdomain;
+			const domain = new Textdomain(textdomain);
 			Textdomain.domains[textdomain] = domain;
 			domain.catalog = {
 				major: 0,
@@ -365,65 +360,6 @@ export class Textdomain {
 				pluralFunction: germanicPlural,
 				entries: {},
 			};
-
-			/* We generate most of the methods dynamically.  This is really
-			 * ugly but it reduces the size of the bundle significantly.
-			 */
-			if (typeof Textdomain.prototype['_'] !== 'function') {
-				// eslint-disable-next-line @typescript-eslint/no-unused-vars
-				const g = gettextImpl;
-				// eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/unbound-method
-				const x = Textdomain.expand;
-				// eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/unbound-method
-				const lk = CatalogCache.lookup;
-				// eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/unbound-method
-				const gc = this.getCatalog;
-
-				// eslint-disable-next-line @typescript-eslint/no-unused-vars
-				const e = {
-					major: 0,
-					minor: 0,
-					pluralFunction: germanicPlural,
-					entries: {},
-				};
-
-				// Arguments in standardized order.
-				const argNames = ['msgctxt', 'msgid', 'msgidPlural', 'numItems'];
-
-				// Method signatures (range of arguments to pick.)
-				const methodArgs: { [key: string]: Array<number> } = {
-					'': [1, 2],
-					n: [1, 4],
-					p: [0, 2],
-					np: [0, 4],
-				};
-
-				const tp = 'Textdomain.prototype._';
-				const f = 'function';
-				const c = 'catalog:this.catalog';
-				const tc = 'const catalog=Textdomain.getCatalog(l,this.textdomain());';
-				const cc = 'catalog:catalog';
-				const rg = 'return g';
-				const rx = 'return x';
-				for (const m in methodArgs) {
-					if ({}.hasOwnProperty.call(methodArgs, m)) {
-						const range = methodArgs[m];
-						const slice = argNames.slice(range[0], range[1]);
-						const a = slice.join(',');
-						const k = slice.map(a => `${a}:${a}`).join(',');
-						// FIXME! expand arguments msgid => msgid: msgid!  But
-						// shorten the actual arguments to single letters.
-
-						// eslint-disable-next-line no-eval
-						eval(`
-${tp}${m}=${f}(${a}){${rg}({${k},${c}});};
-${tp}l${m}=${f}(l,${a}){${tc}${rg}({${k},${cc}});};
-${tp}${m}x=${f}(${a},p){${rx}(g({${k},${c}}),p||{});};
-${tp}l${m}x=${f}(l,${a},p){${tc}${rx}(g({${k},${cc}}),p||{});};
-`);
-					}
-				}
-			}
 
 			return domain;
 		}
@@ -512,10 +448,76 @@ ${tp}l${m}x=${f}(l,${a},p){${tc}${rx}(g({${k},${cc}}),p||{});};
 		}
 	}
 
+	private constructor(domain: string) {
+		this.domain = domain;
+
+		/* We generate most of the methods dynamically.  This is really
+		 * ugly but it reduces the size of the bundle significantly.
+		 */
+
+		// These closures are called from inside the eval'd code which
+		// outsmarts eslint.
+
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const g = gettextImpl;
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/unbound-method
+		const x = Textdomain.expand;
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/unbound-method
+		const lk = CatalogCache.lookup;
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/unbound-method
+		const gc = Textdomain.getCatalog;
+
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const e = {
+			major: 0,
+			minor: 0,
+			pluralFunction: germanicPlural,
+			entries: {},
+		};
+
+		// Arguments in standardized order.
+		const argNames = ['msgctxt', 'msgid', 'msgidPlural', 'numItems'];
+
+		// Method signatures (range of arguments to pick.)
+		const methodArgs: { [key: string]: Array<number> } = {
+			'': [1, 2],
+			n: [1, 4],
+			p: [0, 2],
+			np: [0, 4],
+		};
+
+		const t = 'this._';
+		const f = 'function';
+		const c = 'catalog:this.catalog';
+		const tc = 'const catalog=Textdomain.getCatalog(l,this.textdomain());';
+		const cc = 'catalog:catalog';
+		const rg = 'return g';
+		const rx = 'return x';
+		for (const m in methodArgs) {
+			if ({}.hasOwnProperty.call(methodArgs, m)) {
+				const range = methodArgs[m];
+				const slice = argNames.slice(range[0], range[1]);
+				const a = slice.join(',');
+				const k = slice.map(a => `${a}:${a}`).join(',');
+
+				const code = `
+${t}${m}=${f}(${a}){${rg}({${k},${c}});};
+${t}l${m}=${f}(l,${a}){${tc}${rg}({${k},${cc}});};
+${t}${m}x=${f}(${a},p){${rx}(g({${k},${c}}),p||{});};
+${t}l${m}x=${f}(l,${a},p){${tc}${rx}(g({${k},${cc}}),p||{});};
+`;
+
+				// eslint-disable-next-line no-eval
+				eval(code);
+			}
+		}
+	}
+
 	/**
 	 * A textdomain is an identifier for your application or library. It is
-	 * the basename of your translation files which are either TEXTDOMAIN.json
-	 * or TEXTDOMAIN.mo, depending on the format you have chosen.
+	 * the basename of your translation files which are either
+	 * TEXTDOMAIN.mo.json or TEXTDOMAIN.mo, depending on the format you have
+	 * chosen.
 	 *
 	 * FIXME! This should be a getter!
 	 *
@@ -578,7 +580,7 @@ ${tp}l${m}x=${f}(l,${a},p){${tc}${rx}(g({${k},${cc}}),p||{});};
 			const parts = browserEnvironment()
 				? ['', 'assets', 'locale']
 				: ['src', 'assets', 'locale'];
-			path = parts.join(pathSeparator());
+			path = parts.join(pathSeparator);
 		}
 
 		const resolvedLocale = locale ? locale : Textdomain.locale;
@@ -598,7 +600,7 @@ ${tp}l${m}x=${f}(l,${a},p){${tc}${rx}(g({${k},${cc}}),p||{});};
 	/**
 	 * Get the catalog format in use.
 	 *
-	 * @returns one of 'json' or 'mo' (default is 'json')
+	 * @returns one of 'mo.json' or 'mo' (default is 'mo.json')
 	 */
 	get catalogFormat(): string {
 		return this._catalogFormat;
@@ -607,12 +609,12 @@ ${tp}l${m}x=${f}(l,${a},p){${tc}${rx}(g({${k},${cc}}),p||{});};
 	/**
 	 * Set the catalog format to use.
 	 *
-	 * @param format - one of 'json' or 'mo'
+	 * @param format - one of 'mo.json' or 'mo'
 	 */
 	set catalogFormat(format: string) {
 		format = format.toLowerCase();
-		if (format === 'json') {
-			this._catalogFormat = 'json';
+		if (format === 'mo.json') {
+			this._catalogFormat = 'mo.json';
 		} else if (format === 'mo') {
 			this._catalogFormat = 'mo';
 		} else {
@@ -652,10 +654,7 @@ ${tp}l${m}x=${f}(l,${a},p){${tc}${rx}(g({${k},${cc}}),p||{});};
 		supported: Array<string>,
 		requested?: Array<string>,
 	): string {
-		return selectLocale(
-			supported,
-			requested ?? Textdomain.userLocales(),
-		);
+		return selectLocale(supported, requested ?? Textdomain.userLocales());
 	}
 
 	/**

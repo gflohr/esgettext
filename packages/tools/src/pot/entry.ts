@@ -36,7 +36,9 @@ export class POTEntry {
 		}
 
 		if (typeof this.properties.msgidPlural !== 'undefined') {
-			if (/[\u0000-\u0006\u000e-\u001f]/.exec(properties.msgidPlural as string)) {
+			if (
+				/[\u0000-\u0006\u000e-\u001f]/.exec(properties.msgidPlural as string)
+			) {
 				throw new Error(
 					gtx._('msgid_plural must not contain control characters.'),
 				);

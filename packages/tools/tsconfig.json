@@ -2,10 +2,12 @@
 	"extends": "../../tsconfig.json",
 	"compilerOptions": {
 		"resolveJsonModule": true,
+		"module": "CommonJS",
 		"baseUrl": ".",
 		"paths": {
 			"@esgettext/runtime": ["../runtime/src"]
 		}
 	},
-	"includes": ["./src"]
+	"includes": ["./src/**/*.ts"],
+	"exclude": ["node_modules", "dist"]
 }

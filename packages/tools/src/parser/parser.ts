@@ -174,7 +174,10 @@ export abstract class Parser {
 			StringLiteral: path => {
 				if (!t.isBinaryExpression(path.parentPath.node)) {
 					const loc = path.node.loc;
-					this.addEntry({ msgid: path.node.value, loc: loc as t.SourceLocation });
+					this.addEntry({
+						msgid: path.node.value,
+						loc: loc as t.SourceLocation,
+					});
 				}
 			},
 		});
@@ -212,7 +215,10 @@ export abstract class Parser {
 			method = path.node.callee.name;
 		} else if (t.isMemberExpression(path.node.callee)) {
 			const instance = new Array<string>();
-			method = this.methodFromMemberExpression(path.node.callee, instance) as string;
+			method = this.methodFromMemberExpression(
+				path.node.callee,
+				instance,
+			) as string;
 			if (method === null) {
 				return;
 			}
@@ -279,7 +285,13 @@ export abstract class Parser {
 			}
 		}
 
-		this.addEntry({ msgid: msgid as string, loc: path.node.loc as t.SourceLocation, method, msgidPlural, msgctxt });
+		this.addEntry({
+			msgid: msgid as string,
+			loc: path.node.loc as t.SourceLocation,
+			method,
+			msgidPlural,
+			msgctxt,
+		});
 	}
 
 	private extractArgument(argument: unknown): string | null | undefined {
@@ -307,7 +319,9 @@ export abstract class Parser {
 		return (left as string) + (right as string);
 	}
 
-	private extractTemplateLiteral(literal: t.TemplateLiteral): string | null | undefined {
+	private extractTemplateLiteral(
+		literal: t.TemplateLiteral,
+	): string | null | undefined {
 		if (
 			literal.expressions.length === 0 &&
 			literal.quasis.length === 1 &&
@@ -492,7 +506,10 @@ export abstract class Parser {
 		let first;
 		for (first = preceding.length - 2; first >= 0; --first) {
 			const commentLocation = preceding[first].loc;
-			if (commentLocation && commentLocation.end.line < (ptr as t.SourceLocation).start.line - 1) {
+			if (
+				commentLocation &&
+				commentLocation.end.line < (ptr as t.SourceLocation).start.line - 1
+			) {
 				break;
 			}
 			ptr = commentLocation;
@@ -573,11 +590,12 @@ export abstract class Parser {
 	protected error(msg: string, loc: t.SourceLocation): void {
 		++this.errors;
 		const start = `${loc.start.line}:${loc.start.column}`;
-		const end = loc.end && loc.end.line > 0 ? `-${loc.end.line}:${loc.end.column}` : '';
+		const end =
+			loc.end && loc.end.line > 0 ? `-${loc.end.line}:${loc.end.column}` : '';
 		const filename =
 			'-' === this.filename ? gtx._('[standard input]') : this.filename;
 		const location = `${filename}:${start}${end}`;
-		console.error(gtx._x('{location}: error: {msg}', { location, msg }));
+		console.error(gtx._x('{location}: Error: {msg}', { location, msg }));
 	}
 
 	private canonicalizeEncoding(encoding: string): string {

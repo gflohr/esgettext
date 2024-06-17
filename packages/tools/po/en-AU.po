@@ -1,0 +1,740 @@
+# Australian English translations for the esgettext package
+# Australian English translation for esgettext.
+# Copyright (C) 2024 Guido Flohr <http://www.guido-flohr.net>
+# This file is distributed under the same license as the esgettext package.
+# Guido Flohr <guido.flohr@cantanea.com>, 2024.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: esgettext 1.1.0\n"
+"Report-Msgid-Bugs-To: MSGID_BUGS_ADDRESS\n"
+"POT-Creation-Date: 2024-06-15 14:47+0300\n"
+"PO-Revision-Date: 2024-06-14 19:15+0300\n"
+"Last-Translator: Guido Flohr <guido.flohr@cantanea.com>\n"
+"Language-Team: English <translation-team-en@lists.sourceforge.net>\n"
+"Language: en-GB\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: ../src/cli/getopt.ts:133
+#, perl-brace-format
+msgid "'{programName}': unrecognized option '--{option}'"
+msgstr ""
+
+#: ../src/cli/getopt.ts:140
+#, perl-brace-format
+msgid "'{programName}': invalid option -- '{option}'"
+msgstr ""
+
+#: ../src/cli/getopt.ts:152
+#, perl-brace-format
+msgid "The option '{option}' can be given only once."
+msgstr ""
+
+#: ../src/cli/getopt.ts:167
+#, perl-brace-format
+msgid "Usage: {programName}"
+msgstr ""
+
+#: ../src/cli/getopt.ts:175
+msgid ""
+"Mandatory arguments to long options are mandatory for short options too.\n"
+msgstr ""
+
+#: ../src/cli/getopt.ts:178
+msgid "Similarly for optional arguments.\n"
+msgstr ""
+
+#: ../src/cli/getopt.ts:180
+msgid "Arguments to options are referred to in CAPS in the description."
+msgstr ""
+
+#: ../src/cli/getopt.ts:194
+msgid "LICENSE: WTFPL <http://www.wtfpl.net/about/>\n"
+msgstr ""
+
+#: ../src/cli/getopt.ts:195
+msgid "This is free software. You can do with it whatever you want.\n"
+msgstr ""
+
+#: ../src/cli/getopt.ts:196
+msgid "There is NO WARRANTY, to the extent permitted by law.\n"
+msgstr ""
+
+#: ../src/cli/getopt.ts:197
+msgid "Written by Guido Flohr."
+msgstr ""
+
+#: ../src/cli/getopt.ts:199
+msgid "Informative output"
+msgstr ""
+
+#: ../src/cli/getopt.ts:203
+msgid "display this help and exit"
+msgstr ""
+
+#: ../src/cli/getopt.ts:207
+msgid "output version information and exit"
+msgstr ""
+
+#: ../src/cli/getopt.ts:214
+msgid "enable verbose output"
+msgstr ""
+
+#: ../src/cli/getopt.ts:219
+msgid "Report bugs at https://github.com/gflohr/esgettext/issues"
+msgstr ""
+
+#: ../src/cli/mo2json-cli.ts:13
+msgid "File locations:"
+msgstr ""
+
+#: ../src/cli/mo2json-cli.ts:20
+msgid "location of the input MO file"
+msgstr ""
+
+#: ../src/cli/mo2json-cli.ts:21
+msgid "Error: the option '--input' is required."
+msgstr ""
+
+#: ../src/cli/mo2json-cli.ts:29
+msgid "location of the output JSON file"
+msgstr ""
+
+#: ../src/cli/mo2json-cli.ts:36 ../src/commands/install.ts:32
+msgid "[OPTIONS]"
+msgstr ""
+
+#: ../src/cli/mo2json-cli.ts:37
+msgid "Convert .mo files into catalog json."
+msgstr "Convert .mo files into catalogue json."
+
+#: ../src/cli/mo2json-cli.ts:55 ../src/cli/msgfmt-all.ts:118
+#: ../src/cli/msgmerge-all.ts:102 ../src/cli/xgettext-cli.ts:331
+#: ../src/index.ts:61
+#, perl-brace-format
+msgid "{programName}: unhandled exception: {exception}"
+msgstr ""
+
+#: ../src/cli/msgfmt-all.ts:13 ../src/cli/msgmerge-all.ts:13
+#: ../src/commands/install.ts:51 ../src/commands/install.ts:58
+#: ../src/commands/install.ts:65
+msgid "Input file options:"
+msgstr ""
+
+#: ../src/cli/msgfmt-all.ts:19 ../src/cli/msgmerge-all.ts:19
+#: ../src/cli/xgettext-cli.ts:239
+msgid ""
+"read package information from PACKAGE_JSON (or 'package.json' without an "
+"argument)"
+msgstr ""
+
+#: ../src/cli/msgfmt-all.ts:32 ../src/cli/msgmerge-all.ts:32
+msgid "list of locales"
+msgstr ""
+
+#: ../src/cli/msgfmt-all.ts:40 ../src/cli/msgmerge-all.ts:40
+msgid "search '.po' files in DIRECTORY"
+msgstr ""
+
+#: ../src/cli/msgfmt-all.ts:46 ../src/commands/install.ts:71
+#: ../src/commands/install.ts:78
+msgid "Output file options:"
+msgstr ""
+
+#: ../src/cli/msgfmt-all.ts:53
+msgid "output file type format (extender)"
+msgstr ""
+
+#: ../src/cli/msgfmt-all.ts:59 ../src/cli/msgmerge-all.ts:46
+msgid "Mode of operation:"
+msgstr ""
+
+#: ../src/cli/msgfmt-all.ts:66
+msgid "msgfmt program if not in PATH"
+msgstr ""
+
+#: ../src/cli/msgfmt-all.ts:77
+msgid "options to pass to msgfmt"
+msgstr ""
+
+#: ../src/cli/msgfmt-all.ts:84 ../src/cli/msgmerge-all.ts:70
+msgid "[OPTIONS] ref.pot"
+msgstr ""
+
+#: ../src/cli/msgfmt-all.ts:85 ../src/cli/msgmerge-all.ts:71
+msgid "Invoke 'msgmerge' for multiple files."
+msgstr ""
+
+#: ../src/cli/msgfmt-all.ts:96 ../src/cli/msgmerge-all.ts:82
+#: ../src/cli/xgettext-cli.ts:314
+#, perl-brace-format
+msgid "{programName}: {error}"
+msgstr ""
+
+#: ../src/cli/msgfmt-all.ts:102 ../src/cli/msgmerge-all.ts:88
+#: ../src/cli/xgettext-cli.ts:320
+#, perl-brace-format
+msgid "Try \"{programName} --help\" for more information!"
+msgstr ""
+
+#: ../src/cli/msgmerge-all.ts:53
+msgid "msgmerge program if not in PATH"
+msgstr ""
+
+#: ../src/cli/msgmerge-all.ts:63
+msgid "options to pass to msgmerge"
+msgstr ""
+
+#: ../src/cli/xgettext-cli.ts:14 ../src/commands/xgettext.ts:80
+#: ../src/commands/xgettext.ts:86
+msgid "Input file location:"
+msgstr ""
+
+#: ../src/cli/xgettext-cli.ts:21 ../src/commands/xgettext.ts:83
+msgid "get list of input files from FILE"
+msgstr ""
+
+#: ../src/cli/xgettext-cli.ts:30
+msgid ""
+"add DIRECTORY to list for input files search\n"
+"If input file is -, standard input is read."
+msgstr ""
+
+#: ../src/cli/xgettext-cli.ts:38 ../src/commands/xgettext.ts:94
+#: ../src/commands/xgettext.ts:100 ../src/commands/xgettext.ts:107
+msgid "Output file location:"
+msgstr ""
+
+#: ../src/cli/xgettext-cli.ts:45 ../src/commands/xgettext.ts:97
+msgid "use NAME.po for output (instead of messages.po)"
+msgstr ""
+
+#: ../src/cli/xgettext-cli.ts:55 ../src/commands/xgettext.ts:103
+msgid "write output to specified file"
+msgstr ""
+
+#: ../src/cli/xgettext-cli.ts:63
+msgid ""
+"output files will be placed in directory DIR\n"
+"If output file is -, output is written to standard output."
+msgstr ""
+
+#: ../src/cli/xgettext-cli.ts:71 ../src/commands/xgettext.ts:116
+msgid "Choice of input file language:"
+msgstr ""
+
+#: ../src/cli/xgettext-cli.ts:78
+msgid ""
+"recognise the specified language (JavaScript, TypeScript, HTML)\n"
+"Default is to auto-detect language based on filename extension."
+msgstr ""
+
+#: ../src/cli/xgettext-cli.ts:86 ../src/commands/xgettext.ts:126
+msgid "Interpretation of input files:"
+msgstr ""
+
+#: ../src/cli/xgettext-cli.ts:92 ../src/commands/xgettext.ts:128
+msgid "encoding of input files"
+msgstr ""
+
+#: ../src/cli/xgettext-cli.ts:99 ../src/commands/xgettext.ts:132
+#: ../src/commands/xgettext.ts:138 ../src/commands/xgettext.ts:145
+#: ../src/commands/xgettext.ts:154
+msgid "Operation mode:"
+msgstr ""
+
+#: ../src/cli/xgettext-cli.ts:106 ../src/commands/xgettext.ts:135
+msgid "join messages with existing file"
+msgstr ""
+
+#: ../src/cli/xgettext-cli.ts:115 ../src/commands/xgettext.ts:141
+msgid "entries from FILE.po are not extracted"
+msgstr ""
+
+#: ../src/cli/xgettext-cli.ts:124 ../src/commands/xgettext.ts:148
+msgid ""
+"place comment blocks starting with TAG and preceding keyword lines in output "
+"file"
+msgstr ""
+
+#: ../src/cli/xgettext-cli.ts:132 ../src/commands/xgettext.ts:155
+msgid "place all comment blocks preceding keyword lines in output file"
+msgstr ""
+
+#: ../src/cli/xgettext-cli.ts:141 ../src/commands/xgettext.ts:161
+#: ../src/commands/xgettext.ts:167 ../src/commands/xgettext.ts:173
+#: ../src/commands/xgettext.ts:181
+msgid "Language specific options:"
+msgstr ""
+
+#: ../src/cli/xgettext-cli.ts:148 ../src/commands/xgettext.ts:164
+msgid "extract all strings"
+msgstr ""
+
+#: ../src/cli/xgettext-cli.ts:157 ../src/commands/xgettext.ts:169
+msgid "look for WORD as an additional keyword"
+msgstr ""
+
+#: ../src/cli/xgettext-cli.ts:165 ../src/commands/xgettext.ts:175
+msgid ""
+"argument: WORD:ARG:FLAG, additional flag for strings inside the argument "
+"number ARG of keyword WORD"
+msgstr ""
+
+#: ../src/cli/xgettext-cli.ts:175 ../src/commands/xgettext.ts:183
+msgid "only accept method calls of specified instance names"
+msgstr ""
+
+#: ../src/cli/xgettext-cli.ts:183
+msgid "Output details"
+msgstr ""
+
+#: ../src/cli/xgettext-cli.ts:189 ../src/commands/xgettext.ts:189
+msgid "write PO file even if empty"
+msgstr ""
+
+#: ../src/cli/xgettext-cli.ts:197 ../src/commands/xgettext.ts:194
+msgid "set output page width"
+msgstr ""
+
+#: ../src/cli/xgettext-cli.ts:204 ../src/commands/xgettext.ts:199
+msgid ""
+"do not break long message lines, longer than the output page width, into "
+"several lines"
+msgstr ""
+
+#: ../src/cli/xgettext-cli.ts:217 ../src/commands/xgettext.ts:210
+msgid "generate sorted output"
+msgstr ""
+
+#: ../src/cli/xgettext-cli.ts:225 ../src/commands/xgettext.ts:216
+msgid "sort output by file location"
+msgstr ""
+
+#: ../src/cli/xgettext-cli.ts:232 ../src/commands/xgettext.ts:221
+msgid "don't write header with msgid '\"\"' entry"
+msgstr ""
+
+#: ../src/cli/xgettext-cli.ts:248 ../src/commands/xgettext.ts:226
+msgid "set copyright holder in output"
+msgstr ""
+
+#: ../src/cli/xgettext-cli.ts:255 ../src/commands/xgettext.ts:232
+msgid "omit FSF copyright in output for foreign user"
+msgstr ""
+
+#: ../src/cli/xgettext-cli.ts:262 ../src/cli/xgettext-cli.ts:269
+#: ../src/commands/xgettext.ts:237
+msgid "set package name in output"
+msgstr ""
+
+#: ../src/cli/xgettext-cli.ts:276 ../src/commands/xgettext.ts:249
+msgid "set report address for msgid bugs"
+msgstr ""
+
+#: ../src/cli/xgettext-cli.ts:284 ../src/commands/xgettext.ts:256
+msgid "use STRING or \"\" as prefix for msgstr values"
+msgstr ""
+
+#: ../src/cli/xgettext-cli.ts:292 ../src/commands/xgettext.ts:262
+msgid "use STRING or \"\" as suffix for msgstr values"
+msgstr ""
+
+#: ../src/cli/xgettext-cli.ts:299 ../src/commands/xgettext.ts:62
+msgid "[OPTIONS] [INPUTFILE]..."
+msgstr ""
+
+#: ../src/cli/xgettext-cli.ts:301
+msgid "Extract translatable strings from given input files"
+msgstr ""
+
+#: ../src/commands/install.ts:36
+msgid "Install translation catalogs."
+msgstr "Install translation catalogues."
+
+#: ../src/commands/install.ts:48
+msgid "List of locale identifiers"
+msgstr ""
+
+#: ../src/commands/install.ts:56
+msgid "Where to search message catalog files"
+msgstr "Where to search message catalogue files"
+
+#: ../src/commands/install.ts:62
+msgid "Input file type"
+msgstr ""
+
+#: ../src/commands/install.ts:69
+msgid "Output directory"
+msgstr ""
+
+#: ../src/commands/install.ts:75
+msgid "Output format"
+msgstr ""
+
+#: ../src/commands/install.ts:83 ../src/commands/xgettext.ts:267
+msgid "Enable verbose output"
+msgstr ""
+
+#: ../src/commands/install.ts:98 ../src/msgfmt-all/msgfmt-all.ts:52
+#: ../src/msgmerge-all/msgmerge-all.ts:69
+msgid "no locales given"
+msgstr ""
+
+#: ../src/commands/install.ts:107
+msgid "only 'mo.json', 'mo', and 'json' are allowed as output formats!"
+msgstr ""
+
+#: ../src/commands/install.ts:162
+#, perl-brace-format
+msgid "Installing '{inFile}' as '{outFile}' ..."
+msgstr ""
+
+#: ../src/commands/install.ts:186 ../src/commands/install.ts:217
+#, perl-brace-format
+msgid "Compiling '{inFile}' into '{outFile}' ..."
+msgstr ""
+
+#: ../src/commands/install.ts:200 ../src/commands/install.ts:247
+#, perl-brace-format
+msgid "{outfile}: write error: {err}"
+msgstr ""
+
+#: ../src/commands/install.ts:231
+#, perl-brace-format
+msgid "{inFile}: plural expressions are not allowed for '.json' output!"
+msgstr ""
+
+#: ../src/commands/xgettext.ts:66
+msgid "Extract translatable strings from given input files."
+msgstr ""
+
+#: ../src/commands/xgettext.ts:89
+msgid ""
+"add directory to list for input files search\n"
+"If input file is -, standard input is read."
+msgstr ""
+
+#: ../src/commands/xgettext.ts:110
+msgid ""
+"output files will be placed in directory DIR. If output file is -, output is "
+"written to standard output."
+msgstr ""
+
+#: ../src/commands/xgettext.ts:121
+msgid ""
+"recognise the specified language (JavaScript, TypeScript, HTML). Default is "
+"to auto-detect language based on filename extension."
+msgstr ""
+
+#: ../src/commands/xgettext.ts:187 ../src/commands/xgettext.ts:192
+#: ../src/commands/xgettext.ts:197 ../src/commands/xgettext.ts:207
+#: ../src/commands/xgettext.ts:213 ../src/commands/xgettext.ts:219
+#: ../src/commands/xgettext.ts:224 ../src/commands/xgettext.ts:230
+#: ../src/commands/xgettext.ts:235 ../src/commands/xgettext.ts:241
+#: ../src/commands/xgettext.ts:247 ../src/commands/xgettext.ts:253
+#: ../src/commands/xgettext.ts:259
+msgid "Output details:"
+msgstr ""
+
+#: ../src/commands/xgettext.ts:243
+msgid "set package version in output"
+msgstr ""
+
+#: ../src/commands/xgettext.ts:310 ../src/xgettext/xgettext.ts:119
+#, perl-brace-format
+msgid "language \"{language}\" unknown"
+msgstr ""
+
+#: ../src/commands/xgettext.ts:334 ../src/xgettext/xgettext.ts:145
+#, perl-brace-format
+msgid "{programName}: error: {message}"
+msgstr ""
+
+#: ../src/commands/xgettext.ts:346 ../src/xgettext/xgettext.ts:157
+#, perl-brace-format
+msgid ""
+"{programName}: error: --join-existing cannot be used, when output is written "
+"to stdout"
+msgstr ""
+
+#: ../src/commands/xgettext.ts:388 ../src/parser/parser.ts:131
+#: ../src/parser/parser.ts:585 ../src/parser/parser.ts:596
+#: ../src/xgettext/xgettext.ts:199
+msgid "[standard input]"
+msgstr ""
+
+#: ../src/commands/xgettext.ts:400 ../src/xgettext/xgettext.ts:211
+#, perl-brace-format
+msgid "{programName}: {exception}"
+msgstr ""
+
+#: ../src/commands/xgettext.ts:476 ../src/xgettext/xgettext.ts:286
+msgid ""
+"language for standard input is unknown without option \"--language\"; will "
+"try JavaScript"
+msgstr ""
+
+#: ../src/commands/xgettext.ts:483 ../src/xgettext/xgettext.ts:293
+#, perl-brace-format
+msgid ""
+"file \"{filename}\" extension \"{extname}\" is unknown; will try JavaScript "
+"instead"
+msgstr ""
+
+#: ../src/commands/xgettext.ts:520 ../src/xgettext/xgettext.ts:330
+#, perl-brace-format
+msgid "{programName}: warning: {msg}"
+msgstr ""
+
+#: ../src/commands/xgettext/files-collector.ts:11
+#: ../src/msgmerge-all/msgmerge-all.ts:57
+msgid "no input file given"
+msgstr ""
+
+#: ../src/configuration.ts:26 ../src/configuration.ts:37
+msgid "The field 'package.msgid-bugs-address' must not be empty!"
+msgstr ""
+
+#: ../src/configuration.ts:29 ../src/configuration.ts:40
+msgid ""
+"The field 'package.msgid-bugs-address' must contain a valid email address or "
+"URL!"
+msgstr ""
+
+#: ../src/configuration.ts:53 ../src/configuration.ts:68
+#: ../src/configuration.ts:82 ../src/configuration.ts:96
+#: ../src/configuration.ts:113
+#, perl-brace-format
+msgid "The field '{field}' must be a string!"
+msgstr ""
+
+#: ../src/configuration.ts:58 ../src/configuration.ts:73
+#: ../src/configuration.ts:87 ../src/configuration.ts:101
+#, perl-brace-format
+msgid "The field '{field}' must not be empty!"
+msgstr ""
+
+#: ../src/configuration.ts:121
+msgid "The entries in 'po.locales' must be strings!"
+msgstr ""
+
+#: ../src/configuration.ts:122
+msgid "The entries in 'po.locales' must not be empty!"
+msgstr ""
+
+#: ../src/configuration.ts:282
+msgid "There is one configuration error:"
+msgid_plural "There are {num} configuration errors:"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../src/configuration.ts:302
+msgid "[path not set"
+msgstr ""
+
+#: ../src/configuration.ts:328
+#, perl-brace-format
+msgid "error: {filename}: {variable}: {message}."
+msgstr ""
+
+#: ../src/index.ts:31
+#, perl-brace-format
+msgid "Additional defaults read from: {files}."
+msgstr ""
+
+#: ../src/index.ts:36
+#, perl-brace-format
+msgid "Report bugs in the bugtracker at {url}!"
+msgstr ""
+
+#: ../src/msgfmt-all/msgfmt-all.ts:32
+msgid "no additional arguments allowed"
+msgstr ""
+
+#: ../src/msgfmt-all/msgfmt-all.ts:90
+#, perl-brace-format
+msgid "Compiling '{po}' into '{mo}'."
+msgstr ""
+
+#: ../src/msgfmt-all/msgfmt-all.ts:118 ../src/msgmerge-all/msgmerge-all.ts:112
+#, perl-brace-format
+msgid "Failed to run '{prg}': {err}"
+msgstr ""
+
+#: ../src/msgmerge-all/msgmerge-all.ts:59
+msgid "exactly one input file is required"
+msgstr ""
+
+#: ../src/msgmerge-all/msgmerge-all.ts:98
+#, perl-brace-format
+msgid "Merging '{pot}' into '{po}'."
+msgstr ""
+
+#: ../src/parser/parser.ts:109
+msgid ""
+"Non-ASCII character.\n"
+"Please specify the encoding through \"--from-code\"."
+msgstr ""
+
+#: ../src/parser/parser.ts:121
+msgid "invalid multibyte sequence"
+msgstr ""
+
+#: ../src/parser/parser.ts:334
+msgid ""
+"template literals with embedded expressions are not allowed as arguments to "
+"gettext functions because they are not constant"
+msgstr ""
+
+#: ../src/parser/parser.ts:587 ../src/pot/entry.ts:472
+#, perl-brace-format
+msgid "{location}: warning: {msg}"
+msgstr ""
+
+#: ../src/parser/parser.ts:598 ../src/pot/entry.ts:461
+#, perl-brace-format
+msgid "{location}: error: {msg}"
+msgstr ""
+
+#: ../src/parser/po.ts:37
+#, perl-brace-format
+msgid "unsupported encoding \"{encoding}\""
+msgstr ""
+
+#: ../src/parser/po.ts:101
+msgid "inconsistent use of #~"
+msgstr ""
+
+#: ../src/parser/po.ts:198
+#, perl-brace-format
+msgid "the charset \"{charset}\" is not a portable encoding name."
+msgstr ""
+
+#: ../src/parser/po.ts:204
+msgid "message conversion to the users charset might not work."
+msgstr ""
+
+#: ../src/parser/po.ts:224
+msgid "missing \"msgid\" section"
+msgstr ""
+
+#: ../src/parser/po.ts:228
+msgid "duplicate message definition..."
+msgstr ""
+
+#: ../src/parser/po.ts:230
+msgid "...this is the location of the first definition"
+msgstr ""
+
+#: ../src/parser/po.ts:280 ../src/parser/po.ts:289 ../src/parser/po.ts:298
+#: ../src/parser/po.ts:307
+#, perl-brace-format
+msgid "duplicate \"{keyword}\" section"
+msgstr ""
+
+#: ../src/parser/po.ts:315
+#, perl-brace-format
+msgid "keyword \"{keyword}\" unknown"
+msgstr ""
+
+#: ../src/parser/po.ts:342 ../src/parser/po.ts:348
+msgid "end-of-line within string"
+msgstr ""
+
+#: ../src/parser/po.ts:383
+msgid "invalid control sequence"
+msgstr ""
+
+#: ../src/parser/po.ts:423
+msgid "ignoring empty flag"
+msgstr ""
+
+#: ../src/parser/po.ts:446
+#, perl-brace-format
+msgid "ignoring mal-formed reference \"{reference}\""
+msgstr ""
+
+#: ../src/parser/po.ts:457
+msgid "syntax error"
+msgstr ""
+
+#: ../src/pot/entry.ts:35
+msgid "msgid must not contain control characters."
+msgstr ""
+
+#: ../src/pot/entry.ts:43
+msgid "msgid_plural must not contain control characters."
+msgstr ""
+
+#: ../src/pot/entry.ts:54
+msgid ""
+"Empty msgid.  It is reserved by esgettext.\n"
+"Calling gettext('') returns the header entry with meta information, not the "
+"empty string.\n"
+"Consider adding a message context, if this is done intentionally."
+msgstr ""
+
+#: ../src/pot/entry.ts:197
+#, perl-brace-format
+msgid "flag \"{flag}\" conflicts with previous flag \"{negated}\""
+msgstr ""
+
+#: ../src/pot/entry.ts:205
+#, perl-brace-format
+msgid "The conflicting flag \"{negated}\" may stem from this location:"
+msgid_plural ""
+"The conflicting flag \"{negated}\" may stem from one of these locations:"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../src/pot/entry.ts:422
+#, perl-brace-format
+msgid ""
+"internationalized messages should not contain the '{escape}' escape sequence"
+msgstr ""
+
+#: ../src/pot/entry.ts:438
+msgid "filenames must not contain space or newlines"
+msgstr ""
+
+#: ../src/pot/entry.ts:450
+msgid "flags must not contain commas or newlines"
+msgstr ""
+
+#: ../src/pot/entry.ts:456 ../src/pot/entry.ts:466
+msgid "[in memory]"
+msgstr ""
+
+#: ../src/pot/keyword.ts:44
+#, perl-brace-format
+msgid "Multiple meanings for argument #{num} for function \"{function}\"!"
+msgstr ""
+
+#: ../src/pot/keyword.ts:55
+#, perl-brace-format
+msgid "Multiple context arguments for function \"{function}\"!"
+msgstr ""
+
+#: ../src/pot/keyword.ts:64
+#, perl-brace-format
+msgid "Multiple total arguments for function \"{function}\"!"
+msgstr ""
+
+#: ../src/pot/keyword.ts:72
+#, perl-brace-format
+msgid "Too many forms for function \"{function}\"!"
+msgstr ""
+
+#: ../src/pot/keyword.ts:88
+#, perl-brace-format
+msgid "Multiple extracted comments for function \"{function}\"!"
+msgstr ""
+
+#: ../src/pot/keyword.ts:96
+#, perl-brace-format
+msgid "Invalid argument specification \"{spec}\" for function \"{function}\"!"
+msgstr ""

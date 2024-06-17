@@ -10,7 +10,7 @@ PACKAGES = existing additional
 #CATALOGS = $(addsuffix .po, LINGUAS)
 CATALOGS = $(LINGUAS)
 MO_FILES = $(foreach pkg,$(PACKAGES), $(addprefix $(pkg)., $(addsuffix .gmo, $(LINGUAS))))
-JSON_FILES = $(foreach pkg,$(PACKAGES), $(addprefix $(pkg)., $(addsuffix .json, $(LINGUAS))))
+JSON_FILES = $(foreach pkg,$(PACKAGES), $(addprefix $(pkg)., $(addsuffix .mo.json, $(LINGUAS))))
 
 MSGMERGE  = msgmerge
 MSGFMT    = msgfmt
@@ -32,8 +32,8 @@ install: $(MO_FILES) $(JSON_FILES)
 			mocat="$$package.$$lang.gmo"; \
 			echo "installing $$mocat as $$dest"; \
 			install -C $$mocat $$dest && chmod 644 $$dest || exit 1; \
-			dest="$$targetdir/$$lang/LC_MESSAGES/$$package.json"; \
-			jsoncat="$$package.$$lang.json"; \
+			dest="$$targetdir/$$lang/LC_MESSAGES/$$package.mo.json"; \
+			jsoncat="$$package.$$lang.mo.json"; \
 			echo "installing $$jsoncat as $$dest"; \
 			mkdir -p "$$targetdir/$$lang/LC_MESSAGES"; \
 			install -C $$jsoncat $$dest && chmod 644 $$dest || exit 1; \
@@ -46,10 +46,10 @@ clean:
 	rm -f $(MO_FILES) $(JSON_FILES) *~
 
 .SUFFIXES:
-.SUFFIXES: .po .gmo .json
+.SUFFIXES: .po .gmo .mo.json
 
 .po.gmo:
 	$(MSGFMT) --check --statistics --verbose -o $@ $<
 
-.gmo.json:
+.gmo.mo.json:
 	$(MO2JSON) --input=$< >$@

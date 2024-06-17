@@ -302,7 +302,7 @@ msgstr[1] ""
 			expect(errorSpy).toHaveBeenCalledTimes(1);
 			expect(errorSpy).toHaveBeenNthCalledWith(
 				1,
-				'example.js:1:13-1:28: error: template literals with embedded' +
+				'example.js:1:13-1:28: Error: template literals with embedded' +
 					' expressions are not allowed as arguments to gettext' +
 					' functions because they are not constant',
 			);
@@ -351,7 +351,7 @@ msgstr[1] ""
 			expect(errorSpy).toHaveBeenCalledTimes(1);
 			expect(errorSpy).toHaveBeenNthCalledWith(
 				1,
-				'example.js:1:26-1:43: error: template literals with embedded' +
+				'example.js:1:26-1:43: Error: template literals with embedded' +
 					' expressions are not allowed as arguments to gettext' +
 					' functions because they are not constant',
 			);
@@ -400,7 +400,7 @@ msgstr[1] ""
 			expect(errorSpy).toHaveBeenCalledTimes(1);
 			expect(errorSpy).toHaveBeenNthCalledWith(
 				1,
-				'example.js:1:26-1:43: error: template literals with embedded' +
+				'example.js:1:26-1:43: Error: template literals with embedded' +
 					' expressions are not allowed as arguments to gettext' +
 					' functions because they are not constant',
 			);
@@ -490,7 +490,7 @@ msgstr ""
 			expect(p.parse(Buffer.from(code), 'example.js')).toBeFalsy();
 			expect(errorSpy).toHaveBeenCalledTimes(1);
 			expect(errorSpy).toHaveBeenCalledWith(
-				'example.js:1:12-1:23: error:' +
+				'example.js:1:12-1:23: Error:' +
 					' template literals with embedded expressions are not' +
 					' allowed as arguments to gettext functions because' +
 					' they are not constant',

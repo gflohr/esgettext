@@ -4,7 +4,7 @@ import { Textdomain } from './textdomain';
 import { CatalogCache } from './catalog-cache';
 import { browserEnvironment } from './browser-environment';
 import { germanicPlural } from './germanic-plural';
-import { pathSeparator } from './path-separator';
+import { pathSeparator } from './platform';
 import { Catalog } from './catalog';
 
 const defaultCatalog: Catalog = {
@@ -21,10 +21,10 @@ describe('resolve', () => {
 	});
 
 	describe('simple test', () => {
-		it('should return something for mytest.json', () => {
+		it('should return something for mytest.mo.json', () => {
 			const gtx = Textdomain.getInstance('mytest');
 
-			gtx.catalogFormat = 'json';
+			gtx.catalogFormat = 'mo.json';
 			return gtx.resolve().then(catalog => {
 				expect(catalog).toBeTruthy();
 			});
@@ -74,7 +74,7 @@ describe('resolve', () => {
 			browserEnvironment(true);
 
 			const body = JSON.stringify(catalog);
-			mock.get('/assets/locale/de/LC_MESSAGES/http.json', {
+			mock.get('/assets/locale/de/LC_MESSAGES/http.mo.json', {
 				status: 200,
 				body: body,
 			});
@@ -92,7 +92,7 @@ describe('resolve', () => {
 			gtx.bindtextdomain('http://example.com/assets/locale');
 
 			const body = JSON.stringify(catalog);
-			mock.get('http://example.com/assets/locale/de/LC_MESSAGES/http.json', {
+			mock.get('http://example.com/assets/locale/de/LC_MESSAGES/http.mo.json', {
 				status: 200,
 				body: body,
 			});
@@ -109,10 +109,13 @@ describe('resolve', () => {
 			gtx.bindtextdomain('https://example.com/assets/locale');
 
 			const body = JSON.stringify(catalog);
-			mock.get('https://example.com/assets/locale/de/LC_MESSAGES/http.json', {
-				status: 200,
-				body: body,
-			});
+			mock.get(
+				'https://example.com/assets/locale/de/LC_MESSAGES/http.mo.json',
+				{
+					status: 200,
+					body: body,
+				},
+			);
 
 			return gtx.resolve().then(data => {
 				// FIXME! xhr-mock does not implement arraybuffer response types
@@ -126,7 +129,7 @@ describe('resolve', () => {
 			gtx.bindtextdomain('file:///app/assets/locale');
 
 			const body = JSON.stringify(catalog);
-			mock.get('file:///app/assets/locale/de/LC_MESSAGES/http.json', {
+			mock.get('file:///app/assets/locale/de/LC_MESSAGES/http.mo.json', {
 				status: 200,
 				body: body,
 			});
@@ -247,8 +250,8 @@ describe('special cases', () => {
 
 		const url = 'mailto:guido.flohr@cantanea.com';
 
-		const path = [url, 'de', 'LC_MESSAGES', 'mailto.json'].join(
-			pathSeparator(),
+		const path = [url, 'de', 'LC_MESSAGES', 'mailto.mo.json'].join(
+			pathSeparator,
 		);
 
 		it('should use the fs transport', async () => {

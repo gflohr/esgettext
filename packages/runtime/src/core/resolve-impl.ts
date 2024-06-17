@@ -1,7 +1,7 @@
 import { TransportHttp } from '../transport/http';
 import { TransportFs } from '../transport/fs';
 import { Transport } from '../transport/transport.interface';
-import { parseJsonCatalog, parseMoCatalog } from '../parser';
+import { parseMoJsonCatalog, parseMoCatalog } from '../parser';
 import { browserEnvironment } from './browser-environment';
 import { Catalog, CatalogEntries } from './catalog';
 import { SplitLocale, splitLocale } from './split-locale';
@@ -46,8 +46,8 @@ function loadCatalog(url: string, format: string): Promise<Catalog> {
 
 	type Validator = (data: ArrayBuffer) => Catalog;
 	let validator: Validator;
-	if ('json' === format) {
-		validator = parseJsonCatalog;
+	if ('mo.json' === format) {
+		validator = parseMoJsonCatalog;
 	} else {
 		validator = parseMoCatalog;
 	}

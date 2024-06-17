@@ -1,0 +1,9 @@
+{
+	"major": 0,
+	"minor": 0,
+	"entries": {
+		"": [
+			"Project-Id-Version: esgettext 1.1.0\nReport-Msgid-Bugs-To: Guido Flohr <guido.flohr@cantanea.com>\nPO-Revision-Date: 2024-06-14 19:15+0300\nLast-Translator: Guido Flohr <guido.flohr@cantanea.com>\nLanguage-Team: English <translation-team-en@lists.sourceforge.net>\nLanguage: en-GB\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
+		]
+	}
+}

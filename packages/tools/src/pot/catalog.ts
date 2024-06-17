@@ -239,7 +239,10 @@ FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 			body = copy.entries
 				.filter(isNotHeader)
 				.map(entry => {
-					return { refs: splitRefs(entry.properties.references as string[]), entry };
+					return {
+						refs: splitRefs(entry.properties.references as string[]),
+						entry,
+					};
 				})
 				.sort(compareSplitRefs)
 				.map(split => split.entry)

@@ -2,8 +2,8 @@
 	"$schema": "http://json-schema.org/draft-07/schema",
 	"$id": "http://www.cantanea.com/schemas/message-catalog.json",
 	"type": "object",
-	"title": "JSON Message Catalog",
-	"description": "A schema for a message catalog.",
+	"title": "JSON Machine Object Catalog",
+	"description": "A schema for a message catalog in mo.json format.",
 	"additionalProperties": false,
 	"required": ["major", "minor", "entries"],
 	"properties": {

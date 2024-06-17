@@ -10,34 +10,25 @@ export function validateJsonCatalog(udata: unknown): Catalog {
 		throw new Error('catalog is either null or undefined');
 	}
 
-	const data = udata as Catalog;
-	if (data.constructor !== Object) {
-		throw new Error('catalog must be a dictionary');
-	}
-
-	// We don't care about major and minor because they are actually not
-	// used.
-
-	if (!Object.prototype.hasOwnProperty.call(data, 'entries')) {
-		throw new Error('catalog.entries does not exist');
-	}
-
-	const entries = data.entries;
-	if (entries === null || typeof entries === 'undefined') {
-		throw new Error('catalog.entries are not defined or null');
-	}
-
+	const entries = udata;
 	if (entries.constructor !== Object) {
-		throw new Error('catalog.entries must be a dictionary');
+		new Error('catalog must be a dictionary');
 	}
 
-	for (const [key, value] of Object.entries(entries)) {
-		if (!Array.isArray(value)) {
-			throw new Error(`catalog entry for key '${key}' is not an array`);
-		}
+	// Convert to a regular catalog.
+	const catalog: Catalog = {
+		major: 0,
+		minor: 1,
+		pluralFunction: () => 0,
+		entries: {},
+	};
+
+	for (const [msgid, msgstr] of Object.entries(entries)) {
+		// Just stringify all values but do not complain.
+		catalog.entries[msgid] = [msgstr.toString()];
 	}
 
-	return data;
+	return catalog;
 }
 
 export function parseJsonCatalog(json: ArrayBuffer): Catalog {

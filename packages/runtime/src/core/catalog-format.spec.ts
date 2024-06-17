@@ -5,15 +5,15 @@ import { Textdomain } from '../index';
 describe('format', () => {
 	const gtx = Textdomain.getInstance('mytest');
 	describe('default', () => {
-		it('should default to json', () => {
-			expect(gtx.catalogFormat).toEqual('json');
+		it('should default to mo.json', () => {
+			expect(gtx.catalogFormat).toEqual('mo.json');
 		});
 	});
 
 	describe('setting', () => {
 		it('should accept json', () => {
-			gtx.catalogFormat = 'json';
-			expect(gtx.catalogFormat).toEqual('json');
+			gtx.catalogFormat = 'mo.json';
+			expect(gtx.catalogFormat).toEqual('mo.json');
 		});
 		it('should accept mo', () => {
 			gtx.catalogFormat = 'mo';
@@ -25,9 +25,9 @@ describe('format', () => {
 	});
 
 	describe('normalize', () => {
-		it('should lowercase jSoN', () => {
-			gtx.catalogFormat = 'jSoN';
-			expect(gtx.catalogFormat).toEqual('json');
+		it('should lowercase mO.jSoN', () => {
+			gtx.catalogFormat = 'mO.jSoN';
+			expect(gtx.catalogFormat).toEqual('mo.json');
 		});
 		it('should lowercase mO', () => {
 			gtx.catalogFormat = 'mO';

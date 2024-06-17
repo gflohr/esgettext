@@ -1,7 +1,3 @@
-import { sep } from 'path';
-import { pathSeparator } from './core/path-separator';
-pathSeparator(sep);
-
 import { userLocales } from './core/user-locales';
 // FIXME! Windows!
 if (typeof process.env.LANGUAGE !== 'undefined') {
@@ -16,4 +12,4 @@ if (typeof process.env.LANGUAGE !== 'undefined') {
 
 export * from './core';
 
-export { parseMoCatalog } from './parser';
+export { parseMoCatalog, parseMoJsonCatalog } from './parser';

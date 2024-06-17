@@ -69,13 +69,13 @@ You normally install the library with `npm` or `yarn`.
 With `npm`:
 
 ```shell
-$ npm install --save esgettext
+$ npm install --save @esgettext/runtime
 ```
 
 Or with `yarn`:
 
 ```shell
-$ yarn add esgettext
+$ yarn add @esgettext/runtime
 ```
 
 ### Import the Library
@@ -85,7 +85,7 @@ How to import the library, depends on your environment.
 If you have the `import` keyword:
 
 ```javascript
-import Textdomain from '@esgettext/runtime';
+import { Textdomain } from '@esgettext/runtime';
 ```
 
 If you can use `require`:
@@ -150,8 +150,8 @@ You then have to tell the library where to find translations for the "hello"
 textdomain. You do that with the instance method
 [`bindtextdomain()`](https://gflohr.github.io/esgettext/packages/runtime/api-docs/classes/textdomain.html#bindtextdomain) that
 receives a (base) directory as its argument. The actual translation catalog
-would then be searched at `/assets/locale/fr/LC_MESSAGES/hello.json` (or
-`hello.mo` depending on your environment).
+would then be searched at `/assets/locale/fr/LC_MESSAGES/hello.mo.json` (or
+`hello.mo` or `hello.json`, depending on your environment).
 
 Don't worry that there are no translations at the moment. Failure is handled
 gracefully by the library falling back to using the original, untranslated
