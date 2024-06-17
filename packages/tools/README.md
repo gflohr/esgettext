@@ -129,8 +129,10 @@ $ npx esgettext --help
 
 ### `esgettext xgettext`
 
-The command `esgetext xgettext` extracts translatable strings from your source
+The command `npx esgetext xgettext` extracts translatable strings from your source
 files into `.po` resp. `.pot` files.
+
+You can use `npx esgettext extract` as an alias for `npx esgettext xgettext`.
 
 See the detailed
 [esgettext-xgettext usage information](./README-esgettext-xgettext.md)
