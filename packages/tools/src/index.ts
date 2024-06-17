@@ -5,10 +5,11 @@ import { Textdomain } from '@esgettext/runtime';
 import { Command } from './command';
 import { ConfigurationFactory } from './configuration';
 import { XGettext } from './commands/xgettext';
+import { MsgmergeAll } from './commands/msgmerge-all';
 import { Install } from './commands/install';
 import { Convert } from './commands/convert';
 
-const commandNames = ['xgettext', 'install', 'convert'];
+const commandNames = ['xgettext', 'msgmerge-all', 'install', 'convert'];
 
 const gtx = Textdomain.getInstance('com.cantanea.esgettext-tools');
 gtx
@@ -21,6 +22,7 @@ gtx
 
 		const commands: { [key: string]: Command } = {
 			xgettext: new XGettext(configuration),
+			'msgmerge-all': new MsgmergeAll(configuration),
 			install: new Install(configuration),
 			convert: new Convert(configuration),
 		};
