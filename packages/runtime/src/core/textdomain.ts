@@ -450,67 +450,6 @@ export class Textdomain {
 
 	private constructor(domain: string) {
 		this.domain = domain;
-
-		/* We generate most of the methods dynamically.  This is really
-		 * ugly but it reduces the size of the bundle significantly.
-		 */
-
-		// These closures are called from inside the eval'd code which
-		// outsmarts eslint.
-
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		const g = gettextImpl;
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/unbound-method
-		const x = Textdomain.expand;
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/unbound-method
-		const lk = CatalogCache.lookup;
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/unbound-method
-		const gc = Textdomain.getCatalog;
-
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		const e = {
-			major: 0,
-			minor: 0,
-			pluralFunction: germanicPlural,
-			entries: {},
-		};
-
-		// Arguments in standardized order.
-		const argNames = ['msgctxt', 'msgid', 'msgidPlural', 'numItems'];
-
-		// Method signatures (range of arguments to pick.)
-		const methodArgs: { [key: string]: Array<number> } = {
-			'': [1, 2],
-			n: [1, 4],
-			p: [0, 2],
-			np: [0, 4],
-		};
-
-		const t = 'this._';
-		const f = 'function';
-		const c = 'catalog:this.catalog';
-		const tc = 'const catalog=Textdomain.getCatalog(l,this.textdomain());';
-		const cc = 'catalog:catalog';
-		const rg = 'return g';
-		const rx = 'return x';
-		for (const m in methodArgs) {
-			if ({}.hasOwnProperty.call(methodArgs, m)) {
-				const range = methodArgs[m];
-				const slice = argNames.slice(range[0], range[1]);
-				const a = slice.join(',');
-				const k = slice.map(a => `${a}:${a}`).join(',');
-
-				const code = `
-${t}${m}=${f}(${a}){${rg}({${k},${c}});};
-${t}l${m}=${f}(l,${a}){${tc}${rg}({${k},${cc}});};
-${t}${m}x=${f}(${a},p){${rx}(g({${k},${c}}),p||{});};
-${t}l${m}x=${f}(l,${a},p){${tc}${rx}(g({${k},${cc}}),p||{});};
-`;
-
-				// eslint-disable-next-line no-eval
-				eval(code);
-			}
-		}
 	}
 
 	/**
@@ -781,5 +720,67 @@ ${t}l${m}x=${f}(l,${a},p){${tc}${rx}(g({${k},${cc}}),p||{});};
 		placeholders?: Placeholders,
 	): string {
 		return Textdomain.expand(msgid, placeholders ?? {});
+	}
+}
+
+/* We generate most of the methods dynamically.  This is really
+	* ugly but it reduces the size of the bundle significantly.
+	*/
+
+// These closures are called from inside the eval'd code which
+// outsmarts eslint.
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const g = gettextImpl;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/unbound-method
+const x = Textdomain['expand'];
+// eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/unbound-method
+const lk = CatalogCache.lookup;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/unbound-method
+const gc = Textdomain['getCatalog'];
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const e = {
+	major: 0,
+	minor: 0,
+	pluralFunction: germanicPlural,
+	entries: {},
+};
+
+// Arguments in standardized order.
+const argNames = ['msgctxt', 'msgid', 'msgidPlural', 'numItems'];
+
+// Method signatures (range of arguments to pick.)
+const methodArgs: { [key: string]: Array<number> } = {
+	'': [1, 2],
+	n: [1, 4],
+	p: [0, 2],
+	np: [0, 4],
+};
+
+const t = 'Textdomain.prototype._';
+const f = 'function';
+const c = 'catalog:this.catalog';
+const tc = 'const catalog=Textdomain.getCatalog(l,this.textdomain());';
+const cc = 'catalog:catalog';
+const rg = 'return g';
+const rx = 'return x';
+for (const m in methodArgs) {
+	if ({}.hasOwnProperty.call(methodArgs, m)) {
+		const range = methodArgs[m];
+		const slice = argNames.slice(range[0], range[1]);
+		const a = slice.join(',');
+		const k = slice.map(a => `${a}:${a}`).join(',');
+
+		const code = `
+${t}${m}=${f}(${a}){${rg}({${k},${c}});};
+${t}l${m}=${f}(l,${a}){${tc}${rg}({${k},${cc}});};
+${t}${m}x=${f}(${a},p){${rx}(g({${k},${c}}),p||{});};
+${t}l${m}x=${f}(l,${a},p){${tc}${rx}(g({${k},${cc}}),p||{});};
+`;
+
+		// It is not possible to shut up rollup about eval being dangerous.
+		// Therefore, we hide it a little bit.
+		(eval)(code);
 	}
 }
