@@ -14,7 +14,7 @@ interface MsgmergeAllOptions {
 	msgmerge: string;
 	options: string[];
 	verbose: boolean;
-	[key: string]: string[] | string | boolean,
+	[key: string]: string[] | string | boolean;
 }
 
 const gtx = Textdomain.getInstance('com.cantanea.esgettext-tools');

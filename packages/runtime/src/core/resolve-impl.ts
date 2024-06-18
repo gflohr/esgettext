@@ -1,7 +1,11 @@
 import { TransportHttp } from '../transport/http';
 import { TransportFs } from '../transport/fs';
 import { Transport } from '../transport/transport.interface';
-import { parseMoJsonCatalog, parseMoCatalog } from '../parser';
+import {
+	parseMoJsonCatalog,
+	parseJsonCatalog,
+	parseMoCatalog,
+} from '../parser';
 import { browserEnvironment } from './browser-environment';
 import { Catalog, CatalogEntries } from './catalog';
 import { SplitLocale, splitLocale } from './split-locale';
@@ -10,47 +14,54 @@ import { CatalogCache } from './catalog-cache';
 import { explodeLocale, ExplodedLocale } from './explode-locale';
 import { LocaleContainer } from './locale-container';
 
-/* eslint-disable no-console */
-
 type PluralFunction = (numItems: number) => number;
 
+const isBrowser = process.env.BROWSER_ENV;
+
 function loadCatalog(url: string, format: string): Promise<Catalog> {
-	let transport;
-
-	// Check whether this is a valid URL.
-	try {
-		const parsedURL = new URL(url);
-		if (
-			parsedURL.protocol === 'https:' ||
-			parsedURL.protocol === 'http:' ||
-			parsedURL.protocol === 'file:'
-		) {
-			transport = 'http';
-		} else {
-			throw new Error(`unsupported scheme ${parsedURL.protocol}`);
-		}
-	} catch (e) {
-		if (browserEnvironment()) {
-			transport = 'http';
-		} else {
-			transport = 'fs';
-		}
-	}
-
 	let transportInstance: Transport;
-	if (transport === 'http') {
-		transportInstance = new TransportHttp();
+
+	if (!isBrowser) {
+		let transport;
+		// Check whether this is a valid URL.
+		try {
+			const parsedURL = new URL(url);
+			if (
+				parsedURL.protocol === 'https:' ||
+				parsedURL.protocol === 'http:' ||
+				parsedURL.protocol === 'file:'
+			) {
+				transport = 'http';
+			} else {
+				throw new Error(`unsupported scheme ${parsedURL.protocol}`);
+			}
+		} catch (e) {
+			if (browserEnvironment()) {
+				transport = 'http';
+			} else {
+				transport = 'fs';
+			}
+		}
+
+		if (transport === 'http') {
+			transportInstance = new TransportHttp();
+		} else {
+			transportInstance = new TransportFs();
+		}
 	} else {
-		transportInstance = new TransportFs();
+		transportInstance = new TransportHttp();
 	}
 
 	type Validator = (data: ArrayBuffer) => Catalog;
 	let validator: Validator;
 	if ('mo.json' === format) {
 		validator = parseMoJsonCatalog;
+	} else if ('.json' === format) {
+		validator = parseJsonCatalog;
 	} else {
 		validator = parseMoCatalog;
 	}
+
 	return new Promise<Catalog>((resolve, reject) => {
 		transportInstance
 			.loadFile(url)

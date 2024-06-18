@@ -1,3 +1,5 @@
+#! /usr/bin/env node
+
 import yargs from 'yargs';
 
 import { Package } from './package';
@@ -10,7 +12,13 @@ import { Install } from './commands/install';
 import { Convert } from './commands/convert';
 import { MsgfmtAll } from './commands/msgfmt-all';
 
-const commandNames = ['xgettext', 'msgmerge-all', 'msgfmt-all', 'install', 'convert'];
+const commandNames = [
+	'xgettext',
+	'msgmerge-all',
+	'msgfmt-all',
+	'install',
+	'convert',
+];
 
 const gtx = Textdomain.getInstance('com.cantanea.esgettext-tools');
 gtx
@@ -53,8 +61,9 @@ gtx
 		for (const name of commandNames) {
 			const command = commands[name];
 
-			const commandName = command.synopsis() ?
-				`${name} ${command.synopsis()}` : name;
+			const commandName = command.synopsis()
+				? `${name} ${command.synopsis()}`
+				: name;
 
 			program.command({
 				command: commandName,

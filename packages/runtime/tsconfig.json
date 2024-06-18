@@ -5,7 +5,9 @@
 		"outDir": "lib",
 		"baseUrl": ".",
 		"skipLibCheck": true,
-		"declarationDir": "./lib",
+		"declaration": true,
+		"declarationMap": true,
+		"declarationDir": "./dist",
 		"rootDir": "./src",
 		"module": "ESNext"
 	},

@@ -3,6 +3,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as v from 'valibot';
 import '@valibot/i18n/de';
+import { Package } from './package';
 
 const gtx = Textdomain.getInstance('com.cantanea.esgettext-tools');
 
@@ -221,6 +222,8 @@ export class ConfigurationFactory {
 					}
 
 					break;
+				} else {
+					return null;
 				}
 			}
 		}
@@ -358,7 +361,22 @@ export class ConfigurationFactory {
 	): Promise<Configuration | null> {
 		const extension = path.extname(filePath);
 		if (extension === '.mjs' || extension === '.cjs' || extension === '.js') {
-			return import(filePath).then(module => module.default).catch(() => null);
+			return import(filePath)
+				.then(module => module.default)
+				.catch(error => {
+					console.error(
+						gtx._x(
+							'{programName}: {filename}: error reading configuration: {error}',
+							{
+								programName: Package.getName(),
+								filename: path.basename(filePath),
+								error,
+							},
+						),
+					);
+
+					return null;
+				});
 		} else if (extension === '.json') {
 			try {
 				return JSON.parse(fs.readFileSync(filePath, 'utf-8')) as Configuration;

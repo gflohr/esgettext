@@ -36,4 +36,4 @@ if (
 userLocales(locales);
 
 export * from './core';
-export { parseMoCatalog, parseMoJsonCatalog } from './parser';
+export { parseMoCatalog, parseMoJsonCatalog, parseJsonCatalog } from './parser';

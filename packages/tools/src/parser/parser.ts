@@ -7,8 +7,6 @@ import { Catalog } from '../pot/catalog';
 import { POTEntry } from '../pot/entry';
 import { Keyword } from '../pot/keyword';
 
-/* eslint-disable no-console */
-
 const gtx = Textdomain.getInstance('tools');
 
 interface EntryProperties {
