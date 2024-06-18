@@ -28,13 +28,23 @@ export default [
 			format: 'umd',
 			sourcemap: true,
 		},
+		external: ['fs'],
 		plugins: [
+			// First replace the import.
 			replace({
 				values: {
 					'./fs': JSON.stringify('./fs-browser'),
 					'../transport/fs': JSON.stringify('../transport/fs-browser'),
 				},
 				delimiters: ["'", "'"],
+				preventAssignment: true,
+			}),
+			// Now set the isBrowser variable so that the tree-shaking can
+			// eliminate the node specific code.
+			replace({
+				values: {
+					'process.env.BROWSER_ENV': JSON.stringify(true),
+				},
 				preventAssignment: true,
 			}),
 			resolve(),
@@ -47,7 +57,17 @@ export default [
 	{
 		input: 'src/index.ts',
 		external: ['fs'],
-		plugins: [typescript()],
+		plugins: [
+			// Now set the isBrowser variable so that the tree-shaking can
+			// eliminate the node specific code.
+			replace({
+				values: {
+					'process.env.BROWSER_ENV': JSON.stringify(false),
+				},
+				preventAssignment: true,
+			}),
+			typescript(),
+		],
 		onwarn: warningHandler,
 		output: [
 			{ file: pkg.main, format: 'cjs', sourcemap: true },
