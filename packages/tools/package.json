@@ -2,6 +2,9 @@
 	"name": "@esgettext/tools",
 	"version": "1.0.0",
 	"description": "Gettext-like po creation and manipulation",
+	"publishConfig": {
+		"access": "public"
+	},
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"repository": "https://github.com/gflohr/esgettext",
@@ -68,7 +71,7 @@
 		"@types/jsonfile": "^6.1.4",
 		"@types/node": "^20.14.2",
 		"@types/yargs": "^17.0.32",
-		"eslint": "^9.5.0",
+		"eslint": "^8.56.0",
 		"jest": "^29.7.0",
 		"prettier": "^3.3.2",
 		"rimraf": "^5.0.7",
