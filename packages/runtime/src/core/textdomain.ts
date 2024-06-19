@@ -630,7 +630,7 @@ export class Textdomain {
 
 		if (typeof path === 'undefined' || path === null) {
 			const parts = browserEnvironment()
-				? ['', 'locale']
+				? ['', 'assets', 'locale']
 				: ['.', 'locale'];
 			path = parts.join(pathSeparator);
 		}
