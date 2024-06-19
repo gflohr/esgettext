@@ -2,8 +2,11 @@ import { Textdomain } from './textdomain';
 import { Catalog } from './catalog';
 import { gettextImpl } from './gettext-impl';
 
+const localeDir = 'src/locale';
+
 describe('translation functions without catalog', () => {
 	const gtx = Textdomain.getInstance('test');
+	gtx.bindtextdomain(localeDir);
 
 	describe('normal gettext (_)', () => {
 		it('should echo its argument', () => {
@@ -25,6 +28,7 @@ describe('translation functions without catalog', () => {
 
 describe('existing translations for locale de', () => {
 	const gtx = Textdomain.getInstance('existing');
+	gtx.bindtextdomain(localeDir);
 
 	beforeAll(() => {
 		Textdomain.locale = 'de';
@@ -58,7 +62,9 @@ describe('existing translations for locale de', () => {
 
 describe('translations from multiple packages de', () => {
 	const gtx1 = Textdomain.getInstance('existing');
+	gtx1.bindtextdomain(localeDir);
 	const gtx2 = Textdomain.getInstance('additional');
+	gtx2.bindtextdomain(localeDir);
 
 	beforeAll(() => {
 		Textdomain.locale = 'de';
@@ -85,6 +91,7 @@ describe('translations from multiple packages de', () => {
 
 describe('existing translations for locale de_AT', () => {
 	const gtx = Textdomain.getInstance('existing');
+	gtx.bindtextdomain(localeDir);
 
 	beforeAll(() => {
 		Textdomain.locale = 'de_AT';
@@ -118,6 +125,7 @@ describe('existing translations for locale de_AT', () => {
 
 describe('_x() (placeholder strings)', () => {
 	const gtx = Textdomain.getInstance('existing');
+	gtx.bindtextdomain(localeDir);
 
 	beforeAll(() => {
 		Textdomain.locale = 'de_AT';
@@ -166,6 +174,7 @@ describe('_x() (placeholder strings)', () => {
 
 describe('_n() (plural forms)', () => {
 	const gtx = Textdomain.getInstance('existing');
+	gtx.bindtextdomain(localeDir);
 
 	beforeAll(() => {
 		Textdomain.locale = 'de_AT';
@@ -193,6 +202,7 @@ describe('_n() (plural forms)', () => {
 
 describe('_nx() (plural forms with placeholder expansion)', () => {
 	const gtx = Textdomain.getInstance('existing');
+	gtx.bindtextdomain(localeDir);
 
 	beforeAll(() => {
 		Textdomain.locale = 'de_AT';
@@ -240,6 +250,7 @@ describe('_nx() (plural forms with placeholder expansion)', () => {
 
 describe('_p() (with context)', () => {
 	const gtx = Textdomain.getInstance('existing');
+	gtx.bindtextdomain(localeDir);
 
 	beforeAll(() => {
 		Textdomain.locale = 'de_AT';
@@ -277,6 +288,7 @@ describe('_p() (with context)', () => {
 
 describe('_px() (with context and placeholders)', () => {
 	const gtx = Textdomain.getInstance('existing');
+	gtx.bindtextdomain(localeDir);
 
 	beforeAll(() => {
 		Textdomain.locale = 'de_AT';
@@ -334,6 +346,7 @@ describe('_px() (with context and placeholders)', () => {
 
 describe('_np() (with context and placeholders)', () => {
 	const gtx = Textdomain.getInstance('existing');
+	gtx.bindtextdomain(localeDir);
 
 	beforeAll(() => {
 		Textdomain.locale = 'de_AT';
@@ -374,6 +387,7 @@ describe('_np() (with context and placeholders)', () => {
 
 describe('_npx() (with plural, context and placeholders)', () => {
 	const gtx = Textdomain.getInstance('existing');
+	gtx.bindtextdomain(localeDir);
 
 	beforeAll(() => {
 		Textdomain.locale = 'de_AT';
@@ -466,6 +480,7 @@ describe('_npx() (with plural, context and placeholders)', () => {
 
 describe('_l methods with fixed locale', () => {
 	const gtx = Textdomain.getInstance('existing');
+	gtx.bindtextdomain(localeDir);
 
 	beforeAll(() => {
 		return gtx.resolve('de');
@@ -491,6 +506,7 @@ describe('_l methods with fixed locale', () => {
 
 describe('no-op methods', () => {
 	const gtx = Textdomain.getInstance('test');
+	gtx.bindtextdomain(localeDir);
 
 	describe('N_()', () => {
 		it('the instance method should return the msgid', () => {

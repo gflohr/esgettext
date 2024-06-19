@@ -16,7 +16,7 @@
 			"skipFiles": [
 				"<node_internals>/**"
 			],
-			"program": "${workspaceFolder}/packages/hello-world/src/hello-world.ts"
+			"program": "${file}"
 		},
 	]
 }

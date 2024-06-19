@@ -576,12 +576,18 @@ export class Textdomain {
 	/**
 	 * Bind a textdomain to a certain path or queries the path that a
 	 * textdomain is bound to. The catalog file will be searched
-	 * in `${path}/locale/LC_MESSAGES/${domainname}.EXT`.
+	 * in `${path}/LC_MESSAGES/${domainname}.EXT` where `EXT` is the
+	 * selected catalog format (one of `mo.json`, `mo`, or `json`).
 	 *
 	 * Alternatively, you can pass a [[`LocaleContainer`]] that holds the
 	 * catalogs in memory.
 	 *
+	 * The returned string or `LocaleContainer` is valid until the next
+	 * `bindtextdomain` call with an argument.
+	 *
 	 * @param path - the base path or [[`LocaleContainer`]] for this textdomain
+	 *
+	 * @returns the current base directory or [[`LocaleContainer`]] for this domain, after possibly changing it.
 	 */
 	bindtextdomain(path?: string | LocaleContainer): string | LocaleContainer {
 		if (typeof path !== 'undefined') {
@@ -624,8 +630,8 @@ export class Textdomain {
 
 		if (typeof path === 'undefined' || path === null) {
 			const parts = browserEnvironment()
-				? ['', 'assets', 'locale']
-				: ['src', 'assets', 'locale'];
+				? ['', 'locale']
+				: ['.', 'locale'];
 			path = parts.join(pathSeparator);
 		}
 

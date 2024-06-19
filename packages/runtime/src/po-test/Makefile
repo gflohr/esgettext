@@ -22,7 +22,7 @@ default: install
 
 install: $(MO_FILES) $(JSON_FILES)
 	cd $(srcdir); \
-	targetdir='$(top_srcdir)/src/assets/locale'; \
+	targetdir='$(top_srcdir)/src/locale'; \
 	languages='$(LINGUAS)'; \
 	packages='$(PACKAGES)'; \
 	for package in $$packages; do \

@@ -14,6 +14,8 @@ const defaultCatalog: Catalog = {
 	entries: {},
 };
 
+const localeDir = 'src/locale';
+
 describe('resolve', () => {
 	beforeEach(() => {
 		CatalogCache.clear();
@@ -74,7 +76,7 @@ describe('resolve', () => {
 			browserEnvironment(true);
 
 			const body = JSON.stringify(catalog);
-			mock.get('/assets/locale/de/LC_MESSAGES/http.mo.json', {
+			mock.get('/locale/de/LC_MESSAGES/http.mo.json', {
 				status: 200,
 				body: body,
 			});
@@ -89,10 +91,10 @@ describe('resolve', () => {
 		});
 
 		it('should use http transport for http URLs', async () => {
-			gtx.bindtextdomain('http://example.com/assets/locale');
+			gtx.bindtextdomain('http://example.com/locale');
 
 			const body = JSON.stringify(catalog);
-			mock.get('http://example.com/assets/locale/de/LC_MESSAGES/http.mo.json', {
+			mock.get('http://example.com/locale/de/LC_MESSAGES/http.mo.json', {
 				status: 200,
 				body: body,
 			});
@@ -106,11 +108,11 @@ describe('resolve', () => {
 		});
 
 		it('should use http transport for https URLs', async () => {
-			gtx.bindtextdomain('https://example.com/assets/locale');
+			gtx.bindtextdomain('https://example.com/locale');
 
 			const body = JSON.stringify(catalog);
 			mock.get(
-				'https://example.com/assets/locale/de/LC_MESSAGES/http.mo.json',
+				'https://example.com/locale/de/LC_MESSAGES/http.mo.json',
 				{
 					status: 200,
 					body: body,
@@ -126,10 +128,10 @@ describe('resolve', () => {
 		});
 
 		it('should use http transport for file URLs', async () => {
-			gtx.bindtextdomain('file:///app/assets/locale');
+			gtx.bindtextdomain('file:///app/locale');
 
 			const body = JSON.stringify(catalog);
-			mock.get('file:///app/assets/locale/de/LC_MESSAGES/http.mo.json', {
+			mock.get('file:///app/locale/de/LC_MESSAGES/http.mo.json', {
 				status: 200,
 				body: body,
 			});
@@ -332,6 +334,7 @@ describe('special cases', () => {
 		it('should return a catalog for fi_FI', async () => {
 			Textdomain.locale = 'fi_FI';
 			const gtx = Textdomain.getInstance('existing');
+			gtx.bindtextdomain('src/locale');
 
 			return gtx.resolve().then(catalog => {
 				expect(catalog.entries).toBeDefined();
