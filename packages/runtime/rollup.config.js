@@ -9,15 +9,6 @@ const pkg = JSON.parse(
 	fs.readFileSync('./package.json', { encoding: 'utf-8' }),
 );
 
-// Unfortunately, for the time being, we need eval() because writing out the
-// various methods of a Textdomain instance produces a lot of code, see the
-// comment at the end of `src/core/textdomain.ts`.  If you have a better
-// idea than just shutting up the warning, let me know about it.
-const warningHandler = warning => {
-	if (warning.code === 'EVAL') return;
-	console.error(warning.message);
-};
-
 export default [
 	// UMD build for the browser.
 	{
@@ -49,10 +40,11 @@ export default [
 			}),
 			resolve(),
 			commonjs(),
-			typescript(),
+			typescript({
+				exclude: 'src/**/*.spec.ts',
+			}),
 			terser(),
 		],
-		onwarn: warningHandler,
 	},
 	{
 		input: 'src/index.ts',
@@ -66,9 +58,10 @@ export default [
 				},
 				preventAssignment: true,
 			}),
-			typescript(),
+			typescript({
+				exclude: 'src/**/*.spec.ts',
+			}),
 		],
-		onwarn: warningHandler,
 		output: [
 			{ file: pkg.main, format: 'cjs', sourcemap: true },
 			{ file: pkg.module, format: 'es', sourcemap: true },

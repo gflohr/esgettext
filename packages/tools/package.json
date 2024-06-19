@@ -7,21 +7,25 @@
 	},
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
-	"repository": "https://github.com/gflohr/esgettext",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/gflohr/esgettext.git"
+	},
 	"bugs": {
 		"url": "https://github.com/gflohr/esgettext/issues"
 	},
 	"homepage": "https://github.com/gflohr/esgettext/packages/tools",
 	"files": [
-		"dist/"
+		"dist"
 	],
 	"bin": {
-		"esgettext": "./dist/index.js"
+		"esgettext": "dist/index.js"
 	},
 	"scripts": {
 		"build": "npm run clean && tsc --project tsconfig-build.json && chmod +x dist/index.js",
 		"prebuild": "node ./write-package.mjs >src/package.ts",
-		"prepublish": "npm run build",
+		"prepublishOnly": "npm run check:clean && npm run build",
+		"check:clean": "../../check-clean",
 		"format": "prettier --write 'src/**/*.ts'",
 		"watch": "tsc --watch",
 		"prewatch": "node ./write-package.mjs >src/package.ts",

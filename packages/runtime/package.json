@@ -10,14 +10,18 @@
 	"publishConfig": {
 		"access": "public"
 	},
-	"repository": "https://github.com/gflohr/esgettext",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/gflohr/esgettext.git"
+	},
 	"bugs": {
 		"url": "https://github.com/gflohr/esgettext/issues"
 	},
 	"homepage": "https://github.com/gflohr/esgettext/packages/runtime",
 	"scripts": {
 		"build": "rimraf dist && rollup -c",
-		"prepublishOnly": "npm run build",
+		"prepublishOnly": "npm run check:clean && npm run build",
+		"check:clean": "../../check-clean",
 		"format": "prettier --write 'src/**/*.ts'",
 		"watch": "tsc --watch",
 		"lint": "eslint './src/**/*.ts'",
@@ -32,6 +36,9 @@
 	},
 	"author": "Guido Flohr <guido.flohr@cantanea.com> (http://www.guido.flohr.net/)",
 	"license": "WTFPL",
+	"files": [
+		"dist"
+	],
 	"jest": {
 		"moduleFileExtensions": [
 			"js",

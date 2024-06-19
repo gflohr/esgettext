@@ -100,7 +100,7 @@ _FIXME! Is this correct?_
 If you are writing javascript loaded by a browser:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@esgettext/runtime/_bundles/runtime.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@esgettext/runtime/dist/esgettext.min.js"></script>
 <script>
 	var Textdomain = esgettext.Textdomain;
 	// ... your code follows.
