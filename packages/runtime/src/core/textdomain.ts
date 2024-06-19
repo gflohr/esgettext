@@ -85,7 +85,9 @@ export class Textdomain {
 	 *
 	 * @returns the translated string
 	 */
-	_: (msgid: string) => string;
+	_(msgid: string) {
+		return gettextImpl({ msgid: msgid, catalog: this.catalog });
+	}
 
 	/**
 	 * Retrieve a translation for a string containing a possible plural.
@@ -98,7 +100,14 @@ export class Textdomain {
 	 *
 	 * @returns the translated string
 	 */
-	_n: (msgid: string, msgidPlural: string, numItems: number) => string;
+	_n(msgid: string, msgidPlural: string, numItems: number) {
+		return gettextImpl({
+			msgid: msgid,
+			msgidPlural: msgidPlural,
+			numItems: numItems,
+			catalog: this.catalog,
+		});
+	}
 
 	/**
 	 * Translate a string with a context.
@@ -108,7 +117,13 @@ export class Textdomain {
 	 *
 	 * @returns the translated string
 	 */
-	_p: (msgctxt: string, msgid: string) => string;
+	_p(msgctxt: string, msgid: string) {
+		return gettextImpl({
+			msgctxt: msgctxt,
+			msgid: msgid,
+			catalog: this.catalog,
+		});
+	}
 
 	/**
 	 * The method `_np()` combines `_n()` with `_p()`.
@@ -121,12 +136,15 @@ export class Textdomain {
 	 * @param placeholders - a dictionary with placehoders
 	 * @returns the translated string
 	 */
-	_np: (
-		msgctxt: string,
-		msgid: string,
-		msgidPlural: string,
-		numItems: number,
-	) => string;
+	_np(msgctxt: string, msgid: string, msgidPlural: string, numItems: number) {
+		return gettextImpl({
+			msgctxt: msgctxt,
+			msgid: msgid,
+			msgidPlural: msgidPlural,
+			numItems: numItems,
+			catalog: this.catalog,
+		});
+	}
 
 	/**
 	 * Translate a string with placeholders. The placeholders should be
@@ -138,7 +156,12 @@ export class Textdomain {
 	 *
 	 * @returns the translated string with placeholders expanded
 	 */
-	_x: (msgid: string, placeholders?: Placeholders) => string;
+	_x(msgid: string, placeholders?: Placeholders) {
+		return Textdomain.expand(
+			gettextImpl({ msgid: msgid, catalog: this.catalog }),
+			placeholders || {},
+		);
+	}
 
 	/**
 	 * Translate a string with a plural expression with placeholders.
@@ -150,12 +173,22 @@ export class Textdomain {
 	 *
 	 * @returns the translated string
 	 */
-	_nx: (
+	_nx(
 		msgid: string,
 		msgidPlural: string,
 		numItems: number,
 		placeholders?: Placeholders,
-	) => string;
+	) {
+		return Textdomain.expand(
+			gettextImpl({
+				msgid: msgid,
+				msgidPlural: msgidPlural,
+				numItems: numItems,
+				catalog: this.catalog,
+			}),
+			placeholders || {},
+		);
+	}
 
 	/**
 	 * The method `_px()` combines `_p()` with `_x()`.
@@ -165,7 +198,12 @@ export class Textdomain {
 	 * @param placeholders - an optional dictionary with placehoders
 	 * @returns the translated string
 	 */
-	_px: (msgctxt: string, msgid: string, placeholders?: Placeholders) => string;
+	_px(msgctxt: string, msgid: string, placeholders?: Placeholders) {
+		return Textdomain.expand(
+			gettextImpl({ msgctxt: msgctxt, msgid: msgid, catalog: this.catalog }),
+			placeholders || {},
+		);
+	}
 
 	/**
 	 * The method `_npx()` brings it all together. It combines `_n()` and
@@ -178,13 +216,24 @@ export class Textdomain {
 	 * @param placeholders - an optional dictionary with placehoders
 	 * @returns the translated string
 	 */
-	_npx: (
+	_npx(
 		msgctxt: string,
 		msgid: string,
 		msgidPlural: string,
 		numItems: number,
 		placeholders?: Placeholders,
-	) => string;
+	) {
+		return Textdomain.expand(
+			gettextImpl({
+				msgctxt: msgctxt,
+				msgid: msgid,
+				msgidPlural: msgidPlural,
+				numItems: numItems,
+				catalog: this.catalog,
+			}),
+			placeholders || {},
+		);
+	}
 
 	private static getCatalog(locale: string, textdomain: string): Catalog {
 		const catalog = CatalogCache.lookup(locale, textdomain);
@@ -208,7 +257,10 @@ export class Textdomain {
 	 *
 	 * @returns the translated string
 	 */
-	_l: (locale: string, msgid: string) => string;
+	_l(locale: string, msgid: string) {
+		const catalog = Textdomain.getCatalog(locale, this.textdomain());
+		return gettextImpl({ msgid: msgid, catalog: catalog });
+	}
 
 	/**
 	 * Retrieve a translation for a string containing a possible plural with
@@ -223,12 +275,15 @@ export class Textdomain {
 	 *
 	 * @returns the translated string
 	 */
-	_ln: (
-		locale: string,
-		msgid: string,
-		msgidPlural: string,
-		numItems: number,
-	) => string;
+	_ln(locale: string, msgid: string, msgidPlural: string, numItems: number) {
+		const catalog = Textdomain.getCatalog(locale, this.textdomain());
+		return gettextImpl({
+			msgid: msgid,
+			msgidPlural: msgidPlural,
+			numItems: numItems,
+			catalog: catalog,
+		});
+	}
 
 	/**
 	 * Translate a string with a context with a fixed locale.
@@ -239,7 +294,10 @@ export class Textdomain {
 	 *
 	 * @returns the translated string
 	 */
-	_lp: (locale: string, msgctxt: string, msgid: string) => string;
+	_lp(locale: string, msgctxt: string, msgid: string) {
+		const catalog = Textdomain.getCatalog(locale, this.textdomain());
+		return gettextImpl({ msgctxt: msgctxt, msgid: msgid, catalog: catalog });
+	}
 
 	/**
 	 * The method `_lnp()` combines `_ln()` with `_lp()`.
@@ -253,13 +311,22 @@ export class Textdomain {
 	 * @param placeholders - a dictionary with placehoders
 	 * @returns the translated string
 	 */
-	_lnp: (
+	_lnp(
 		locale: string,
 		msgctxt: string,
 		msgid: string,
 		msgidPlural: string,
 		numItems: number,
-	) => string;
+	) {
+		const catalog = Textdomain.getCatalog(locale, this.textdomain());
+		return gettextImpl({
+			msgctxt: msgctxt,
+			msgid: msgid,
+			msgidPlural: msgidPlural,
+			numItems: numItems,
+			catalog: catalog,
+		});
+	}
 
 	/**
 	 * Translate a string with placeholders for a fixed locale.
@@ -273,7 +340,13 @@ export class Textdomain {
 	 *
 	 * @returns the translated string with placeholders expanded
 	 */
-	_lx: (locale: string, msgid: string, placeholders?: Placeholders) => string;
+	_lx(locale: string, msgid: string, placeholders?: Placeholders) {
+		const catalog = Textdomain.getCatalog(locale, this.textdomain());
+		return Textdomain.expand(
+			gettextImpl({ msgid: msgid, catalog: catalog }),
+			placeholders || {},
+		);
+	}
 
 	/**
 	 * Translate a string with a plural expression with placeholders into a
@@ -287,13 +360,24 @@ export class Textdomain {
 	 *
 	 * @returns the translated string
 	 */
-	_lnx: (
+	_lnx(
 		locale: string,
 		msgid: string,
 		msgidPlural: string,
 		numItems: number,
 		placeholders?: Placeholders,
-	) => string;
+	) {
+		const catalog = Textdomain.getCatalog(locale, this.textdomain());
+		return Textdomain.expand(
+			gettextImpl({
+				msgid: msgid,
+				msgidPlural: msgidPlural,
+				numItems: numItems,
+				catalog: catalog,
+			}),
+			placeholders || {},
+		);
+	}
 
 	/**
 	 * The method `_lpx()` combines `_lp()` with `_lx()`.
@@ -304,7 +388,18 @@ export class Textdomain {
 	 * @param placeholders - an optional dictionary with placehoders
 	 * @returns the translated string
 	 */
-	_lpx: (msgctxt: string, msgid: string, placeholders?: Placeholders) => string;
+	_lpx(
+		locale: string,
+		msgctxt: string,
+		msgid: string,
+		placeholders?: Placeholders,
+	) {
+		const catalog = Textdomain.getCatalog(locale, this.textdomain());
+		return Textdomain.expand(
+			gettextImpl({ msgctxt: msgctxt, msgid: msgid, catalog: catalog }),
+			placeholders || {},
+		);
+	}
 
 	/**
 	 * The method `_lnpx()` brings it all together. It combines `_ln()` and
@@ -318,14 +413,26 @@ export class Textdomain {
 	 * @param placeholders - an optional dictionary with placehoders
 	 * @returns the translated string
 	 */
-	_lnpx: (
+	_lnpx(
 		locale: string,
 		msgctxt: string,
 		msgid: string,
 		msgidPlural: string,
 		numItems: number,
 		placeholders?: Placeholders,
-	) => string;
+	) {
+		const catalog = Textdomain.getCatalog(locale, this.textdomain());
+		return Textdomain.expand(
+			gettextImpl({
+				msgctxt: msgctxt,
+				msgid: msgid,
+				msgidPlural: msgidPlural,
+				numItems: numItems,
+				catalog: catalog,
+			}),
+			placeholders || {},
+		);
+	}
 
 	private static expand(
 		msg: string,
@@ -720,59 +827,5 @@ export class Textdomain {
 		placeholders?: Placeholders,
 	): string {
 		return Textdomain.expand(msgid, placeholders ?? {});
-	}
-}
-
-/* We generate most of the methods dynamically.  This is really
- * ugly but it reduces the size of the bundle significantly.
- *
- * The tree-shaking argument also doesn't seem to be valid because except for
- * trivial/irrelevant cases, the tree-shaking will not remove enought code
- * to beat our eval version.  But I am open to suggestions on how to improve
- * this mess if it does not increase the (compressed) bundled size
- * significantly.
- */
-
-// These closures are called from inside the eval'd code which
-// outsmarts eslint.
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const g = gettextImpl;
-// eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/unbound-method
-const x = Textdomain['expand'];
-
-// Arguments in standardized order.
-const argNames = ['msgctxt', 'msgid', 'msgidPlural', 'numItems'];
-
-// Method signatures (range of arguments to pick.)
-const methodArgs: { [key: string]: Array<number> } = {
-	'': [1, 2],
-	n: [1, 4],
-	p: [0, 2],
-	np: [0, 4],
-};
-
-const t = 'Textdomain.prototype._';
-const f = 'function';
-const c = 'catalog:this.catalog';
-const tc = 'const catalog=Textdomain.getCatalog(l,this.textdomain());';
-const cc = 'catalog:catalog';
-const rg = 'return g';
-const rx = 'return x';
-for (const m in methodArgs) {
-	if ({}.hasOwnProperty.call(methodArgs, m)) {
-		const range = methodArgs[m];
-		const slice = argNames.slice(range[0], range[1]);
-		const a = slice.join(',');
-		const k = slice.map(a => `${a}:${a}`).join(',');
-
-		const code = `
-${t}${m}=${f}(${a}){${rg}({${k},${c}});};
-${t}l${m}=${f}(l,${a}){${tc}${rg}({${k},${cc}});};
-${t}${m}x=${f}(${a},p){${rx}(g({${k},${c}}),p||{});};
-${t}l${m}x=${f}(l,${a},p){${tc}${rx}(g({${k},${cc}}),p||{});};
-`;
-
-		eval(code);
 	}
 }
