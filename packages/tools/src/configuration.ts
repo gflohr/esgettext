@@ -170,6 +170,8 @@ export class ConfigurationFactory {
 	private constructor() {}
 
 	public static async create(
+		jsConfigFiles: Array<string>,
+		pkgJsonFile: string,
 		lang: string | undefined,
 	): Promise<Configuration | null> {
 		if (ConfigurationFactory.instance) {
@@ -179,13 +181,6 @@ export class ConfigurationFactory {
 		if (lang && !lang.match(/^zh-/)) {
 			lang = lang.replace(/-.*/, '');
 		}
-
-		const jsConfigFiles = [
-			'esgettext.config.mjs',
-			'esgettext.config.cjs',
-			'esgettext.config.js',
-			'esgettext.config.json',
-		];
 		let jsConfigFilePath;
 		let msgidBugsAddressFilePath;
 		let nameFilePath;
@@ -238,7 +233,7 @@ export class ConfigurationFactory {
 			!configuration.package['copyright-holder'] ||
 			!configuration.package['version']
 		) {
-			const packageJsonPath = path.join(rootPath, 'package.json');
+			const packageJsonPath = pkgJsonFile;
 			if (fs.existsSync(packageJsonPath)) {
 				const packageJson = JSON.parse(
 					fs.readFileSync(packageJsonPath, 'utf-8'),
@@ -383,7 +378,13 @@ export class ConfigurationFactory {
 			} catch {
 				return null;
 			}
+		} else {
+			throw new Error(gtx._x("{programName}: Error: {filename}: Configuration file name must end in '.mjs', '.cjs', '.js', or '.json'!",
+				{
+					programName: Package.name(),
+					filename: filePath,
+				}
+			));
 		}
-		return null;
 	}
 }

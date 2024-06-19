@@ -1,16 +1,16 @@
 #! /usr/bin/env node
 
-import yargs from 'yargs';
+import yargs, { alias } from 'yargs';
 
-import { Package } from './package';
+import { Package } from './package.js';
 import { Textdomain } from '@esgettext/runtime';
-import { Command } from './command';
-import { ConfigurationFactory } from './configuration';
-import { XGettext } from './commands/xgettext';
-import { MsgmergeAll } from './commands/msgmerge-all';
-import { Install } from './commands/install';
-import { Convert } from './commands/convert';
-import { MsgfmtAll } from './commands/msgfmt-all';
+import { Command } from './command.js';
+import { ConfigurationFactory } from './configuration.js';
+import { XGettext } from './commands/xgettext.js';
+import { MsgmergeAll } from './commands/msgmerge-all.js';
+import { Install } from './commands/install.js';
+import { Convert } from './commands/convert.js';
+import { MsgfmtAll } from './commands/msgfmt-all.js';
 
 const commandNames = [
 	'xgettext',
@@ -20,13 +20,16 @@ const commandNames = [
 	'convert',
 ];
 
+const configFiles = locateConfigFiles();
+const pkgJsonFile = locatePkgJsonFile();
+
 const gtx = Textdomain.getInstance('com.cantanea.esgettext-tools');
 gtx
 	.resolve()
 	.then(async () => {
 		const locale = Textdomain.selectLocale(['en-US', 'en-GB', 'de']);
 		const ulocale = locale.replace('-', '_');
-		const configuration = await ConfigurationFactory.create(locale);
+		const configuration = await ConfigurationFactory.create(configFiles, pkgJsonFile, locale);
 		if (!configuration) process.exit(1);
 
 		const commands: { [key: string]: Command } = {
@@ -40,6 +43,20 @@ gtx
 		const program = yargs(process.argv.slice(2))
 			.locale(ulocale)
 			.strict()
+			.options({
+				configuration: {
+					alias: ['config-file'],
+					type: 'string',
+					describe: gtx._('Path to configuration file'),
+					default: 'esgettext.config.{mjs,cjs,js,json}'
+				},
+				package: {
+					alias: ['package-json'],
+					type: 'string',
+					describe: gtx._("Path to 'package.json'"),
+					default: 'package.json',
+				}
+			})
 			.showHelpOnFail(
 				false,
 				gtx._x("Try {programName} '--help' for more information!", {
@@ -90,3 +107,34 @@ gtx
 			exception,
 		});
 	});
+
+
+function getArgument(option: string): string | null {
+	const longOption = '--' + option;
+	const longOptionRe = new RegExp(`^${longOption}=.+`);
+	const args = process.argv.slice(2);
+
+	for (const [index, arg] of args.entries()) {
+		if (arg == longOption && index < args.length) {
+			return args[index + 1];
+		} else if (arg.match(longOptionRe)) {
+			return arg.substring(longOption.length + 1);
+		} else if (arg[0] !== '-') {
+			break;
+		}
+	}
+
+	return null;
+}
+
+function locateConfigFiles(): Array<string> {
+	const configFile = getArgument('config-file') ?? getArgument('configuration');
+
+	return configFile !== null ? [configFile] : ['esgettext.config.mjs', 'esgettext.config.cjs', 'esgettext.config.js', 'esgettext.config.json'];
+}
+
+function locatePkgJsonFile(): string {
+	const configFile = getArgument('package') ?? getArgument('package-json');
+
+	return configFile !== null ? configFile : 'package.json';
+}
