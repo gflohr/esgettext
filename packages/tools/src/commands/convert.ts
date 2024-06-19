@@ -25,12 +25,10 @@ type ConvertOptions = {
 };
 
 export class Convert implements Command {
-	private options: ConvertOptions;
-	private readonly configuration: Configuration;
+	private options: ConvertOptions = undefined as unknown as ConvertOptions;
 
-	constructor(configuration: Configuration) {
-		this.configuration = configuration;
-	}
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	constructor(_: Configuration) {}
 
 	synopsis(): string {
 		return `[${gtx._('INPUTFILE')}] [${gtx._('OUTPUTFILE')}]`;

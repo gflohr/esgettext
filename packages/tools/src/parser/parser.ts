@@ -29,10 +29,10 @@ export interface ParserOptions {
 }
 
 export abstract class Parser {
-	protected filename: string;
-	protected errors: number;
-	private comments: Array<t.CommentBlock>;
-	private readonly instances: Array<Array<string>>;
+	protected filename: string = '';
+	protected errors: number = 0;
+	private comments: Array<t.CommentBlock> = [];
+	private readonly instances?: Array<Array<string>>;
 
 	private readonly keywords: {
 		[key: string]: Keyword;
@@ -194,7 +194,7 @@ export abstract class Parser {
 	}
 
 	private checkInstance(instance: Array<string>): boolean {
-		if (!this.options.instance) {
+		if (!this.instances) {
 			return true;
 		}
 

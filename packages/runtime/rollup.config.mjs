@@ -10,12 +10,12 @@ const pkg = JSON.parse(
 );
 
 export default [
-	// UMD build for the browser.
+	// UMD builds for the browser.
 	{
 		input: 'src/index-browser.ts',
 		output: {
 			name: 'esgettext',
-			file: pkg.browser,
+			file: 'esgettext.min.js',
 			format: 'umd',
 			sourcemap: true,
 		},
@@ -44,6 +44,40 @@ export default [
 				exclude: 'src/**/*.spec.ts',
 			}),
 			terser(),
+		],
+	},
+	{
+		input: 'src/index-browser.ts',
+		output: {
+			name: 'esgettext',
+			file: 'esgettext.js',
+			format: 'umd',
+			sourcemap: true,
+		},
+		external: ['fs'],
+		plugins: [
+			// First replace the import.
+			replace({
+				values: {
+					'./fs': JSON.stringify('./fs-browser'),
+					'../transport/fs': JSON.stringify('../transport/fs-browser'),
+				},
+				delimiters: ["'", "'"],
+				preventAssignment: true,
+			}),
+			// Now set the isBrowser variable so that the tree-shaking can
+			// eliminate the node specific code.
+			replace({
+				values: {
+					'process.env.BROWSER_ENV': JSON.stringify(true),
+				},
+				preventAssignment: true,
+			}),
+			resolve(),
+			commonjs(),
+			typescript({
+				exclude: 'src/**/*.spec.ts',
+			}),
 		],
 	},
 	{

@@ -20,8 +20,8 @@ interface MsgfmtAllOptions {
 const gtx = Textdomain.getInstance('com.cantanea.esgettext-tools');
 
 export class MsgfmtAll implements Command {
-	private locales: Array<string>;
-	private options: MsgfmtAllOptions;
+	private locales: Array<string> = undefined as unknown as Array<string>;
+	private options: MsgfmtAllOptions = undefined as unknown as MsgfmtAllOptions;
 	private readonly configuration: Configuration;
 
 	constructor(configuration: Configuration) {
@@ -129,18 +129,17 @@ export class MsgfmtAll implements Command {
 		this.init(argv);
 
 		return new Promise(resolve => {
-			// We merge one locale at a time.  It would be more efficient to
-			// do everything asynchronously but that makes error recovery
-			// too hard.
-			this.locales
-				.reduce(
-					(promise, locale) => promise.then(() => this.msgfmtLocale(locale)),
-					Promise.resolve(),
-				)
-				.then(
-					() => resolve(0),
-					() => resolve(1),
-				);
+			const promises = this.locales.map(locale => this.msgfmtLocale(locale));
+
+			Promise.all(promises)
+				.then(results => {
+					const hasOne = results.some(result => result === 1);
+
+					resolve(hasOne ? 1 : 0);
+				})
+				.catch(() => {
+					resolve(1);
+				});
 		});
 	}
 

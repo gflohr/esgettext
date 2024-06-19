@@ -1,11 +1,10 @@
 {
-	"extends": "../../tsconfig.json",
+	"extends": "./tsconfig.json",
 	"compilerOptions": {
-		"module": "CommonJS",
 		"outDir": "./dist",
 		"rootDir": "./src",
-		"resolveJsonModule": true,
-		"skipLibCheck": true
+		"paths": {}
 	},
-	"includes": ["./src/**/*.ts"]
+	"includes": ["./src/**/*.ts"],
+	"exclude": ["./src/**/*.spec.ts"]
 }

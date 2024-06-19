@@ -7,15 +7,16 @@ import { Parser } from './parser';
 const gtx = Textdomain.getInstance('tools');
 
 export class PoParser extends Parser {
-	private entry: POTEntry;
-	private loc: SourceLocation;
-	private entryLoc: SourceLocation;
-	private msgType?: string;
+	// All those get reset on each call to parse().
+	private entry: POTEntry = undefined as unknown as POTEntry;
+	private loc: SourceLocation = undefined as unknown as SourceLocation;
+	private entryLoc: SourceLocation = undefined as unknown as SourceLocation;
+	private msgType: string = undefined as unknown as string;
 	private seen: {
 		[key: string]: {
 			[key: string]: SourceLocation;
 		};
-	};
+	} = {};
 
 	/**
 	 * Parse a po file into a catalog. This parser is very forgiving and

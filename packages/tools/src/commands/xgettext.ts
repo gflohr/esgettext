@@ -45,10 +45,10 @@ interface XGettextOptions {
 const gtx = Textdomain.getInstance('com.cantanea.esgettext-tools');
 
 export class XGettext implements Command {
-	private catalog: Catalog;
+	private catalog: Catalog = undefined as unknown as Catalog;
 	private date: string | undefined;
-	private exclude: ExclusionCatalog;
-	private options: XGettextOptions;
+	private exclude: ExclusionCatalog = undefined as unknown as ExclusionCatalog;
+	private options: XGettextOptions = undefined as unknown as XGettextOptions;
 	private readonly configuration: Configuration;
 
 	// The date is only passed for testing.

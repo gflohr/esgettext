@@ -19,8 +19,8 @@ type InstallOptions = {
 const gtx = Textdomain.getInstance('com.cantanea.esgettext-tools');
 
 export class Install implements Command {
-	private locales: Array<string>;
-	private options: InstallOptions;
+	private locales: Array<string> = undefined as unknown as Array<string>;
+	private options: InstallOptions = undefined as unknown as InstallOptions;
 	private readonly configuration: Configuration;
 
 	constructor(configuration: Configuration) {

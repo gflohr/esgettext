@@ -1,8 +1,11 @@
 {
-	"extends": "../../tsconfig.json",
+	"extends": "@tsconfig/node20",
 	"compilerOptions": {
+		"target": "ES2022",
+		"module": "NodeNext",
+		"moduleResolution": "NodeNext",
 		"resolveJsonModule": true,
-		"module": "CommonJS",
+		"esModuleInterop": true,
 		"baseUrl": ".",
 		"paths": {
 			"@esgettext/runtime": ["../runtime/src"]
