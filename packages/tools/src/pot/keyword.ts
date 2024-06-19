@@ -73,7 +73,7 @@ export class Keyword {
 							function: method,
 						}),
 					);
-				} else if (this.singular) {
+				} else if (this._singular) {
 					this._plural = pos;
 				} else {
 					this._singular = pos;
@@ -102,9 +102,11 @@ export class Keyword {
 			}
 		});
 
-		if (!this._singular) {
-			this._singular = 1;
-		}
+		this._singular ??= 1;
+		this._plural ??= 0;
+		this._totalArgs ??= 0;
+		this._comment ??= '';
+		this._context ??= 0;
 	}
 
 	static from(spec: string): Keyword {
