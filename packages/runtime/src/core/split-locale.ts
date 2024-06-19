@@ -9,7 +9,8 @@ export interface SplitLocale {
 }
 
 export function splitLocale(locale: string): SplitLocale | null {
-	let charset: string = '', modifier: string = '';
+	let charset: string = '',
+		modifier: string = '';
 
 	const underscoreSeparator = locale.includes('_');
 

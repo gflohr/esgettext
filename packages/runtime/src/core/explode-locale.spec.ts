@@ -19,18 +19,27 @@ describe('explode locale', () => {
 			expect(paths).toEqual([['de'], ['de_DE']]);
 		});
 		it('de_DE@ksh', () => {
-			const paths = explodeLocale(splitLocale('de_DE@ksh') as SplitLocale, true);
+			const paths = explodeLocale(
+				splitLocale('de_DE@ksh') as SplitLocale,
+				true,
+			);
 			expect(paths).toEqual([['de@ksh'], ['de_DE@ksh']]);
 		});
 		it('de_DE.UTF-8@ksh', () => {
-			const paths = explodeLocale(splitLocale('de_DE.UTF-8@ksh') as SplitLocale, true);
+			const paths = explodeLocale(
+				splitLocale('de_DE.UTF-8@ksh') as SplitLocale,
+				true,
+			);
 			expect(paths).toEqual([
 				['de.UTF-8@ksh', 'de@ksh'],
 				['de_DE.UTF-8@ksh', 'de_DE@ksh'],
 			]);
 		});
 		it('de_DE.utf-8@ksh', () => {
-			const paths = explodeLocale(splitLocale('de_DE.utf-8@ksh') as SplitLocale, true);
+			const paths = explodeLocale(
+				splitLocale('de_DE.utf-8@ksh') as SplitLocale,
+				true,
+			);
 			expect(paths).toEqual([
 				['de.utf-8@ksh', 'de.UTF-8@ksh', 'de@ksh'],
 				['de_DE.utf-8@ksh', 'de_DE.UTF-8@ksh', 'de_DE@ksh'],

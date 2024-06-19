@@ -10,7 +10,9 @@ describe('textdomain', () => {
 			expect(() => Textdomain.getInstance(null as unknown as string)).toThrow();
 		});
 		it('undefined textdomain should throw an exception', () => {
-			expect(() => Textdomain.getInstance(undefined as unknown as string)).toThrow();
+			expect(() =>
+				Textdomain.getInstance(undefined as unknown as string),
+			).toThrow();
 		});
 	});
 	describe('clearInstances()', () => {
