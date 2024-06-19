@@ -34,7 +34,7 @@ flavors.
 
 ## Copyright
 
-Copyright (C) 2020 Guido Flohr <guido.flohr@cantanea.com>, all
+Copyright (C) 2020-2024 Guido Flohr <guido.flohr@cantanea.com>, all
 rights reserved.
 
 This software is available under the terms and conditions of the
