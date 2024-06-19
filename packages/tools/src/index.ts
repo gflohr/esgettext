@@ -1,6 +1,6 @@
 #! /usr/bin/env node
 
-import yargs, { alias } from 'yargs';
+import yargs from 'yargs';
 
 import { Package } from './package.js';
 import { Textdomain } from '@esgettext/runtime';
