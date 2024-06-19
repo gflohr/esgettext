@@ -1,6 +1,6 @@
 {
 	"name": "@esgettext/hello-world",
-	"version": "0.1.0",
+	"version": "1.1.0",
 	"description": "Example application internationalized with esgettext",
 	"main": "src/index.js",
 	"type": "module",

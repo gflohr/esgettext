@@ -1,6 +1,6 @@
 {
 	"name": "@esgettext/documentation",
-	"version": "0.1.0",
+	"version": "1.1.0",
 	"description": "The website for esgettext.",
 	"main": "index.js",
 	"private": true,
