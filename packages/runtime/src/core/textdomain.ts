@@ -60,7 +60,6 @@ export interface Placeholders {
  * that the method names do not collide with method names from other packages.
  */
 export class Textdomain {
-	// FIXME! Use a default export instead?
 	private static domains: { [key: string]: Textdomain } = {};
 	private static boundDomains: { [key: string]: string | LocaleContainer } = {};
 	private static _locale = 'C';
