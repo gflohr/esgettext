@@ -82,7 +82,7 @@ $ yarn add @esgettext/runtime
 
 How to import the library, depends on your environment.
 
-If you have the `import` keyword:
+If you have the `import` keyword (TypeScript or ES module syntax):
 
 ```javascript
 import { Textdomain } from '@esgettext/runtime';
@@ -91,11 +91,9 @@ import { Textdomain } from '@esgettext/runtime';
 If you can use `require`:
 
 ```javascript
-const esgettext = require('@esgettext/runtime');
-const Textdomain = esgettext.Textdomain;
+const { Textdomain } = require('@esgettext/runtime');
 ```
 
-_FIXME! Is this correct?_
 
 If you are writing javascript loaded by a browser:
 
