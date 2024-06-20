@@ -112,15 +112,32 @@ export const ConfigurationSchema = v.strictObject({
 					),
 				),
 			),
+			'files-from': v.optional(
+				v.pipe(
+					v.string(
+						gtx._x("The field '{field}' must be a string!", {
+							field: 'package.files-from',
+						}),
+					),
+					v.nonEmpty(gtx._x("The field '{field}' must not be empty!",
+						{ field: 'package.files-from' }
+					)),
+				),
+			),
 		}),
 	),
 	po: v.optional(
 		v.strictObject({
 			directory: v.optional(
-				v.string(
-					gtx._x("The field '{field}' must be a string!", {
-						field: 'po.directory',
-					}),
+				v.pipe(
+					v.string(
+						gtx._x("The field '{field}' must be a string!", {
+							field: 'po.directory',
+						}),
+					),
+					v.nonEmpty(gtx._x("The field '{field}' must not be empty!",
+						{ field: 'po.directory' }
+					)),
 				),
 			),
 			locales: v.optional(
@@ -381,7 +398,7 @@ export class ConfigurationFactory {
 		} else {
 			throw new Error(gtx._x("{programName}: Error: {filename}: Configuration file name must end in '.mjs', '.cjs', '.js', or '.json'!",
 				{
-					programName: Package.name(),
+					programName: Package.getName(),
 					filename: filePath,
 				}
 			));

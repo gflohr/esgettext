@@ -11,6 +11,7 @@ type InstallOptions = {
 	directory?: string;
 	inputFormat: string;
 	outputFormat: string;
+	defaultDomain: string,
 	outputDirectory: string;
 	options: string[];
 	verbose?: boolean;
@@ -62,6 +63,12 @@ export class Install implements Command {
 				default: 'gmo',
 				choices: ['gmo', 'mo'],
 				group: gtx._('Input file options:'),
+			},
+			'default-domain': {
+				type: 'string',
+				describe: gtx._('The textdomain to use'),
+				default: this.configuration.package?.textdomain,
+				group: gtx._('Output file options'),
 			},
 			'output-directory': {
 				type: 'string',
@@ -264,7 +271,7 @@ export class Install implements Command {
 			const directory =
 				this.options.outputDirectory + '/' + locale + '/LC_MESSAGES';
 			const outFile =
-				directory + '/' + 'domain' + '.' + this.options.outputFormat;
+				directory + '/' + this.options.defaultDomain + '.' + this.options.outputFormat;
 			const inFile =
 				this.options.directory + '/' + locale + '.' + this.options.inputFormat;
 

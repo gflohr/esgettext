@@ -1,6 +1,6 @@
 import { resolveImpl } from './resolve-impl';
 import { CatalogCache } from './catalog-cache';
-import { Catalog } from './catalog';
+import type { Catalog } from './catalog';
 import { browserEnvironment } from './browser-environment';
 import { gettextImpl } from './gettext-impl';
 import { germanicPlural } from './germanic-plural';
@@ -8,7 +8,7 @@ import { splitLocale } from './split-locale';
 import { pathSeparator } from './platform';
 import { userLocales } from './user-locales';
 import { selectLocale } from './select-locale';
-import { LocaleContainer } from './locale-container';
+import type { LocaleContainer } from './locale-container';
 
 /**
  * Represents a mapping of placeholder strings to the values that they should be replaced with.
@@ -62,21 +62,12 @@ export interface Placeholders {
 export class Textdomain {
 	// FIXME! Use a default export instead?
 	private static domains: { [key: string]: Textdomain } = {};
-	private static readonly cache = CatalogCache.getInstance();
 	private static boundDomains: { [key: string]: string | LocaleContainer } = {};
 	private static _locale = 'C';
 
 	private domain: string;
 	private _catalogFormat = 'mo.json';
-	private catalog: Catalog;
-
-	/**
-	 * Instantiate a Textdomain object. Textdomain objects are singletons
-	 * for each textdomain identifier.
-	 *
-	 * @param textdomain - the textdomain of your application or library.
-	 */
-	getInstance: (textdomain: string) => Textdomain;
+	private catalog: Catalog = undefined as unknown as Catalog;
 
 	/**
 	 * Retrieve a translation for a string.
@@ -447,6 +438,14 @@ export class Textdomain {
 		});
 	}
 
+	/**
+	 * Instantiate a Textdomain object. Textdomain objects are singletons
+	 * for each textdomain identifier.
+	 *
+	 * @param textdomain - the textdomain of your application or library.
+	 *
+	 * @returns a [[`Textdomain`]]
+	 */
 	static getInstance(textdomain: string): Textdomain {
 		if (
 			typeof textdomain === 'undefined' ||

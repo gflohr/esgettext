@@ -80,6 +80,7 @@ export class XGettext implements Command {
 				type: 'string',
 				array: true,
 				describe: gtx._('get list of input files from FILE'),
+				default: this.configuration.package?.['files-from'],
 			},
 			directory: {
 				group: gtx._('Input file location:'),

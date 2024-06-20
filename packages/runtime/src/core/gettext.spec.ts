@@ -1,5 +1,5 @@
 import { Textdomain } from './textdomain';
-import { Catalog } from './catalog';
+import type { Catalog } from './catalog';
 import { gettextImpl } from './gettext-impl';
 
 const localeDir = 'src/locale';

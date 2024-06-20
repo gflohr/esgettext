@@ -5,7 +5,7 @@ import { CatalogCache } from './catalog-cache';
 import { browserEnvironment } from './browser-environment';
 import { germanicPlural } from './germanic-plural';
 import { pathSeparator } from './platform';
-import { Catalog } from './catalog';
+import type { Catalog } from './catalog';
 
 const defaultCatalog: Catalog = {
 	major: 0,

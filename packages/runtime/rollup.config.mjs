@@ -15,7 +15,7 @@ export default [
 		input: 'src/index-browser.ts',
 		output: {
 			name: 'esgettext',
-			file: 'esgettext.min.js',
+			file: './dist/esgettext.min.js',
 			format: 'umd',
 			sourcemap: true,
 		},
@@ -50,7 +50,7 @@ export default [
 		input: 'src/index-browser.ts',
 		output: {
 			name: 'esgettext',
-			file: 'esgettext.js',
+			file: './dist/esgettext.js',
 			format: 'umd',
 			sourcemap: true,
 		},

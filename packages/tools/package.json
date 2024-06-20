@@ -72,6 +72,7 @@
 		"@babel/types": "^7.24.7",
 		"@eslint/config-array": "^0.16.0",
 		"@humanwhocodes/retry": "^0.3.0",
+		"@tsconfig/esm": "^1.0.5",
 		"@tsconfig/node20": "^20.1.4",
 		"@types/glob": "^8.1.0",
 		"@types/jest": "^29.5.12",

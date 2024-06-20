@@ -1,15 +1,15 @@
 {
-	"extends": "../../tsconfig.json",
+	"extends": "@tsconfig/esm",
 	"compilerOptions": {
+		"target": "es5",
 		"resolveJsonModule": true,
+		"verbatimModuleSyntax": false,
 		"outDir": "lib",
 		"baseUrl": ".",
-		"skipLibCheck": true,
 		"declaration": true,
 		"declarationMap": true,
 		"declarationDir": "./dist",
-		"rootDir": "./src",
-		"module": "ESNext"
+		"rootDir": "./src"
 	},
 	"includes": ["./src"]
 }

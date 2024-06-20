@@ -13,9 +13,9 @@
  * with the translation by a `'\u0004'` character. For example, the key for
  * the msgid "Open" with the msgctxt "Menu|File" would be `Menu|File\u0004Open`.
  */
-export interface CatalogEntries {
+export type CatalogEntries = {
 	[key: string]: Array<string>;
-}
+};
 
 /**
  * A [[`Catalog`]] is a container for a set of translations loaded from a
@@ -25,7 +25,7 @@ export interface CatalogEntries {
  * write your own message retrieval method or want to inspect a loaded
  * [[`Catalog`]].
  */
-export interface Catalog {
+export type Catalog = {
 	/** The major revision number of the catalog, currently always 0. */
 	major: number;
 
@@ -48,4 +48,4 @@ export interface Catalog {
 
 	/** The actual translations. */
 	entries: CatalogEntries;
-}
+};

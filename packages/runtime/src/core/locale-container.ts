@@ -1,4 +1,4 @@
-import { Catalog } from './catalog';
+import type { Catalog } from './catalog';
 
 /**
  * An object storing locale information.  It resembles the directory structure
@@ -20,7 +20,7 @@ import { Catalog } from './catalog';
  * \}
  * </code></pre>
  */
-export interface LocaleContainer {
+export type LocaleContainer = {
 	/** A language code like 'fr' or 'de-DE'. */
 	[key: string]: {
 		/** The Locale category, always 'LC_MESSAGES'. */
@@ -29,4 +29,4 @@ export interface LocaleContainer {
 			[key: string]: Catalog;
 		};
 	};
-}
+};
