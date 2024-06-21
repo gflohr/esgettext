@@ -2,11 +2,20 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"name": "Debug Jest Tests",
+			"name": "Debug Runtime Tests",
 			"type": "node",
 			"request": "launch",
 			"runtimeArgs": ["--inspect-brk", "${workspaceRoot}/node_modules/.bin/jest", "--runInBand", "--coverage", "false", "--silent", "false"],
 			"cwd": "${workspaceFolder}/packages/runtime",
+			"console": "integratedTerminal",
+			"internalConsoleOptions": "neverOpen"
+		},
+		{
+			"name": "Debug Tools Tests",
+			"type": "node",
+			"request": "launch",
+			"runtimeArgs": ["--inspect-brk", "${workspaceRoot}/node_modules/.bin/jest", "--runInBand", "--coverage", "false", "--silent", "false"],
+			"cwd": "${workspaceFolder}/packages/tools",
 			"console": "integratedTerminal",
 			"internalConsoleOptions": "neverOpen"
 		},
