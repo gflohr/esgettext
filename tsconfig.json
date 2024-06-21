@@ -1,22 +1,7 @@
 {
+	"extends": "@tsconfig/recommended",
 	"compilerOptions": {
-		"allowSyntheticDefaultImports": true,
-		"noImplicitAny": true,
-		"noImplicitReturns": true,
-		"noImplicitThis": true,
-		"removeComments": true,
-		"declaration": true,
-		"target": "ES2017",
-		"lib": ["ES2017", "dom"],
-		"module": "ES6",
-		"sourceMap": true,
-		"typeRoots": ["node_modules/@types"],
-		"esModuleInterop": true,
-		"moduleResolution": "node",
-		"strictNullChecks": true,
-		"strictBindCallApply": true,
-		"forceConsistentCasingInFileNames": true,
-		"noFallthroughCasesInSwitch": true
+		"resolveJsonModule": true,
 	},
 	"exclude": ["node_modules", "dist"],
 }

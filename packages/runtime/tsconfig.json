@@ -1,9 +1,6 @@
 {
-	"extends": "@tsconfig/esm",
+	"extends": "../../tsconfig.json",
 	"compilerOptions": {
-		"target": "es5",
-		"resolveJsonModule": true,
-		"verbatimModuleSyntax": false,
 		"outDir": "lib",
 		"baseUrl": ".",
 		"declaration": true,
