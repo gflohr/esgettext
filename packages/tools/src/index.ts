@@ -12,6 +12,7 @@ import { Install } from './commands/install.js';
 import { Convert } from './commands/convert.js';
 import { MsgfmtAll } from './commands/msgfmt-all.js';
 import { Init } from './commands/init.js';
+import { Potfiles } from './commands/potfiles.js';
 
 const commandNames = [
 	'convert',
@@ -19,6 +20,7 @@ const commandNames = [
 	'init',
 	'msgfmt-all',
 	'msgmerge-all',
+	'potfiles',
 	'xgettext',
 ];
 
@@ -45,6 +47,7 @@ gtx
 			install: new Install(configuration),
 			convert: new Convert(configuration),
 			init: new Init(configuration),
+			potfiles: new Potfiles(configuration),
 		};
 
 		const program = yargs(process.argv.slice(2))

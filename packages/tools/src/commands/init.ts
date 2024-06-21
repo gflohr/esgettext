@@ -9,8 +9,8 @@ const gtx = Textdomain.getInstance('com.cantanea.esgettext-tools');
 
 type InitOptions = {
 	_: string[];
-	force: boolean,
-	dryRun: boolean,
+	force: boolean;
+	dryRun: boolean;
 	verbose?: boolean;
 	[key: string]: string | string[] | boolean | undefined;
 };
@@ -112,9 +112,9 @@ export class Init implements Command {
 			if (!this.options.force) {
 				if (fs.existsSync(directory)) {
 					return resolve(
-						gtx._x("The directory '{directory}' already exists!",
-							{ directory }
-						)
+						gtx._x("The directory '{directory}' already exists!", {
+							directory,
+						}),
 					);
 				}
 			}
@@ -149,9 +149,10 @@ export class Init implements Command {
 
 	private async promptUser() {
 		console.log(
-			'⚡ ' + gtx._("We'll prepare your package for esgettext in a few seconds."),
+			'⚡ ' +
+				gtx._("We'll prepare your package for esgettext in a few seconds."),
 		);
-		console.log('🤔 ¯\\_(ツ)_/¯ ' + gtx._('In doubt, just hit return!'))
+		console.log('🤔 ¯\\_(ツ)_/¯ ' + gtx._('In doubt, just hit return!'));
 		console.log();
 		const setup = {
 			textdomain: await input({
@@ -190,7 +191,7 @@ export class Init implements Command {
 					},
 				],
 				default: this.guessPackageManager(),
-			})
+			}),
 		};
 		console.log(setup);
 	}
