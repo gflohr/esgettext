@@ -86,7 +86,7 @@ async function loadLanguageFromObject(
 	domainname: string,
 ): Promise<Catalog | null> {
 	for (let i = 0; i < ids.length; ++i) {
-		const id = ids[1];
+		const id = ids[i];
 		// Language exists?
 		if (!Object.prototype.hasOwnProperty.call(base, id)) {
 			continue;
@@ -150,15 +150,9 @@ async function loadDomain(
 		entries,
 	};
 
-	const cacheHit = CatalogCache.lookup(localeKey, domainname);
+	const cacheHit = await CatalogCache.lookup(localeKey, domainname);
 	if (cacheHit !== null) {
-		// Promise?
-		if (Promise.resolve(cacheHit) === cacheHit) {
-			return cacheHit;
-		} else {
-			// Normal cache hit.
-			return new Promise(resolve => resolve(cacheHit));
-		}
+		return cacheHit;
 	}
 
 	for (const tries of exploded) {
