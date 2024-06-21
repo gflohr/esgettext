@@ -1,5 +1,6 @@
 import yargs from 'yargs';
-import { input } from '@inquirer/prompts';
+import * as fs from 'fs';
+import { input, select } from '@inquirer/prompts';
 import { Command } from '../command';
 import { Textdomain } from '@esgettext/runtime';
 import { Configuration } from '../configuration';
@@ -8,6 +9,8 @@ const gtx = Textdomain.getInstance('com.cantanea.esgettext-tools');
 
 type InitOptions = {
 	_: string[];
+	force: boolean,
+	dryRun: boolean,
 	verbose?: boolean;
 	[key: string]: string | string[] | boolean | undefined;
 };
@@ -97,11 +100,58 @@ export class Init implements Command {
 		});
 	}
 
+	private checkDirectory(answer: string): Promise<boolean | string> {
+		return new Promise(resolve => {
+			const directory = answer.trim();
+			if (directory.length === 0) {
+				return resolve(
+					gtx._('Please enter a string with at least one character!'),
+				);
+			}
+
+			if (!this.options.force) {
+				if (fs.existsSync(directory)) {
+					return resolve(
+						gtx._x("The directory '{directory}' already exists!",
+							{ directory }
+						)
+					);
+				}
+			}
+
+			return resolve(true);
+		});
+	}
+
+	private guessPackageManager(): 'npm' | 'yarn' | 'pnpm' | 'bun' {
+		if (fs.existsSync('package-lock.json')) {
+			return 'npm';
+		} else if (fs.existsSync('yarn.lock')) {
+			return 'yarn';
+		} else if (fs.existsSync('pnpm-lock.yaml')) {
+			return 'pnpm';
+		} else if (fs.existsSync('bun.lockb')) {
+			return 'bun';
+		} else {
+			return 'npm';
+		}
+	}
+
+	private guessLocaleDir(): string {
+		if (fs.existsSync('assets')) {
+			return 'assets/locale';
+		} else if (fs.existsSync('src')) {
+			return 'src/locale';
+		} else {
+			return 'assets/locale';
+		}
+	}
+
 	private async promptUser() {
 		console.log(
-			gtx._('All of the following questions have sane default answers.'),
+			'⚡ ' + gtx._("We'll prepare your package for esgettext in a few seconds."),
 		);
-		console.log(gtx._('In doubt just hit return!'));
+		console.log('🤔 ¯\\_(ツ)_/¯ ' + gtx._('In doubt, just hit return!'))
 		console.log();
 		const setup = {
 			textdomain: await input({
@@ -109,6 +159,38 @@ export class Init implements Command {
 				default: this.configuration.package?.name,
 				validate: answer => this.nonEmpty(answer),
 			}),
+			poDirectory: await input({
+				message: gtx._('Where to store translation files'),
+				default: 'po',
+				validate: answer => this.checkDirectory(answer),
+			}),
+			localeDirectory: await input({
+				message: gtx._('Where to store compiled translations'),
+				default: this.guessLocaleDir(),
+				validate: answer => this.checkDirectory(answer),
+			}),
+			packageManager: await select({
+				message: gtx._('Which package manager should be used'),
+				choices: [
+					{
+						name: 'npm',
+						value: 'npm',
+					},
+					{
+						name: 'yarn',
+						value: 'yarn',
+					},
+					{
+						name: 'pnpm',
+						value: 'pnpm',
+					},
+					{
+						name: 'bun',
+						value: 'bun',
+					},
+				],
+				default: this.guessPackageManager(),
+			})
 		};
 		console.log(setup);
 	}
