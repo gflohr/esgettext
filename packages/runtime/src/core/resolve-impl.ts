@@ -128,32 +128,25 @@ async function loadLanguage(
 	domainname: string,
 	format: string,
 ): Promise<Catalog> {
+	// Check if `base` is an object (LocaleContainer).
 	if (typeof base === 'object' && base !== null) {
 		return loadLanguageFromObject(ids, base, domainname);
 	}
 
-	return new Promise((resolve, reject) => {
-		type CatalogLoader = (url: string) => Promise<Catalog>;
-
-		const tries = new Array<CatalogLoader>();
-		ids.forEach(id => {
-			tries.push(() =>
-				loadCatalog(
-					// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-					assemblePath(base as string, id, domainname, format),
-					format,
-				),
-			);
-		});
-
-		tries
-			.reduce(
-				(promise, fn: CatalogLoader) => promise.catch(fn),
-				Promise.reject(),
-			)
-			.then(value => resolve(value))
-			.catch(e => reject(e));
+	const loaders: Array<() => Promise<Catalog>> = ids.map(id => {
+		return () => loadCatalog(assemblePath(base as string, id, domainname, format), format);
 	});
+
+	return loaders.reduce(async (previousPromise, loader) => {
+		try {
+			return await previousPromise.catch(loader);
+		} catch (error) {
+			/* Ignore. */
+		}
+
+		// Return the previous promise in case of failure to ensure proper chaining.
+		return previousPromise;
+	}, Promise.reject());
 }
 
 async function loadDomain(
