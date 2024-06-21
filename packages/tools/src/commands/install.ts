@@ -11,7 +11,7 @@ type InstallOptions = {
 	directory?: string;
 	inputFormat: string;
 	outputFormat: string;
-	defaultDomain: string,
+	defaultDomain: string;
 	outputDirectory: string;
 	options: string[];
 	verbose?: boolean;
@@ -271,7 +271,11 @@ export class Install implements Command {
 			const directory =
 				this.options.outputDirectory + '/' + locale + '/LC_MESSAGES';
 			const outFile =
-				directory + '/' + this.options.defaultDomain + '.' + this.options.outputFormat;
+				directory +
+				'/' +
+				this.options.defaultDomain +
+				'.' +
+				this.options.outputFormat;
 			const inFile =
 				this.options.directory + '/' + locale + '.' + this.options.inputFormat;
 

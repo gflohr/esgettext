@@ -18,7 +18,10 @@ type PluralFunction = (numItems: number) => number;
 
 const isBrowser = process.env.BROWSER_ENV;
 
-async function loadCatalog(url: string, format: string): Promise<Catalog | null> {
+async function loadCatalog(
+	url: string,
+	format: string,
+): Promise<Catalog | null> {
 	let transportInstance: Transport;
 
 	if (!isBrowser) {
@@ -125,7 +128,10 @@ async function loadLanguage(
 	}
 
 	for (const id of ids) {
-		const catalog = await loadCatalog(assemblePath(base as string, id, domainname, format), format);
+		const catalog = await loadCatalog(
+			assemblePath(base as string, id, domainname, format),
+			format,
+		);
 		if (catalog) {
 			return catalog;
 		}
@@ -234,7 +240,13 @@ export async function resolveImpl(
 	}
 
 	const exploded = explodeLocale(splitLocale(localeKey) as SplitLocale, true);
-	const catalog = await loadDomain(exploded, localeKey, path, domainname, format);
+	const catalog = await loadDomain(
+		exploded,
+		localeKey,
+		path,
+		domainname,
+		format,
+	);
 	setPluralFunction(catalog);
 	CatalogCache.store(localeKey, domainname, catalog);
 	return catalog;

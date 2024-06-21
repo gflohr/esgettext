@@ -556,7 +556,8 @@ export class Textdomain {
 	private constructor(domain: string) {
 		this.domain = domain;
 
-		const msg = "The property 'locale' is not an instance property but static. Use 'Textdomain.locale' instead!";
+		const msg =
+			"The property 'locale' is not an instance property but static. Use 'Textdomain.locale' instead!";
 		Object.defineProperty(this, 'locale', {
 			get: () => {
 				throw new Error(msg);

@@ -11,13 +11,15 @@ import { MsgmergeAll } from './commands/msgmerge-all.js';
 import { Install } from './commands/install.js';
 import { Convert } from './commands/convert.js';
 import { MsgfmtAll } from './commands/msgfmt-all.js';
+import { Init } from './commands/init.js';
 
 const commandNames = [
-	'xgettext',
-	'msgmerge-all',
-	'msgfmt-all',
-	'install',
 	'convert',
+	'install',
+	'init',
+	'msgfmt-all',
+	'msgmerge-all',
+	'xgettext',
 ];
 
 const configFiles = locateConfigFiles();
@@ -29,7 +31,11 @@ gtx
 	.then(async () => {
 		const locale = Textdomain.selectLocale(['en-US', 'en-GB', 'de']);
 		const ulocale = locale.replace('-', '_');
-		const configuration = await ConfigurationFactory.create(configFiles, pkgJsonFile, locale);
+		const configuration = await ConfigurationFactory.create(
+			configFiles,
+			pkgJsonFile,
+			locale,
+		);
 		if (!configuration) process.exit(1);
 
 		const commands: { [key: string]: Command } = {
@@ -38,6 +44,7 @@ gtx
 			'msgfmt-all': new MsgfmtAll(configuration),
 			install: new Install(configuration),
 			convert: new Convert(configuration),
+			init: new Init(configuration),
 		};
 
 		const program = yargs(process.argv.slice(2))
@@ -48,14 +55,14 @@ gtx
 					alias: ['config-file'],
 					type: 'string',
 					describe: gtx._('Path to configuration file'),
-					default: 'esgettext.config.{mjs,cjs,js,json}'
+					default: 'esgettext.config.{mjs,cjs,js,json}',
 				},
 				package: {
 					alias: ['package-json'],
 					type: 'string',
 					describe: gtx._("Path to 'package.json'"),
 					default: 'package.json',
-				}
+				},
 			})
 			.showHelpOnFail(
 				false,
@@ -108,7 +115,6 @@ gtx
 		});
 	});
 
-
 function getArgument(option: string): string | null {
 	const longOption = '--' + option;
 	const longOptionRe = new RegExp(`^${longOption}=.+`);
@@ -130,7 +136,14 @@ function getArgument(option: string): string | null {
 function locateConfigFiles(): Array<string> {
 	const configFile = getArgument('config-file') ?? getArgument('configuration');
 
-	return configFile !== null ? [configFile] : ['esgettext.config.mjs', 'esgettext.config.cjs', 'esgettext.config.js', 'esgettext.config.json'];
+	return configFile !== null
+		? [configFile]
+		: [
+				'esgettext.config.mjs',
+				'esgettext.config.cjs',
+				'esgettext.config.js',
+				'esgettext.config.json',
+			];
 }
 
 function locatePkgJsonFile(): string {
