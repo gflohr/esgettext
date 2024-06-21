@@ -191,7 +191,7 @@ function pluralExpression(str: string): PluralFunction {
 	const code = 'var nplurals = 1, plural = 0;' + str + '; return 0 + plural';
 
 	// This may throw an exception!
-	/* eslint-disable @typescript-eslint/no-implied-eval */
+	// eslint-disable-next-line @typescript-eslint/no-implied-eval
 	return new Function('n', code) as PluralFunction;
 }
 
@@ -205,7 +205,11 @@ function setPluralFunction(catalog: Catalog): Catalog {
 		const tokens = header.split(':');
 		if ('plural-forms' === (tokens.shift() as string).toLowerCase()) {
 			const code = tokens.join(':');
-			catalog.pluralFunction = pluralExpression(code);
+			try {
+				catalog.pluralFunction = pluralExpression(code);
+			} catch {
+				catalog.pluralFunction = germanicPlural;
+			}
 		}
 	});
 
