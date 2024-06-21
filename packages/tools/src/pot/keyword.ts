@@ -12,10 +12,10 @@ const gtx = Textdomain.getInstance('tools');
 export class Keyword {
 	private readonly _method: string;
 	private _singular: number;
-	private _plural: number;
-	private _context: number;
-	private _totalArgs: number;
-	private _comment: string;
+	private _plural?: number;
+	private _context?: number;
+	private _totalArgs?: number;
+	private _comment?: string;
 
 	constructor(method: string, args?: Array<string>) {
 		this._method = method;
@@ -103,10 +103,6 @@ export class Keyword {
 		});
 
 		this._singular ??= 1;
-		this._plural ??= 0;
-		this._totalArgs ??= 0;
-		this._comment ??= '';
-		this._context ??= 0;
 	}
 
 	static from(spec: string): Keyword {
@@ -193,19 +189,19 @@ export class Keyword {
 		return this._singular;
 	}
 
-	get plural(): number {
+	get plural(): number | undefined {
 		return this._plural;
 	}
 
-	get context(): number {
+	get context(): number | undefined {
 		return this._context;
 	}
 
-	get comment(): string {
+	get comment(): string | undefined {
 		return this._comment;
 	}
 
-	get totalArgs(): number {
+	get totalArgs(): number | undefined {
 		return this._totalArgs;
 	}
 }
