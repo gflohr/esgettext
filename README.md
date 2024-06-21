@@ -3,7 +3,7 @@
 
 # esgettext
 
-GNU gettext-alike runtime and tools for ECMAScript/JavaScript.
+Gettext for ECMAScript also known as JavaScript.
 
 ## Packages
 
