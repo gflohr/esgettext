@@ -19,7 +19,7 @@
 		"lint": "lerna run lint --stream",
 		"lint:fix": "lerna run lint:fix --stream",
 		"lint:fix-dry-run": "lerna run lint:fix-dry-run --stream",
-		"lint:staged": "lerna run lint:staged --stream",
+		"lint:staged": "lerna run --no-private lint:staged --stream",
 		"test": "lerna run test --stream",
 		"test:cov": "lerna run test:cov --stream",
 		"test:watch": "lerna watch -- lerna run test --scope=\\$LERNA_PACKAGE_NAME --stream",
