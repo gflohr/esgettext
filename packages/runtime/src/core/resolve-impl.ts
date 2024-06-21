@@ -18,7 +18,7 @@ type PluralFunction = (numItems: number) => number;
 
 const isBrowser = process.env.BROWSER_ENV;
 
-function loadCatalog(url: string, format: string): Promise<Catalog> {
+async function loadCatalog(url: string, format: string): Promise<Catalog | null> {
 	let transportInstance: Transport;
 
 	if (!isBrowser) {
@@ -62,14 +62,13 @@ function loadCatalog(url: string, format: string): Promise<Catalog> {
 		validator = parseMoCatalog;
 	}
 
-	return new Promise<Catalog>((resolve, reject) => {
-		transportInstance
-			.loadFile(url)
-			.then(data => {
-				resolve(validator(data));
-			})
-			.catch(e => reject(e));
-	});
+	try {
+		const data = await transportInstance.loadFile(url);
+
+		return validator(data);
+	} catch {
+		return null;
+	}
 }
 
 function assemblePath(
@@ -81,15 +80,13 @@ function assemblePath(
 	return `${base}/${id}/LC_MESSAGES/${domainname}.${extender}`;
 }
 
-function loadLanguageFromObject(
+async function loadLanguageFromObject(
 	ids: Array<string>,
 	base: LocaleContainer,
 	domainname: string,
-): Promise<Catalog> {
-	let catalog: Catalog;
-
+): Promise<Catalog | null> {
 	for (let i = 0; i < ids.length; ++i) {
-		const id = ids[0];
+		const id = ids[1];
 		// Language exists?
 		if (!Object.prototype.hasOwnProperty.call(base, id)) {
 			continue;
@@ -105,16 +102,10 @@ function loadLanguageFromObject(
 			continue;
 		}
 
-		catalog = base[id].LC_MESSAGES[domainname];
+		return base[id].LC_MESSAGES[domainname];
 	}
 
-	return new Promise<Catalog>((resolve, reject) => {
-		if (catalog) {
-			resolve(catalog);
-		} else {
-			reject();
-		}
-	});
+	return null;
 }
 
 /*
@@ -127,26 +118,20 @@ async function loadLanguage(
 	base: string | LocaleContainer,
 	domainname: string,
 	format: string,
-): Promise<Catalog> {
+): Promise<Catalog | null> {
 	// Check if `base` is an object (LocaleContainer).
 	if (typeof base === 'object' && base !== null) {
 		return loadLanguageFromObject(ids, base, domainname);
 	}
 
-	const loaders: Array<() => Promise<Catalog>> = ids.map(id => {
-		return () => loadCatalog(assemblePath(base as string, id, domainname, format), format);
-	});
-
-	return loaders.reduce(async (previousPromise, loader) => {
-		try {
-			return await previousPromise.catch(loader);
-		} catch (error) {
-			/* Ignore. */
+	for (const id of ids) {
+		const catalog = await loadCatalog(assemblePath(base as string, id, domainname, format), format);
+		if (catalog) {
+			return catalog;
 		}
+	}
 
-		// Return the previous promise in case of failure to ensure proper chaining.
-		return previousPromise;
-	}, Promise.reject());
+	return null;
 }
 
 async function loadDomain(
@@ -176,29 +161,16 @@ async function loadDomain(
 		}
 	}
 
-	const promises = new Array<Promise<void | Catalog>>();
-	const results = new Array<Catalog>();
+	for (const tries of exploded) {
+		const result = await loadLanguage(tries, base, domainname, format);
+		if (result) {
+			catalog.major = result.major;
+			catalog.minor = result.minor;
+			catalog.entries = { ...catalog.entries, ...result.entries };
+		}
+	}
 
-	exploded.forEach((tries, i) => {
-		const p = loadLanguage(tries, base, domainname, format)
-			.then(catalog => (results[i] = catalog))
-			.catch(() => {
-				/* ignore */
-			});
-		promises.push(p);
-	});
-
-	await Promise.all(promises);
-
-	results.forEach(result => {
-		catalog.major = result.major;
-		catalog.minor = result.minor;
-		catalog.entries = { ...catalog.entries, ...result.entries };
-	});
-
-	return new Promise(resolve => {
-		resolve(catalog);
-	});
+	return catalog;
 }
 
 function pluralExpression(str: string): PluralFunction {
@@ -246,7 +218,7 @@ function setPluralFunction(catalog: Catalog): Catalog {
 	return catalog;
 }
 
-export function resolveImpl(
+export async function resolveImpl(
 	domainname: string,
 	path: string | LocaleContainer,
 	format: string,
@@ -260,20 +232,12 @@ export function resolveImpl(
 	};
 
 	if (localeKey === 'C' || localeKey === 'POSIX') {
-		return new Promise(resolve => resolve(defaultCatalog));
+		return defaultCatalog;
 	}
 
-	return new Promise(resolve => {
-		const exploded = explodeLocale(splitLocale(localeKey) as SplitLocale, true);
-		loadDomain(exploded, localeKey, path, domainname, format)
-			.then(catalog => {
-				setPluralFunction(catalog);
-				CatalogCache.store(localeKey, domainname, catalog);
-				resolve(catalog);
-			})
-			.catch(() => {
-				CatalogCache.store(localeKey, domainname, defaultCatalog);
-				resolve(defaultCatalog);
-			});
-	});
+	const exploded = explodeLocale(splitLocale(localeKey) as SplitLocale, true);
+	const catalog = await loadDomain(exploded, localeKey, path, domainname, format);
+	setPluralFunction(catalog);
+	CatalogCache.store(localeKey, domainname, catalog);
+	return catalog;
 }
