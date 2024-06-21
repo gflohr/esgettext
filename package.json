@@ -26,6 +26,7 @@
 		"posttest:cov": "node merge-lcov.js packages/*",
 		"clean": "lerna run clean --stream",
 		"typedoc": "lerna run typedoc --stream",
+		"publish": "lerna publish --no-private",
 		"prepare": "husky"
 	},
 	"devDependencies": {
