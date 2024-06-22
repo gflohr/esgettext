@@ -15,6 +15,7 @@ type PotfilesOptions = {
 	directory?: string;
 	exclude?: string[];
 	git: boolean;
+	include?: string[];
 	[key: string]: string | string[] | boolean | undefined;
 };
 
@@ -53,6 +54,12 @@ export class Potfiles implements Command {
 				type: 'boolean',
 				describe: gtx._('Only list files under (git) version control.'),
 				default: this.isGitRepo(),
+			},
+			include: {
+				type: 'string',
+				describe: gtx._(
+					'Pattern for additional files to include (even when not under version control).',
+				),
 			},
 			directory: {
 				type: 'string',
@@ -116,6 +123,7 @@ export class Potfiles implements Command {
 
 	private init(argv: yargs.Arguments) {
 		const options = argv as unknown as PotfilesOptions;
+
 		this.options = options;
 	}
 
@@ -167,6 +175,18 @@ export class Potfiles implements Command {
 			} else {
 				filtered = candidates.filter(filename => !this.isDirectory(filename));
 			}
+
+			if (typeof this.options.include !== 'undefined') {
+				const included = globSync(this.options.include).filter(
+					filename => !this.isDirectory(filename),
+				);
+				filtered.push(...included);
+			}
+
+			// sort | uniq for JavaScript.
+			filtered = filtered.sort().filter((item, index) => {
+				return index === 0 || item !== filtered[index - 1];
+			});
 
 			if (
 				typeof this.options.directory !== 'undefined' &&
