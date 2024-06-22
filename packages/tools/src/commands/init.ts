@@ -4,6 +4,7 @@ import { input, select } from '@inquirer/prompts';
 import { Command } from '../command';
 import { Textdomain } from '@esgettext/runtime';
 import { Configuration } from '../configuration';
+import { Package } from '../package';
 
 const gtx = Textdomain.getInstance('com.cantanea.esgettext-tools');
 
@@ -15,13 +16,68 @@ type InitOptions = {
 	[key: string]: string | string[] | boolean | undefined;
 };
 
+type ConfigFile =
+	| 'esconfig.mjs'
+	| 'esconfig.cjs'
+	| 'esconfig.json'
+	| 'package.json';
+
+type Setup = {
+	textdomain: string;
+	poDirectory: string;
+	localeDirectory: string;
+	packageManager: string;
+	configFile: ConfigFile;
+};
+
+type PackageJson = {
+	name?: string;
+	version?: string;
+	type?: 'module' | 'commonjs';
+	module?: boolean;
+	bugs?: {
+		url?: string;
+		email?: string;
+	};
+	esgettext: Configuration;
+};
+
 export class Init implements Command {
 	private options: InitOptions = undefined as unknown as InitOptions;
 	private readonly configuration: Configuration;
+	private readonly packageJson: PackageJson;
+	private readonly indentWithSpaces: boolean;
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(configuration: Configuration) {
 		this.configuration = configuration;
+
+		if (!fs.existsSync('package.json')) {
+			console.error(
+				gtx._x(
+					"{programName}: No 'package.json' found. Please run 'npm init' first!",
+					{
+						programName: Package.getName(),
+					},
+				),
+			);
+			process.exit(1);
+		}
+
+		const json = fs.readFileSync('package.json', { encoding: 'utf-8' });
+		this.indentWithSpaces = json.match(/ /) ? true : false;
+		try {
+			this.packageJson = JSON.parse(json);
+		} catch (error) {
+			console.error(
+				gtx._x('{programName}: Error: {filename}: {error}', {
+					programName: Package.getName(),
+					filename: 'package.json',
+					error,
+				}),
+			);
+			process.exit(1);
+		}
 	}
 
 	synopsis(): string {
@@ -47,7 +103,7 @@ export class Init implements Command {
 				alias: 'n',
 				type: 'boolean',
 				describe: gtx._(
-					'Just print what would be done without writing anything.',
+					'Just print what would be done without writing anything; implies --verbose.',
 				),
 			},
 			verbose: {
@@ -64,21 +120,21 @@ export class Init implements Command {
 	private init(argv: yargs.Arguments) {
 		const options = argv as unknown as InitOptions;
 		this.options = options;
+
+		if (this.options.dryRun) this.options.verbose = true;
+	}
+
+	public async doRun(): Promise<number> {
+		await this.promptUser();
+
+		return 0;
 	}
 
 	public run(argv: yargs.Arguments): Promise<number> {
 		this.init(argv);
 
 		return new Promise(resolve => {
-			if (!this.configuration.files.includes('package.json')) {
-				console.error(
-					gtx._x(
-						"{programName}: No 'package.json' found. Please run 'npm init' first!",
-					),
-				);
-				return resolve(1);
-			}
-			this.promptUser()
+			this.doRun()
 				.then(() => {
 					resolve(0);
 				})
@@ -147,14 +203,24 @@ export class Init implements Command {
 		}
 	}
 
-	private async promptUser() {
+	private guessConfigFile(): ConfigFile {
+		if (this.packageJson.type === 'module' || this.packageJson.module) {
+			return 'esconfig.mjs';
+		} else if (this.packageJson.type === 'commonjs') {
+			return 'esconfig.cjs';
+		} else {
+			return 'esconfig.json';
+		}
+	}
+
+	private async promptUser(): Promise<Setup> {
 		console.log(
 			'⚡ ' +
 				gtx._("We'll prepare your package for esgettext in a few seconds."),
 		);
 		console.log('🤔 ¯\\_(ツ)_/¯ ' + gtx._('In doubt, just hit return!'));
 		console.log();
-		const setup = {
+		return {
 			textdomain: await input({
 				message: gtx._('Textdomain of your package'),
 				default: this.configuration.package?.name,
@@ -192,7 +258,28 @@ export class Init implements Command {
 				],
 				default: this.guessPackageManager(),
 			}),
+			configFile: await select({
+				message: gtx._('Which package manager should be used'),
+				choices: [
+					{
+						name: 'esconfig.mjs',
+						value: 'esconfig.mjs',
+					},
+					{
+						name: 'esconfig.cjs',
+						value: 'esconfig.cjs',
+					},
+					{
+						name: 'esconfig.json',
+						value: 'esconfig.json',
+					},
+					{
+						name: 'package.json',
+						value: 'package.json',
+					},
+				],
+				default: this.guessConfigFile(),
+			}),
 		};
-		console.log(setup);
 	}
 }

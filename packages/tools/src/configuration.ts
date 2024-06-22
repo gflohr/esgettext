@@ -7,6 +7,19 @@ import { Package } from './package';
 
 const gtx = Textdomain.getInstance('com.cantanea.esgettext-tools');
 
+type PackageJson = {
+	name?: string;
+	version?: string;
+	bugs?: {
+		url?: string;
+		email?: string;
+	};
+	people?: {
+		author?: string;
+	};
+	esgettext: Configuration;
+};
+
 const bugsAddressSchema = v.union([
 	v.pipe(
 		v.string(),
@@ -172,19 +185,6 @@ export const ConfigurationSchema = v.strictObject({
 
 export type Configuration = v.InferInput<typeof ConfigurationSchema>;
 
-type PackageJson = {
-	name?: string;
-	version?: string;
-	bugs?: {
-		url?: string;
-		email?: string;
-	};
-	people: {
-		author: string;
-	};
-	esgettext: Configuration;
-};
-
 export class ConfigurationFactory {
 	private static instance: Configuration;
 
@@ -269,15 +269,15 @@ export class ConfigurationFactory {
 				if (!configuration) configuration = { files: [] };
 
 				if (!configuration.package?.['msgid-bugs-address']) {
-					if (packageJson.bugs?.email) {
+					if (packageJson.bugs?.url) {
+						configuration.package ??= {};
+						configuration.package['msgid-bugs-address'] = packageJson.bugs.url;
+						msgidBugsAddressFilePath = 'package.json';
+						fileUsed = true;
+					} else if (packageJson.bugs?.email) {
 						configuration.package ??= {};
 						configuration.package['msgid-bugs-address'] =
 							packageJson.bugs.email;
-						msgidBugsAddressFilePath = 'package.json';
-						fileUsed = true;
-					} else if (packageJson.bugs?.url) {
-						configuration.package ??= {};
-						configuration.package['msgid-bugs-address'] = packageJson.bugs.url;
 						msgidBugsAddressFilePath = 'package.json';
 						fileUsed = true;
 					}
