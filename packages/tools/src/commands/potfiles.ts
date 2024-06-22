@@ -15,7 +15,6 @@ type PotfilesOptions = {
 	directory?: string;
 	exclude?: string[];
 	git: boolean;
-	include?: string[];
 	[key: string]: string | string[] | boolean | undefined;
 };
 
@@ -54,12 +53,6 @@ export class Potfiles implements Command {
 				type: 'boolean',
 				describe: gtx._('Only list files under (git) version control.'),
 				default: this.isGitRepo(),
-			},
-			include: {
-				type: 'string',
-				describe: gtx._(
-					'Files to include (even, when not under version control).',
-				),
 			},
 			directory: {
 				type: 'string',
@@ -156,9 +149,6 @@ export class Potfiles implements Command {
 
 		return new Promise(resolve => {
 			const patterns = this.options[gtx._('PATTERN')] as string[];
-			if (this.options.include) {
-				patterns.push(...this.options.include);
-			}
 
 			if (!patterns.length) {
 				console.error(
