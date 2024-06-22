@@ -1,4 +1,6 @@
 import { Textdomain } from '@esgettext/runtime';
+import NpmCliPackageJson from '@npmcli/package-json';
+import normalizePackageData from 'normalize-package-data';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as v from 'valibot';
@@ -7,17 +9,25 @@ import { Package } from './package';
 
 const gtx = Textdomain.getInstance('com.cantanea.esgettext-tools');
 
-type PackageJson = {
+type Author = {
+	name?: string;
+	email?: string;
+	url?: string;
+};
+
+export type PackageJson = {
 	name?: string;
 	version?: string;
+	type?: 'module' | 'commonjs';
+	module?: boolean;
 	bugs?: {
 		url?: string;
 		email?: string;
 	};
 	people?: {
-		author?: string;
+		author?: Author;
 	};
-	esgettext: Configuration;
+	esgettext?: Configuration;
 };
 
 const bugsAddressSchema = v.union([
@@ -180,7 +190,7 @@ export const ConfigurationSchema = v.strictObject({
 			msgfmt: v.optional(programSchema('msgfmt')),
 		}),
 	),
-	files: v.array(v.string()),
+	files: v.optional(v.array(v.string())),
 });
 
 export type Configuration = v.InferInput<typeof ConfigurationSchema>;
@@ -202,11 +212,11 @@ export class ConfigurationFactory {
 		if (lang && !lang.match(/^zh-/)) {
 			lang = lang.replace(/-.*/, '');
 		}
-		let jsConfigFilePath;
-		let msgidBugsAddressFilePath;
-		let nameFilePath;
-		let copyrightHolderFilePath;
-		let versionFilePath;
+		let jsConfigFile;
+		let msgidBugsAddressFile;
+		let nameFile;
+		let copyrightHolderFile;
+		let versionFile;
 
 		const rootPath = process.cwd();
 
@@ -219,22 +229,22 @@ export class ConfigurationFactory {
 				if (data) {
 					configuration = data;
 					configuration.files = [file];
-					jsConfigFilePath = file;
+					jsConfigFile = file;
 
 					if (configuration.package?.['msgid-bugs-address']) {
-						msgidBugsAddressFilePath = filePath;
+						msgidBugsAddressFile = filePath;
 					}
 
 					if (configuration.package?.name) {
-						nameFilePath = filePath;
+						nameFile = filePath;
 					}
 
 					if (configuration.package?.['copyright-holder']) {
-						copyrightHolderFilePath = filePath;
+						copyrightHolderFile = filePath;
 					}
 
 					if (configuration.package?.version) {
-						versionFilePath = filePath;
+						versionFile = filePath;
 					}
 
 					break;
@@ -254,72 +264,113 @@ export class ConfigurationFactory {
 			!configuration.package['copyright-holder'] ||
 			!configuration.package['version']
 		) {
-			const packageJsonPath = pkgJsonFile;
-			if (fs.existsSync(packageJsonPath)) {
-				const packageJson = JSON.parse(
-					fs.readFileSync(packageJsonPath, 'utf-8'),
-				) as PackageJson;
-				let fileUsed = false;
-				if (!configuration && packageJson.esgettext) {
-					configuration = packageJson.esgettext as Configuration;
-					configuration.files = [];
+			const packageJson = await ConfigurationFactory.getPackageJson();
+			let fileUsed = false;
+			if (!configuration && packageJson.esgettext) {
+				configuration = packageJson.esgettext as Configuration;
+				configuration.files = [];
+				fileUsed = true;
+			}
+
+			if (!configuration) configuration = {};
+
+			configuration.files = [];
+
+			if (!configuration.package?.['msgid-bugs-address']) {
+				if (packageJson.bugs?.url) {
+					configuration.package ??= {};
+					configuration.package['msgid-bugs-address'] = packageJson.bugs.url;
+					msgidBugsAddressFile = 'package.json: bugs.url';
+					fileUsed = true;
+				} else if (packageJson.bugs?.email) {
+					configuration.package ??= {};
+					configuration.package['msgid-bugs-address'] = packageJson.bugs.email;
+					msgidBugsAddressFile = 'package.json: bugs.email';
+					fileUsed = true;
+				} else if (packageJson.people?.author?.email) {
+					configuration.package ??= {};
+					configuration.package['msgid-bugs-address'] =
+						packageJson.people.author.email;
+					msgidBugsAddressFile = 'package.json: people.author';
 					fileUsed = true;
 				}
+			}
 
-				if (!configuration) configuration = { files: [] };
+			if (!configuration.package?.name) {
+				if (packageJson.name) {
+					configuration.package ??= {};
+					configuration.package.name = packageJson.name;
+					nameFile = 'package.json';
+					fileUsed = true;
+				}
+			}
 
-				if (!configuration.package?.['msgid-bugs-address']) {
-					if (packageJson.bugs?.url) {
-						configuration.package ??= {};
-						configuration.package['msgid-bugs-address'] = packageJson.bugs.url;
-						msgidBugsAddressFilePath = 'package.json';
-						fileUsed = true;
-					} else if (packageJson.bugs?.email) {
-						configuration.package ??= {};
-						configuration.package['msgid-bugs-address'] =
-							packageJson.bugs.email;
-						msgidBugsAddressFilePath = 'package.json';
-						fileUsed = true;
+			if (!configuration.package?.['copyright-holder']) {
+				if (packageJson.people?.author) {
+					configuration.package ??= {};
+					configuration.package['copyright-holder'] =
+						packageJson.people.author.name;
+					if (packageJson.people.author.email) {
+						configuration.package['copyright-holder'] +=
+							` <${packageJson.people.author.email}>`;
 					}
-				}
-
-				if (!configuration.package?.name) {
-					if (packageJson.name) {
-						configuration.package ??= {};
-						configuration.package.name = packageJson.name;
-						nameFilePath = 'package.json';
-						fileUsed = true;
+					if (packageJson.people.author.url) {
+						configuration.package['copyright-holder'] +=
+							` <${packageJson.people.author.url}>`;
 					}
+					copyrightHolderFile = 'package.json';
+					fileUsed = true;
 				}
+			}
 
-				if (!configuration.package?.['copyright-holder']) {
-					if (packageJson.people?.author) {
-						configuration.package ??= {};
-						configuration.package['copyright-holder'] =
-							packageJson.people.author;
-						copyrightHolderFilePath = 'package.json';
-						fileUsed = true;
-					}
+			if (!configuration.package?.version) {
+				if (packageJson.version) {
+					configuration.package ??= {};
+					configuration.package.version = packageJson.version;
+					nameFile = 'package.json';
+					fileUsed = true;
 				}
+			}
 
-				if (!configuration.package?.version) {
-					if (packageJson.version) {
-						configuration.package ??= {};
-						configuration.package.version = packageJson.version;
-						nameFilePath = 'package.json';
-						fileUsed = true;
-					}
-				}
-
-				if (fileUsed) {
-					configuration.files.push('package.json');
-				}
+			if (fileUsed) {
+				configuration.files.push('package.json');
 			}
 		}
 
-		if (!configuration) configuration = { files: [] };
+		if (!configuration) configuration = {};
 
+		if (
+			!this.validate(
+				configuration,
+				{
+					msgidBugsAddressFile: msgidBugsAddressFile as string,
+					nameFile: nameFile as string,
+					copyrightHolderFile: copyrightHolderFile as string,
+					versionFile: versionFile as string,
+					jsConfigFile: jsConfigFile as string,
+				},
+				lang,
+			)
+		) {
+			return null;
+		}
+
+		return configuration;
+	}
+
+	public static validate(
+		configuration: Configuration,
+		files: {
+			msgidBugsAddressFile: string;
+			nameFile: string;
+			copyrightHolderFile: string;
+			versionFile: string;
+			jsConfigFile: string;
+		},
+		lang?: string,
+	): boolean {
 		const result = v.safeParse(ConfigurationSchema, configuration, { lang });
+
 		if (!result.success) {
 			const issues = result.issues;
 			console.error(
@@ -339,37 +390,46 @@ export class ConfigurationFactory {
 				let filename;
 				switch (path) {
 					case 'package.msgid-bugs-address':
-						filename = msgidBugsAddressFilePath;
+						filename = files.msgidBugsAddressFile;
 						break;
 					case 'name':
-						filename = nameFilePath;
+						filename = files.nameFile;
 						break;
 					case 'copyright-holder':
-						filename = copyrightHolderFilePath;
+						filename = files.copyrightHolderFile;
 						break;
 					case 'version':
-						filename = versionFilePath;
+						filename = files.versionFile;
 						break;
 					default:
-						filename = jsConfigFilePath;
+						filename = files.jsConfigFile;
 						break;
 				}
 
 				console.error(
-					'  ' +
-						gtx._x('{programName}: error: {filename}: {variable}: {message}.', {
-							variable: path,
-							programName: 'esgettext',
-							filename,
-							message,
-						}),
+					'\t',
+					gtx._x('{programName}: Error: {filename}: {variable}: {message}.', {
+						variable: path,
+						programName: 'esgettext',
+						filename,
+						message,
+					}),
 				);
 			}
-
-			return null;
+			return false;
 		}
 
-		return configuration;
+		return true;
+	}
+
+	public static async getPackageJson(): Promise<PackageJson> {
+		try {
+			const data = await NpmCliPackageJson.load(process.cwd());
+			normalizePackageData(data.content);
+			return data.content as PackageJson;
+		} catch (error) {
+			return {} as PackageJson;
+		}
 	}
 
 	private static async loadFile(

@@ -9,6 +9,7 @@ const directory = dirname(filename);
 const packageJsonPath = join(directory, 'package.json');
 
 const pkg = JSON.parse(readFileSync(packageJsonPath, 'utf8'));
+const npmRunAllVersion = pkg.devDependencies['npm-run-all'];
 
 console.log(`export class Package {
 	public static getName(): string {
@@ -21,5 +22,9 @@ console.log(`export class Package {
 
 	public static getVersion(): string {
 		return '${pkg.version}';
+	}
+
+	public static getNpmRunAllVersion(): string {
+		return '${npmRunAllVersion}';
 	}
 }`);

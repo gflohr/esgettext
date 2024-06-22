@@ -1,9 +1,15 @@
 import yargs from 'yargs';
 import * as fs from 'fs';
+import * as util from 'util';
 import { input, select } from '@inquirer/prompts';
 import { Command } from '../command';
 import { Textdomain } from '@esgettext/runtime';
-import { Configuration } from '../configuration';
+import {
+	Configuration,
+	ConfigurationFactory,
+	PackageJson,
+} from '../configuration';
+import NPMCliPackageJson from '@npmcli/package-json';
 import { Package } from '../package';
 
 const gtx = Textdomain.getInstance('com.cantanea.esgettext-tools');
@@ -17,9 +23,9 @@ type InitOptions = {
 };
 
 type ConfigFile =
-	| 'esconfig.mjs'
-	| 'esconfig.cjs'
-	| 'esconfig.json'
+	| 'esgettext.config.mjs'
+	| 'esgettext.config.cjs'
+	| 'esgettext.config.json'
 	| 'package.json';
 
 type Setup = {
@@ -30,54 +36,14 @@ type Setup = {
 	configFile: ConfigFile;
 };
 
-type PackageJson = {
-	name?: string;
-	version?: string;
-	type?: 'module' | 'commonjs';
-	module?: boolean;
-	bugs?: {
-		url?: string;
-		email?: string;
-	};
-	esgettext: Configuration;
-};
-
 export class Init implements Command {
 	private options: InitOptions = undefined as unknown as InitOptions;
 	private readonly configuration: Configuration;
-	private readonly packageJson: PackageJson;
-	private readonly indentWithSpaces: boolean;
+	private packageJson = undefined as unknown as PackageJson;
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(configuration: Configuration) {
 		this.configuration = configuration;
-
-		if (!fs.existsSync('package.json')) {
-			console.error(
-				gtx._x(
-					"{programName}: No 'package.json' found. Please run 'npm init' first!",
-					{
-						programName: Package.getName(),
-					},
-				),
-			);
-			process.exit(1);
-		}
-
-		const json = fs.readFileSync('package.json', { encoding: 'utf-8' });
-		this.indentWithSpaces = json.match(/ /) ? true : false;
-		try {
-			this.packageJson = JSON.parse(json);
-		} catch (error) {
-			console.error(
-				gtx._x('{programName}: Error: {filename}: {error}', {
-					programName: Package.getName(),
-					filename: 'package.json',
-					error,
-				}),
-			);
-			process.exit(1);
-		}
 	}
 
 	synopsis(): string {
@@ -117,24 +83,284 @@ export class Init implements Command {
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	additional(_: yargs.Argv) {}
 
-	private init(argv: yargs.Arguments) {
+	private async init(argv: yargs.Arguments) {
 		const options = argv as unknown as InitOptions;
+		this.packageJson = await ConfigurationFactory.getPackageJson();
+
 		this.options = options;
 
 		if (this.options.dryRun) this.options.verbose = true;
 	}
 
-	public async doRun(): Promise<number> {
-		await this.promptUser();
+	private getConfiguration(setup: Setup): Configuration {
+		const pkg = this.packageJson;
+		const verbose = this.options.verbose;
+
+		if (verbose) {
+			console.error(gtx._('Setting configuration values.'));
+		}
+
+		// We could actually initialize this in a smarter manner by setting
+		// all properties to empty objects.  But that does not compile because
+		// all of them are optiona.
+		const config: Configuration = {};
+
+		if (!config.package) config.package = {};
+
+		if (typeof pkg.name === 'undefined') {
+			config.package.name = setup.textdomain;
+		} else {
+			config.package.name = pkg.name;
+		}
+		config.package.version = pkg.version;
+		config.package.textdomain = setup.textdomain;
+
+		let msgidBugsAddressFile = gtx._('Your input');
+		if (
+			typeof this.configuration.package?.['msgid-bugs-address'] !== 'undefined'
+		) {
+			config.package['msgid-bugs-address'] =
+				this.configuration.package['msgid-bugs-address'];
+			msgidBugsAddressFile = 'package.json: bugs';
+		}
+
+		let copyrightHolderFile = gtx._('Your input');
+		if (
+			typeof this.configuration.package?.['copyright-holder'] !== 'undefined'
+		) {
+			config.package['copyright-holder'] =
+				this.configuration.package['copyright-holder'];
+			copyrightHolderFile = 'package.json: people.author';
+		}
+
+		if (!config.po) config.po = {};
+		config.po.directory = setup.poDirectory;
+		config.po.locales = [];
+
+		if (!config.install) config.install = {};
+		config.install.directory = setup.localeDirectory;
+
+		if (this.options.verbose) {
+			console.error(gtx._('Validating the configuration.'));
+		}
+		if (
+			!ConfigurationFactory.validate(
+				config,
+				{
+					jsConfigFile: gtx._('your input'),
+					msgidBugsAddressFile: msgidBugsAddressFile,
+					copyrightHolderFile: copyrightHolderFile,
+					versionFile: 'package.json',
+					nameFile: 'package.json',
+				},
+				Textdomain.locale,
+			)
+		) {
+			console.error(
+				gtx._(
+					'Please try again with option --verbose to see the origin of the above errors.',
+				),
+			);
+			process.exit(1);
+		}
+
+		return config;
+	}
+
+	private getJsonConfig(config: Configuration, indent: string): string {
+		return JSON.stringify(config, null, indent);
+	}
+
+	private getJsConfig(config: Configuration, setup: Setup, indent: string) {
+		const header =
+			setup.configFile === 'esgettext.config.mjs'
+				? 'export default '
+				: 'module.exports = ';
+		const comment = gtx._x(
+			'Configuration for esgettext, created by {package} {version}.',
+			{
+				package: Package.getName(),
+				version: 'v' + Package.getVersion(),
+			},
+		);
+		const body = util.inspect(config, {
+			depth: null,
+			maxArrayLength: null,
+			maxStringLength: null,
+		});
+		const bodyLines = body.split('\n');
+		const match = bodyLines[1].match(/^(\t| *)/);
+		const bodyIndent = match?.groups?.[1];
+		const indentedBody = body;
+		const code = `// ${comment}\n${header} ${indentedBody}`;
+
+		return code.replace(new RegExp(`^${bodyIndent}`, 'gm'), indent);
+	}
+
+	private async writeFiles(config: Configuration, setup: Setup) {
+		const pkg = await NPMCliPackageJson.load(process.cwd());
+		const content = pkg.content as PackageJson;
+		const newline = content[
+			Symbol.for('newline') as unknown as keyof typeof content
+		] as string;
+		const indent = content[
+			Symbol.for('indent') as unknown as keyof typeof content
+		] as string;
+
+		let serialized: string | undefined;
+		if (setup.configFile === 'package.json') {
+			content.esgettext = config;
+		} else if (setup.configFile === 'esgettext.config.json') {
+			serialized = this.getJsonConfig(config, indent);
+		} else {
+			serialized = this.getJsConfig(config, setup, indent);
+		}
+
+		if (this.options.verbose) {
+			console.error(
+				gtx._x("Writing configuration to '{filename}'.", {
+					filename: setup.configFile,
+				}),
+			);
+		}
+
+		if (typeof serialized !== 'undefined' && !this.options.dryRun) {
+			const data = serialized.replace('\n', newline);
+			fs.writeFileSync(setup.configFile, data);
+		}
+
+		if (this.options.verbose) {
+			console.error(
+				gtx._x(
+					"Adding package '{package}' version '{version}' as a dependency.",
+					{
+						package: '@esgettext/runtime',
+						version: `^${Package.getVersion()}`,
+					},
+				),
+			);
+		}
+		const dependencies = {
+			...pkg.content.dependencies,
+			'@esgettext/runtime': `^${Package.getVersion()}`,
+		};
+
+		if (this.options.verbose) {
+			console.error(
+				gtx._x(
+					"Adding package '{package}' version {version} as a development dependencyy.",
+					{ package: '@esgettext/tools', version: `^${Package.getVersion()}` },
+				),
+			);
+		}
+		const devDependencies = {
+			...pkg.content.devDependencies,
+			'@esgettext/tools': `^${Package.getVersion()}`,
+		};
+
+		if (
+			!pkg.content.devDependencies?.['npm-run-all'] &&
+			!pkg.content.dependencies?.['npm-run-all']
+		) {
+			if (this.options.verbose) {
+				console.error(
+					gtx._x(
+						"Adding package '{package}' version {version} as a development dependencyy.",
+						{ package: 'npm-run-all', version: Package.getNpmRunAllVersion() },
+					),
+				);
+			}
+			devDependencies[
+				'npm-run-all' as unknown as keyof typeof devDependencies
+			] = Package.getNpmRunAllVersion();
+		}
+
+		const scripts = {
+			...pkg.content.scripts,
+			esgettext:
+				'npm-run-all esgettext:potfiles esgettext:extract esgettext:update-po esgettext:update-mo esgettext:install',
+			'esgettext:potfiles': `esgettext potfiles --directory ${setup.poDirectory} >${setup.poDirectory}/POTFILES`,
+			'esgettext:extract': `esgettext extract --directory ${setup.poDirectory} --files-from=${setup.poDirectory}/POTFILES`,
+			'esgettext:update-po': `esgettext msgmerge-all`,
+			'esgettext:update-mo': `esgettext msgfmt-all`,
+			'esgettext:install': `esgettext install`,
+		};
+
+		pkg.update({ dependencies, devDependencies, scripts });
+
+		if (this.options.verbose) {
+			console.error(
+				gtx._x("Writing updated '{filename}'.", { filename: 'package.json' }),
+			);
+		}
+		if (!this.options.dryRun) {
+			pkg.save();
+		}
+	}
+
+	private async doRun(argv: yargs.Arguments): Promise<number> {
+		await this.init(argv);
+
+		const setup = await this.promptUser();
+		const configuration = this.getConfiguration(setup);
+		if (this.options.verbose) {
+			console.log(gtx._('Resulting configuration:'));
+			console.log(configuration);
+		}
+
+		try {
+			await this.writeFiles(configuration, setup);
+			if (this.options.verbose) {
+				console.error('');
+			}
+			console.error(gtx._('The next steps are:'));
+			console.error(
+				gtx._(
+					'1) Mark translatable strings in your code like this "gtx._(\'Hello, world!\')".',
+				),
+			);
+			console.error(
+				gtx._x("2) Extract strings with '{command}' into '{filename}'.", {
+					command: 'npm run esgettext:update-po',
+					filename: `${setup.poDirectory}/${setup.textdomain}.pot`,
+				}),
+			);
+			console.error(
+				gtx._x(
+					"3) Create a translation file with '{command}' (replace 'xy' with a language code like 'de' or 'pt_BR').",
+					{
+						command: `msginit -l xy -i ${setup.poDirectory}/${setup.textdomain}.pot -o po/xy.po`,
+					},
+				),
+			);
+			console.error(
+				gtx._x('4) Translate the message with a PO editor of your choice.', {
+					command: `msginit -l xy -i ${setup.poDirectory}/${setup.textdomain}.pot -o po/xy.po`,
+				}),
+			);
+			console.error(
+				gtx._x("5) Install the translation with '{command}'.", {
+					command: 'npm run esgettext:install',
+				}),
+			);
+			console.error();
+			console.error(
+				gtx._x(
+					"The command '{command}' executes all steps of the translation workflow at once.",
+					{ command: 'npm run esgettext' },
+				),
+			);
+		} catch (error) {
+			console.error(gtx._('Error writing output:'));
+			return 1;
+		}
 
 		return 0;
 	}
 
 	public run(argv: yargs.Arguments): Promise<number> {
-		this.init(argv);
-
 		return new Promise(resolve => {
-			this.doRun()
+			this.doRun(argv)
 				.then(() => {
 					resolve(0);
 				})
@@ -205,11 +431,11 @@ export class Init implements Command {
 
 	private guessConfigFile(): ConfigFile {
 		if (this.packageJson.type === 'module' || this.packageJson.module) {
-			return 'esconfig.mjs';
+			return 'esgettext.config.mjs';
 		} else if (this.packageJson.type === 'commonjs') {
-			return 'esconfig.cjs';
+			return 'esgettext.config.cjs';
 		} else {
-			return 'esconfig.json';
+			return 'esgettext.config.json';
 		}
 	}
 
@@ -262,16 +488,16 @@ export class Init implements Command {
 				message: gtx._('Which package manager should be used'),
 				choices: [
 					{
-						name: 'esconfig.mjs',
-						value: 'esconfig.mjs',
+						name: 'esgettext.config.mjs',
+						value: 'esgettext.config.mjs',
 					},
 					{
-						name: 'esconfig.cjs',
-						value: 'esconfig.cjs',
+						name: 'esgettext.config.cjs',
+						value: 'esgettext.config.cjs',
 					},
 					{
-						name: 'esconfig.json',
-						value: 'esconfig.json',
+						name: 'esgettext.config.json',
+						value: 'esgettext.config.json',
 					},
 					{
 						name: 'package.json',

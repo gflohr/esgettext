@@ -75,7 +75,7 @@ gtx
 			)
 			.demandCommand(1, gtx._('Error: No command given.'))
 			.scriptName(Package.getName());
-		let epilogue = configuration.files.length
+		let epilogue = configuration.files?.length
 			? gtx._x('Additional defaults read from: {files}.', {
 					files: configuration.files.join(', '),
 				}) + '\n\n'
