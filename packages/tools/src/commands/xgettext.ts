@@ -40,6 +40,7 @@ interface XGettextOptions {
 	addAllComments: boolean;
 	extractAll: boolean;
 	keyword: string[];
+	[key: string]: string | string[] | boolean | number | undefined;
 }
 
 const gtx = Textdomain.getInstance('com.cantanea.esgettext-tools');
@@ -78,7 +79,6 @@ export class XGettext implements Command {
 			'files-from': {
 				group: gtx._('Input file location:'),
 				type: 'string',
-				array: true,
 				describe: gtx._('get list of input files from FILE'),
 				default: this.configuration.package?.['files-from'],
 			},
@@ -270,7 +270,12 @@ export class XGettext implements Command {
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	additional(_: yargs.Argv) {}
+	additional(argv: yargs.Argv) {
+		argv.positional(gtx._('INPUTFILE'), {
+			type: 'string',
+			describe: gtx._('input files'),
+		});
+	}
 
 	private init(argv: yargs.Arguments) {
 		const options = argv as unknown as XGettextOptions;
@@ -371,7 +376,7 @@ export class XGettext implements Command {
 		try {
 			fileCollector = new FilesCollector(
 				this.options.filesFrom,
-				this.options._,
+				this.options[gtx._('INPUTFILE')] as Array<string>,
 			);
 		} catch (e) {
 			console.error(`${this.options.$0}: ${e}`);

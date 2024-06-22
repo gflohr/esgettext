@@ -14,6 +14,7 @@ const errorSpy = jest.spyOn(global.console, 'error').mockImplementation(() => {
 });
 
 const baseArgv = {
+	_: [],
 	$0: 'esgettext',
 };
 
@@ -46,7 +47,7 @@ console.log(gtx._('Goodbye, world!'));
 				.mockReturnValueOnce(Buffer.from(hello))
 				.mockReturnValueOnce(Buffer.from(goodbye));
 
-			const argv = { ...baseArgv, _: ['hello1.js', 'goodbye.js'] };
+			const argv = { ...baseArgv, INPUTFILE: ['hello1.js', 'goodbye.js'] };
 			const xgettext = new XGettext(baseConfig, date);
 			expect(await xgettext.run(argv)).toEqual(0);
 			expect(writeFileSync).toHaveBeenCalledTimes(1);
@@ -70,7 +71,7 @@ const goodbye: string = gtx._('Goodbye, world!');
 				.mockReturnValueOnce(Buffer.from(hello))
 				.mockReturnValueOnce(Buffer.from(goodbye));
 
-			const argv = { ...baseArgv, _: ['hello2.ts', 'goodbye.ts'] };
+			const argv = { ...baseArgv, INPUTFILE: ['hello2.ts', 'goodbye.ts'] };
 			const xgettext = new XGettext(baseConfig, date);
 			expect(await xgettext.run(argv)).toEqual(0);
 			expect(writeFileSync).toHaveBeenCalledTimes(1);
@@ -111,7 +112,7 @@ msgstr ""
 
 			readFileSync.mockReturnValueOnce(Buffer.from(po));
 
-			const argv = { ...baseArgv, _: ['de.po'] };
+			const argv = { ...baseArgv, INPUTFILE: ['de.po'] };
 			const xgettext = new XGettext(baseConfig, date);
 			expect(await xgettext.run(argv)).toEqual(0);
 			expect(writeFileSync).toHaveBeenCalledTimes(1);
@@ -151,7 +152,7 @@ msgstr ""
 
 			readFileSync.mockReturnValueOnce(Buffer.from(pot));
 
-			const argv = { ...baseArgv, _: ['package.pot'] };
+			const argv = { ...baseArgv, INPUTFILE: ['package.pot'] };
 			const xgettext = new XGettext(baseConfig, date);
 			expect(await xgettext.run(argv)).toEqual(0);
 			expect(writeFileSync).toHaveBeenCalledTimes(1);
@@ -191,7 +192,7 @@ msgstr ""
 
 			readFileSync.mockReturnValueOnce(Buffer.from(pot));
 
-			const argv = { ...baseArgv, _: ['package.xyz'] };
+			const argv = { ...baseArgv, INPUTFILE: ['package.xyz'] };
 			const xgettext = new XGettext(baseConfig, date);
 			expect(await xgettext.run(argv)).toEqual(1);
 			expect(writeFileSync).toHaveBeenCalledTimes(0);
@@ -205,7 +206,7 @@ msgstr ""
 
 			readFileSync.mockReturnValueOnce(Buffer.from(hello));
 
-			const argv = { ...baseArgv, _: ['hello3.js'] };
+			const argv = { ...baseArgv, INPUTFILE: ['hello3.js'] };
 			const xgettext = new XGettext(baseConfig, date);
 			expect(await xgettext.run(argv)).toEqual(1);
 			expect(writeFileSync).not.toHaveBeenCalled();
@@ -223,7 +224,7 @@ msgstr ""
 				throw new Error('no such file or directory');
 			});
 
-			const argv = { ...baseArgv, _: ['hello4.js'] };
+			const argv = { ...baseArgv, INPUTFILE: ['hello4.js'] };
 			const xgettext = new XGettext(baseConfig, date);
 			expect(await xgettext.run(argv)).toEqual(1);
 			expect(writeFileSync).not.toHaveBeenCalled();
@@ -244,7 +245,7 @@ msgstr ""
 				throw new Error('no such file or directory');
 			});
 
-			const argv = { ...baseArgv, _: ['hello5.js'] };
+			const argv = { ...baseArgv, INPUTFILE: ['hello5.js'] };
 			const xgettext = new XGettext(baseConfig, date);
 			expect(await xgettext.run(argv)).toEqual(1);
 			expect(writeFileSync).toHaveBeenCalledTimes(1);
@@ -270,7 +271,7 @@ describe('xgettext command-line options and arguments', () => {
 				const argv = {
 					...baseArgv,
 					output: 'option-output.pot',
-					_: ['here/option-output.js', 'there/option-output.js'],
+					INPUTFILE: ['here/option-output.js', 'there/option-output.js'],
 				};
 				const xgettext = new XGettext(baseConfig, date);
 				expect(await xgettext.run(argv)).toEqual(1);
@@ -292,7 +293,7 @@ describe('xgettext command-line options and arguments', () => {
 				const argv = {
 					...baseArgv,
 					output: 'option-output.pot',
-					_: ['-'],
+					INPUTFILE: ['-'],
 				};
 				const stdinSpy = jest
 					.spyOn(global.process.stdin, 'read')
@@ -319,7 +320,7 @@ describe('xgettext command-line options and arguments', () => {
 				const argv = {
 					...baseArgv,
 					language: 'JavaScript',
-					_: ['-'],
+					INPUTFILE: ['-'],
 				};
 				const stdinSpy = jest
 					.spyOn(global.process.stdin, 'read')
@@ -356,7 +357,7 @@ describe('xgettext command-line options and arguments', () => {
 				const argv = {
 					...baseArgv,
 					filesFrom: ['POTFILES-1', 'POTFILES-2'],
-					_: [] as Array<string>,
+					INPUTFILE: [] as Array<string>,
 				};
 				const xgettext = new XGettext(baseConfig, date);
 				expect(await xgettext.run(argv)).toEqual(0);
@@ -387,7 +388,7 @@ describe('xgettext command-line options and arguments', () => {
 				const argv = {
 					...baseArgv,
 					filesFrom: ['POTFILES'],
-					_: [] as Array<string>,
+					INPUTFILE: [] as Array<string>,
 				};
 				const xgettext = new XGettext(baseConfig, date);
 				expect(await xgettext.run(argv)).toEqual(1);
@@ -409,7 +410,7 @@ describe('xgettext command-line options and arguments', () => {
 				const argv = {
 					...baseArgv,
 					filesFrom: ['-'],
-					_: [] as Array<string>,
+					INPUTFILE: [] as Array<string>,
 				};
 				const stdinSpy = jest
 					.spyOn(global.process.stdin, 'read')
@@ -444,7 +445,7 @@ files-from-2.js
 				const argv = {
 					...baseArgv,
 					directory: ['foo', 'bar', 'baz'],
-					_: ['directory.js'] as Array<string>,
+					INPUTFILE: ['directory.js'] as Array<string>,
 				};
 				readFileSync.mockImplementation(filename => {
 					throw new Error(
@@ -480,7 +481,7 @@ files-from-2.js
 				const argv = {
 					...baseArgv,
 					output: 'option-output.pot',
-					_: ['option-output.js'],
+					INPUTFILE: ['option-output.js'],
 				};
 				const xgettext = new XGettext(baseConfig, date);
 				expect(await xgettext.run(argv)).toEqual(0);
@@ -498,7 +499,7 @@ files-from-2.js
 				const argv = {
 					...baseArgv,
 					output: '-',
-					_: ['option-output.js'],
+					INPUTFILE: ['option-output.js'],
 				};
 				const xgettext = new XGettext(baseConfig, date);
 
@@ -526,7 +527,7 @@ files-from-2.js
 				readFileSync.mockReturnValueOnce(Buffer.from(code));
 				const argv = {
 					...baseArgv,
-					_: ['option-output.js'],
+					INPUTFILE: ['option-output.js'],
 				};
 				const xgettext = new XGettext(baseConfig, date);
 
@@ -545,7 +546,7 @@ files-from-2.js
 				const argv = {
 					...baseArgv,
 					defaultDomain: 'strings',
-					_: ['option-output.js'],
+					INPUTFILE: ['option-output.js'],
 				};
 				const xgettext = new XGettext(baseConfig, date);
 
@@ -570,7 +571,7 @@ files-from-2.js
 				const argv = {
 					...baseArgv,
 					outputDir: 'po',
-					_: ['option-output.js'],
+					INPUTFILE: ['option-output.js'],
 				};
 				const xgettext = new XGettext(baseConfig, date);
 
@@ -623,7 +624,7 @@ msgstr ""
 					...baseArgv,
 					// This is on purpose the wrong language.
 					language: 'javascript',
-					_: ['hello6.pot'],
+					INPUTFILE: ['hello6.pot'],
 				};
 				const xgettext = new XGettext(baseConfig, date);
 				expect(await xgettext.run(argv)).toEqual(1);
@@ -640,7 +641,7 @@ msgstr ""
 				const argv = {
 					...baseArgv,
 					language: 'TypeScript',
-					_: ['hello-language-typescript.ts'],
+					INPUTFILE: ['hello-language-typescript.ts'],
 				};
 				const xgettext = new XGettext(baseConfig, date);
 				expect(await xgettext.run(argv)).toEqual(0);
@@ -671,7 +672,7 @@ msgstr ""
 					output: 'package.pot',
 					language: 'javascript',
 					joinExisting: true,
-					_: ['join-existing1.js'],
+					INPUTFILE: ['join-existing1.js'],
 				};
 
 				const xgettext = new XGettext(baseConfig, date);
@@ -692,7 +693,7 @@ msgstr ""
 					output: '-',
 					language: 'javascript',
 					joinExisting: true,
-					_: ['join-existing2.js'],
+					INPUTFILE: ['join-existing2.js'],
 				};
 
 				const xgettext = new XGettext(baseConfig, date);
@@ -712,7 +713,7 @@ msgstr ""
 					output: 'package.pot',
 					language: 'javascript',
 					joinExisting: true,
-					_: ['join-existing3.js'],
+					INPUTFILE: ['join-existing3.js'],
 				};
 
 				readFileSync.mockImplementationOnce(() => {
@@ -748,7 +749,7 @@ msgstr ""
 					output: 'package.pot',
 					language: 'javascript',
 					joinExisting: true,
-					_: ['join-existing1.js'],
+					INPUTFILE: ['join-existing1.js'],
 				};
 
 				const xgettext = new XGettext(baseConfig, date);
@@ -787,7 +788,7 @@ gtx._("catch me!");
 				const argv = {
 					...baseArgv,
 					excludeFile: ['exclude1.pot', 'exclude2.pot'],
-					_: ['exclude-file1.js'],
+					INPUTFILE: ['exclude-file1.js'],
 				};
 
 				const xgettext = new XGettext(baseConfig, date);
@@ -807,7 +808,7 @@ gtx._("catch me!");
 				const argv = {
 					...baseArgv,
 					excludeFile: ['exclude1.pot', 'exclude2.pot'],
-					_: ['exclude-file1.js'],
+					INPUTFILE: ['exclude-file1.js'],
 				};
 
 				const xgettext = new XGettext(baseConfig, date);
@@ -825,7 +826,7 @@ gtx._("catch me!");
 				const argv = {
 					...baseArgv,
 					excludeFile: ['exclude1.pot', 'exclude2.pot'],
-					_: ['exclude-file1.js'],
+					INPUTFILE: ['exclude-file1.js'],
 				};
 
 				const xgettext = new XGettext(baseConfig, date);
@@ -871,7 +872,7 @@ gtx._("Copy & Paste");
 				const argv = {
 					...baseArgv,
 					addComments: ['TRANSLATORS:', 'TESTERS:'],
-					_: ['add-comments.js'],
+					INPUTFILE: ['add-comments.js'],
 				};
 				const xgettext = new XGettext(baseConfig, date);
 				expect(await xgettext.run(argv)).toEqual(0);
@@ -900,7 +901,7 @@ gtx._("Copy & Paste");
 				const argv = {
 					...baseArgv,
 					addAllComments: true,
-					_: ['add-comments.js'],
+					INPUTFILE: ['add-comments.js'],
 				};
 				const xgettext = new XGettext(baseConfig, date);
 				expect(await xgettext.run(argv)).toEqual(0);
@@ -925,7 +926,7 @@ console.log("non-gettext-function");
 				const argv = {
 					...baseArgv,
 					extractAll: true,
-					_: ['extract-all.js'],
+					INPUTFILE: ['extract-all.js'],
 				};
 				const xgettext = new XGettext(baseConfig, date);
 				expect(await xgettext.run(argv)).toEqual(0);
@@ -949,7 +950,7 @@ npgettext("context", "one file", "multiple files", 2304);
 				const argv = {
 					...baseArgv,
 					keyword: ['', 'gettext', 'npgettext:1c,2,3'],
-					_: ['keyword.js'],
+					INPUTFILE: ['keyword.js'],
 				};
 				const xgettext = new XGettext(baseConfig, date);
 				expect(await xgettext.run(argv)).toEqual(0);
@@ -970,7 +971,7 @@ npgettext("context", "one file", "multiple files", 2304);
 				readFileSync.mockReturnValueOnce(Buffer.from(code));
 				const argv = {
 					...baseArgv,
-					_: ['force-po1.js'],
+					INPUTFILE: ['force-po1.js'],
 				};
 				const xgettext = new XGettext(baseConfig, date);
 				expect(await xgettext.run(argv)).toEqual(0);
@@ -985,7 +986,7 @@ npgettext("context", "one file", "multiple files", 2304);
 				const argv = {
 					...baseArgv,
 					forcePo: true,
-					_: ['force-po1.js'],
+					INPUTFILE: ['force-po1.js'],
 				};
 				const xgettext = new XGettext(baseConfig, date);
 				expect(await xgettext.run(argv)).toEqual(0);
@@ -1005,7 +1006,7 @@ npgettext("context", "one file", "multiple files", 2304);
 				const argv = {
 					...baseArgv,
 					width: 25,
-					_: ['width.js'],
+					INPUTFILE: ['width.js'],
 				};
 				const xgettext = new XGettext(baseConfig, date);
 				expect(await xgettext.run(argv)).toEqual(0);
@@ -1029,7 +1030,7 @@ describe('xgettext encodings', () => {
 
 			const argv = {
 				...baseArgv,
-				_: ['hello-ascii.js'],
+				INPUTFILE: ['hello-ascii.js'],
 			};
 			const xgettext = new XGettext(baseConfig, date);
 			expect(await xgettext.run(argv)).toEqual(0);
@@ -1048,7 +1049,7 @@ gtx._("Hello, world!");
 
 			const argv = {
 				...baseArgv,
-				_: ['hello-ascii.js'],
+				INPUTFILE: ['hello-ascii.js'],
 			};
 			const xgettext = new XGettext(baseConfig, date);
 			expect(await xgettext.run(argv)).toEqual(1);
@@ -1071,7 +1072,7 @@ gtx._("Hello, world!");
 			const argv = {
 				...baseArgv,
 				fromCode: 'iso-8859-1',
-				_: ['hello-ascii.js'],
+				INPUTFILE: ['hello-ascii.js'],
 			};
 			const xgettext = new XGettext(baseConfig, date);
 			expect(await xgettext.run(argv)).toEqual(0);
@@ -1087,7 +1088,7 @@ gtx._("Hello, world!");
 
 			const argv = {
 				...baseArgv,
-				_: ['hyvää-yötä.js'],
+				INPUTFILE: ['hyvää-yötä.js'],
 			};
 			const xgettext = new XGettext(baseConfig, date);
 			expect(await xgettext.run(argv)).toEqual(1);
@@ -1106,7 +1107,7 @@ Please specify the encoding through "--from-code".`);
 			const argv = {
 				...baseArgv,
 				fromCode: 'US-ASCII',
-				_: ['hyvää-yötä.js'],
+				INPUTFILE: ['hyvää-yötä.js'],
 			};
 			const xgettext = new XGettext(baseConfig, date);
 			expect(await xgettext.run(argv)).toEqual(1);
@@ -1125,7 +1126,7 @@ Please specify the encoding through "--from-code".`);
 			const argv = {
 				...baseArgv,
 				fromCode: 'ANSI_X3.4-1968',
-				_: ['hyvää-yötä.js'],
+				INPUTFILE: ['hyvää-yötä.js'],
 			};
 			const xgettext = new XGettext(baseConfig, date);
 			expect(await xgettext.run(argv)).toEqual(1);
@@ -1157,7 +1158,7 @@ gtx._('񈈈􈈈');
 			const argv = {
 				...baseArgv,
 				fromCode: 'utf-8',
-				_: ['hello-ascii.js'],
+				INPUTFILE: ['hello-ascii.js'],
 			};
 			const xgettext = new XGettext(baseConfig, date);
 			expect(await xgettext.run(argv)).toEqual(0);
@@ -1178,7 +1179,7 @@ gtx._("Hello, world!");
 			const argv = {
 				...baseArgv,
 				fromCode: 'utf-8',
-				_: ['hello-ascii.js'],
+				INPUTFILE: ['hello-ascii.js'],
 			};
 			const xgettext = new XGettext(baseConfig, date);
 			expect(await xgettext.run(argv)).toEqual(1);
@@ -1200,7 +1201,7 @@ gtx._("Hello, world!");
 			const argv = {
 				...baseArgv,
 				fromCode: 'no-such-charset',
-				_: ['hello-ascii.js'],
+				INPUTFILE: ['hello-ascii.js'],
 			};
 			const xgettext = new XGettext(baseConfig, date);
 			expect(await xgettext.run(argv)).toEqual(1);
@@ -1218,7 +1219,7 @@ gtx._("Hello, world!");
 				...baseArgv,
 				fromCode: 'no-such-charset',
 				language: 'javascript',
-				_: ['-'],
+				INPUTFILE: ['-'],
 			};
 			const stdinSpy = jest
 				.spyOn(global.process.stdin, 'read')
