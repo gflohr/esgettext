@@ -1,7 +1,10 @@
 import yargs from 'yargs';
 import * as fs from 'fs';
+import * as path from 'path';
 import * as util from 'util';
+import * as child_process from 'child_process';
 import { input, select } from '@inquirer/prompts';
+import { globSync } from 'glob';
 import { Command } from '../command';
 import { Textdomain } from '@esgettext/runtime';
 import {
@@ -97,7 +100,7 @@ export class Init implements Command {
 		const verbose = this.options.verbose;
 
 		if (verbose) {
-			console.error(gtx._('Setting configuration values.'));
+			console.log(gtx._('Setting configuration values.'));
 		}
 
 		// We could actually initialize this in a smarter manner by setting
@@ -141,7 +144,7 @@ export class Init implements Command {
 		config.install.directory = setup.localeDirectory;
 
 		if (this.options.verbose) {
-			console.error(gtx._('Validating the configuration.'));
+			console.log(gtx._('Validating the configuration.'));
 		}
 		if (
 			!ConfigurationFactory.validate(
@@ -217,7 +220,7 @@ export class Init implements Command {
 		}
 
 		if (this.options.verbose) {
-			console.error(
+			console.log(
 				gtx._x("Writing configuration to '{filename}'.", {
 					filename: setup.configFile,
 				}),
@@ -230,7 +233,7 @@ export class Init implements Command {
 		}
 
 		if (this.options.verbose) {
-			console.error(
+			console.log(
 				gtx._x(
 					"Adding package '{package}' version '{version}' as a dependency.",
 					{
@@ -246,7 +249,7 @@ export class Init implements Command {
 		};
 
 		if (this.options.verbose) {
-			console.error(
+			console.log(
 				gtx._x(
 					"Adding package '{package}' version {version} as a development dependencyy.",
 					{ package: '@esgettext/tools', version: `^${Package.getVersion()}` },
@@ -263,7 +266,7 @@ export class Init implements Command {
 			!pkg.content.dependencies?.['npm-run-all']
 		) {
 			if (this.options.verbose) {
-				console.error(
+				console.log(
 					gtx._x(
 						"Adding package '{package}' version {version} as a development dependencyy.",
 						{ package: 'npm-run-all', version: Package.getNpmRunAllVersion() },
@@ -275,11 +278,13 @@ export class Init implements Command {
 			] = Package.getNpmRunAllVersion();
 		}
 
+		const potFilesOptions = this.potfilesOptions(setup);
+
 		const scripts = {
 			...pkg.content.scripts,
 			esgettext:
 				'npm-run-all esgettext:potfiles esgettext:extract esgettext:update-po esgettext:update-mo esgettext:install',
-			'esgettext:potfiles': `esgettext potfiles --directory ${setup.poDirectory} >${setup.poDirectory}/POTFILES`,
+			'esgettext:potfiles': `esgettext potfiles ${potFilesOptions} >${setup.poDirectory}/POTFILES`,
 			'esgettext:extract': `esgettext extract --directory ${setup.poDirectory} --files-from=${setup.poDirectory}/POTFILES`,
 			'esgettext:update-po': `esgettext msgmerge-all`,
 			'esgettext:update-mo': `esgettext msgfmt-all`,
@@ -289,13 +294,197 @@ export class Init implements Command {
 		pkg.update({ dependencies, devDependencies, scripts });
 
 		if (this.options.verbose) {
-			console.error(
+			console.log(
 				gtx._x("Writing updated '{filename}'.", { filename: 'package.json' }),
 			);
 		}
 		if (!this.options.dryRun) {
 			pkg.save();
 		}
+	}
+
+	private installDependencies(setup: Setup) {
+		const command = `${setup.packageManager} install`;
+
+		if (this.options.verbose) {
+			console.log(gtx._x("Run '{command}'.", { command }));
+		}
+
+		if (!this.options.dryRun) {
+			child_process.execSync(command);
+		}
+	}
+
+	private nextSteps(setup: Setup) {
+		if (this.options.verbose) {
+			console.log('');
+		}
+		console.log(gtx._('The next steps are:'));
+		console.log(
+			gtx._(
+				'1) Mark translatable strings in your code like this "gtx._(\'Hello, world!\')".',
+			),
+		);
+		console.log(
+			gtx._x("2) Extract strings with '{command}' into '{filename}'.", {
+				command: 'npm run esgettext:update-po',
+				filename: `${setup.poDirectory}/${setup.textdomain}.pot`,
+			}),
+		);
+		console.log(
+			gtx._x(
+				"3) Create a translation file with '{command}' (replace 'xy' with a language code like 'de' or 'pt_BR').",
+				{
+					command: `msginit -l xy -i ${setup.poDirectory}/${setup.textdomain}.pot -o po/xy.po`,
+				},
+			),
+		);
+		console.log(
+			gtx._x('4) Translate the message with a PO editor of your choice.', {
+				command: `msginit -l xy -i ${setup.poDirectory}/${setup.textdomain}.pot -o po/xy.po`,
+			}),
+		);
+		console.log(
+			gtx._x("5) Install the translation with '{command}'.", {
+				command: 'npm run esgettext:install',
+			}),
+		);
+		console.log();
+		console.log(
+			gtx._x(
+				"The command '{command}' executes all steps of the translation workflow at once.",
+				{ command: 'npm run esgettext' },
+			),
+		);
+	}
+
+	private getGitFiles(): Array<string> | null {
+		try {
+			return child_process.execSync('git ls-files').toString('utf-8').split(/[\r\n]+/)
+		} catch(_) {
+			return null;
+		}
+	}
+
+	private potfilesOptions(setup: Setup): Array<string> {
+		const hasNodeModules = fs.existsSync('node_modules');
+		let exclude: Array<string> = [];
+
+		if (hasNodeModules) {
+			exclude.push('node_modules');
+		}
+
+		if (this.options.verbose) {
+			console.log(gtx._('Analyzing source files.'));
+		}
+
+		if (typeof this.packageJson.main !== 'undefined' && this.packageJson.main.length) {
+			exclude.push(path.dirname(this.packageJson.main));
+		}
+
+		if (typeof this.packageJson.module !== 'undefined' && this.packageJson.module.length) {
+			exclude.push(path.dirname(this.packageJson.module));
+		}
+
+		if (typeof this.packageJson.browser !== 'undefined' && this.packageJson.browser.length) {
+			exclude.push(path.dirname(this.packageJson.browser));
+		}
+
+		// sort | uniq for JavaScript.
+		exclude = exclude.sort().filter((item, index) => {
+			return index === 0 || item !== exclude[index - 1];
+		}).map(name => `./${name}/**/*`);
+
+		let candidates = globSync('./**/*.{js,jsx,ts,tsx}', { ignore: exclude });
+
+		const gitFiles = this.getGitFiles();
+		if (gitFiles) {
+			if (this.options.verbose) {
+				console.log(gtx._('This is a git repo.  We will only translate files under version control.'));
+			}
+
+			candidates = candidates.filter(filename => gitFiles.includes(filename));
+		}
+
+	let hasTestDir = false;
+	let hasSpec = false;
+	for (const candidate of candidates) {
+			const parts = candidate.split('/');
+			if (!hasTestDir && parts[0].match(/^tests?$/)) {
+				if (this.options.verbose) {
+					console.log(gtx._x('Looks like you have test files under {directory}. We will not translate them.'));
+				}
+				exclude.push(`${parts[0]}/*/**`);
+				hasTestDir = true;
+			}
+			if (!hasSpec && parts[parts.length - 1].match(/\.spec\./)) {
+				exclude.push(`**/*.spec.*`);
+				hasSpec = true;
+			}
+		}
+
+		const extenders: { [dir: string]: Array<string> } = {};
+		let topLevelDirectories = candidates.map(name => {
+			const parts = name.split('/');
+			const filename = parts[parts.length - 1];
+			const fparts = filename.split('.');
+
+			let tld;
+			if (parts.length === 1) {
+				tld = '.';
+			} else {
+				tld = parts[0];
+			}
+
+			extenders[tld] ??= [];
+			extenders[tld].push(fparts[fparts.length - 1]);
+
+			return tld;
+		});
+
+		// And make them unique.
+		topLevelDirectories = topLevelDirectories.sort()
+		.filter((item, index) => {
+			return index === 0 || item !== topLevelDirectories[index - 1];
+		});
+
+		const options: Array<string> = [
+			`--directory=${setup.poDirectory}`,
+		];
+
+		if (gitFiles) {
+			options.push('--git');
+		}
+
+		for (const pattern of exclude) {
+			options.push(`--exclude="${pattern}"`)
+		}
+
+		if (!topLevelDirectories.length) {
+			console.error(gtx._x("Warning! Could not find any source files.  Will use the pattern './src/**/*.{js,jsx,ts,tsx}."));
+			options.push('"./src/**/*.{js,jsx,ts,tsx}"')
+		} else {
+			for (const tld in extenders) {
+				let x = extenders[tld];
+				x = x.sort().filter((item, index) => {
+					return index === 0 || item !== x[index - 1];
+				});
+
+				if (x.length > 1) {
+					options.push(`"./${tld}/**/*.{${x.join(',')}}"`);
+				} else {
+					options.push(`"./${tld}/**/*.${x[0]}"`);
+				}
+			}
+		}
+
+		if (this.options.verbose) {
+			console.log(gtx._x("Command-line options for extracting source files are: {options}",
+				{ options: options.join(' ') },
+			));
+		}
+
+		return options;
 	}
 
 	private async doRun(argv: yargs.Arguments): Promise<number> {
@@ -310,50 +499,13 @@ export class Init implements Command {
 
 		try {
 			await this.writeFiles(configuration, setup);
-			if (this.options.verbose) {
-				console.error('');
-			}
-			console.error(gtx._('The next steps are:'));
-			console.error(
-				gtx._(
-					'1) Mark translatable strings in your code like this "gtx._(\'Hello, world!\')".',
-				),
-			);
-			console.error(
-				gtx._x("2) Extract strings with '{command}' into '{filename}'.", {
-					command: 'npm run esgettext:update-po',
-					filename: `${setup.poDirectory}/${setup.textdomain}.pot`,
-				}),
-			);
-			console.error(
-				gtx._x(
-					"3) Create a translation file with '{command}' (replace 'xy' with a language code like 'de' or 'pt_BR').",
-					{
-						command: `msginit -l xy -i ${setup.poDirectory}/${setup.textdomain}.pot -o po/xy.po`,
-					},
-				),
-			);
-			console.error(
-				gtx._x('4) Translate the message with a PO editor of your choice.', {
-					command: `msginit -l xy -i ${setup.poDirectory}/${setup.textdomain}.pot -o po/xy.po`,
-				}),
-			);
-			console.error(
-				gtx._x("5) Install the translation with '{command}'.", {
-					command: 'npm run esgettext:install',
-				}),
-			);
-			console.error();
-			console.error(
-				gtx._x(
-					"The command '{command}' executes all steps of the translation workflow at once.",
-					{ command: 'npm run esgettext' },
-				),
-			);
+			this.installDependencies(setup);
 		} catch (error) {
 			console.error(gtx._('Error writing output:'));
 			return 1;
 		}
+
+		this.nextSteps(setup);
 
 		return 0;
 	}

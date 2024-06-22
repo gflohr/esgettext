@@ -19,7 +19,9 @@ export type PackageJson = {
 	name?: string;
 	version?: string;
 	type?: 'module' | 'commonjs';
-	module?: boolean;
+	main?: string;
+	module?: string;
+	browser?: string;
 	bugs?: {
 		url?: string;
 		email?: string;
