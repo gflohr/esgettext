@@ -159,7 +159,7 @@ export class Init implements Command {
 				Textdomain.locale,
 			)
 		) {
-			console.error(
+			this.error(
 				gtx._(
 					'Please try again with option --verbose to see the origin of the above errors.',
 				),
@@ -461,7 +461,7 @@ export class Init implements Command {
 		}
 
 		if (!topLevelDirectories.length) {
-			console.error(gtx._x("Warning! Could not find any source files.  Will use the pattern './src/**/*.{js,jsx,ts,tsx}."));
+			this.error(gtx._x("Warning! Could not find any source files.  Will use the pattern './src/**/*.{js,jsx,ts,tsx}."));
 			options.push('"./src/**/*.{js,jsx,ts,tsx}"')
 		} else {
 			for (const tld in extenders) {
@@ -494,12 +494,12 @@ export class Init implements Command {
 		const filename = setup.configFile;
 		console.log(`filename: ${filename}`);
 		if (filename !== 'package.json' && fs.existsSync(filename)) {
-			console.error(
+			this.error(
 				gtx._x("Error: The file '{filename}' already exists!", {
 					filename,
 				}),
 			);
-			console.error(gtx._x("Will not overwrite without option '{option}'.",
+			this.error(gtx._x("Will not overwrite without option '{option}'.",
 				{ option: '--force' },
 			));
 			return false;
@@ -518,10 +518,10 @@ export class Init implements Command {
 
 			for (const script of esgettextScripts) {
 				if (Object.prototype.hasOwnProperty.call(pkg.scripts, script)) {
-					console.error(gtx._x("Error: The file '{filename}' already defines a script '{script}'.",
+					this.error(gtx._x("Error: The file '{filename}' already defines a script '{script}'.",
 						{ filename: 'package.json', },
 					));
-					console.error(gtx._x("Will not overwrite without option '{option}'.",
+					this.error(gtx._x("Will not overwrite without option '{option}'.",
 						{ option: '--force' },
 					));
 
@@ -531,6 +531,27 @@ export class Init implements Command {
 		}
 
 		return true;
+	}
+
+	private checkGettextTools() {
+		const missing: Array<string> = [];
+		const wanted = ['msgmerge', 'msgfmt'];
+
+		for (const tool of wanted) {
+			try {
+				child_process.execSync(`${tool} --version`);
+			} catch(e) {
+				missing.push(tool);
+			}
+		}
+
+		if (missing.length) {
+			this.error(gtx._x('Warning! The following programs are missing or do not work:'));
+			for (const tool of missing) {
+				this.error(`\t${tool}`);
+			}
+			this.error(gtx._x('You have to install the GNU gettext tools!'));
+		}
 	}
 
 	private async doRun(argv: yargs.Arguments): Promise<number> {
@@ -551,11 +572,12 @@ export class Init implements Command {
 			await this.writeFiles(configuration, setup);
 			this.installDependencies(setup);
 		} catch (error) {
-			console.error(gtx._('Error writing output:'));
-			console.error(error);
+			this.error(gtx._('Error writing output:'));
+			this.error(error);
 			return 1;
 		}
 
+		this.checkGettextTools();
 		this.nextSteps(setup);
 
 		return 0;
@@ -612,6 +634,12 @@ export class Init implements Command {
 		});
 	}
 
+	private guessTextdomain(): string | undefined {
+		if (this.configuration.package?.name) {
+			return(this.configuration.package?.name.replace(/^@(.+)\/(.+)/, '$1-$2'));
+		}
+	}
+
 	private guessPackageManager(): 'npm' | 'yarn' | 'pnpm' | 'bun' {
 		if (fs.existsSync('package-lock.json')) {
 			return 'npm';
@@ -656,7 +684,7 @@ export class Init implements Command {
 		return {
 			textdomain: await input({
 				message: gtx._('Textdomain of your package'),
-				default: this.configuration.package?.name,
+				default: this.guessTextdomain(),
 				validate: answer => this.nonEmpty(answer),
 			}),
 			poDirectory: await input({
@@ -714,5 +742,11 @@ export class Init implements Command {
 				default: this.guessConfigFile(),
 			}),
 		};
+	}
+
+	private error(...args: unknown[]) {
+		const redOn = '\x1b[31m';
+		const redOff = '\x1b[0m';
+		console.error(redOn, ...args, redOff);
 	}
 }
