@@ -487,10 +487,60 @@ export class Init implements Command {
 		return options;
 	}
 
+	private checkOverwrite(setup: Setup): boolean {
+		if (this.options.force) return true;
+
+		// The po directory are already checked.
+		const filename = setup.configFile;
+		console.log(`filename: ${filename}`);
+		if (filename !== 'package.json' && fs.existsSync(filename)) {
+			console.error(
+				gtx._x("Error: The file '{filename}' already exists!", {
+					filename,
+				}),
+			);
+			console.error(gtx._x("Will not overwrite without option '{option}'.",
+				{ option: '--force' },
+			));
+			return false;
+		}
+
+		const pkg = this.packageJson;
+		if (pkg.scripts) {
+			const esgettextScripts = [
+				'esgettext',
+				'esgettext:potfiles',
+				'esgettext:extract',
+				'esgettext:update-po',
+				'esgettext:update-mo',
+				'esgettext:install',
+			];
+
+			for (const script of esgettextScripts) {
+				if (Object.prototype.hasOwnProperty.call(pkg.scripts, script)) {
+					console.error(gtx._x("Error: The file '{filename}' already defines a script '{script}'.",
+						{ filename: 'package.json', },
+					));
+					console.error(gtx._x("Will not overwrite without option '{option}'.",
+						{ option: '--force' },
+					));
+
+					return false;
+				}
+			}
+		}
+
+		return true;
+	}
+
 	private async doRun(argv: yargs.Arguments): Promise<number> {
 		await this.init(argv);
 
 		const setup = await this.promptUser();
+		if (!this.checkOverwrite(setup)) {
+			return 1;
+		}
+
 		const configuration = this.getConfiguration(setup);
 		if (this.options.verbose) {
 			console.log(gtx._('Resulting configuration:'));
@@ -502,6 +552,7 @@ export class Init implements Command {
 			this.installDependencies(setup);
 		} catch (error) {
 			console.error(gtx._('Error writing output:'));
+			console.error(error);
 			return 1;
 		}
 
@@ -548,7 +599,11 @@ export class Init implements Command {
 					return resolve(
 						gtx._x("The directory '{directory}' already exists!", {
 							directory,
-						}),
+						})
+						+ ' '
+						+ gtx._x("Will not overwrite without option '{option}'.",
+							{ option: '--force' },
+						)
 					);
 				}
 			}
@@ -637,7 +692,7 @@ export class Init implements Command {
 				default: this.guessPackageManager(),
 			}),
 			configFile: await select({
-				message: gtx._('Which package manager should be used'),
+				message: gtx._('Where do you want to put configuration'),
 				choices: [
 					{
 						name: 'esgettext.config.mjs',

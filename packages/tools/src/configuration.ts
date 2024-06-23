@@ -29,6 +29,14 @@ export type PackageJson = {
 	people?: {
 		author?: Author;
 	};
+	scripts?: {
+		esgettext?: 'string';
+		'esgettext:potfiles'?: 'string';
+		'esgettext:extract'?: 'string';
+		'esgettext:update-po'?: 'string';
+		'esgettext:update-mo'?: 'string';
+		'esgettext:install'?: 'string';
+	};
 	esgettext?: Configuration;
 };
 
