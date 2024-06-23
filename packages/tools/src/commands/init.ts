@@ -352,6 +352,7 @@ export class Init implements Command {
 		if (directory.includes(' ') || directory.includes('"')) {
 			directory = `"${directory.replace(/([\\""])/g, '\\$1')}"`;
 		}
+
 		const scripts = {
 			...pkg.content.scripts,
 			esgettext:
@@ -361,6 +362,7 @@ export class Init implements Command {
 			'esgettext:update-po': `esgettext msgmerge-all`,
 			'esgettext:update-mo': `esgettext msgfmt-all`,
 			'esgettext:install': `esgettext install`,
+			'esgettext:addlang': `esgettext msginit`,
 		};
 
 		const peerDependencies =

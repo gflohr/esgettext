@@ -156,7 +156,6 @@ export class Potfiles implements Command {
 	}
 
 	public run(argv: yargs.Arguments): Promise<number> {
-
 		return new Promise(resolve => {
 			if (!coerceOptions(argv, this.args())) {
 				return resolve(1);

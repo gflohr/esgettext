@@ -286,9 +286,7 @@ export class ConfigurationFactory {
 				fileUsed = true;
 			}
 
-			if (!configuration) configuration = {};
-
-			configuration.files = [];
+			if (!configuration) configuration = { files: [] };
 
 			if (!configuration.package?.['msgid-bugs-address']) {
 				if (packageJson.bugs?.url) {

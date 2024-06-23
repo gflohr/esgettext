@@ -13,8 +13,10 @@ import { Convert } from './commands/convert.js';
 import { MsgfmtAll } from './commands/msgfmt-all.js';
 import { Init } from './commands/init.js';
 import { Potfiles } from './commands/potfiles.js';
+import { AddLanguage } from './commands/add-language.js';
 
 const commandNames = [
+	'add-language',
 	'convert',
 	'install',
 	'init',
@@ -48,6 +50,7 @@ gtx
 			convert: new Convert(configuration),
 			init: new Init(configuration),
 			potfiles: new Potfiles(configuration),
+			'add-language': new AddLanguage(configuration),
 		};
 
 		const program = yargs(process.argv.slice(2))
