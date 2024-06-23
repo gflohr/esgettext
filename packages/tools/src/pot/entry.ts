@@ -32,7 +32,9 @@ export class POTEntry {
 	 */
 	constructor(readonly properties: POTEntryProperties) {
 		if (/[\u0000-\u0006\u000e-\u001f]/.exec(properties.msgid)) {
-			throw new Error(gtx._('msgid must not contain control characters.'));
+			throw new Error(gtx._x("Section '{section}' must not contain control characters.",
+				{ section: 'msgid' }
+			));
 		}
 
 		if (typeof this.properties.msgidPlural !== 'undefined') {
@@ -40,7 +42,9 @@ export class POTEntry {
 				/[\u0000-\u0006\u000e-\u001f]/.exec(properties.msgidPlural as string)
 			) {
 				throw new Error(
-					gtx._('msgid_plural must not contain control characters.'),
+					gtx._x("Section '{section}' must not contain control characters.",
+						{ section: 'msgid_plural' }
+					),
 				);
 			}
 		}
@@ -53,8 +57,8 @@ export class POTEntry {
 			this.warning(
 				gtx._(
 					'Empty msgid.  It is reserved by esgettext.\n' +
-						"Calling gettext('') returns the header " +
-						'entry with meta information, not the empty ' +
+						"Calling 'gettext()' with an empty msgid returns the " +
+						' header entry with meta information, not the empty ' +
 						'string.\n' +
 						'Consider adding a message context, if this ' +
 						'is done intentionally.',

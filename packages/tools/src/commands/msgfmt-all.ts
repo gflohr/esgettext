@@ -65,7 +65,9 @@ export class MsgfmtAll implements Command {
 			},
 			msgfmt: {
 				type: 'string',
-				describe: gtx._('msgfmt program if not in PATH [string]'),
+				describe: gtx._x("'{program}' program if not in $PATH", {
+					program: 'msgfmt',
+				}),
 				default: this.configuration.programs?.msgfmt?.path ?? 'msgfmt',
 				group: gtx._('Mode of operation:'),
 			},
@@ -73,7 +75,7 @@ export class MsgfmtAll implements Command {
 				multi: true,
 				type: 'string',
 				describe: gtx._x(
-					"Options to pass to '{program}' program (without hyphens)",
+					"Options to pass to '{program}' program (without leading hyphens)",
 					{ program: 'msgfmt' },
 				),
 				default: this.configuration.programs?.msgfmt?.options || [
@@ -154,7 +156,7 @@ export class MsgfmtAll implements Command {
 				if (name.substring(0, 1) === '-') {
 					console.error(
 						gtx._x(
-							"{programName}: option '{option}': Options passed to '{program}' must not start with a hyphen",
+							"{programName}: option '{option}': Options passed to '{program}' must be given without leading hyphens",
 							{
 								programName: Package.getName(),
 								program: 'msgfmt',

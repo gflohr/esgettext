@@ -30,7 +30,13 @@ const configFiles = locateConfigFiles();
 const pkgJsonFile = locatePkgJsonFile();
 
 const gtx = Textdomain.getInstance('com.cantanea.esgettext-tools');
-Textdomain.locale = Textdomain.selectLocale(['en-AU', 'en-US', 'en-GB', 'en-NZ', 'de']);
+Textdomain.locale = Textdomain.selectLocale([
+	'en-AU',
+	'en-US',
+	'en-GB',
+	'en-NZ',
+	'de',
+]);
 const localePath = path.join(__dirname, 'locale');
 gtx.bindtextdomain(localePath);
 gtx
@@ -74,7 +80,7 @@ gtx
 			})
 			.showHelpOnFail(
 				false,
-				gtx._x("Try {programName} '--help' for more information!", {
+				gtx._x("Try '{programName} --help' for more information!", {
 					programName: Package.getName(),
 				}),
 			)

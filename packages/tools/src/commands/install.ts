@@ -30,7 +30,7 @@ export class Install implements Command {
 	}
 
 	synopsis(): string {
-		return gtx._('[OPTIONS]');
+		return `[${gtx._('OPTIONS')}]`;
 	}
 
 	description(): string {

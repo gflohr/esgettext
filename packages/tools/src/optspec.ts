@@ -28,7 +28,7 @@ export function coerceOptions(
 				console.error(
 					gtx._x(
 						'{programName}: Error: The option' +
-							' {optname} cannot be specified more than once!',
+							" '{optname}' cannot be specified more than once!",
 						{ programName: Package.getName(), optname },
 					),
 				);

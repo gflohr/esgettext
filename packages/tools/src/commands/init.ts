@@ -422,9 +422,9 @@ export class Init implements Command {
 		);
 		console.log(
 			gtx._x(
-				"3) Create a translation file with '{command}' (replace"
-				+ " 'xy' with a language code like 'de' or 'pt_BR'). Get"
-				+ " more information with '{command2}'",
+				"3) Create a translation file with '{command}' (replace" +
+					" 'xy' with a language code like 'de' or 'pt_BR'). Get" +
+					" more information with '{command2}'",
 				{
 					command: `msginit -l xy -i ${setup.poDirectory}/${setup.textdomain}.pot -o po/xy.po`,
 					command2: 'npm run esgettext:add-language',
@@ -542,7 +542,7 @@ export class Init implements Command {
 					console.log(
 						gtx._x(
 							"Looks like you have test files under '{directory}'. We will not translate them.",
-							{ directory: parts[0] }
+							{ directory: parts[0] },
 						),
 					);
 				}
@@ -593,7 +593,7 @@ export class Init implements Command {
 			this.error(
 				gtx._x(
 					"Warning! Could not find any source files.  Will use the pattern '{pattern}'.",
-					{ pattern: './src/**/*.{js,cjs,mjs,jsx,ts,tsx}' }
+					{ pattern: './src/**/*.{js,cjs,mjs,jsx,ts,tsx}' },
 				),
 			);
 			options.push('"./src/**/*.{js,cjs,mjs,jsx,ts,tsx}"');
@@ -783,9 +783,7 @@ export class Init implements Command {
 		return new Promise(resolve => {
 			const directory = answer.trim();
 			if (directory.length === 0) {
-				return resolve(
-					gtx._('Please enter at least one character!'),
-				);
+				return resolve(gtx._('Please enter at least one character!'));
 			}
 
 			if (!this.options.force) {

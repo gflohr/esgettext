@@ -112,7 +112,7 @@ export class XGettext implements Command {
 				alias: 'p',
 				type: 'string',
 				describe: gtx._(
-					'output files will be placed in directory DIR. If output file is -, output is written to standard output.',
+					'output files will be placed in the specified directory. If output file is -, output is written to standard output.',
 				),
 				default: this.configuration.po?.directory ?? '.',
 			},
@@ -133,29 +133,29 @@ export class XGettext implements Command {
 				default: 'ASCII',
 			},
 			'join-existing': {
-				group: gtx._('Operation mode:'),
+				group: gtx._('Mode of operation:'),
 				alias: 'j',
 				type: 'boolean',
 				describe: gtx._('join messages with existing file'),
 			},
 			'exclude-file': {
 				multi: true,
-				group: gtx._('Operation mode:'),
+				group: gtx._('Mode of operation:'),
 				alias: 'x',
 				type: 'string',
-				describe: gtx._('entries from FILE.po are not extracted'),
+				describe: gtx._('entries from this po file are not extracted'),
 			},
 			'add-comments': {
 				multi: true,
-				group: gtx._('Operation mode:'),
+				group: gtx._('Mode of operation:'),
 				alias: 'c',
 				type: 'string',
 				describe: gtx._(
-					'place comment blocks starting with TAG and preceding keyword lines in output file',
+					'place comment blocks starting with this string and preceding keyword lines in output file',
 				),
 			},
 			'add-all-comments': {
-				group: gtx._('Operation mode:'),
+				group: gtx._('Mode of operation:'),
 				describe: gtx._(
 					'place all comment blocks preceding keyword lines in output file',
 				),
@@ -171,7 +171,7 @@ export class XGettext implements Command {
 				multi: true,
 				group: gtx._('Language specific options:'),
 				type: 'string',
-				describe: gtx._('look for WORD as an additional keyword'),
+				describe: gtx._('look for this word as an additional keyword'),
 			},
 			flag: {
 				multi: true,
@@ -185,7 +185,9 @@ export class XGettext implements Command {
 				multi: true,
 				group: gtx._('Language specific options:'),
 				type: 'string',
-				describe: gtx._('only accept method calls of specified instance names'),
+				describe: gtx._(
+					'only search for method calls of specified instance names',
+				),
 			},
 			'force-po': {
 				group: gtx._('Output details:'),
@@ -211,7 +213,7 @@ export class XGettext implements Command {
 				group: gtx._('Output details:'),
 				alias: 's',
 				type: 'boolean',
-				describe: gtx._('generate sorted output'),
+				describe: gtx._('generate sorted output (deprecated)'),
 			},
 			'sort-by-file': {
 				group: gtx._('Output details:'),
@@ -257,13 +259,13 @@ export class XGettext implements Command {
 				group: gtx._('Output details:'),
 				alias: 'm',
 				type: 'string',
-				describe: gtx._('use STRING or "" as prefix for msgstr values'),
+				describe: gtx._('use this string or "" as prefix for msgstr values'),
 			},
 			'msgstr-suffix': {
 				group: gtx._('Output details:'),
 				alias: 'M',
 				type: 'string',
-				describe: gtx._('use STRING or "" as suffix for msgstr values'),
+				describe: gtx._('use this string or "" as suffix for msgstr values'),
 			},
 			verbose: {
 				alias: 'V',
@@ -354,7 +356,7 @@ export class XGettext implements Command {
 			if (this.options.output === '-') {
 				console.error(
 					gtx._x(
-						'{programName}: Error: --join-existing' +
+						"{programName}: Error: '--join-existing'" +
 							' cannot be used, when output is written to stdout',
 						{
 							programName: this.options.$0,
@@ -504,14 +506,14 @@ export class XGettext implements Command {
 					this.warn(
 						gtx._(
 							'language for standard input is unknown without' +
-								' option "--language"; will try JavaScript',
+								' option "--language"; will try TypeScript',
 						),
 					);
 				} else {
 					this.warn(
 						gtx._x(
 							'file "{filename}" extension "{extname}"' +
-								' is unknown; will try JavaScript instead',
+								' is unknown; will try TypeScript instead',
 							{
 								filename,
 								extname: ext,
@@ -519,7 +521,7 @@ export class XGettext implements Command {
 						),
 					);
 				}
-				parser = new JavaScriptParser(this.catalog, parserOptions);
+				parser = new TypeScriptParser(this.catalog, parserOptions);
 				break;
 		}
 

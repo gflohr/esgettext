@@ -44,23 +44,27 @@ const bugsAddressSchema = v.union([
 	v.pipe(
 		v.string(),
 		v.nonEmpty(
-			gtx._("The field 'package.msgid-bugs-address' must not be empty!"),
+			gtx._x("The field '{field}' must not be empty!", {
+				field: 'msgid-bugs-address',
+			}),
 		),
 		v.email(
-			gtx._(
-				"The field 'package.msgid-bugs-address' must contain a valid email address or URL!",
-			),
+			gtx._x("The field '{field}' must contain a valid email address or URL!", {
+				field: 'msgid-bugs-address',
+			}),
 		),
 	),
 	v.pipe(
 		v.string(),
 		v.nonEmpty(
-			gtx._("The field 'package.msgid-bugs-address' must not be empty!"),
+			gtx._x("The field '{field}' must not be empty!", {
+				field: 'msgid-bugs-address',
+			}),
 		),
 		v.url(
-			gtx._(
-				"The field 'package.msgid-bugs-address' must contain a valid email address or URL!",
-			),
+			gtx._x("The field '{field}' must contain a valid email address or URL!", {
+				field: 'msgid-bugs-address',
+			}),
 		),
 	),
 ]);

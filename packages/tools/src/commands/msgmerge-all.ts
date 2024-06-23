@@ -76,7 +76,9 @@ export class MsgmergeAll implements Command {
 			},
 			msgmerge: {
 				type: 'string',
-				describe: gtx._('msgmerge program if not in PATH [string]'),
+				describe: gtx._x("'{program}' program if not in $PATH", {
+					program: 'msgmerge',
+				}),
 				default: this.configuration.programs?.msgmerge?.path ?? 'msgmerge',
 				group: gtx._('Mode of operation:'),
 			},
@@ -84,7 +86,7 @@ export class MsgmergeAll implements Command {
 				multi: true,
 				type: 'string',
 				describe: gtx._x(
-					"Options to pass to '{program}' program (without hyphens)",
+					"Options to pass to '{program}' program (without leading hyphens)",
 					{ program: 'msgmerge' },
 				),
 				default: this.configuration.programs?.msgmerge?.options,
@@ -168,7 +170,7 @@ export class MsgmergeAll implements Command {
 				if (name.substring(0, 1) === '-') {
 					console.error(
 						gtx._x(
-							"{programName}: option '{option}': Options passed to '{program}' must not start with a hyphen",
+							"{programName}: option '{option}': Options passed to '{program}' must be given without leading hyphens",
 							{
 								programName: Package.getName(),
 								program: 'msgfmt',
