@@ -319,7 +319,7 @@ export class Init implements Command {
 		if (this.options.verbose) {
 			console.log(
 				gtx._x(
-					"Adding package '{package}' version {version} as a development dependencyy.",
+					"Adding package '{package}' version {version} as a development dependency.",
 					{ package: '@esgettext/tools', version: `^${Package.getVersion()}` },
 				),
 			);
@@ -422,9 +422,12 @@ export class Init implements Command {
 		);
 		console.log(
 			gtx._x(
-				"3) Create a translation file with '{command}' (replace 'xy' with a language code like 'de' or 'pt_BR').",
+				"3) Create a translation file with '{command}' (replace"
+				+ " 'xy' with a language code like 'de' or 'pt_BR'). Get"
+				+ " more information with '{command2}'",
 				{
 					command: `msginit -l xy -i ${setup.poDirectory}/${setup.textdomain}.pot -o po/xy.po`,
+					command2: 'npm run esgettext:add-language',
 				},
 			),
 		);
@@ -538,7 +541,8 @@ export class Init implements Command {
 				if (this.options.verbose) {
 					console.log(
 						gtx._x(
-							'Looks like you have test files under {directory}. We will not translate them.',
+							"Looks like you have test files under '{directory}'. We will not translate them.",
+							{ directory: parts[0] }
 						),
 					);
 				}
@@ -588,10 +592,11 @@ export class Init implements Command {
 		if (!topLevelDirectories.length) {
 			this.error(
 				gtx._x(
-					"Warning! Could not find any source files.  Will use the pattern './src/**/*.{js,jsx,ts,tsx}.",
+					"Warning! Could not find any source files.  Will use the pattern '{pattern}'.",
+					{ pattern: './src/**/*.{js,cjs,mjs,jsx,ts,tsx}' }
 				),
 			);
-			options.push('"./src/**/*.{js,jsx,ts,tsx}"');
+			options.push('"./src/**/*.{js,cjs,mjs,jsx,ts,tsx}"');
 		} else {
 			for (const tld in extenders) {
 				let x = extenders[tld];
@@ -610,7 +615,7 @@ export class Init implements Command {
 		if (this.options.verbose) {
 			console.log(
 				gtx._x(
-					'Command-line options for extracting source files are: {options}',
+					'Command-line options for extracting strings from source files are: {options}',
 					{ options: options.join(' ') },
 				),
 			);
@@ -689,7 +694,7 @@ export class Init implements Command {
 				return resolve(true);
 			} catch (error) {
 				return resolve(
-					gtx._x('The command {command} did not work.' + ' Error: {error}.', {
+					gtx._x("The command '{command}' did not work.  Error: {error}.", {
 						command,
 						error,
 					}),
@@ -741,7 +746,7 @@ export class Init implements Command {
 	private nonEmpty(answer: string): Promise<boolean | string> {
 		return new Promise(resolve => {
 			if (answer.trim().length === 0) {
-				resolve(gtx._('Please enter a string with at least one character!'));
+				resolve(gtx._('Please enter at least one character!'));
 			} else {
 				resolve(true);
 			}
@@ -779,7 +784,7 @@ export class Init implements Command {
 			const directory = answer.trim();
 			if (directory.length === 0) {
 				return resolve(
-					gtx._('Please enter a string with at least one character!'),
+					gtx._('Please enter at least one character!'),
 				);
 			}
 

@@ -41,12 +41,12 @@
 		"test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
 		"typedoc": "echo nothing to do",
 		"esgettext": "npm-run-all esgettext:potfiles esgettext:extract esgettext:update-po esgettext:update-mo esgettext:install",
-		"esgettext:potfiles": "esgettext potfiles --directory=po --git --exclude=\"dist/**/*\" --exclude=\"node_modules/**/*\" --exclude=\"**/*.spec.*\" \"././**/*.mjs\" \"./src/**/*.ts\" >po/POTFILES",
-		"esgettext:extract": "esgettext extract --directory po --files-from=po/POTFILES",
-		"esgettext:update-po": "esgettext msgmerge-all",
-		"esgettext:update-mo": "esgettext msgfmt-all",
-		"esgettext:install": "esgettext install",
-		"esgettext:addlang": "esgettext msginit"
+		"esgettext:potfiles": "node --import=tsx src/index.ts potfiles --directory=po --git --exclude=\"dist/**/*\" --exclude=\"node_modules/**/*\" --exclude=\"**/*.spec.*\"  \"./src/**/*.ts\" >po/POTFILES",
+		"esgettext:extract": "node --import=tsx src/index.ts extract --directory po --files-from=po/POTFILES --from-code='utf-8'",
+		"esgettext:update-po": "node --import=tsx src/index.ts msgmerge-all",
+		"esgettext:update-mo": "node --import=tsx src/index.ts msgfmt-all",
+		"esgettext:install": "node --import=tsx src/index.ts install",
+		"esgettext:addlang": "node --import=tsx src/index.ts msginit"
 	},
 	"author": "Guido Flohr <guido.flohr@cantanea.com> (http://www.guido.flohr.net/)",
 	"license": "WTFPL",

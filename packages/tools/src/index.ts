@@ -1,7 +1,7 @@
 #! /usr/bin/env node
 
 import yargs from 'yargs';
-
+import * as path from 'path';
 import { Package } from './package.js';
 import { Textdomain } from '@esgettext/runtime';
 import { Command } from './command.js';
@@ -30,15 +30,17 @@ const configFiles = locateConfigFiles();
 const pkgJsonFile = locatePkgJsonFile();
 
 const gtx = Textdomain.getInstance('com.cantanea.esgettext-tools');
+Textdomain.locale = Textdomain.selectLocale(['en-AU', 'en-US', 'en-GB', 'en-NZ', 'de']);
+const localePath = path.join(__dirname, 'locale');
+gtx.bindtextdomain(localePath);
 gtx
 	.resolve()
 	.then(async () => {
-		const locale = Textdomain.selectLocale(['en-US', 'en-GB', 'de']);
-		const ulocale = locale.replace('-', '_');
+		const ulocale = Textdomain.locale.replace('-', '_');
 		const configuration = await ConfigurationFactory.create(
 			configFiles,
 			pkgJsonFile,
-			locale,
+			Textdomain.locale,
 		);
 		if (!configuration) process.exit(1);
 
