@@ -871,7 +871,9 @@ export class Init implements Command {
 				validate: answer => this.checkTool(answer),
 			}),
 			msgfmtOptions: await input({
-				message: gtx._x("Options to invoke '{tool}' with", { tool: 'msgfmt' }),
+				message: gtx._x("(Boolean) options to invoke '{tool}' with", {
+					tool: 'msgfmt',
+				}),
 				default: '--check --statistics --verbose',
 			}),
 			poDirectory: await input({
