@@ -598,12 +598,35 @@ export class Init implements Command {
 	private nonEmpty(answer: string): Promise<boolean | string> {
 		return new Promise(resolve => {
 			if (answer.trim().length === 0) {
-				return resolve(
+				resolve(
 					gtx._('Please enter a string with at least one character!'),
 				);
 			} else {
-				return resolve(true);
+				resolve(true);
 			}
+		});
+	}
+
+	private checkTextdomain(textdomain: string): Promise<boolean | string> {
+		return this.nonEmpty(textdomain)
+		.then(notEmpty => {
+			if (typeof notEmpty === 'string') {
+				return notEmpty;
+			}
+			if (textdomain.trim().match(/[/\\:]/)) {
+				return gtx._x("A valid textdomain must not contain a"
+					+ " slash ('{slash}'), backslash ('{backslash}', or"
+					+ " colon ('{colon}').", {
+					slash: '/',
+					backslash: '\\',
+					colon: ':',
+				});
+			} else {
+				return true;
+			}
+		})
+		.catch((error: unknown) => {
+			return gtx._x("An unknown error occurred: {error}!", { error });
 		});
 	}
 
@@ -685,7 +708,7 @@ export class Init implements Command {
 			textdomain: await input({
 				message: gtx._('Textdomain of your package'),
 				default: this.guessTextdomain(),
-				validate: answer => this.nonEmpty(answer),
+				validate: answer => this.checkTextdomain(answer),
 			}),
 			poDirectory: await input({
 				message: gtx._('Where to store translation files'),
