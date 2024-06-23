@@ -144,6 +144,8 @@ export class Install implements Command {
 				return resolve(1);
 			}
 
+			this.init(argv);
+
 			const promises: Array<Promise<number>> = [];
 
 			for (let i = 0; i < this.locales.length; ++i) {
