@@ -1,6 +1,6 @@
 {
 	"name": "@esgettext/tools",
-	"version": "1.3.0",
+	"version": "1.2.0",
 	"description": "Gettext-like po creation and manipulation",
 	"publishConfig": {
 		"access": "public"
@@ -91,7 +91,7 @@
 	"dependencies": {
 		"@babel/parser": "^7.24.7",
 		"@babel/traverse": "^7.24.7",
-		"@esgettext/runtime": "file:../runtime",
+		"@esgettext/runtime": "^1.3.0",
 		"@inquirer/prompts": "^5.0.6",
 		"@npmcli/package-json": "^5.2.0",
 		"@valibot/i18n": "^0.15.0",
@@ -100,5 +100,6 @@
 		"mkdirp": "^3.0.1",
 		"valibot": "^0.31.1",
 		"yargs": "^17.7.2"
-	}
+	},
+	"gitHead": "e019c3027870a314a59c2a64842149ae07ddc3be"
 }
