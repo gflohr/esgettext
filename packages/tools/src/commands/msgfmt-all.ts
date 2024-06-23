@@ -5,6 +5,7 @@ import { Textdomain } from '@esgettext/runtime';
 import yargs from 'yargs';
 import { Configuration } from '../configuration';
 import { Package } from '../package';
+import { OptSpec, coerceOptions } from '../optspec';
 
 interface MsgfmtAllOptions {
 	_: string[];
@@ -40,11 +41,10 @@ export class MsgfmtAll implements Command {
 		return [];
 	}
 
-	args(): { [key: string]: yargs.Options } {
+	args(): { [key: string]: OptSpec } {
 		const options = {
 			locales: {
-				alias: 'l',
-				type: 'array',
+				multi: true,
 				describe: gtx._('List of locale identifiers'),
 				demandOption: true,
 				default: this.configuration.po?.locales,
@@ -70,8 +70,8 @@ export class MsgfmtAll implements Command {
 				group: gtx._('Mode of operation:'),
 			},
 			options: {
+				multi: true,
 				type: 'string',
-				array: true,
 				describe: gtx._x(
 					"Options to pass to '{program}' program (without hyphens)",
 					{ program: 'msgfmt' },
@@ -126,9 +126,12 @@ export class MsgfmtAll implements Command {
 	}
 
 	public run(argv: yargs.Arguments): Promise<number> {
-		this.init(argv);
-
 		return new Promise(resolve => {
+			if (!coerceOptions(argv, this.args())) {
+				return resolve(1);
+			}
+
+			this.init(argv);
 			const promises = this.locales.map(locale => this.msgfmtLocale(locale));
 
 			Promise.all(promises)

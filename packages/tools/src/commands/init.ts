@@ -15,6 +15,7 @@ import {
 } from '../configuration';
 import NPMCliPackageJson from '@npmcli/package-json';
 import { Package } from '../package';
+import { OptSpec, coerceOptions } from '../optspec';
 
 const gtx = Textdomain.getInstance('com.cantanea.esgettext-tools');
 
@@ -66,7 +67,7 @@ export class Init implements Command {
 		return [];
 	}
 
-	args(): { [key: string]: yargs.Options } {
+	args(): { [key: string]: OptSpec } {
 		return {
 			force: {
 				alias: 'f',
@@ -721,6 +722,10 @@ export class Init implements Command {
 
 	public run(argv: yargs.Arguments): Promise<number> {
 		return new Promise(resolve => {
+			if (!coerceOptions(argv, this.args())) {
+				return resolve(1);
+			}
+
 			this.doRun(argv)
 				.then(() => {
 					resolve(0);

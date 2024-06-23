@@ -1210,7 +1210,7 @@ gtx._("Hello, world!");
 			expect(errorSpy).toHaveBeenCalledTimes(1);
 		});
 
-		it('should complain about invalid charsets converting stanard input', async () => {
+		it('should complain about invalid charsets converting standard input', async () => {
 			const code = `
 gtx._("Hello, world!");
 `;

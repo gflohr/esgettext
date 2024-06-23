@@ -6,6 +6,7 @@ import { Textdomain } from '@esgettext/runtime';
 import yargs from 'yargs';
 import { Configuration } from '../configuration';
 import { Package } from '../package';
+import { OptSpec, coerceOptions } from '../optspec';
 
 interface MsgmergeAllOptions {
 	_: string[];
@@ -56,11 +57,11 @@ export class MsgmergeAll implements Command {
 		return [];
 	}
 
-	args(): { [key: string]: yargs.Options } {
+	args(): { [key: string]: OptSpec } {
 		const options = {
 			locales: {
+				multi: true,
 				alias: 'l',
-				type: 'array',
 				describe: gtx._('List of locale identifiers'),
 				demandOption: true,
 				default: this.configuration.po?.locales,
@@ -80,8 +81,8 @@ export class MsgmergeAll implements Command {
 				group: gtx._('Mode of operation:'),
 			},
 			options: {
+				multi: true,
 				type: 'string',
-				array: true,
 				describe: gtx._x(
 					"Options to pass to '{program}' program (without hyphens)",
 					{ program: 'msgmerge' },
@@ -139,9 +140,13 @@ export class MsgmergeAll implements Command {
 	}
 
 	public run(argv: yargs.Arguments): Promise<number> {
-		this.init(argv);
 
 		return new Promise(resolve => {
+			if (!coerceOptions(argv, this.args())) {
+				return resolve(1);
+			}
+
+			this.init(argv);
 			const promises = this.locales.map(locale => this.msgmergeLocale(locale));
 
 			Promise.all(promises)

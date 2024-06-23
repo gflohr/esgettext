@@ -4,6 +4,7 @@ import { Textdomain, parseMoCatalog } from '@esgettext/runtime';
 import yargs from 'yargs';
 import * as mkdirp from 'mkdirp';
 import { Configuration } from '../configuration';
+import { OptSpec, coerceOptions } from '../optspec';
 
 type InstallOptions = {
 	_: string[];
@@ -40,11 +41,11 @@ export class Install implements Command {
 		return [];
 	}
 
-	args(): { [key: string]: yargs.Options } {
+	args(): { [key: string]: OptSpec } {
 		return {
 			locales: {
+				multi: true,
 				alias: 'l',
-				type: 'array',
 				describe: gtx._('List of locale identifiers'),
 				demandOption: true,
 				default: this.configuration.po?.locales,
@@ -138,9 +139,11 @@ export class Install implements Command {
 	}
 
 	public run(argv: yargs.Arguments): Promise<number> {
-		this.init(argv);
-
 		return new Promise(resolve => {
+			if (!coerceOptions(argv, this.args())) {
+				return resolve(1);
+			}
+
 			const promises: Array<Promise<number>> = [];
 
 			for (let i = 0; i < this.locales.length; ++i) {

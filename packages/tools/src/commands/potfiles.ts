@@ -7,6 +7,7 @@ import { Command } from '../command';
 import { Textdomain } from '@esgettext/runtime';
 import { Configuration } from '../configuration';
 import { Package } from '../package';
+import { OptSpec, coerceOptions } from '../optspec';
 
 const gtx = Textdomain.getInstance('com.cantanea.esgettext-tools');
 
@@ -43,9 +44,10 @@ export class Potfiles implements Command {
 		return [];
 	}
 
-	args(): { [key: string]: yargs.Options } {
+	args(): { [key: string]: OptSpec } {
 		return {
 			exclude: {
+				multi: true,
 				alias: 'x',
 				type: 'string',
 				describe: gtx._('Pattern for files to ignore.'),
@@ -56,6 +58,7 @@ export class Potfiles implements Command {
 				default: this.isGitRepo(),
 			},
 			include: {
+				multi: true,
 				type: 'string',
 				describe: gtx._(
 					'Pattern for additional files to include (even when not under version control).',
@@ -153,9 +156,12 @@ export class Potfiles implements Command {
 	}
 
 	public run(argv: yargs.Arguments): Promise<number> {
-		this.init(argv);
 
 		return new Promise(resolve => {
+			if (!coerceOptions(argv, this.args())) {
+				return resolve(1);
+			}
+			this.init(argv);
 			const patterns = this.options[gtx._('PATTERN')] as string[];
 
 			if (!patterns.length) {

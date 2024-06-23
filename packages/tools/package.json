@@ -53,7 +53,7 @@
 			"^@esgettext/runtime$": "<rootDir>/../../runtime/src"
 		},
 		"rootDir": "src",
-		"testRegex": ".spec.ts$",
+		"testRegex": "\\.spec\\.ts$",
 		"transform": {
 			"^.+\\.ts$": "ts-jest"
 		},

@@ -13,6 +13,7 @@ import { Parser, ParserOptions } from '../parser/parser';
 import { TypeScriptParser } from '../parser/typescript';
 import { JavaScriptParser } from '../parser/javascript';
 import { Keyword } from '../pot/keyword';
+import { OptSpec, coerceOptions } from '../optspec';
 
 interface ExclusionCatalog {
 	[key: string]: Array<string>;
@@ -40,6 +41,8 @@ interface XGettextOptions {
 	addAllComments: boolean;
 	extractAll: boolean;
 	keyword: string[];
+	flag: string[];
+	instance: string[];
 	[key: string]: string | string[] | boolean | number | undefined;
 }
 
@@ -70,22 +73,23 @@ export class XGettext implements Command {
 		return ['extract'];
 	}
 
-	args(): { [key: string]: yargs.Options } {
+	args(): { [key: string]: OptSpec } {
 		const outputFile = this.configuration.package?.textdomain
 			? `${this.configuration.package.textdomain}.pot`
 			: undefined;
 
 		return {
 			'files-from': {
+				multi: true,
 				group: gtx._('Input file location:'),
 				type: 'string',
 				describe: gtx._('get list of input files from FILE'),
 				default: this.configuration.package?.['files-from'],
 			},
 			directory: {
+				multi: true,
 				group: gtx._('Input file location:'),
 				type: 'string',
-				array: true,
 				describe: gtx._(
 					'add directory to list for input files search\nIf input file is -, standard input is read.',
 				),
@@ -135,20 +139,20 @@ export class XGettext implements Command {
 				describe: gtx._('join messages with existing file'),
 			},
 			'exclude-file': {
+				multi: true,
 				group: gtx._('Operation mode:'),
 				alias: 'x',
 				type: 'string',
 				describe: gtx._('entries from FILE.po are not extracted'),
-				array: true,
 			},
 			'add-comments': {
+				multi: true,
 				group: gtx._('Operation mode:'),
 				alias: 'c',
 				type: 'string',
 				describe: gtx._(
 					'place comment blocks starting with TAG and preceding keyword lines in output file',
 				),
-				array: true,
 			},
 			'add-all-comments': {
 				group: gtx._('Operation mode:'),
@@ -164,24 +168,24 @@ export class XGettext implements Command {
 				describe: gtx._('extract all strings'),
 			},
 			keyword: {
+				multi: true,
 				group: gtx._('Language specific options:'),
 				type: 'string',
 				describe: gtx._('look for WORD as an additional keyword'),
-				array: true,
 			},
 			flag: {
+				multi: true,
 				group: gtx._('Language specific options:'),
 				type: 'string',
 				describe: gtx._(
 					'argument: WORD:ARG:FLAG, additional flag for strings inside the argument number ARG of keyword WORD',
 				),
-				array: true,
 			},
 			instance: {
+				multi: true,
 				group: gtx._('Language specific options:'),
 				type: 'string',
 				describe: gtx._('only accept method calls of specified instance names'),
-				array: true,
 			},
 			'force-po': {
 				group: gtx._('Output details:'),
@@ -279,6 +283,7 @@ export class XGettext implements Command {
 
 	private init(argv: yargs.Arguments) {
 		const options = argv as unknown as XGettextOptions;
+
 		this.options = options;
 		const conf = this.configuration;
 		const catalogProperties: CatalogProperties = { date: this.date };
@@ -417,9 +422,12 @@ export class XGettext implements Command {
 	}
 
 	public run(argv: yargs.Arguments): Promise<number> {
-		this.init(argv);
-
 		return new Promise(resolve => {
+			if (!coerceOptions(argv, this.args())) {
+				return resolve(1);
+			}
+
+			this.init(argv);
 			try {
 				resolve(this.doRun());
 			} catch (e) {

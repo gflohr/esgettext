@@ -59,7 +59,7 @@ export class Convert implements Command {
 			'input-format': {
 				alias: 'I',
 				type: 'string',
-				describe: gtx._('Input file format (defaul: derived from filename)'),
+				describe: gtx._('Input file format (default: derived from filename)'),
 				choices: ['mo.json', 'mo', 'gmo', 'json'],
 				coerce: arg => arg.toLowerCase(),
 				group: gtx._('File formats:'),
