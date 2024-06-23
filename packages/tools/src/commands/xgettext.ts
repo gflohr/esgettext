@@ -491,6 +491,8 @@ export class XGettext implements Command {
 				break;
 			case '.js':
 			case '.jsx':
+			case '.mjs':
+			case '.cjs':
 				parser = new JavaScriptParser(this.catalog, parserOptions);
 				break;
 			case '.po':
