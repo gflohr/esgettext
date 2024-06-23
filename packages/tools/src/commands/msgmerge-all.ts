@@ -87,7 +87,7 @@ export class MsgmergeAll implements Command {
 					"Options to pass to '{program}' program (without hyphens)",
 					{ program: 'msgmerge' },
 				),
-				default: this.configuration.programs?.msgfmt?.options,
+				default: this.configuration.programs?.msgmerge?.options,
 				group: gtx._('Mode of operation:'),
 			},
 			verbose: {
