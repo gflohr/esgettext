@@ -27,6 +27,7 @@
 		"clean": "lerna run clean --stream",
 		"typedoc": "lerna run typedoc --stream",
 		"publish": "lerna publish --no-private",
+		"prepublish": "lerna run --no-private --stream check:clean",
 		"prepare": "husky"
 	},
 	"devDependencies": {

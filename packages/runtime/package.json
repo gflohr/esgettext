@@ -19,7 +19,7 @@
 	"homepage": "https://github.com/gflohr/esgettext/packages/runtime",
 	"scripts": {
 		"build": "rimraf dist && rollup -c",
-		"prepublishOnly": "npm run check:clean && npm run build",
+		"prepublishOnly": "npm run build",
 		"check:clean": "../../check-clean",
 		"format": "prettier --write 'src/**/*.ts'",
 		"watch": "tsc --watch",

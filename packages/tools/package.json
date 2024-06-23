@@ -24,7 +24,7 @@
 	"scripts": {
 		"build": "npm run clean && tsc --project tsconfig-build.json && chmod +x dist/index.js",
 		"prebuild": "node ./write-package.mjs >src/package.ts",
-		"prepublishOnly": "npm run check:clean && npm run build",
+		"prepublishOnly": "npm run build",
 		"check:clean": "../../check-clean",
 		"format": "prettier --write 'src/**/*.ts'",
 		"watch": "tsc --watch",
