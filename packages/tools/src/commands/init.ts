@@ -3,6 +3,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as util from 'util';
 import * as child_process from 'child_process';
+import * as mkdirp from 'mkdirp';
 import { input, select } from '@inquirer/prompts';
 import { globSync } from 'glob';
 import { Command } from '../command';
@@ -200,10 +201,22 @@ export class Init implements Command {
 		return code.replace(new RegExp(`^${bodyIndent}`, 'gm'), indent);
 	}
 
+	private createPODirectory(setup: Setup) {
+		if (!fs.existsSync(setup.poDirectory)) {
+			console.log(gtx._x("Creating PO directory '{directory}'."));
+			if (!this.options.dryRun) {
+				mkdirp.sync(setup.poDirectory);
+			}
+		} else if (this.options.verbose) {
+			console.log(gtx._x("PO directory '{directory}' already exists."));
+		}
+	}
+
 	private async writeFiles(config: Configuration, setup: Setup) {
+		this.createPODirectory(setup);
 		const pkg = await NPMCliPackageJson.load(process.cwd());
 		const content = pkg.content as PackageJson;
-		console.log(content);
+
 		const newline = content[
 			Symbol.for('newline') as unknown as keyof typeof content
 		] as string;
@@ -279,14 +292,18 @@ export class Init implements Command {
 			] = Package.getNpmRunAllVersion();
 		}
 
-		const potFilesOptions = this.potfilesOptions(setup);
+		const potfilesOptions = this.potfilesOptions(setup).join(' ');
 
+		let directory = setup.poDirectory;
+		if (directory.includes(' ')) {
+			directory = `"${directory.replace(/([\\""])/g, '\\$1')}"`;
+		}
 		const scripts = {
 			...pkg.content.scripts,
 			esgettext:
 				'npm-run-all esgettext:potfiles esgettext:extract esgettext:update-po esgettext:update-mo esgettext:install',
-			'esgettext:potfiles': `esgettext potfiles ${potFilesOptions} >${setup.poDirectory}/POTFILES`,
-			'esgettext:extract': `esgettext extract --directory ${setup.poDirectory} --files-from=${setup.poDirectory}/POTFILES`,
+			'esgettext:potfiles': `esgettext potfiles ${potfilesOptions} >${setup.poDirectory}/POTFILES`,
+			'esgettext:extract': `esgettext extract --directory ${directory} --files-from=${directory}/POTFILES`,
 			'esgettext:update-po': `esgettext msgmerge-all`,
 			'esgettext:update-mo': `esgettext msgfmt-all`,
 			'esgettext:install': `esgettext install`,
@@ -321,7 +338,10 @@ export class Init implements Command {
 		}
 
 		if (!this.options.dryRun) {
-			child_process.execSync(command, { encoding: 'utf-8' });
+			child_process.execSync(command, {
+				stdio: ['ignore', process.stdout, process.stderr ],
+				encoding: 'utf-8',
+			});
 		}
 	}
 
@@ -392,23 +412,35 @@ export class Init implements Command {
 		}
 
 		if (typeof this.packageJson.main !== 'undefined' && this.packageJson.main.length) {
-			exclude.push(path.dirname(this.packageJson.main));
+			const dir = path.dirname(this.packageJson.main);
+
+			if (dir != '.') {
+				exclude.push(path.dirname(this.packageJson.main));
+			}
 		}
 
 		if (typeof this.packageJson.module !== 'undefined' && this.packageJson.module.length) {
-			exclude.push(path.dirname(this.packageJson.module));
+			const dir = path.dirname(this.packageJson.module);
+
+			if (dir != '.') {
+				exclude.push(path.dirname(this.packageJson.module));
+			}
 		}
 
 		if (typeof this.packageJson.browser !== 'undefined' && this.packageJson.browser.length) {
-			exclude.push(path.dirname(this.packageJson.browser));
+			const dir = path.dirname(this.packageJson.browser);
+
+			if (dir != '.') {
+				exclude.push(path.dirname(this.packageJson.browser));
+			}
 		}
 
 		// sort | uniq for JavaScript.
 		exclude = exclude.sort().filter((item, index) => {
 			return index === 0 || item !== exclude[index - 1];
-		}).map(name => `./${name}/**/*`);
+		}).map(name => `${name}/**/*`);
 
-		let candidates = globSync('./**/*.{js,jsx,ts,tsx}', { ignore: exclude });
+		let candidates = globSync('./**/*.{js,mjs,cjs,jsx,ts,tsx}', { ignore: exclude });
 
 		const gitFiles = this.getGitFiles();
 		if (gitFiles) {
@@ -505,7 +537,6 @@ export class Init implements Command {
 
 		// The po directory are already checked.
 		const filename = setup.configFile;
-		console.log(`filename: ${filename}`);
 		if (filename !== 'package.json' && fs.existsSync(filename)) {
 			this.error(
 				gtx._x("Error: The file '{filename}' already exists!", {
