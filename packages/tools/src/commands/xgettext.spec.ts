@@ -311,7 +311,7 @@ describe('xgettext command-line options and arguments', () => {
 					1,
 					'esgettext: Warning: language for standard' +
 						' input is unknown without option "--language";' +
-						' will try JavaScript',
+						' will try TypeScript',
 				);
 				expect(errorSpy).toHaveBeenCalledTimes(0);
 			});
@@ -703,7 +703,7 @@ msgstr ""
 				expect(warnSpy).not.toHaveBeenCalled();
 				expect(errorSpy).toHaveBeenCalledTimes(1);
 				expect(errorSpy).toHaveBeenCalledWith(
-					'esgettext: Error: --join-existing cannot be used, when output is written to stdout',
+					"esgettext: Error: '--join-existing' cannot be used, when output is written to stdout",
 				);
 			});
 
