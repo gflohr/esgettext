@@ -38,6 +38,10 @@ type Setup = {
 	localeDirectory: string;
 	packageManager: string;
 	configFile: ConfigFile;
+	msgmerge: string;
+	msgmergeOptions: string;
+	msgfmt: string;
+	msgfmtOptions: string;
 };
 
 export class Init implements Command {
@@ -96,6 +100,53 @@ export class Init implements Command {
 		if (this.options.dryRun) this.options.verbose = true;
 	}
 
+	private setPrograms(config: Configuration, setup: Setup) {
+		if (!config.programs) config.programs = {};
+
+		const msgmergeOptions = setup.msgmergeOptions
+			.split(/ +/)
+			.map(option => option.replace(/^-/, ''));
+		const msgfmtOptions = setup.msgfmtOptions
+			.split(/ +/)
+			.map(option => option.replace(/^-/, ''));
+
+		if (setup.msgmerge !== 'msgmerge') {
+			config.programs.msgmerge ??= {};
+			config.programs.msgmerge.path = setup.msgmerge;
+		} else if (this.options.verbose) {
+			console.log(
+				gtx._x(
+					"The tool '{tool}' is in your $PATH. No need to" +
+						' save it in the configuration.',
+					{ tool: 'msgmerge' },
+				),
+			);
+		}
+
+		if (msgmergeOptions.length > 0) {
+			config.programs.msgmerge ??= {};
+			config.programs.msgmerge.options = msgmergeOptions;
+		}
+
+		if (setup.msgfmt !== 'msgfmt') {
+			config.programs.msgfmt ??= {};
+			config.programs.msgfmt.path = setup.msgfmt;
+		} else if (this.options.verbose) {
+			console.log(
+				gtx._x(
+					"The tool '{tool}' is in your $PATH. No need to" +
+						' save it in the configuration.',
+					{ tool: 'msgfmt' },
+				),
+			);
+		}
+
+		if (msgfmtOptions.length > 0) {
+			config.programs.msgfmt ??= {};
+			config.programs.msgfmt.options = msgfmtOptions;
+		}
+	}
+
 	private getConfiguration(setup: Setup): Configuration {
 		const pkg = this.packageJson;
 		const verbose = this.options.verbose;
@@ -143,6 +194,8 @@ export class Init implements Command {
 
 		if (!config.install) config.install = {};
 		config.install.directory = setup.localeDirectory;
+
+		this.setPrograms(config, setup);
 
 		if (this.options.verbose) {
 			console.log(gtx._('Validating the configuration.'));
@@ -295,7 +348,7 @@ export class Init implements Command {
 		const potfilesOptions = this.potfilesOptions(setup).join(' ');
 
 		let directory = setup.poDirectory;
-		if (directory.includes(' ')) {
+		if (directory.includes(' ') || directory.includes('"')) {
 			directory = `"${directory.replace(/([\\""])/g, '\\$1')}"`;
 		}
 		const scripts = {
@@ -309,8 +362,11 @@ export class Init implements Command {
 			'esgettext:install': `esgettext install`,
 		};
 
-		const peerDependencies = pkg.content.peerDependencies as { [key: string]: string } ?? undefined;
-		const optionalDependencies = pkg.content.optionalDependencies as { [key: string]: string } ?? undefined;
+		const peerDependencies =
+			(pkg.content.peerDependencies as { [key: string]: string }) ?? undefined;
+		const optionalDependencies =
+			(pkg.content.optionalDependencies as { [key: string]: string }) ??
+			undefined;
 
 		pkg.update({
 			scripts,
@@ -339,7 +395,7 @@ export class Init implements Command {
 
 		if (!this.options.dryRun) {
 			child_process.execSync(command, {
-				stdio: ['ignore', process.stdout, process.stderr ],
+				stdio: ['ignore', process.stdout, process.stderr],
 				encoding: 'utf-8',
 			});
 		}
@@ -390,11 +446,13 @@ export class Init implements Command {
 
 	private getGitFiles(): Array<string> | null {
 		try {
-			return child_process.execSync('git ls-files', {
-				stdio: 'pipe',
-				encoding: 'utf-8',
-			}).split(/[\r\n]+/);
-		} catch(_) {
+			return child_process
+				.execSync('git ls-files', {
+					stdio: 'pipe',
+					encoding: 'utf-8',
+				})
+				.split(/[\r\n]+/);
+		} catch (_) {
 			return null;
 		}
 	}
@@ -411,7 +469,10 @@ export class Init implements Command {
 			console.log(gtx._('Analyzing source files.'));
 		}
 
-		if (typeof this.packageJson.main !== 'undefined' && this.packageJson.main.length) {
+		if (
+			typeof this.packageJson.main !== 'undefined' &&
+			this.packageJson.main.length
+		) {
 			const dir = path.dirname(this.packageJson.main);
 
 			if (dir != '.') {
@@ -419,7 +480,10 @@ export class Init implements Command {
 			}
 		}
 
-		if (typeof this.packageJson.module !== 'undefined' && this.packageJson.module.length) {
+		if (
+			typeof this.packageJson.module !== 'undefined' &&
+			this.packageJson.module.length
+		) {
 			const dir = path.dirname(this.packageJson.module);
 
 			if (dir != '.') {
@@ -427,7 +491,10 @@ export class Init implements Command {
 			}
 		}
 
-		if (typeof this.packageJson.browser !== 'undefined' && this.packageJson.browser.length) {
+		if (
+			typeof this.packageJson.browser !== 'undefined' &&
+			this.packageJson.browser.length
+		) {
 			const dir = path.dirname(this.packageJson.browser);
 
 			if (dir != '.') {
@@ -436,28 +503,41 @@ export class Init implements Command {
 		}
 
 		// sort | uniq for JavaScript.
-		exclude = exclude.sort().filter((item, index) => {
-			return index === 0 || item !== exclude[index - 1];
-		}).map(name => `${name}/**/*`);
+		exclude = exclude
+			.sort()
+			.filter((item, index) => {
+				return index === 0 || item !== exclude[index - 1];
+			})
+			.map(name => `${name}/**/*`);
 
-		let candidates = globSync('./**/*.{js,mjs,cjs,jsx,ts,tsx}', { ignore: exclude });
+		let candidates = globSync('./**/*.{js,mjs,cjs,jsx,ts,tsx}', {
+			ignore: exclude,
+		});
 
 		const gitFiles = this.getGitFiles();
 		if (gitFiles) {
 			if (this.options.verbose) {
-				console.log(gtx._('This is a git repo.  We will only translate files under version control.'));
+				console.log(
+					gtx._(
+						'This is a git repo.  We will only translate files under version control.',
+					),
+				);
 			}
 
 			candidates = candidates.filter(filename => gitFiles.includes(filename));
 		}
 
-	let hasTestDir = false;
-	let hasSpec = false;
-	for (const candidate of candidates) {
+		let hasTestDir = false;
+		let hasSpec = false;
+		for (const candidate of candidates) {
 			const parts = candidate.split('/');
 			if (!hasTestDir && parts[0].match(/^tests?$/)) {
 				if (this.options.verbose) {
-					console.log(gtx._x('Looks like you have test files under {directory}. We will not translate them.'));
+					console.log(
+						gtx._x(
+							'Looks like you have test files under {directory}. We will not translate them.',
+						),
+					);
 				}
 				exclude.push(`${parts[0]}/*/**`);
 				hasTestDir = true;
@@ -488,26 +568,27 @@ export class Init implements Command {
 		});
 
 		// And make them unique.
-		topLevelDirectories = topLevelDirectories.sort()
-		.filter((item, index) => {
+		topLevelDirectories = topLevelDirectories.sort().filter((item, index) => {
 			return index === 0 || item !== topLevelDirectories[index - 1];
 		});
 
-		const options: Array<string> = [
-			`--directory=${setup.poDirectory}`,
-		];
+		const options: Array<string> = [`--directory=${setup.poDirectory}`];
 
 		if (gitFiles) {
 			options.push('--git');
 		}
 
 		for (const pattern of exclude) {
-			options.push(`--exclude="${pattern}"`)
+			options.push(`--exclude="${pattern}"`);
 		}
 
 		if (!topLevelDirectories.length) {
-			this.error(gtx._x("Warning! Could not find any source files.  Will use the pattern './src/**/*.{js,jsx,ts,tsx}."));
-			options.push('"./src/**/*.{js,jsx,ts,tsx}"')
+			this.error(
+				gtx._x(
+					"Warning! Could not find any source files.  Will use the pattern './src/**/*.{js,jsx,ts,tsx}.",
+				),
+			);
+			options.push('"./src/**/*.{js,jsx,ts,tsx}"');
 		} else {
 			for (const tld in extenders) {
 				let x = extenders[tld];
@@ -524,9 +605,12 @@ export class Init implements Command {
 		}
 
 		if (this.options.verbose) {
-			console.log(gtx._x("Command-line options for extracting source files are: {options}",
-				{ options: options.join(' ') },
-			));
+			console.log(
+				gtx._x(
+					'Command-line options for extracting source files are: {options}',
+					{ options: options.join(' ') },
+				),
+			);
 		}
 
 		return options;
@@ -543,9 +627,11 @@ export class Init implements Command {
 					filename,
 				}),
 			);
-			this.error(gtx._x("Will not overwrite without option '{option}'.",
-				{ option: '--force' },
-			));
+			this.error(
+				gtx._x("Will not overwrite without option '{option}'.", {
+					option: '--force',
+				}),
+			);
 			return false;
 		}
 
@@ -562,12 +648,17 @@ export class Init implements Command {
 
 			for (const script of esgettextScripts) {
 				if (Object.prototype.hasOwnProperty.call(pkg.scripts, script)) {
-					this.error(gtx._x("Error: The file '{filename}' already defines a script '{script}'.",
-						{ filename: 'package.json', },
-					));
-					this.error(gtx._x("Will not overwrite without option '{option}'.",
-						{ option: '--force' },
-					));
+					this.error(
+						gtx._x(
+							"Error: The file '{filename}' already defines a script '{script}'.",
+							{ filename: 'package.json' },
+						),
+					);
+					this.error(
+						gtx._x("Will not overwrite without option '{option}'.", {
+							option: '--force',
+						}),
+					);
 
 					return false;
 				}
@@ -577,25 +668,31 @@ export class Init implements Command {
 		return true;
 	}
 
-	private checkGettextTools() {
-		const missing: Array<string> = [];
-		const wanted = ['msgmerge', 'msgfmt'];
+	private escapePath(name: string): string {
+		if (name.includes(' ') || name.includes('"')) {
+			return `"${name.replace(/([\\""])/g, '\\$1')}"`;
+		} else {
+			return name;
+		}
+	}
 
-		for (const tool of wanted) {
+	private checkTool(name: string): Promise<boolean | string> {
+		return new Promise(resolve => {
+			const command = this.escapePath(name) + ' --version';
 			try {
-				child_process.execSync(`${tool} --version`);
-			} catch(e) {
-				missing.push(tool);
+				child_process.execSync(command, {
+					stdio: ['ignore', 'ignore', 'ignore'],
+				});
+				return resolve(true);
+			} catch (error) {
+				return resolve(
+					gtx._x('The command {command} did not work.' + ' Error: {error}.', {
+						command,
+						error,
+					}),
+				);
 			}
-		}
-
-		if (missing.length) {
-			this.error(gtx._x('Warning! The following programs are missing or do not work:'));
-			for (const tool of missing) {
-				this.error(`\t${tool}`);
-			}
-			this.error(gtx._x('You have to install the GNU gettext tools!'));
-		}
+		});
 	}
 
 	private async doRun(argv: yargs.Arguments): Promise<number> {
@@ -607,10 +704,6 @@ export class Init implements Command {
 		}
 
 		const configuration = this.getConfiguration(setup);
-		if (this.options.verbose) {
-			console.log(gtx._('Resulting configuration:'));
-			console.log(configuration);
-		}
 
 		try {
 			await this.writeFiles(configuration, setup);
@@ -621,7 +714,6 @@ export class Init implements Command {
 			return 1;
 		}
 
-		this.checkGettextTools();
 		this.nextSteps(setup);
 
 		return 0;
@@ -642,9 +734,7 @@ export class Init implements Command {
 	private nonEmpty(answer: string): Promise<boolean | string> {
 		return new Promise(resolve => {
 			if (answer.trim().length === 0) {
-				resolve(
-					gtx._('Please enter a string with at least one character!'),
-				);
+				resolve(gtx._('Please enter a string with at least one character!'));
 			} else {
 				resolve(true);
 			}
@@ -653,25 +743,28 @@ export class Init implements Command {
 
 	private checkTextdomain(textdomain: string): Promise<boolean | string> {
 		return this.nonEmpty(textdomain)
-		.then(notEmpty => {
-			if (typeof notEmpty === 'string') {
-				return notEmpty;
-			}
-			if (textdomain.trim().match(/[/\\:]/)) {
-				return gtx._x("A valid textdomain must not contain a"
-					+ " slash ('{slash}'), backslash ('{backslash}', or"
-					+ " colon ('{colon}').", {
-					slash: '/',
-					backslash: '\\',
-					colon: ':',
-				});
-			} else {
-				return true;
-			}
-		})
-		.catch((error: unknown) => {
-			return gtx._x("An unknown error occurred: {error}!", { error });
-		});
+			.then(notEmpty => {
+				if (typeof notEmpty === 'string') {
+					return notEmpty;
+				}
+				if (textdomain.trim().match(/[/\\:]/)) {
+					return gtx._x(
+						'A valid textdomain must not contain a' +
+							" slash ('{slash}'), backslash ('{backslash}', or" +
+							" colon ('{colon}').",
+						{
+							slash: '/',
+							backslash: '\\',
+							colon: ':',
+						},
+					);
+				} else {
+					return true;
+				}
+			})
+			.catch((error: unknown) => {
+				return gtx._x('An unknown error occurred: {error}!', { error });
+			});
 	}
 
 	private checkDirectory(answer: string): Promise<boolean | string> {
@@ -688,11 +781,11 @@ export class Init implements Command {
 					return resolve(
 						gtx._x("The directory '{directory}' already exists!", {
 							directory,
-						})
-						+ ' '
-						+ gtx._x("Will not overwrite without option '{option}'.",
-							{ option: '--force' },
-						)
+						}) +
+							' ' +
+							gtx._x("Will not overwrite without option '{option}'.", {
+								option: '--force',
+							}),
 					);
 				}
 			}
@@ -703,7 +796,7 @@ export class Init implements Command {
 
 	private guessTextdomain(): string | undefined {
 		if (this.configuration.package?.name) {
-			return(this.configuration.package?.name.replace(/^@(.+)\/(.+)/, '$1-$2'));
+			return this.configuration.package?.name.replace(/^@(.+)\/(.+)/, '$1-$2');
 		}
 	}
 
@@ -753,6 +846,26 @@ export class Init implements Command {
 				message: gtx._('Textdomain of your package'),
 				default: this.guessTextdomain(),
 				validate: answer => this.checkTextdomain(answer),
+			}),
+			msgmerge: await input({
+				message: gtx._x("The '{tool}' program to use:", { tool: 'msgmerge' }),
+				default: 'msgmerge',
+				validate: answer => this.checkTool(answer),
+			}),
+			msgmergeOptions: await input({
+				message: gtx._x("(Boolean) options to invoke '{tool}' with", {
+					tool: 'msgmerge',
+				}),
+				default: '--verbose',
+			}),
+			msgfmt: await input({
+				message: gtx._x("The '{tool}' program to use:", { tool: 'msgfmt' }),
+				default: 'msgfmt',
+				validate: answer => this.checkTool(answer),
+			}),
+			msgfmtOptions: await input({
+				message: gtx._x("Options to invoke '{tool}' with", { tool: 'msgfmt' }),
+				default: '--check --statistics --verbose',
 			}),
 			poDirectory: await input({
 				message: gtx._('Where to store translation files'),

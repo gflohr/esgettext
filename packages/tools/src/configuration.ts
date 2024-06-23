@@ -67,19 +67,23 @@ const bugsAddressSchema = v.union([
 
 const programSchema = (program: string) => {
 	return v.strictObject({
-		path: v.pipe(
-			v.string(),
-			v.nonEmpty(
-				gtx._x("The field '{field}' must not be empty!", {
-					field: `programs.${program}.path`,
-				}),
-			),
-		),
-		options: v.array(
+		path: v.optional(
 			v.pipe(
 				v.string(),
-				v.regex(new RegExp('^(?:[A-Z]|[-a-z]{2,})')),
-				v.nonEmpty(),
+				v.nonEmpty(
+					gtx._x("The field '{field}' must not be empty!", {
+						field: `programs.${program}.path`,
+					}),
+				),
+			),
+		),
+		options: v.optional(
+			v.array(
+				v.pipe(
+					v.string(),
+					v.regex(new RegExp('^(?:[A-Z]|[-a-z]{2,})')),
+					v.nonEmpty(),
+				),
 			),
 		),
 	});
