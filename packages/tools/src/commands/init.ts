@@ -105,10 +105,10 @@ export class Init implements Command {
 
 		const msgmergeOptions = setup.msgmergeOptions
 			.split(/ +/)
-			.map(option => option.replace(/^-/, ''));
+			.map(option => option.replace(/^-+/, ''));
 		const msgfmtOptions = setup.msgfmtOptions
 			.split(/ +/)
-			.map(option => option.replace(/^-/, ''));
+			.map(option => option.replace(/^-+/, ''));
 
 		if (setup.msgmerge !== 'msgmerge') {
 			config.programs.msgmerge ??= {};
