@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: esgettext 1.1.0\n"
 "Report-Msgid-Bugs-To: https://github.com/gflohr/esgettext/issues\n"
-"POT-Creation-Date: 2024-06-23 19:24+0300\n"
+"POT-Creation-Date: 2024-06-24 00:47+0300\n"
 "PO-Revision-Date: 2024-06-14 19:15+0300\n"
 "Last-Translator: Guido Flohr <guido.flohr@cantanea.com>\n"
 "Language-Team: English <translation-team-en@lists.sourceforge.net>\n"
@@ -66,7 +66,7 @@ msgstr ""
 
 #: ../src/commands/convert.ts:34 ../src/commands/convert.ts:84
 #: ../src/commands/convert.ts:107 ../src/commands/xgettext.ts:65
-#: ../src/commands/xgettext.ts:278 ../src/commands/xgettext.ts:384
+#: ../src/commands/xgettext.ts:280 ../src/commands/xgettext.ts:386
 msgid "INPUTFILE"
 msgstr ""
 
@@ -105,8 +105,8 @@ msgid "Output file format (default: derived from format)"
 msgstr ""
 
 #: ../src/commands/convert.ts:78 ../src/commands/init.ts:87
-#: ../src/commands/install.ts:90 ../src/commands/msgfmt-all.ts:89
-#: ../src/commands/msgmerge-all.ts:96 ../src/commands/xgettext.ts:271
+#: ../src/commands/install.ts:90 ../src/commands/msgfmt-all.ts:91
+#: ../src/commands/msgmerge-all.ts:98 ../src/commands/xgettext.ts:273
 msgid "Enable verbose output"
 msgstr ""
 
@@ -170,7 +170,7 @@ msgid "Only 'mo.json' and 'json' are allowed as output formats!"
 msgstr ""
 
 #: ../src/commands/convert.ts:276 ../src/commands/convert.ts:291
-#: ../src/commands/xgettext.ts:400 ../src/parser/parser.ts:129
+#: ../src/commands/xgettext.ts:402 ../src/parser/parser.ts:129
 #: ../src/parser/parser.ts:583 ../src/parser/parser.ts:594
 msgid "[standard input]"
 msgstr ""
@@ -351,7 +351,7 @@ msgid "Error: The file '{filename}' already exists!"
 msgstr ""
 
 #: ../src/commands/init.ts:639 ../src/commands/init.ts:666
-#: ../src/commands/init.ts:798
+#: ../src/commands/init.ts:796
 #, perl-brace-format
 msgid "Will not overwrite without option '{option}'."
 msgstr ""
@@ -370,7 +370,7 @@ msgstr ""
 msgid "Error writing output:"
 msgstr ""
 
-#: ../src/commands/init.ts:749 ../src/commands/init.ts:787
+#: ../src/commands/init.ts:749 ../src/commands/init.ts:786
 msgid "Please enter at least one character!"
 msgstr ""
 
@@ -386,52 +386,52 @@ msgstr ""
 msgid "An unknown error occurred: {error}!"
 msgstr ""
 
-#: ../src/commands/init.ts:794
+#: ../src/commands/init.ts:792
 #, perl-brace-format
 msgid "The directory '{directory}' already exists!"
 msgstr ""
 
-#: ../src/commands/init.ts:852
+#: ../src/commands/init.ts:850
 msgid "We'll prepare your package for esgettext in a few seconds."
 msgstr ""
 
-#: ../src/commands/init.ts:854
+#: ../src/commands/init.ts:852
 msgid "In doubt, just hit return!"
 msgstr ""
 
-#: ../src/commands/init.ts:858
+#: ../src/commands/init.ts:856
 msgid "Textdomain of your package"
 msgstr ""
 
-#: ../src/commands/init.ts:863 ../src/commands/init.ts:874
+#: ../src/commands/init.ts:861 ../src/commands/init.ts:872
 #, perl-brace-format
 msgid "The '{tool}' program to use:"
 msgstr ""
 
-#: ../src/commands/init.ts:868 ../src/commands/init.ts:879
+#: ../src/commands/init.ts:866 ../src/commands/init.ts:877
 #, perl-brace-format
 msgid "(Boolean) options to invoke '{tool}' with"
 msgstr ""
 
-#: ../src/commands/init.ts:885
+#: ../src/commands/init.ts:883
 #, fuzzy
 msgid "Where to store translation files"
 msgstr "Where to search message catalogue files"
 
-#: ../src/commands/init.ts:890
+#: ../src/commands/init.ts:888
 msgid "Where to store compiled translations"
 msgstr ""
 
-#: ../src/commands/init.ts:895
+#: ../src/commands/init.ts:893
 msgid "Which package manager should be used"
 msgstr ""
 
-#: ../src/commands/init.ts:917
+#: ../src/commands/init.ts:915
 msgid "Where do you want to put configuration"
 msgstr ""
 
 #: ../src/commands/install.ts:33
-msgid "[OPTIONS]"
+msgid "OPTIONS"
 msgstr ""
 
 #: ../src/commands/install.ts:37
@@ -479,8 +479,8 @@ msgstr ""
 msgid "Output format"
 msgstr ""
 
-#: ../src/commands/install.ts:108 ../src/commands/msgfmt-all.ts:115
-#: ../src/commands/msgmerge-all.ts:129
+#: ../src/commands/install.ts:108 ../src/commands/msgfmt-all.ts:117
+#: ../src/commands/msgmerge-all.ts:131
 msgid "no locales given"
 msgstr ""
 
@@ -520,39 +520,42 @@ msgstr ""
 msgid "Output file format"
 msgstr ""
 
-#: ../src/commands/msgfmt-all.ts:68
-msgid "msgfmt program if not in PATH [string]"
+#: ../src/commands/msgfmt-all.ts:68 ../src/commands/msgmerge-all.ts:79
+#, perl-brace-format
+msgid "'{program}' program if not in $PATH"
 msgstr ""
 
-#: ../src/commands/msgfmt-all.ts:70 ../src/commands/msgfmt-all.ts:84
-#: ../src/commands/msgmerge-all.ts:81 ../src/commands/msgmerge-all.ts:91
+#: ../src/commands/msgfmt-all.ts:72 ../src/commands/msgfmt-all.ts:86
+#: ../src/commands/msgmerge-all.ts:83 ../src/commands/msgmerge-all.ts:93
+#: ../src/commands/xgettext.ts:136 ../src/commands/xgettext.ts:143
+#: ../src/commands/xgettext.ts:150 ../src/commands/xgettext.ts:158
 msgid "Mode of operation:"
 msgstr ""
 
-#: ../src/commands/msgfmt-all.ts:75 ../src/commands/msgmerge-all.ts:86
+#: ../src/commands/msgfmt-all.ts:77 ../src/commands/msgmerge-all.ts:88
 #, perl-brace-format
-msgid "Options to pass to '{program}' program (without hyphens)"
+msgid "Options to pass to '{program}' program (without leading hyphens)"
 msgstr ""
 
-#: ../src/commands/msgfmt-all.ts:156 ../src/commands/msgmerge-all.ts:170
+#: ../src/commands/msgfmt-all.ts:158 ../src/commands/msgmerge-all.ts:172
 #, perl-brace-format
 msgid ""
-"{programName}: option '{option}': Options passed to '{program}' must not "
-"start with a hyphen"
+"{programName}: option '{option}': Options passed to '{program}' must be "
+"given without leading hyphens"
 msgstr ""
 
-#: ../src/commands/msgfmt-all.ts:191
+#: ../src/commands/msgfmt-all.ts:193
 #, perl-brace-format
 msgid "Compiling '{po}' into '{mo}'."
 msgstr ""
 
-#: ../src/commands/msgfmt-all.ts:219 ../src/commands/msgmerge-all.ts:216
+#: ../src/commands/msgfmt-all.ts:221 ../src/commands/msgmerge-all.ts:218
 #, perl-brace-format
 msgid "Failed to run '{prg}': {err}"
 msgstr ""
 
 #: ../src/commands/msgmerge-all.ts:46 ../src/commands/msgmerge-all.ts:48
-#: ../src/commands/msgmerge-all.ts:110 ../src/commands/msgmerge-all.ts:122
+#: ../src/commands/msgmerge-all.ts:112 ../src/commands/msgmerge-all.ts:124
 msgid "POTFILE"
 msgstr ""
 
@@ -560,15 +563,11 @@ msgstr ""
 msgid "Invoke 'msgmerge' for multiple files."
 msgstr ""
 
-#: ../src/commands/msgmerge-all.ts:79
-msgid "msgmerge program if not in PATH [string]"
-msgstr ""
-
-#: ../src/commands/msgmerge-all.ts:112
+#: ../src/commands/msgmerge-all.ts:114
 msgid "Catalog file with up-to-date message ids"
 msgstr ""
 
-#: ../src/commands/msgmerge-all.ts:203
+#: ../src/commands/msgmerge-all.ts:205
 #, perl-brace-format
 msgid "Merging '{pot}' into '{po}'."
 msgstr ""
@@ -642,8 +641,8 @@ msgstr ""
 
 #: ../src/commands/xgettext.ts:114
 msgid ""
-"output files will be placed in directory DIR. If output file is -, output is "
-"written to standard output."
+"output files will be placed in the specified directory. If output file is -, "
+"output is written to standard output."
 msgstr ""
 
 #: ../src/commands/xgettext.ts:120
@@ -664,23 +663,18 @@ msgstr ""
 msgid "encoding of input files"
 msgstr ""
 
-#: ../src/commands/xgettext.ts:136 ../src/commands/xgettext.ts:143
-#: ../src/commands/xgettext.ts:150 ../src/commands/xgettext.ts:158
-msgid "Operation mode:"
-msgstr ""
-
 #: ../src/commands/xgettext.ts:139
 msgid "join messages with existing file"
 msgstr ""
 
 #: ../src/commands/xgettext.ts:146
-msgid "entries from FILE.po are not extracted"
+msgid "entries from this po file are not extracted"
 msgstr ""
 
 #: ../src/commands/xgettext.ts:153
 msgid ""
-"place comment blocks starting with TAG and preceding keyword lines in output "
-"file"
+"place comment blocks starting with this string and preceding keyword lines "
+"in output file"
 msgstr ""
 
 #: ../src/commands/xgettext.ts:159
@@ -697,7 +691,7 @@ msgid "extract all strings"
 msgstr ""
 
 #: ../src/commands/xgettext.ts:174
-msgid "look for WORD as an additional keyword"
+msgid "look for this word as an additional keyword"
 msgstr ""
 
 #: ../src/commands/xgettext.ts:180
@@ -707,113 +701,113 @@ msgid ""
 msgstr ""
 
 #: ../src/commands/xgettext.ts:188
-msgid "only accept method calls of specified instance names"
+msgid "only search for method calls of specified instance names"
 msgstr ""
 
-#: ../src/commands/xgettext.ts:191 ../src/commands/xgettext.ts:196
-#: ../src/commands/xgettext.ts:201 ../src/commands/xgettext.ts:211
-#: ../src/commands/xgettext.ts:217 ../src/commands/xgettext.ts:223
-#: ../src/commands/xgettext.ts:228 ../src/commands/xgettext.ts:234
-#: ../src/commands/xgettext.ts:239 ../src/commands/xgettext.ts:245
-#: ../src/commands/xgettext.ts:251 ../src/commands/xgettext.ts:257
-#: ../src/commands/xgettext.ts:263
+#: ../src/commands/xgettext.ts:193 ../src/commands/xgettext.ts:198
+#: ../src/commands/xgettext.ts:203 ../src/commands/xgettext.ts:213
+#: ../src/commands/xgettext.ts:219 ../src/commands/xgettext.ts:225
+#: ../src/commands/xgettext.ts:230 ../src/commands/xgettext.ts:236
+#: ../src/commands/xgettext.ts:241 ../src/commands/xgettext.ts:247
+#: ../src/commands/xgettext.ts:253 ../src/commands/xgettext.ts:259
+#: ../src/commands/xgettext.ts:265
 msgid "Output details:"
 msgstr ""
 
-#: ../src/commands/xgettext.ts:193
+#: ../src/commands/xgettext.ts:195
 msgid "write PO file even if empty"
 msgstr ""
 
-#: ../src/commands/xgettext.ts:198
+#: ../src/commands/xgettext.ts:200
 msgid "set output page width"
 msgstr ""
 
-#: ../src/commands/xgettext.ts:203
+#: ../src/commands/xgettext.ts:205
 msgid ""
 "do not break long message lines, longer than the output page width, into "
 "several lines"
 msgstr ""
 
-#: ../src/commands/xgettext.ts:214
-msgid "generate sorted output"
+#: ../src/commands/xgettext.ts:216
+msgid "generate sorted output (deprecated)"
 msgstr ""
 
-#: ../src/commands/xgettext.ts:220
+#: ../src/commands/xgettext.ts:222
 msgid "sort output by file location"
 msgstr ""
 
-#: ../src/commands/xgettext.ts:225
+#: ../src/commands/xgettext.ts:227
 msgid "don't write header with msgid '\"\"' entry"
 msgstr ""
 
-#: ../src/commands/xgettext.ts:230
+#: ../src/commands/xgettext.ts:232
 msgid "set copyright holder in output"
 msgstr ""
 
-#: ../src/commands/xgettext.ts:236
+#: ../src/commands/xgettext.ts:238
 msgid "omit FSF copyright in output for foreign user"
 msgstr ""
 
-#: ../src/commands/xgettext.ts:241
+#: ../src/commands/xgettext.ts:243
 msgid "set package name in output"
 msgstr ""
 
-#: ../src/commands/xgettext.ts:247
+#: ../src/commands/xgettext.ts:249
 msgid "set package version in output"
 msgstr ""
 
-#: ../src/commands/xgettext.ts:253
+#: ../src/commands/xgettext.ts:255
 msgid "set report address for msgid bugs"
 msgstr ""
 
-#: ../src/commands/xgettext.ts:260
-msgid "use STRING or \"\" as prefix for msgstr values"
+#: ../src/commands/xgettext.ts:262
+msgid "use this string or \"\" as prefix for msgstr values"
 msgstr ""
 
-#: ../src/commands/xgettext.ts:266
-msgid "use STRING or \"\" as suffix for msgstr values"
+#: ../src/commands/xgettext.ts:268
+msgid "use this string or \"\" as suffix for msgstr values"
 msgstr ""
 
-#: ../src/commands/xgettext.ts:280
+#: ../src/commands/xgettext.ts:282
 msgid "input files"
 msgstr ""
 
-#: ../src/commands/xgettext.ts:323
+#: ../src/commands/xgettext.ts:325
 #, perl-brace-format
 msgid "language \"{language}\" unknown"
 msgstr ""
 
-#: ../src/commands/xgettext.ts:344
+#: ../src/commands/xgettext.ts:346
 #, perl-brace-format
 msgid "{programName}: Error: {message}"
 msgstr ""
 
-#: ../src/commands/xgettext.ts:356
+#: ../src/commands/xgettext.ts:358
 #, perl-brace-format
 msgid ""
-"{programName}: Error: --join-existing cannot be used, when output is written "
-"to stdout"
+"{programName}: Error: '--join-existing' cannot be used, when output is "
+"written to stdout"
 msgstr ""
 
-#: ../src/commands/xgettext.ts:412
+#: ../src/commands/xgettext.ts:414
 #, perl-brace-format
 msgid "{programName}: {exception}"
 msgstr ""
 
-#: ../src/commands/xgettext.ts:505
+#: ../src/commands/xgettext.ts:507
 msgid ""
 "language for standard input is unknown without option \"--language\"; will "
-"try JavaScript"
+"try TypeScript"
 msgstr ""
 
-#: ../src/commands/xgettext.ts:512
+#: ../src/commands/xgettext.ts:514
 #, perl-brace-format
 msgid ""
-"file \"{filename}\" extension \"{extname}\" is unknown; will try JavaScript "
+"file \"{filename}\" extension \"{extname}\" is unknown; will try TypeScript "
 "instead"
 msgstr ""
 
-#: ../src/commands/xgettext.ts:549
+#: ../src/commands/xgettext.ts:551
 #, perl-brace-format
 msgid "{programName}: Warning: {msg}"
 msgstr ""
@@ -822,94 +816,90 @@ msgstr ""
 msgid "no input file given"
 msgstr ""
 
-#: ../src/configuration.ts:47 ../src/configuration.ts:58
-msgid "The field 'package.msgid-bugs-address' must not be empty!"
-msgstr ""
-
-#: ../src/configuration.ts:50 ../src/configuration.ts:61
-msgid ""
-"The field 'package.msgid-bugs-address' must contain a valid email address or "
-"URL!"
-msgstr ""
-
-#: ../src/configuration.ts:74 ../src/configuration.ts:103
-#: ../src/configuration.ts:118 ../src/configuration.ts:132
-#: ../src/configuration.ts:146 ../src/configuration.ts:160
-#: ../src/configuration.ts:178
+#: ../src/configuration.ts:47 ../src/configuration.ts:60
+#: ../src/configuration.ts:78 ../src/configuration.ts:107
+#: ../src/configuration.ts:122 ../src/configuration.ts:136
+#: ../src/configuration.ts:150 ../src/configuration.ts:164
+#: ../src/configuration.ts:182
 #, perl-brace-format
 msgid "The field '{field}' must not be empty!"
 msgstr ""
 
-#: ../src/configuration.ts:98 ../src/configuration.ts:113
-#: ../src/configuration.ts:127 ../src/configuration.ts:141
-#: ../src/configuration.ts:155 ../src/configuration.ts:173
+#: ../src/configuration.ts:52 ../src/configuration.ts:65
+#, perl-brace-format
+msgid "The field '{field}' must contain a valid email address or URL!"
+msgstr ""
+
+#: ../src/configuration.ts:102 ../src/configuration.ts:117
+#: ../src/configuration.ts:131 ../src/configuration.ts:145
+#: ../src/configuration.ts:159 ../src/configuration.ts:177
 #, perl-brace-format
 msgid "The field '{field}' must be a string!"
 msgstr ""
 
-#: ../src/configuration.ts:187
+#: ../src/configuration.ts:191
 msgid "The entries in 'po.locales' must be strings!"
 msgstr ""
 
-#: ../src/configuration.ts:188
+#: ../src/configuration.ts:192
 msgid "The entries in 'po.locales' must not be empty!"
 msgstr ""
 
-#: ../src/configuration.ts:389
+#: ../src/configuration.ts:393
 msgid "There is one configuration error:"
 msgid_plural "There are {num} configuration errors:"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../src/configuration.ts:398
+#: ../src/configuration.ts:402
 msgid "[path not set]"
 msgstr ""
 
-#: ../src/configuration.ts:423
+#: ../src/configuration.ts:427
 #, perl-brace-format
 msgid "{programName}: Error: {filename}: {variable}: {message}."
 msgstr ""
 
-#: ../src/configuration.ts:456
+#: ../src/configuration.ts:460
 #, perl-brace-format
 msgid "{programName}: {filename}: error reading configuration: {error}"
 msgstr ""
 
-#: ../src/configuration.ts:476
+#: ../src/configuration.ts:480
 #, perl-brace-format
 msgid ""
 "{programName}: Error: {filename}: Configuration file name must end in '."
 "mjs', '.cjs', '.js', or '.json'!"
 msgstr ""
 
-#: ../src/index.ts:65
+#: ../src/index.ts:71
 msgid "Path to configuration file"
 msgstr ""
 
-#: ../src/index.ts:71
+#: ../src/index.ts:77
 msgid "Path to 'package.json'"
 msgstr ""
 
-#: ../src/index.ts:77
+#: ../src/index.ts:83
 #, perl-brace-format
-msgid "Try {programName} '--help' for more information!"
+msgid "Try '{programName} --help' for more information!"
 msgstr ""
 
-#: ../src/index.ts:81
+#: ../src/index.ts:87
 msgid "Error: No command given."
 msgstr ""
 
-#: ../src/index.ts:84
+#: ../src/index.ts:90
 #, perl-brace-format
 msgid "Additional defaults read from: {files}."
 msgstr ""
 
-#: ../src/index.ts:89
+#: ../src/index.ts:95
 #, perl-brace-format
 msgid "Report bugs in the bugtracker at {url}!"
 msgstr ""
 
-#: ../src/index.ts:120
+#: ../src/index.ts:126
 #, perl-brace-format
 msgid "{programName}: unhandled exception: {exception}"
 msgstr ""
@@ -917,7 +907,7 @@ msgstr ""
 #: ../src/optspec.ts:29
 #, perl-brace-format
 msgid ""
-"{programName}: Error: The option {optname} cannot be specified more than "
+"{programName}: Error: The option '{optname}' cannot be specified more than "
 "once!"
 msgstr ""
 
@@ -937,7 +927,7 @@ msgid ""
 "gettext functions because they are not constant"
 msgstr ""
 
-#: ../src/parser/parser.ts:585 ../src/pot/entry.ts:470
+#: ../src/parser/parser.ts:585 ../src/pot/entry.ts:474
 #, perl-brace-format
 msgid "{location}: warning: {msg}"
 msgstr ""
@@ -1009,28 +999,25 @@ msgstr ""
 msgid "syntax error"
 msgstr ""
 
-#: ../src/pot/entry.ts:35
-msgid "msgid must not contain control characters."
+#: ../src/pot/entry.ts:35 ../src/pot/entry.ts:45
+#, perl-brace-format
+msgid "Section '{section}' must not contain control characters."
 msgstr ""
 
-#: ../src/pot/entry.ts:43
-msgid "msgid_plural must not contain control characters."
-msgstr ""
-
-#: ../src/pot/entry.ts:54
+#: ../src/pot/entry.ts:58
 msgid ""
 "Empty msgid.  It is reserved by esgettext.\n"
-"Calling gettext('') returns the header entry with meta information, not the "
-"empty string.\n"
+"Calling 'gettext()' with an empty msgid returns the  header entry with meta "
+"information, not the empty string.\n"
 "Consider adding a message context, if this is done intentionally."
 msgstr ""
 
-#: ../src/pot/entry.ts:197
+#: ../src/pot/entry.ts:201
 #, perl-brace-format
 msgid "flag \"{flag}\" conflicts with previous flag \"{negated}\""
 msgstr ""
 
-#: ../src/pot/entry.ts:205
+#: ../src/pot/entry.ts:209
 #, perl-brace-format
 msgid "The conflicting flag \"{negated}\" may stem from this location:"
 msgid_plural ""
@@ -1038,25 +1025,25 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../src/pot/entry.ts:421
+#: ../src/pot/entry.ts:425
 #, perl-brace-format
 msgid ""
 "internationalized messages should not contain the '{escape}' escape sequence"
 msgstr ""
 
-#: ../src/pot/entry.ts:437
+#: ../src/pot/entry.ts:441
 msgid "filenames must not contain space or newlines"
 msgstr ""
 
-#: ../src/pot/entry.ts:449
+#: ../src/pot/entry.ts:453
 msgid "flags must not contain commas or newlines"
 msgstr ""
 
-#: ../src/pot/entry.ts:455 ../src/pot/entry.ts:465
+#: ../src/pot/entry.ts:459 ../src/pot/entry.ts:469
 msgid "[in memory]"
 msgstr ""
 
-#: ../src/pot/entry.ts:460
+#: ../src/pot/entry.ts:464
 #, perl-brace-format
 msgid "{location}: error: {msg}"
 msgstr ""
