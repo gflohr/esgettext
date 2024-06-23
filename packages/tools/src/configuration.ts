@@ -345,7 +345,7 @@ export class ConfigurationFactory {
 			}
 
 			if (fileUsed) {
-				configuration.files.push('package.json');
+				configuration.files?.push('package.json');
 			}
 		}
 
