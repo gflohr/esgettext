@@ -32,9 +32,11 @@ export class POTEntry {
 	 */
 	constructor(readonly properties: POTEntryProperties) {
 		if (/[\u0000-\u0006\u000e-\u001f]/.exec(properties.msgid)) {
-			throw new Error(gtx._x("Section '{section}' must not contain control characters.",
-				{ section: 'msgid' }
-			));
+			throw new Error(
+				gtx._x("Section '{section}' must not contain control characters.", {
+					section: 'msgid',
+				}),
+			);
 		}
 
 		if (typeof this.properties.msgidPlural !== 'undefined') {
@@ -42,9 +44,9 @@ export class POTEntry {
 				/[\u0000-\u0006\u000e-\u001f]/.exec(properties.msgidPlural as string)
 			) {
 				throw new Error(
-					gtx._x("Section '{section}' must not contain control characters.",
-						{ section: 'msgid_plural' }
-					),
+					gtx._x("Section '{section}' must not contain control characters.", {
+						section: 'msgid_plural',
+					}),
 				);
 			}
 		}

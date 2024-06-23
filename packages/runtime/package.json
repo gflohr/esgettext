@@ -2,7 +2,15 @@
 	"name": "@esgettext/runtime",
 	"version": "1.3.0",
 	"description": "A gettext-like translation runtime for JavaScript aka EcmaScript",
-	"keywords": ["gettext", "internationalization", "localization", "i18n", "l10n"],
+	"keywords": [
+		"gettext",
+		"internationalization",
+		"localization",
+		"i18n",
+		"l10n",
+		"mo parser",
+		"mo.json parser"
+	],
 	"main": "dist/esgettext.cjs.js",
 	"module": "dist/esgettext.esm.js",
 	"browser": "dist/esgettext.min.js",

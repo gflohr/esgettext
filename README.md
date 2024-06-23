@@ -22,7 +22,7 @@ $ yarn run test
 ## Prerequisites
 
 See the [prerequisites of the esgettext
-tools]((packages/tools/README.md#prerequisites)).
+tools](<(packages/tools/README.md#prerequisites)>).
 
 ## Getting Started
 
@@ -37,11 +37,11 @@ Run the command again without `--dry-run`, when you are happy with the
 output.
 
 The command has created an esgettext configuration file, or - depending on your
-choice - a section inside your `package.json`.  It has also added a bunch
-of scripts inside `package.json`.  In the future, it will be enough to just
-run `npm run esgettext` to get everything up-to-date for translations.  At the
+choice - a section inside your `package.json`. It has also added a bunch
+of scripts inside `package.json`. In the future, it will be enough to just
+run `npm run esgettext` to get everything up-to-date for translations. At the
 moment, this will still fail until you have started marking strings as
-translatable (see [@esgettxt/runtime]((packages/runtime/README.md)) for
+translatable (see [@esgettxt/runtime](<(packages/runtime/README.md)>) for
 more information) and you have added the first language to your project.
 
 ## Copyright

@@ -5,11 +5,7 @@
 	"keywords": [
 		"gettext",
 		"po parser",
-		"create po",
-		"mo parser",
-		"create mo",
-		"mo.json parser",
-		"create mo.json"
+		"create po"
 	],
 	"publishConfig": {
 		"access": "public"
