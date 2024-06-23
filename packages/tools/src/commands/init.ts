@@ -203,6 +203,7 @@ export class Init implements Command {
 	private async writeFiles(config: Configuration, setup: Setup) {
 		const pkg = await NPMCliPackageJson.load(process.cwd());
 		const content = pkg.content as PackageJson;
+		console.log(content);
 		const newline = content[
 			Symbol.for('newline') as unknown as keyof typeof content
 		] as string;
@@ -291,7 +292,16 @@ export class Init implements Command {
 			'esgettext:install': `esgettext install`,
 		};
 
-		pkg.update({ dependencies, devDependencies, scripts });
+		const peerDependencies = pkg.content.peerDependencies as { [key: string]: string } ?? undefined;
+		const optionalDependencies = pkg.content.optionalDependencies as { [key: string]: string } ?? undefined;
+
+		pkg.update({
+			scripts,
+			dependencies,
+			devDependencies,
+			peerDependencies,
+			optionalDependencies,
+		});
 
 		if (this.options.verbose) {
 			console.log(
@@ -299,7 +309,7 @@ export class Init implements Command {
 			);
 		}
 		if (!this.options.dryRun) {
-			pkg.save();
+			await pkg.save();
 		}
 	}
 
@@ -311,7 +321,7 @@ export class Init implements Command {
 		}
 
 		if (!this.options.dryRun) {
-			child_process.execSync(command);
+			child_process.execSync(command, { encoding: 'utf-8' });
 		}
 	}
 
@@ -360,7 +370,10 @@ export class Init implements Command {
 
 	private getGitFiles(): Array<string> | null {
 		try {
-			return child_process.execSync('git ls-files').toString('utf-8').split(/[\r\n]+/)
+			return child_process.execSync('git ls-files', {
+				stdio: 'pipe',
+				encoding: 'utf-8',
+			}).split(/[\r\n]+/);
 		} catch(_) {
 			return null;
 		}
