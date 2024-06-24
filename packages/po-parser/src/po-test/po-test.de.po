@@ -1,0 +1,28 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: @esgettext/po-parser 1.3.1\n"
+"POT-Creation-Date: 2024-07-07 12:44+03:00\n"
+"PO-Revision-Date: 2024-07-07 12:44+03:00\n"
+"Last-Translator: Guido Flohr <guido.flohr@cantanea.com>\n"
+"Language-Team: German <de@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8-bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: ../path/to/first/file.ts:60 ../path/to/second/file.ts:80
+#, perl-brace-format
+msgid "one year"
+msgid_plural "{num} years"
+msgstr[0] "ein Jahr"
+msgstr[1] "{num} Jahre"
+
+#: ../path/to/calendard.ts:2304
+msgid "date"
+msgstr "Datum"
+
+#. TRANSLATORS: This is the fruit, not a romantic appointment or a calendar date.
+#: ../path/to/orchard.ts:48
+msgctxt "fruit"
+msgid "date"
+msgstr "Dattel"

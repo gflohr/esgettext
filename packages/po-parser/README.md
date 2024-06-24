@@ -2,9 +2,6 @@
 
 GNU gettext-alike translation runtime library.
 
-If you are looking for a parser for `.mo` files, you have also found the right
-package.
-
 ## Table of Contents <!-- omit in toc -->
 
 - [API Documentation](#api-documentation)
