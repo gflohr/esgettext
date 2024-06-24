@@ -18,7 +18,9 @@ export class MoParser implements CatalogueParser {
 			const entry = new PoEntry({
 				msgid: msgid,
 				msgctxt: msgctxt,
-			});
+				msgstr: raw.entries[key],
+			}, true);
+
 
 			catalogue.addEntry(entry);
 		}

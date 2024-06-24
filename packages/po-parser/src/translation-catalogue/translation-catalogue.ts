@@ -8,21 +8,36 @@ interface Cache {
 	};
 }
 
-export interface TranslationCatalogueProperties {
+export type TranslationCatalogueProperties = {
 	package?: string;
 	version?: string;
 	copyrightHolder?: string;
 	msgidBugsAddress?: string;
 	foreignUser?: boolean;
 	date?: string;
-}
+};
 
-export interface RenderOptions {
+export type RenderOptions = {
 	width?: number;
 	sortOutput?: boolean;
 	sortByFile?: boolean;
 	omitHeader?: boolean;
-}
+};
+
+export type POHeader = {
+	ProjectIdVersion: string;
+	ReportMsgidBugsTo: string;
+	POTCreationDate: string;
+	PORevisionDate: string;
+	LastTraslator: string;
+	LanguageTeam: string;
+	Language: string;
+	MIMEVersion: string;
+	ContentType: string;
+	ContentTransferEncoding: string;
+	PluralForms: string;
+	[field: string]: string,
+};
 
 /**
  * An entire message catalog that is subsequently filled.

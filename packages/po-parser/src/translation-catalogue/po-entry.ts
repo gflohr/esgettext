@@ -22,10 +22,14 @@ export class PoEntry {
 	/**
 	 * Create an entry.
 	 *
+	 * Creating a `PoEntry` for an empty msgid, normally triggers a warning
+	 * because this is reserved for the PO header.  Pass a truthy value
+	 * for the optional `isHeader` property, if you do that on purpose.
+	 *
 	 * @param properties - the properties of the entry
-	 * @param options - options for wrapping
+	 * @param isHeader - set to true if you create a header on purpose
 	 */
-	constructor(readonly properties: PoEntryProperties) {
+	constructor(readonly properties: PoEntryProperties, isHeader?: boolean) {
 		if (/[\u0000-\u0006\u000e-\u001f]/.exec(properties.msgid)) {
 			throw new Error(
 				gtx._x("Section '{section}' must not contain control characters.", {
@@ -46,8 +50,8 @@ export class PoEntry {
 			}
 		}
 
-		if (
-			this.properties.msgid === '' &&
+		if (!isHeader
+			&& this.properties.msgid === '' &&
 			(typeof this.properties.msgctxt === 'undefined' ||
 				this.properties.msgctxt === '')
 		) {
