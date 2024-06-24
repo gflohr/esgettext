@@ -2,9 +2,10 @@
 
 Supporting tools for https://github.com/gflohr/esgettext.
 
+The package also contains code for parsing po files and for writing them.
+
 ## Table of Contents <!-- omit in toc -->
 
-- [Status](#status)
 - [Prerequisites](#prerequisites)
 	- [Un\*x/Linux](#unxlinux)
 	- [Mac OS X](#mac-os-x)
@@ -38,10 +39,6 @@ Supporting tools for https://github.com/gflohr/esgettext.
 				- [`programs.msgfmt.path`](#programsmsgfmtpath)
 				- [`programs.msgfmt.options`](#programsmsgfmtoptions)
 - [Copyright](#copyright)
-
-## Status
-
-in development.
 
 ## Prerequisites
 
