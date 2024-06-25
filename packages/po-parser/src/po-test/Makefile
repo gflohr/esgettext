@@ -48,7 +48,7 @@ clean:
 .SUFFIXES: .po .gmo .mo.json
 
 .po.gmo:
-	$(MSGFMT) --check --statistics --verbose -o $@ $<
+	$(MSGFMT) --check --statistics --verbose -o $@ $< || (rm -f $@; exit 1)
 
 .gmo.mo.json:
-	$(ESGETTEXT) convert --input=$< --output=>$@
+	$(ESGETTEXT) convert --input=$< --output=$@ || (rm -f $@; exit 1)

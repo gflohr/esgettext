@@ -1,4 +1,4 @@
-import { parseMoCatalog } from "@esgettext/runtime";
+import { parseMoJsonCatalog } from "@esgettext/runtime";
 import { CatalogueParser } from ".";
 import { PoEntry, TranslationCatalogue } from "../translation-catalogue";
 
@@ -7,9 +7,9 @@ const ctxtSeparator = '\u0004';
 /**
  * A `MoParser` is able to parse binary mo files into a ???
  */
-export class MoParser implements CatalogueParser {
+export class MoJsonParser implements CatalogueParser {
 	parse(data: ArrayBuffer): TranslationCatalogue {
-		const raw = parseMoCatalog(data);
+		const raw = parseMoJsonCatalog(data);
 		const catalogue = new TranslationCatalogue();
 
 		for (const key in raw.entries) {

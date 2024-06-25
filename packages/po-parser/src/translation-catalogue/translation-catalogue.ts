@@ -1,5 +1,6 @@
 import { PoEntry } from './po-entry';
 
+// FIXME! We don't a cache here!
 interface Cache {
 	// msgid
 	[key: string]: {
@@ -299,7 +300,6 @@ FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 		}
 	}
 
-
 	/**
 	 * Remove an entry from the catalog.
 	 *
@@ -319,6 +319,20 @@ FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 		delete this.cache[msgid][msgctxt as string];
 		this.entries = this.entries.filter(other => other !== entry);
 	}
+	/**
+	 * Add an entry to the catalog. If an entry with the same msgid
+	 * and msgctxt already exists, the entry is merged into
+	 * the existing one instead.
+	 *
+	 * @param entry - the `PoEntry` to add
+	 */
+	getEntry(msgid: string, msgctxt?: string): PoEntry | undefined {
+		return this.entries.find(entry => {
+			return entry.properties.msgid === msgid
+				&& entry.properties.msgctxt === msgctxt
+		});
+	}
+
 
 	/**
 	 * Copy a catalogue with other options. This is for testing only.
