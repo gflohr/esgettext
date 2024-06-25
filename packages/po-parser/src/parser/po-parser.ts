@@ -7,23 +7,24 @@ import { TranslationCatalogue } from '../translation-catalogue';
 
 const gtx = Textdomain.getInstance('tools');
 
-export class PoParser implements CatalogueParser {
-	// All those get reset on each call to parse().
-	// FIXME! Change that into a context object that is passed around.
-	private entry: PoEntry = undefined as unknown as PoEntry;
-	private loc: SourceLocation = undefined as unknown as SourceLocation;
-	private entryLoc: SourceLocation = undefined as unknown as SourceLocation;
-	private msgType: string = undefined as unknown as string;
-	private seen: {
-		[key: string]: {
-			[key: string]: SourceLocation;
-		};
-	} = {};
-	private catalog: TranslationCatalogue =
-		undefined as unknown as TranslationCatalogue;
-	private errors: number = undefined as unknown as number;
-	private filename: string = undefined as unknown as string;
+type Seen = {
+	[key: string]: {
+		[key: string]: SourceLocation;
+	};
+};
 
+type ParserContext = {
+	catalog: TranslationCatalogue;
+	entry: PoEntry;
+	loc: SourceLocation;
+	entryLoc: SourceLocation;
+	msgType: string;
+	seen: Seen;
+	errors: number;
+	filename: string;
+};
+
+export class PoParser implements CatalogueParser {
 	/**
 	 * Parse a po file into a catalog. This parser is very forgiving and
 	 * accepts input that actually does not follow the standard in certain
@@ -59,44 +60,48 @@ export class PoParser implements CatalogueParser {
 					: decode(buf, encoding);
 		}
 
-		// Reset parser.
-		this.catalog = new TranslationCatalogue();
-		this.entry = undefined as unknown as PoEntry;
-		this.filename = filename;
-		this.loc = {
-			start: {
-				line: 0,
-				column: 1,
-				index: 0,
+		const ctx: ParserContext = {
+			catalog: new TranslationCatalogue(),
+			entry: undefined as unknown as PoEntry,
+			filename: filename,
+			loc: {
+				start: {
+					line: 0,
+					column: 1,
+					index: 0,
+				},
+				end: {
+					line: 0,
+					column: 0,
+					index: 0,
+				},
+				filename,
+				identifierName: '',
 			},
-			end: {
-				line: 0,
-				column: 0,
-				index: 0,
-			},
-			filename,
-			identifierName: '',
+			entryLoc: {} as unknown as SourceLocation,
+			msgType: undefined as unknown as string,
+			seen: {},
+			errors: 0,
 		};
-		this.msgType = undefined as unknown as string;
-		this.seen = {};
-		this.errors = 0;
 
 		// We cannot use forEach here because we may have to return from
 		// inside the loop.
 		const lines = input.split('\n');
 		for (let i = 0; i < lines.length; ++i) {
 			const line = lines[i];
-			this.loc.start.column = 1;
-			++this.loc.start.line;
+			ctx.loc.start.column = 1;
+			++ctx.loc.start.line;
 			if (line === '') {
 				if (
-					this.entry &&
-					this.entry.properties.msgid === '' &&
-					typeof this.entry.properties.msgctxt === 'undefined' &&
-					this.entry.properties.msgstr
+					ctx.entry &&
+					ctx.entry.properties.msgid === '' &&
+					typeof ctx.entry.properties.msgctxt === 'undefined' &&
+					ctx.entry.properties.msgstr
 				) {
-					// FIXME! Get *all* translations!
-					const charset = this.extractCharset(this.entry.properties.msgstr[0]);
+					const charset = this.extractCharset(
+						ctx,
+						ctx.entry.properties.msgstr[0],
+					);
 					if (
 						charset &&
 						(typeof encoding === 'undefined' ||
@@ -109,55 +114,54 @@ export class PoParser implements CatalogueParser {
 					}
 				}
 
-				this.flushEntry();
+				this.flushEntry(ctx);
 			} else {
 				const first = line[0];
 				switch (first) {
 					case '#':
 						if (line.length > 1 && line[1] === '~') {
-							if (this.entry) {
-								this.error(gtx._('inconsistent use of #~'), this.loc);
+							if (ctx.entry) {
+								this.error(ctx, gtx._('inconsistent use of #~'), ctx.loc);
 							} else {
 								break;
 							}
 						}
-						if (!this.entry) {
-							this.entry = PoEntry.build();
+						if (!ctx.entry) {
+							ctx.entry = PoEntry.build();
 						}
-						this.parseCommentLine(line);
+						this.parseCommentLine(ctx, line);
 						break;
 					case 'm':
-						if (!this.entry) {
-							this.entry = PoEntry.build();
+						if (!ctx.entry) {
+							ctx.entry = PoEntry.build();
 						}
-						this.parseKeywordLine(line);
+						this.parseKeywordLine(ctx, line);
 						break;
 					case '"':
-						if (!this.entry) {
-							this.syntaxError();
+						if (!ctx.entry) {
+							this.syntaxError(ctx);
 						}
-						this.parseQuotedString(line);
+						this.parseQuotedString(ctx, line);
 						break;
 					default:
 						if (
 							(first >= 'A' && first <= 'Z') ||
 							(first >= 'a' && first <= 'z')
 						) {
-							this.parseKeywordLine(line);
+							this.parseKeywordLine(ctx, line);
 						}
-						this.syntaxError();
+						this.syntaxError(ctx);
 				}
 			}
 		}
 
 		if (
-			this.entry &&
-			this.entry.properties.msgid === '' &&
-			typeof this.entry.properties.msgctxt === 'undefined' &&
-			this.entry.properties.msgstr
+			ctx.entry &&
+			ctx.entry.properties.msgid === '' &&
+			typeof ctx.entry.properties.msgctxt === 'undefined' &&
+			ctx.entry.properties.msgstr
 		) {
-			// FIXME! Handle *all* translations!
-			const charset = this.extractCharset(this.entry.properties.msgstr[0]);
+			const charset = this.extractCharset(ctx, ctx.entry.properties.msgstr[0]);
 			if (
 				charset &&
 				(typeof encoding === 'undefined' ||
@@ -170,13 +174,13 @@ export class PoParser implements CatalogueParser {
 			}
 		}
 
-		this.flushEntry();
+		this.flushEntry(ctx);
 
-		if (this.errors) {
+		if (ctx.errors) {
 			return null;
 		}
 
-		return this.catalog;
+		return ctx.catalog;
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -184,7 +188,7 @@ export class PoParser implements CatalogueParser {
 		throw new Error('not implemented');
 	}
 
-	private extractCharset(header: string): string | null {
+	private extractCharset(ctx: ParserContext, header: string): string | null {
 		const headers: { [key: string]: string } = {};
 
 		header
@@ -211,14 +215,16 @@ export class PoParser implements CatalogueParser {
 
 		if (!encodingExists(charset)) {
 			this.warn(
+				ctx,
 				gtx._x('the charset "{charset}" is not a portable encoding name.', {
 					charset,
 				}),
-				this.loc,
+				ctx.loc,
 			);
 			this.warn(
+				ctx,
 				gtx._('message conversion to the users charset might not work.'),
-				this.loc,
+				ctx.loc,
 			);
 			return null;
 		}
@@ -226,142 +232,148 @@ export class PoParser implements CatalogueParser {
 		return charset;
 	}
 
-	private flushEntry(): void {
-		if (this.errors) {
-			this.entry = undefined as unknown as PoEntry;
+	private flushEntry(ctx: ParserContext): void {
+		if (ctx.errors) {
+			ctx.entry = undefined as unknown as PoEntry;
 			return;
 		}
 
-		if (this.entry) {
-			const msgctxt = this.entry.properties.msgctxt as string;
-			const msgid = this.entry.properties.msgid;
+		if (ctx.entry) {
+			const msgctxt = ctx.entry.properties.msgctxt as string;
+			const msgid = ctx.entry.properties.msgid;
 			if (typeof msgid === 'undefined') {
 				// TRANSLATORS: Do not translate "msgid".
-				this.error(gtx._('missing "msgid" section'), this.loc);
+				this.error(ctx, gtx._('missing "msgid" section'), ctx.loc);
 				return;
 			}
-			if (this.seen[msgctxt] && this.seen[msgctxt][msgid]) {
-				this.error(gtx._('duplicate message definition...'), this.entryLoc);
+			if (ctx.seen[msgctxt] && ctx.seen[msgctxt][msgid]) {
+				this.error(ctx, gtx._('duplicate message definition...'), ctx.entryLoc);
 				this.error(
+					ctx,
 					gtx._('...this is the location of the first definition'),
-					this.seen[msgctxt][msgid],
+					ctx.seen[msgctxt][msgid],
 				);
 				return;
 			}
-			if (!this.seen[msgctxt]) {
-				this.seen[msgctxt] = {};
+			if (!ctx.seen[msgctxt]) {
+				ctx.seen[msgctxt] = {};
 			}
 
-			this.seen[msgctxt][msgid] = this.copyLocation(this.entryLoc);
-			this.catalog.addEntry(this.entry);
+			ctx.seen[msgctxt][msgid] = this.copyLocation(ctx.entryLoc);
+			ctx.catalog.addEntry(ctx.entry);
 		}
-		this.entry = undefined as unknown as PoEntry;
+		ctx.entry = undefined as unknown as PoEntry;
 	}
 
-	private parseCommentLine(line: string): void {
+	private parseCommentLine(ctx: ParserContext, line: string): void {
 		const marker = line[1];
 		switch (marker) {
 			case ',':
-				this.parseFlags(line);
+				this.parseFlags(ctx, line);
 				break;
 
 			case ':':
-				this.parseReferences(line);
+				this.parseReferences(ctx, line);
 				break;
 
 			case '.':
-				this.entry.addExtractedCommentLine(line.substr(1).trim());
+				ctx.entry.addExtractedCommentLine(line.substr(1).trim());
 				break;
 
 			case ' ':
-				this.entry.addTranslatorCommentLine(line.substr(2));
+				ctx.entry.addTranslatorCommentLine(line.substr(2));
 				break;
 
 			default:
-				this.entry.addTranslatorCommentLine(line.substr(1));
+				ctx.entry.addTranslatorCommentLine(line.substr(1));
 				break;
 		}
 	}
 
-	private parseKeywordLine(line: string): void {
-		const errorsBefore = this.errors;
+	private parseKeywordLine(ctx: ParserContext, line: string): void {
+		const errorsBefore = ctx.errors;
 
 		let remainder = line.replace(/^[_A-Za-z0-9[\]]+/, keyword => {
 			switch (keyword) {
 				case 'msgid':
-					this.entryLoc = this.copyLocation(this.loc);
-					this.msgType = keyword;
-					if (typeof this.entry.properties.msgid !== 'undefined') {
+					ctx.entryLoc = this.copyLocation(ctx.loc);
+					ctx.msgType = keyword;
+					if (typeof ctx.entry.properties.msgid !== 'undefined') {
 						this.error(
+							ctx,
 							gtx._x('duplicate "{keyword}" section', { keyword }),
-							this.loc,
+							ctx.loc,
 						);
 					}
 					break;
 				case 'msgstr':
-					this.msgType = keyword;
-					if (typeof this.entry.properties.msgstr !== 'undefined') {
+					ctx.msgType = keyword;
+					if (typeof ctx.entry.properties.msgstr !== 'undefined') {
 						this.error(
+							ctx,
 							gtx._x('duplicate "{keyword}" section', { keyword }),
-							this.loc,
+							ctx.loc,
 						);
 					}
 					break;
 				case 'msgid_plural':
-					this.msgType = keyword;
-					if (typeof this.entry.properties.msgidPlural !== 'undefined') {
+					ctx.msgType = keyword;
+					if (typeof ctx.entry.properties.msgidPlural !== 'undefined') {
 						this.error(
+							ctx,
 							gtx._x('duplicate "{keyword}" section', { keyword }),
-							this.loc,
+							ctx.loc,
 						);
 					}
 					break;
 				case 'msgctxt':
-					this.msgType = keyword;
-					if (typeof this.entry.properties.msgctxt !== 'undefined') {
+					ctx.msgType = keyword;
+					if (typeof ctx.entry.properties.msgctxt !== 'undefined') {
 						this.error(
+							ctx,
 							gtx._x('duplicate "{keyword}" section', { keyword }),
-							this.loc,
+							ctx.loc,
 						);
 					}
 					break;
 				default:
 					if (!/^msgstr\[[0-9]+\]/.exec(keyword)) {
 						this.error(
+							ctx,
 							gtx._x('keyword "{keyword}" unknown', { keyword }),
-							this.loc,
+							ctx.loc,
 						);
 					}
-					this.msgType = keyword;
+					ctx.msgType = keyword;
 			}
 
-			this.loc.start.column += keyword.length;
+			ctx.loc.start.column += keyword.length;
 
 			return '';
 		});
 
-		if (errorsBefore !== this.errors) {
+		if (errorsBefore !== ctx.errors) {
 			return;
 		}
 
-		remainder = this.trim(remainder);
+		remainder = this.trim(ctx, remainder);
 		if (remainder.startsWith('"')) {
-			return this.parseQuotedString(remainder);
+			return this.parseQuotedString(ctx, remainder);
 		} else {
-			this.syntaxError();
+			this.syntaxError(ctx);
 		}
 	}
 
-	private parseQuotedString(line: string): void {
+	private parseQuotedString(ctx: ParserContext, line: string): void {
 		if (!line.endsWith('"')) {
-			this.loc.start.column += line.length;
-			this.error(gtx._('end-of-line within string'), this.loc);
+			ctx.loc.start.column += line.length;
+			this.error(ctx, gtx._('end-of-line within string'), ctx.loc);
 			return;
 		}
 
 		const raw = line.substr(1, line.length - 2);
 		if (raw.length && raw.endsWith('\\')) {
-			this.error(gtx._('end-of-line within string'), this.loc);
+			this.error(ctx, gtx._('end-of-line within string'), ctx.loc);
 			return;
 		}
 		const msg = raw.replace(/\\./g, (match, offset) => {
@@ -395,88 +407,89 @@ export class PoParser implements CatalogueParser {
 					break;
 				default:
 					// We have to take the leading quote into account.
-					this.loc.start.column += offset + 1;
-					this.error(gtx._('invalid control sequence'), this.loc);
+					ctx.loc.start.column += offset + 1;
+					this.error(ctx, gtx._('invalid control sequence'), ctx.loc);
 					retval = '';
 			}
 
 			return retval;
 		});
 
-		if (this.errors) {
+		if (ctx.errors) {
 			return;
 		}
 
-		switch (this.msgType) {
+		switch (ctx.msgType) {
 			case 'msgid':
-				this.entry.addToMsgid(msg);
+				ctx.entry.addToMsgid(msg);
 				break;
 			case 'msgstr':
-				this.entry.addToMsgstr(msg);
+				ctx.entry.addToMsgstr(msg);
 				break;
 			case 'msgid_plural':
-				this.entry.addToMsgidPlural(msg);
+				ctx.entry.addToMsgidPlural(msg);
 				break;
 			case 'msgctxt':
-				this.entry.addToMsgctxt(msg);
+				ctx.entry.addToMsgctxt(msg);
 				break;
 			default:
-				// Ignore plural translations.
+				// FIXME! Do not ignore plural translations!
 				break;
 		}
 	}
 
-	private parseFlags(line: string): void {
+	private parseFlags(ctx: ParserContext, line: string): void {
 		const flags = line.substr(2).split(',');
 		flags.forEach((flag, i) => {
 			if (i) {
-				++this.loc.start.column;
+				++ctx.loc.start.column;
 			}
 
 			const rspace = this.rspace(flag);
-			flag = this.trim(flag);
+			flag = this.trim(ctx, flag);
 			if (!flag.length) {
-				this.warn(gtx._('ignoring empty flag'), this.loc);
+				this.warn(ctx, gtx._('ignoring empty flag'), ctx.loc);
 			} else {
-				this.entry.addFlag(flag);
+				ctx.entry.addFlag(flag);
 			}
-			this.loc.start.column += rspace + flag.length;
+			ctx.loc.start.column += rspace + flag.length;
 		});
 	}
 
-	private parseReferences(line: string): void {
-		this.loc.start.column += 2;
+	private parseReferences(ctx: ParserContext, line: string): void {
+		ctx.loc.start.column += 2;
 
 		const refs = line.substr(2).split(' ');
 		refs.forEach((reference, i) => {
 			if (i) {
-				++this.loc.start.column;
+				++ctx.loc.start.column;
 			}
 
-			reference = this.trim(reference);
+			reference = this.trim(ctx, reference);
 
 			if (/.+:[1-9][0-9]*$/.exec(reference)) {
-				this.entry.addReference(reference);
+				ctx.entry.addReference(reference);
 			} else if (reference !== '') {
 				this.warn(
+					ctx,
 					gtx._x('ignoring mal-formed reference "{reference}"', {
 						reference,
 					}),
-					this.loc,
+					ctx.loc,
 				);
 			}
-			this.loc.start.column += reference.length;
+			ctx.loc.start.column += reference.length;
 		});
 	}
 
-	private syntaxError(): void {
-		this.error(gtx._('syntax error'), this.loc);
+	private syntaxError(ctx: ParserContext): void {
+		this.error(ctx, gtx._('syntax error'), ctx.loc);
 	}
 
-	private trim(str: string): string {
+	private trim(ctx: ParserContext, str: string): string {
 		return str
 			.replace(/^[\s\uFEFF\xA0]+/, match => {
-				this.loc.start.column += match.length;
+				ctx.loc.start.column += match.length;
 				return '';
 			})
 			.trim();
@@ -507,22 +520,26 @@ export class PoParser implements CatalogueParser {
 		} as SourceLocation;
 	}
 
-	protected warn(msg: string, loc: SourceLocation): void {
+	// FIXME! Allow to hook in here and replace console.warn() with a user
+	// supplied function.
+	protected warn(ctx: ParserContext, msg: string, loc: SourceLocation): void {
 		const start = `${loc.start.line}:${loc.start.column}`;
 		const end = loc.end.line > 0 ? `-${loc.end.line}:${loc.end.column}` : '';
 		const filename =
-			'-' === this.filename ? gtx._('[standard input]') : this.filename;
+			'-' === ctx.filename ? gtx._('[standard input]') : ctx.filename;
 		const location = `${filename}:${start}${end}`;
 		console.warn(gtx._x('{location}: warning: {msg}', { location, msg }));
 	}
 
-	private error(msg: string, loc: SourceLocation): void {
-		++this.errors;
+	// FIXME! Allow to hook in here and replace console.error() with a user
+	// supplied function.
+	private error(ctx: ParserContext, msg: string, loc: SourceLocation): void {
+		++ctx.errors;
 		const start = `${loc.start.line}:${loc.start.column}`;
 		const end =
 			loc.end && loc.end.line > 0 ? `-${loc.end.line}:${loc.end.column}` : '';
 		const filename =
-			'-' === this.filename ? gtx._('[standard input]') : this.filename;
+			'-' === ctx.filename ? gtx._('[standard input]') : ctx.filename;
 		const location = `${filename}:${start}${end}`;
 		console.error(gtx._x('{location}: Error: {msg}', { location, msg }));
 	}
