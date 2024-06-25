@@ -9,7 +9,7 @@ export default {
 	po: { directory: 'po', locales: ['de', 'en-AU', 'en-CA', 'en-GB', 'en-NZ'] },
 	install: { directory: 'src/locale' },
 	programs: {
-		msgmerge: { options: ['verbose'] },
+		msgmerge: { options: ['update', 'previous'] },
 		msgfmt: { options: ['check', 'statistics', 'verbose'] },
 	},
 };
