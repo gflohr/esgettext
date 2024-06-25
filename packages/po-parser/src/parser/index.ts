@@ -1,14 +1,3 @@
-import { TranslationCatalogue } from '../translation-catalogue';
-
-export interface CatalogueParser {
-	/**
-	 * Parses a binary file into a `TranslationCatalogue`.
-	 *
-	 * @param data - the raw input data
-	 *
-	 * @returns a `TranslationCatalogue`
-	 */
-	parse(data: ArrayBuffer): TranslationCatalogue;
-}
-
+export * from './po-parser';
 export * from './mo-parser';
+export * from './mo-json-parser';

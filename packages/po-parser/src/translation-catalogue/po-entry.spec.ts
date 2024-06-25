@@ -426,19 +426,6 @@ msgstr ""
 
 		afterEach(() => jest.restoreAllMocks());
 
-		it('should print a warning, when a msgid is the empty string', () => {
-			new PoEntry({ msgid: '' });
-			expect(warner).toHaveBeenCalled();
-			warner.mockClear();
-
-			new PoEntry({ msgid: '', msgidPlural: 'spaces' });
-			expect(warner).toHaveBeenCalled();
-			warner.mockClear();
-
-			new PoEntry({ msgid: '', msgctxt: 'spaces' });
-			expect(warner).not.toHaveBeenCalled();
-		});
-
 		it('should print one warning for each deprecated control in a msgid', () => {
 			new PoEntry({ msgid: '\u0007\u0007\b\b\v\v\f\f\r\r' });
 			expect(warner).toHaveBeenCalledTimes(5);

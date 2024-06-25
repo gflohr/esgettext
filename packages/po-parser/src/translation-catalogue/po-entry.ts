@@ -13,7 +13,7 @@ export type PoEntryProperties = {
 	automatic?: Array<string>;
 	references?: Array<string>;
 	noWarnings?: boolean;
-}
+};
 
 /**
  * Class representing one entry in a po file.
@@ -27,9 +27,8 @@ export class PoEntry {
 	 * for the optional `isHeader` property, if you do that on purpose.
 	 *
 	 * @param properties - the properties of the entry
-	 * @param isHeader - set to true if you create a header on purpose
 	 */
-	constructor(readonly properties: PoEntryProperties, isHeader?: boolean) {
+	constructor(readonly properties: PoEntryProperties) {
 		if (/[\u0000-\u0006\u000e-\u001f]/.exec(properties.msgid)) {
 			throw new Error(
 				gtx._x("Section '{section}' must not contain control characters.", {
@@ -48,23 +47,6 @@ export class PoEntry {
 					}),
 				);
 			}
-		}
-
-		if (!isHeader
-			&& this.properties.msgid === '' &&
-			(typeof this.properties.msgctxt === 'undefined' ||
-				this.properties.msgctxt === '')
-		) {
-			this.warning(
-				gtx._(
-					'Empty msgid.  It is reserved by esgettext.\n' +
-						"Calling 'gettext()' with an empty msgid returns the " +
-						' header entry with meta information, not the empty ' +
-						'string.\n' +
-						'Consider adding a message context, if this ' +
-						'is done intentionally.',
-				),
-			);
 		}
 
 		// Order matters here. This is most likely the order of appearance
@@ -148,7 +130,8 @@ export class PoEntry {
 		if (typeof this.properties.msgidPlural === 'undefined') {
 			if (typeof this.properties.msgstr !== 'undefined') {
 				out +=
-					this.serializeMsgId(this.properties.msgstr[0], width, 'msgstr') + '\n';
+					this.serializeMsgId(this.properties.msgstr[0], width, 'msgstr') +
+					'\n';
 			} else {
 				out += 'msgstr ""\n';
 			}

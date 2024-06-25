@@ -9,15 +9,6 @@ interface Cache {
 	};
 }
 
-export type TranslationCatalogueProperties = {
-	package?: string;
-	version?: string;
-	copyrightHolder?: string;
-	msgidBugsAddress?: string;
-	foreignUser?: boolean;
-	date?: string;
-};
-
 export type RenderOptions = {
 	width?: number;
 	sortOutput?: boolean;
@@ -37,7 +28,7 @@ export type POHeader = {
 	ContentType: string;
 	ContentTransferEncoding: string;
 	PluralForms: string;
-	[field: string]: string,
+	[field: string]: string;
 };
 
 /**
@@ -47,97 +38,8 @@ export class TranslationCatalogue {
 	private readonly cache: Cache = {};
 	entries: Array<PoEntry>;
 
-	constructor(readonly properties: TranslationCatalogueProperties = {}) {
+	constructor() {
 		this.entries = new Array<PoEntry>();
-		let barePkg: string;
-
-		if (typeof properties.package === 'undefined') {
-			barePkg = 'PACKAGE';
-			properties.package = 'PACKAGE VERSION';
-		} else {
-			barePkg = properties.package.replace(/\n/g, '\\n');
-			if (typeof properties.version !== 'undefined') {
-				properties.package += ' ' + properties.version;
-			}
-		}
-
-		if (typeof properties.copyrightHolder === 'undefined') {
-			properties.copyrightHolder = "THE PACKAGE'S COPYRIGHT HOLDER";
-		}
-
-		if (typeof properties.msgidBugsAddress === 'undefined') {
-			properties.msgidBugsAddress = 'MSGID_BUGS_ADDRESS';
-		}
-
-		if (typeof properties.date === 'undefined') {
-			const now = new Date();
-
-			// Avoid if/else, so we do not spoil our test coverage. :)
-			let year = now.getFullYear().toString();
-			year = '0'.repeat(4 - year.length) + year;
-			let month = (1 + now.getMonth()).toString();
-			month = '0'.repeat(2 - month.length) + month;
-			let mday = now.getDate().toString();
-			mday = '0'.repeat(2 - mday.length) + mday;
-			let hour = now.getHours().toString();
-			hour = '0'.repeat(2 - hour.length) + hour;
-			let minutes = now.getMinutes().toString();
-			minutes = '0'.repeat(2 - minutes.length) + minutes;
-
-			// Do not depend on the timezone for test coverage.
-			let offset = now.getTimezoneOffset();
-			const sign = ['+', '-'][Math.sign(offset) + 1];
-			offset = Math.abs(offset);
-
-			let offsetHours = Math.floor(offset / 60).toString();
-			offsetHours = '0'.repeat(2 - offsetHours.length) + offsetHours;
-			let offsetMinutes = (offset % 60).toString();
-			offsetMinutes = '0'.repeat(2 - offsetMinutes.length) + offsetMinutes;
-
-			properties.date =
-				[year, month, mday].join('-') +
-				` ${hour}:${minutes}` +
-				`${sign}${offsetHours}${offsetMinutes}`;
-		}
-
-		const pkg = properties.package.replace(/\n/g, '\\n');
-		const msgidBugsAddress = properties.msgidBugsAddress.replace(/\n/g, '\\n');
-		const copyrightHolder = properties.copyrightHolder.replace(/\n/g, '\\n');
-
-		const header = `Project-Id-Version: ${pkg}
-Report-Msgid-Bugs-To: ${msgidBugsAddress}
-POT-Creation-Date: ${properties.date}
-PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE
-Last-Translator: FULL NAME <EMAIL@ADDRESS>
-Language-Team: LANGUAGE <LL@li.org>
-Language:\u0020
-MIME-Version: 1.0
-Content-Type: text/plain; charset=CHARSET
-Content-Transfer-Encoding: 8bit
-`;
-
-		let comment;
-		if (properties.foreignUser) {
-			comment = `SOME DESCRIPTIVE TITLE
-This file is put in the public domain.
-FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-`;
-		} else {
-			comment = `SOME DESCRIPTIVE TITLE
-Copyright (C) YEAR ${copyrightHolder}
-This file is distributed under the same license as the ${barePkg} package.
-FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-`;
-		}
-
-		const headerEntry = new PoEntry({
-			msgid: '',
-			msgstr: [header],
-			flags: ['fuzzy'],
-			translatorComments: [comment],
-			noWarnings: true,
-		});
-		this.addEntry(headerEntry);
 	}
 
 	/**
@@ -198,7 +100,7 @@ FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 				.map(entry => entry.toString(width))
 				.join('\n');
 		} else if (options.sortByFile) {
-			const copy = this.copy(this.properties);
+			const copy = this.copy();
 
 			const splitRef = (ref: string): { filename: string; lineno: number } => {
 				const parts = ref.split(':');
@@ -305,7 +207,7 @@ FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 	 *
 	 * @param msgid - the message id
 	 * @param msgctxt - the message context
- 	 */
+	 */
 	deleteEntry(msgid: string, msgctxt?: string) {
 		if (!this.cache[msgid]) {
 			return;
@@ -328,19 +230,19 @@ FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 	 */
 	getEntry(msgid: string, msgctxt?: string): PoEntry | undefined {
 		return this.entries.find(entry => {
-			return entry.properties.msgid === msgid
-				&& entry.properties.msgctxt === msgctxt
+			return (
+				entry.properties.msgid === msgid && entry.properties.msgctxt === msgctxt
+			);
 		});
 	}
 
-
 	/**
-	 * Copy a catalogue with other options. This is for testing only.
+	 * Copy a catalogue.
 	 *
 	 * @returns a deep copy of the catalogue.
 	 */
-	copy(properties?: TranslationCatalogueProperties): TranslationCatalogue {
-		const other = new TranslationCatalogue(properties);
+	copy(): TranslationCatalogue {
+		const other = new TranslationCatalogue();
 
 		this.entries.forEach(entry => other.addEntry(entry));
 

@@ -1,50 +1,11 @@
 import { TranslationCatalogue } from './translation-catalogue';
 import { PoEntry } from './po-entry';
 
-const date = '2020-04-23 08:50+0300';
-
 describe('translation catalogue', () => {
 	describe('initialization', () => {
 		it('should be initialized with zero configuration', () => {
 			const catalogue = new TranslationCatalogue();
-			expect(catalogue.renderPo({ width: 76 })).toMatch(/Content-Type/);
-		});
-
-		it('should be initialized with default values', () => {
-			const catalogue = new TranslationCatalogue({ date });
-			expect(catalogue.renderPo()).toMatchSnapshot();
-		});
-
-		it('should honour the foreign-user option', () => {
-			const catalogue = new TranslationCatalogue({ date, foreignUser: true });
-			expect(catalogue.renderPo()).toMatchSnapshot();
-		});
-
-		it('should honour the package option', () => {
-			const catalogue = new TranslationCatalogue({ date, package: 'foobar 23.4' });
-			expect(catalogue.renderPo()).toMatchSnapshot();
-		});
-
-		it('should ignore a lone version option', () => {
-			const catalogue = new TranslationCatalogue({ date, version: '23.4' });
-			expect(catalogue.renderPo()).toMatchSnapshot();
-		});
-
-		it('should honour the version option', () => {
-			const catalogue = new TranslationCatalogue({
-				date,
-				package: 'foobar',
-				version: '23.4.89',
-			});
-			expect(catalogue.renderPo()).toMatchSnapshot();
-		});
-
-		it('should honour the msgid-bugs-address option', () => {
-			const catalogue = new TranslationCatalogue({
-				date,
-				msgidBugsAddress: 'me@example.com',
-			});
-			expect(catalogue.renderPo()).toMatchSnapshot();
+			expect(catalogue.renderPo()).toBe('');
 		});
 	});
 
@@ -100,7 +61,7 @@ describe('translation catalogue', () => {
 	});
 
 	describe('continuous filling', () => {
-		const catalogue = new TranslationCatalogue({ date });
+		const catalogue = new TranslationCatalogue();
 
 		it('should add an entry', () => {
 			catalogue.addEntry(
@@ -232,6 +193,7 @@ describe('translation catalogue', () => {
 					references: ['src/yankee.ts:42', 'src/zulu.ts:2304'],
 				}),
 			);
+			expect(catalogue).toMatchSnapshot();
 		});
 
 		it('should sort output on demand', () => {
@@ -239,12 +201,15 @@ describe('translation catalogue', () => {
 		});
 
 		it('should sort by file on demand', () => {
+			// The snapshot differs from the GNU xgettext output but I think
+			// that our version is correct, and the "original" is wrong.
+			// Anyway, who needs that feature???
 			expect(catalogue.renderPo({ sortByFile: true })).toMatchSnapshot();
 		});
 	});
 
 	describe('deleting', () => {
-		const catalogue = new TranslationCatalogue({ date });
+		const catalogue = new TranslationCatalogue();
 
 		catalogue.addEntry(
 			new PoEntry({
@@ -266,7 +231,7 @@ describe('translation catalogue', () => {
 
 	describe('sorting', () => {
 		it('should sort by msgctxt', () => {
-			const catalogue = new TranslationCatalogue({ date });
+			const catalogue = new TranslationCatalogue();
 
 			catalogue.addEntry(
 				new PoEntry({
@@ -302,7 +267,7 @@ describe('translation catalogue', () => {
 		});
 
 		it('should sort by line number', () => {
-			const catalogue = new TranslationCatalogue({ date });
+			const catalogue = new TranslationCatalogue();
 
 			catalogue.addEntry(
 				new PoEntry({

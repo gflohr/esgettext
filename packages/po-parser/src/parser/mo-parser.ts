@@ -1,6 +1,6 @@
-import { parseMoCatalog } from "@esgettext/runtime";
-import { CatalogueParser } from ".";
-import { PoEntry, TranslationCatalogue } from "../translation-catalogue";
+import { parseMoCatalog } from '@esgettext/runtime';
+import { CatalogueParser } from './catalogue-parser';
+import { PoEntry, TranslationCatalogue } from '../translation-catalogue';
 
 const ctxtSeparator = '\u0004';
 
@@ -14,15 +14,14 @@ export class MoParser implements CatalogueParser {
 
 		for (const key in raw.entries) {
 			const fields = key.split(ctxtSeparator, 2);
-			const [msgid, msgctxt] = fields.length === 1
-				? [fields[0]] : [fields[1], fields[0]];
+			const [msgid, msgctxt] =
+				fields.length === 1 ? [fields[0]] : [fields[1], fields[0]];
 
 			const entry = new PoEntry({
 				msgid: msgid,
 				msgctxt: msgctxt,
 				msgstr: raw.entries[key],
-			}, true);
-
+			});
 
 			catalogue.addEntry(entry);
 		}
