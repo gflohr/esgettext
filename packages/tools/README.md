@@ -7,37 +7,37 @@ The package also contains code for parsing po files and for writing them.
 ## Table of Contents <!-- omit in toc -->
 
 - [Prerequisites](#prerequisites)
-	- [Un\*x/Linux](#unxlinux)
-	- [Mac OS X](#mac-os-x)
-		- [MacPorts](#macports)
-		- [HomeBrew](#homebrew)
-	- [MS-DOS (Microsoft Windows)](#ms-dos-microsoft-windows)
+  - [Un\*x/Linux](#unxlinux)
+  - [Mac OS X](#mac-os-x)
+    - [MacPorts](#macports)
+    - [HomeBrew](#homebrew)
+  - [MS-DOS (Microsoft Windows)](#ms-dos-microsoft-windows)
 - [Installation](#installation)
 - [The Tools](#the-tools)
-	- [`esgettext xgettext`](#esgettext-xgettext)
-	- [Other Commands](#other-commands)
+  - [`esgettext xgettext`](#esgettext-xgettext)
+  - [Other Commands](#other-commands)
 - [Configuration](#configuration)
-	- [Configuration Files](#configuration-files)
-	- [Validation](#validation)
-	- [Configuration Schema](#configuration-schema)
-		- [`package`](#package)
-			- [`package.textdomain`](#packagetextdomain)
-			- [`package.msgid-bugs-address`](#packagemsgid-bugs-address)
-			- [`package.name`](#packagename)
-			- [`package.copyright-holder`](#packagecopyright-holder)
-			- [`package.version`](#packageversion)
-		- [`po`:](#po)
-			- [`po.directory`](#podirectory)
-			- [`po.locales`](#polocales)
-		- [`install`](#install)
-			- [`install.directory`](#installdirectory)
-		- [`programs`](#programs)
-			- [`programs.msgmerge`](#programsmsgmerge)
-				- [`programs.msgmerge.path`](#programsmsgmergepath)
-				- [`programs.msgmerge.options`](#programsmsgmergeoptions)
-			- [`programs.msgfmt`](#programsmsgfmt)
-				- [`programs.msgfmt.path`](#programsmsgfmtpath)
-				- [`programs.msgfmt.options`](#programsmsgfmtoptions)
+  - [Configuration Files](#configuration-files)
+  - [Validation](#validation)
+  - [Configuration Schema](#configuration-schema)
+    - [`package`](#package)
+      - [`package.textdomain`](#packagetextdomain)
+      - [`package.msgid-bugs-address`](#packagemsgid-bugs-address)
+      - [`package.name`](#packagename)
+      - [`package.copyright-holder`](#packagecopyright-holder)
+      - [`package.version`](#packageversion)
+    - [`po`:](#po)
+      - [`po.directory`](#podirectory)
+      - [`po.locales`](#polocales)
+    - [`install`](#install)
+      - [`install.directory`](#installdirectory)
+    - [`programs`](#programs)
+      - [`programs.msgmerge`](#programsmsgmerge)
+        - [`programs.msgmerge.path`](#programsmsgmergepath)
+        - [`programs.msgmerge.options`](#programsmsgmergeoptions)
+      - [`programs.msgfmt`](#programsmsgfmt)
+        - [`programs.msgfmt.path`](#programsmsgfmtpath)
+        - [`programs.msgfmt.options`](#programsmsgfmtoptions)
 - [Copyright](#copyright)
 
 ## Prerequisites
@@ -47,7 +47,7 @@ tools. If the command `xgettext --version` outputs some kind of version
 information, you are most probably set. Otherwise check the information for
 your platform below.
 
-### Un*x/Linux
+### Un\*x/Linux
 
 Use the package manager of your vendor to search for something like
 "gettext-tools" or just "gettext" and install it. The gettext tools are
@@ -74,8 +74,8 @@ $ brew install gettext
 
 The options that I know of are
 
-* [Cygwin](https://www.cygwin.com/)
-* [MinGW](http://www.mingw.org/)
+- [Cygwin](https://www.cygwin.com/)
+- [MinGW](http://www.mingw.org/)
 
 See their documentation for more information.
 
@@ -121,6 +121,7 @@ If you have installed them globally, just omit the leading `npx`.
 Try this for an overview:
 
 ```shell
+$ npm install --save-deve @esgettext/tools
 $ npx esgettext --help
 ```
 
@@ -137,7 +138,7 @@ for more details.
 
 ### Other Commands
 
-All other commands should be understandable by their help output.  Try
+All other commands should be understandable by their help output. Try
 `npx esgettext --help` for an overview over all commands, and
 `npx esgettext COMMAND --help` for help for a specific command.
 
@@ -150,18 +151,18 @@ in a configuration file or just in `package.json`.
 
 Configuration files are checked in this order:
 
-* esgettext.config.mjs
-* esgettext.config.cjs
-* esgettext.config.js
-* esgettext.config.json
-* package.json
+- esgettext.config.mjs
+- esgettext.config.cjs
+- esgettext.config.js
+- esgettext.config.json
+- package.json
 
 The JavaScript versions should have one default export with the configuration.
 The JSON version just defines the configuration. Alteratively, you can add
 a field "esgettext" to your `package.json`.
 
 You should always configure `po.locales` with a list of locale identifiers that
-your package supports.  Otherwise, using `esgettext` does not make sense.
+your package supports. Otherwise, using `esgettext` does not make sense.
 
 You should also set `package.textdomain` unless you are happy with the
 default which is just your package name read from `package.json`.
@@ -170,8 +171,8 @@ All other configuration values have sane defaults.
 
 ### Validation
 
-The required format is always the same.  Note that the configuration gets
-validated against a schema.  All tools will fail with a validation error if
+The required format is always the same. Note that the configuration gets
+validated against a schema. All tools will fail with a validation error if
 you pass an invalid configuration.
 
 ### Configuration Schema
@@ -180,7 +181,7 @@ All fields in the configuration are optional because you are always able to
 pass them on the command line.
 
 Options passed on the command line have higher precedence than options given
-in a configuration file.  Options that you define inside a section `esgettext`
+in a configuration file. Options that you define inside a section `esgettext`
 in `package.json` have higher precedence than options that default to
 general fields inside `package.json`.
 
@@ -206,12 +207,12 @@ General information about your package.
 ##### `package.textdomain`
 
 The textdomain of your package, usually something like
-`com.example.YOUR-PACKAGE`.  You should configure this.
+`com.example.YOUR-PACKAGE`. You should configure this.
 
 ##### `package.msgid-bugs-address`
 
 An email address or URL where to send bug reports or questions about message
-ids.  This is added to the respective field in all generated po files.
+ids. This is added to the respective field in all generated po files.
 
 If you omit this field, it will be read from the fields `bugs.email` or
 `bugs.url` (in that order) in `package.json`.
@@ -225,12 +226,11 @@ If you omit this field, it will be read from the field `name` in
 
 ##### `package.copyright-holder`
 
-The copyright holder of your package.  This is added as a comment to all
+The copyright holder of your package. This is added as a comment to all
 generated po files.
 
 If you omit this field, it will be read from the field `people.author` in
 `package.json`.
-
 
 ##### `package.version`
 
@@ -250,7 +250,7 @@ The directory where all translation related files reside, usually 'po'.
 
 ##### `po.locales`
 
-An array of locale identifiers.  This should always be configured.
+An array of locale identifiers. This should always be configured.
 
 #### `install`
 
@@ -273,8 +273,8 @@ The path to the `msgmerge` program of your system.
 
 ###### `programs.msgmerge.options`
 
-An array of options to pass to the `msgmerge` program.  Only boolean options
-without arguments are supported.  And you have to omit the leading hyphens,
+An array of options to pass to the `msgmerge` program. Only boolean options
+without arguments are supported. And you have to omit the leading hyphens,
 for example `['verbose']` or `['v']`, and not `['--verbose']` or `['-v']`.
 
 ##### `programs.msgfmt`
@@ -285,8 +285,8 @@ The path to the `msgfmt` program of your system.
 
 ###### `programs.msgfmt.options`
 
-An array of options to pass to the `msgmerge` program.  Only boolean options
-without arguments are supported.  And you have to omit the leading hyphens,
+An array of options to pass to the `msgmerge` program. Only boolean options
+without arguments are supported. And you have to omit the leading hyphens,
 for example `['verbose']` or `['v']`, and not `['--verbose']` or `['-v']`.
 
 ## Copyright
