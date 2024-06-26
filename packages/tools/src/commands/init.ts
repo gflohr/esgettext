@@ -866,7 +866,7 @@ export class Init implements Command {
 				message: gtx._x("(Boolean) options to invoke '{tool}' with", {
 					tool: 'msgmerge',
 				}),
-				default: '--verbose',
+				default: '--update --previous',
 			}),
 			msgfmt: await input({
 				message: gtx._x("The '{tool}' program to use:", { tool: 'msgfmt' }),
