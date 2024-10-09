@@ -10,7 +10,7 @@ export class DataViewlet {
 	 * Create a DataViewlet instance. All encodings that are supported by
 	 * the runtime environments `TextDecoder` interface.
 	 *
-	 * @param array - a `Unit8Array` view on the binary buffer
+	 * @param array - a `Uint8Array` view on the binary buffer
 	 * @param encoding - encoding of strings, defaults to utf-8
 	 */
 	constructor(
