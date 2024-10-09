@@ -205,7 +205,11 @@ export class Install implements Command {
 			}
 
 			const input = readFileSync(inFile);
-			const catalog = parseMoCatalog(input);
+			const b = input.buffer.slice(
+				input.byteOffset,
+				input.byteOffset + input.byteLength,
+			) as ArrayBuffer;
+			const catalog = parseMoCatalog(b);
 			const json = JSON.stringify(catalog);
 
 			writeFile(outFile, json, err => {
@@ -236,7 +240,11 @@ export class Install implements Command {
 			}
 
 			const input = readFileSync(inFile);
-			const catalog = parseMoCatalog(input);
+			const b = input.buffer.slice(
+				input.byteOffset,
+				input.byteOffset + input.byteLength,
+			) as ArrayBuffer;
+			const catalog = parseMoCatalog(b);
 			const msgs: { [msgid: string]: string } = {};
 			for (const msgid in catalog.entries) {
 				const msgstr = catalog.entries[msgid];
