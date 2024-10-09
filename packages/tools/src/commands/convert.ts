@@ -247,14 +247,19 @@ export class Convert implements Command {
 		return true;
 	}
 
-	private readInput(filename: string | undefined): Buffer {
+	private readInput(filename: string | undefined): ArrayBuffer {
 		try {
 			if (filename === '-' && !fs.existsSync(filename)) {
 				filename = undefined;
 			}
 
 			if (typeof filename !== 'undefined') {
-				return fs.readFileSync(filename);
+				const b = fs.readFileSync(filename);
+
+				return b.buffer.slice(
+					b.byteOffset,
+					b.byteOffset + b.byteLength,
+				) as ArrayBuffer;
 			}
 
 			// Must read from standard input.
@@ -270,7 +275,12 @@ export class Convert implements Command {
 				chunks.push(Buffer.from(buffer.subarray(0, bytesRead)));
 			}
 
-			return Buffer.concat(chunks);
+			const b = Buffer.concat(chunks);
+
+			return b.buffer.slice(
+				b.byteOffset,
+				b.byteOffset + b.byteLength,
+			) as ArrayBuffer;
 		} catch (error) {
 			if (typeof filename === 'undefined') {
 				filename = gtx._('[standard input]');
