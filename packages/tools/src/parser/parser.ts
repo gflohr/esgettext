@@ -656,6 +656,7 @@ export abstract class Parser {
 			}
 
 			if (buf[i] === 0xd) {
+				++i;
 				continue;
 			}
 

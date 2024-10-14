@@ -82,6 +82,17 @@ msgstr ""
 			expect(errorSpy).not.toHaveBeenCalled();
 			expect(warnSpy).not.toHaveBeenCalled();
 		});
+
+		it('should process strings with carriage returns', () => {
+			const catalog = new Catalog();
+			const p = new JavaScriptParser(catalog, { extractAll: true });
+			const code = 'console.log();\r\nconsole.log();';
+			const buf = Buffer.from(code);
+			expect(p.parse(buf, 'example.js')).toBeTruthy();
+			expect(catalog.toString({ omitHeader: true })).toEqual('');
+			expect(errorSpy).not.toHaveBeenCalled();
+			expect(warnSpy).not.toHaveBeenCalled();
+		});
 	});
 
 	describe('comments', () => {
