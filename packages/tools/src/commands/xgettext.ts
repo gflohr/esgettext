@@ -275,7 +275,6 @@ export class XGettext implements Command {
 		};
 	}
 
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	additional(argv: yargs.Argv) {
 		argv.positional(gtx._('INPUTFILE'), {
 			type: 'string',
@@ -471,6 +470,7 @@ export class XGettext implements Command {
 			try {
 				const fullName = resolve(directories[i], filename);
 				return readFileSync(fullName);
+				// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			} catch (e) {
 				/* ignore */
 			}
@@ -656,6 +656,10 @@ export class XGettext implements Command {
 				cookedKeywords.push(Keyword.from(raw));
 			});
 			parserOptions.keyword = cookedKeywords;
+		}
+
+		if (this.options.instance) {
+			parserOptions.instance = this.options.instance;
 		}
 
 		return parserOptions;
