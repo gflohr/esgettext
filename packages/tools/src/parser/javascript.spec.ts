@@ -471,6 +471,22 @@ msgstr ""
 			expect(errorSpy).not.toHaveBeenCalled();
 			expect(warnSpy).not.toHaveBeenCalled();
 		});
+
+		it('should extract calls inside template strings', () => {
+			const catalog = new Catalog();
+			const p = new JavaScriptParser(catalog, {
+				keyword: [new Keyword('_', ['1'])],
+			});
+			const code = '`Hello, ${gtx._("Hello, world!")}`';
+			expect(p.parse(Buffer.from(code), 'example.js')).toBeTruthy();
+			const expected = `#: example.js:1
+msgid "Hello, world!"
+msgstr ""
+`;
+			expect(catalog.toString({ omitHeader: true })).toEqual(expected);
+			expect(errorSpy).not.toHaveBeenCalled();
+			expect(warnSpy).not.toHaveBeenCalled();
+		});
 	});
 
 	describe('encoding', () => {
