@@ -445,6 +445,13 @@ export abstract class Parser {
 			instance.push(me.property.name);
 			return this.methodFromMemberExpression(me.object, instance);
 		} else if (
+			t.isThisExpression(me.object) &&
+			t.isIdentifier(me.property) &&
+			!me.computed
+		) {
+			instance.push(me.property.name);
+			return instance[0];
+		} else if (
 			t.isMemberExpression(me.object) &&
 			t.isLiteral(me.property) &&
 			me.computed
