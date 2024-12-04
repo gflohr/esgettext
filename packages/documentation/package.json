@@ -16,7 +16,7 @@
 	"author": "Guido Flohr <www.guido-flohr.net>",
 	"license": "WTFPL",
 	"devDependencies": {
-		"@fullhuman/postcss-purgecss": "^6.0.0",
+		"@fullhuman/postcss-purgecss": "^7.0.2",
 		"@popperjs/core": "^2.11.8",
 		"bootstrap": "^5.3.3",
 		"bootstrap-icons": "^1.11.3",
@@ -26,13 +26,13 @@
 		"css-minimizer-webpack-plugin": "^7.0.0",
 		"gumshoejs": "github:cferdinandi/gumshoe",
 		"live-server": "^1.2.2",
-		"mini-css-extract-plugin": "^2.9.0",
+		"mini-css-extract-plugin": "^2.9.2",
 		"postcss-loader": "^8.1.1",
-		"postcss-preset-env": "^9.5.14",
+		"postcss-preset-env": "^10.1.1",
 		"prismjs": "^1.29.0",
-		"sass": "^1.77.5",
-		"sass-loader": "^14.2.1",
-		"webpack": "^5.92.0",
+		"sass": "^1.82.0",
+		"sass-loader": "^16.0.4",
+		"webpack": "^5.97.0",
 		"webpack-cli": "^5.1.4"
 	}
 }

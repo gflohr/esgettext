@@ -128,16 +128,20 @@ export class Convert implements Command {
 			}
 
 			try {
-				const inBuffer = this.readInput(input);
+				const buffer = this.readInput(input);
+				const arrayBuffer: ArrayBuffer = (buffer.buffer as ArrayBuffer).slice(
+					buffer.byteOffset,
+					buffer.byteOffset + buffer.byteLength,
+				);
 				let catalog: Catalog;
 				switch (options.inputFormat) {
 					case 'mo.json':
-						catalog = parseMoJsonCatalog(inBuffer);
+						catalog = parseMoJsonCatalog(arrayBuffer);
 						break;
 					case 'mo':
 					case 'gmo':
 					default:
-						catalog = parseMoCatalog(inBuffer);
+						catalog = parseMoCatalog(arrayBuffer);
 						break;
 				}
 
@@ -152,7 +156,12 @@ export class Convert implements Command {
 
 				this.output(output, converted);
 			} catch (e) {
-				console.error(gtx._x('{programName}: Error: {e}'));
+				console.error(
+					gtx._x('{programName}: Error: {e}', {
+						programName: Package.getName(),
+						e,
+					}),
+				);
 				return resolve(1);
 			}
 

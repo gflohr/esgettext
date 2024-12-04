@@ -1,6 +1,8 @@
 import { decode } from 'iconv-lite';
 import traverse, { NodePath } from '@babel/traverse';
 import * as t from '@babel/types';
+import * as fs from 'fs';
+import * as path from 'path';
 
 import { Textdomain } from '@esgettext/runtime';
 import { Catalog } from '../pot/catalog';
@@ -443,6 +445,13 @@ export abstract class Parser {
 			instance.push(me.property.name);
 			return this.methodFromMemberExpression(me.object, instance);
 		} else if (
+			t.isThisExpression(me.object) &&
+			t.isIdentifier(me.property) &&
+			!me.computed
+		) {
+			instance.push(me.property.name);
+			return instance[0];
+		} else if (
 			t.isMemberExpression(me.object) &&
 			t.isLiteral(me.property) &&
 			me.computed
@@ -450,6 +459,13 @@ export abstract class Parser {
 			// Recurse.
 			instance.push(this.literalValue(me.property) as string);
 			return this.methodFromMemberExpression(me.object, instance);
+		} else if (
+			t.isThisExpression(me.object) &&
+			t.isLiteral(me.property) &&
+			me.computed
+		) {
+			instance.push(this.literalValue(me.property) as string);
+			return instance[0];
 		} else {
 			return null;
 		}
@@ -720,6 +736,53 @@ export abstract class Parser {
 			}
 
 			return loc;
+		}
+
+		return null;
+	}
+
+	private getSourceTypeFromPackageJson(filename: string): 'script' | 'module' {
+		const packageJsonPath = this.findPackageJson(filename);
+		if (packageJsonPath === null) return 'script';
+		const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+		if (packageJson.type === 'module') {
+			return 'module';
+		}
+
+		return 'script';
+	}
+
+	protected getSourceType(filename: string): 'script' | 'module' {
+		const extname = path.extname(filename).toLowerCase();
+
+		switch (extname) {
+			case '.js':
+			case '.ts':
+			case '.jsx':
+			case '.tsx':
+				return this.getSourceTypeFromPackageJson(filename);
+			case '.mjs':
+				return 'module';
+			case '.cjs':
+				return 'script';
+			default:
+				return 'script';
+		}
+	}
+
+	private findPackageJson(filePath: string): string | null {
+		const absolutePath = path.resolve(filePath);
+
+		let currentDir = absolutePath;
+
+		while (currentDir !== path.parse(currentDir).root) {
+			const packageJsonPath = path.join(currentDir, 'package.json');
+
+			if (fs.existsSync(packageJsonPath)) {
+				return packageJsonPath;
+			}
+
+			currentDir = path.dirname(currentDir);
 		}
 
 		return null;

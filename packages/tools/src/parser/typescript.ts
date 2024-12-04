@@ -9,9 +9,9 @@ export class TypeScriptParser extends Parser {
 			allowReturnOutsideFunction: true,
 			allowSuperOutsideMethod: true,
 			allowUndeclaredExports: true,
-			// Documented but not supported. FIXME! Maybe only missing in types.
-			// errorRecovery: true,
+			errorRecovery: true,
 			sourceFilename: filename,
+			sourceType: this.getSourceType(filename),
 			plugins: [
 				'typescript',
 				'jsx',

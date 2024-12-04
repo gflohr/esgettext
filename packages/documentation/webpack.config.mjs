@@ -7,7 +7,7 @@ import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
 import fse from 'fs-extra';
 import CompressionPlugin from 'compression-webpack-plugin';
 import postcssPresetEnv from 'postcss-preset-env';
-import purgecss from '@fullhuman/postcss-purgecss';
+import { purgeCSSPlugin } from '@fullhuman/postcss-purgecss';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -47,7 +47,7 @@ export default {
 							postcssOptions: {
 								plugins: [
 									[
-										purgecss({
+										purgeCSSPlugin({
 											content: ['../../docs/**/*.html'],
 											safelist: [/language/, /line-numbers/],
 										}),

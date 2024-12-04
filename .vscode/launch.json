@@ -20,6 +20,16 @@
 			"internalConsoleOptions": "neverOpen"
 		},
 		{
+			"name": "Debug TypeScript Program",
+			"type": "node",
+			"request": "launch",
+			"program": "${file}",
+			"preLaunchTask": "tsc: build - tsconfig.json",
+			"cwd": "${workspaceFolder}",
+			"console": "integratedTerminal",
+			"internalConsoleOptions": "neverOpen"
+		},
+		{
 			"type": "node",
 			"request": "launch",
 			"name": "Debug Hello World",
