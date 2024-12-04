@@ -175,7 +175,7 @@ async function loadDomain(
 
 function pluralExpression(str: string): PluralFunction {
 	const tokens = str
-		.replace(/[ \t\r\013\014]/g, '')
+		.replace(/[ \t\r\x0b\x0c]/g, '')
 		.replace(/;$/, '')
 		// Do NOT allow square brackets here. JSFuck!
 		.split(/[<>!=]=|&&|\|\||[-!*/%+<>=?:;]/);

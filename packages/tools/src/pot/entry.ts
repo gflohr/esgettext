@@ -397,7 +397,7 @@ export class POTEntry {
 			'\\': '\\\\',
 		};
 
-		return input.replace(/([\u0007-\u000d"\\])/gs, m => {
+		return input.replace(/([\u0007-\u000d"\\])/g, m => {
 			return escapes[m[0]];
 		});
 	}
