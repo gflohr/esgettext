@@ -459,6 +459,13 @@ export abstract class Parser {
 			// Recurse.
 			instance.push(this.literalValue(me.property) as string);
 			return this.methodFromMemberExpression(me.object, instance);
+		} else if (
+			t.isThisExpression(me.object) &&
+			t.isLiteral(me.property) &&
+			me.computed
+		) {
+			instance.push(this.literalValue(me.property) as string);
+			return instance[0];
 		} else {
 			return null;
 		}

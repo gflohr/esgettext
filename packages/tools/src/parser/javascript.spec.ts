@@ -439,6 +439,38 @@ msgstr ""
 			expect(errorSpy).not.toHaveBeenCalled();
 			expect(warnSpy).not.toHaveBeenCalled();
 		});
+
+		it('should extract computed method calls', () => {
+			const catalog = new Catalog();
+			const p = new JavaScriptParser(catalog, {
+				keyword: [new Keyword('_', ['1'])],
+			});
+			const code = 'gtx["_"]("gotcha!")';
+			expect(p.parse(Buffer.from(code), 'example.js')).toBeTruthy();
+			const expected = `#: example.js:1
+msgid "gotcha!"
+msgstr ""
+`;
+			expect(catalog.toString({ omitHeader: true })).toEqual(expected);
+			expect(errorSpy).not.toHaveBeenCalled();
+			expect(warnSpy).not.toHaveBeenCalled();
+		});
+
+		it('should extract computed method calls inside this expressions', () => {
+			const catalog = new Catalog();
+			const p = new JavaScriptParser(catalog, {
+				keyword: [new Keyword('_', ['1'])],
+			});
+			const code = 'this["_"]("gotcha!")';
+			expect(p.parse(Buffer.from(code), 'example.js')).toBeTruthy();
+			const expected = `#: example.js:1
+msgid "gotcha!"
+msgstr ""
+`;
+			expect(catalog.toString({ omitHeader: true })).toEqual(expected);
+			expect(errorSpy).not.toHaveBeenCalled();
+			expect(warnSpy).not.toHaveBeenCalled();
+		});
 	});
 
 	describe('encoding', () => {
