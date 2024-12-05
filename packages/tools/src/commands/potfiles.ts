@@ -25,7 +25,6 @@ export class Potfiles implements Command {
 	private options: PotfilesOptions = undefined as unknown as PotfilesOptions;
 	private readonly configuration: Configuration;
 
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(configuration: Configuration) {
 		this.configuration = configuration;
 	}
@@ -72,7 +71,6 @@ export class Potfiles implements Command {
 		};
 	}
 
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	additional(argv: yargs.Argv) {
 		argv.positional(gtx._('PATTERN'), {
 			type: 'string',

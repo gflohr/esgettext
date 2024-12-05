@@ -38,7 +38,7 @@ async function loadCatalog(
 			} else {
 				throw new Error(`unsupported scheme ${parsedURL.protocol}`);
 			}
-		} catch (e) {
+		} catch {
 			if (browserEnvironment()) {
 				transport = 'http';
 			} else {
@@ -197,7 +197,6 @@ function pluralExpression(str: string): PluralFunction {
 	const code = 'var nplurals = 1, plural = 0;' + str + '; return 0 + plural';
 
 	// This may throw an exception!
-	// eslint-disable-next-line @typescript-eslint/no-implied-eval
 	return new Function('n', code) as PluralFunction;
 }
 
