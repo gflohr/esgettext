@@ -50,7 +50,6 @@ export class Init implements Command {
 	private readonly configuration: Configuration;
 	private packageJson = undefined as unknown as PackageJson;
 
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(configuration: Configuration) {
 		this.configuration = configuration;
 	}
@@ -458,7 +457,7 @@ export class Init implements Command {
 					encoding: 'utf-8',
 				})
 				.split(/[\r\n]+/);
-		} catch (_) {
+		} catch {
 			return null;
 		}
 	}
@@ -866,7 +865,7 @@ export class Init implements Command {
 				message: gtx._x("(Boolean) options to invoke '{tool}' with", {
 					tool: 'msgmerge',
 				}),
-				default: '--update --previous',
+				default: '--previous',
 			}),
 			msgfmt: await input({
 				message: gtx._x("The '{tool}' program to use:", { tool: 'msgfmt' }),

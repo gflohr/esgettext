@@ -1,8 +1,6 @@
 import { browserEnvironment } from './core/browser-environment';
 browserEnvironment(true);
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { userLocales } from './core/user-locales';
 const locales = new Array<string>();
 if (window.navigator.languages) {

@@ -38,9 +38,7 @@ describe('XMLHttpRequest', () => {
 	it('should fail on xhr errors', async () => {
 		mock.get('/error', () => Promise.reject(new Error()));
 
-		// eslint-disable-next-line no-console
 		const log = console.error;
-		// eslint-disable-next-line no-console
 		console.error = jest.fn();
 		try {
 			await transport.loadFile('/error').catch((e: string | undefined) => {
@@ -49,7 +47,6 @@ describe('XMLHttpRequest', () => {
 		} catch (e) {
 			expect(e).toBeDefined();
 		}
-		// eslint-disable-next-line no-console
 		console.error = log;
 	});
 });

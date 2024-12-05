@@ -1,7 +1,5 @@
 import { Transport } from './transport.interface';
 
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-
 export class TransportHttp implements Transport {
 	loadFile(url: string): Promise<ArrayBuffer> {
 		return new Promise((resolve, reject) => {

@@ -2,8 +2,6 @@ import { Catalog } from '../core/catalog';
 import { germanicPlural } from '../core/germanic-plural';
 import { DataViewlet } from '../core/data-viewlet';
 
-/* eslint-disable @typescript-eslint/no-explicit-any, no-control-regex, no-bitwise */
-
 interface POHeader {
 	[key: string]: string;
 }
@@ -33,10 +31,8 @@ export function parseMoCatalog(raw: ArrayBuffer): Catalog {
 	type Reader = (buf: DataViewlet, off: number) => number;
 	let reader: Reader;
 	if (magic === 0x950412de) {
-		/* eslint-disable-next-line @typescript-eslint/explicit-function-return-type */
 		reader = (buf, off) => buf.readUInt32LE(off);
 	} else if (magic === 0xde120495) {
-		/* eslint-disable-next-line @typescript-eslint/explicit-function-return-type */
 		reader = (buf, off) => buf.readUInt32BE(off);
 	} else {
 		throw new Error(`invalid MO magic 0x${magic.toString(16)}`);
