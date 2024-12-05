@@ -1,6 +1,6 @@
 {
 	"name": "@esgettext/runtime",
-	"version": "1.3.2",
+	"version": "1.3.6",
 	"description": "A gettext-like translation runtime for JavaScript aka EcmaScript",
 	"keywords": [
 		"gettext",
