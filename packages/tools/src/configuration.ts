@@ -443,7 +443,7 @@ export class ConfigurationFactory {
 			const data = await NpmCliPackageJson.load(process.cwd());
 			normalizePackageData(data.content);
 			return data.content as PackageJson;
-		} catch (error) {
+		} catch {
 			return {} as PackageJson;
 		}
 	}
@@ -472,7 +472,8 @@ export class ConfigurationFactory {
 		} else if (extension === '.json') {
 			try {
 				return JSON.parse(fs.readFileSync(filePath, 'utf-8')) as Configuration;
-			} catch {
+			} catch (e) {
+				console.error(`error reading configuration from '${filePath}': ${e}!`);
 				return null;
 			}
 		} else {
