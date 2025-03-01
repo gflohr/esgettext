@@ -5,7 +5,6 @@ lib-esm/
 dist/
 /tmp
 /out-tsc
-packages/runtime/api-docs
 packages/tools/src/package.ts
 
 # dependencies
@@ -53,3 +52,4 @@ write-package.json
 
 # Built documentation.
 packages/docs/_site/esgettext
+packages/docs/api-docs
