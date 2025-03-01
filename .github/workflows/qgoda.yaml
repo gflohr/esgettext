@@ -26,6 +26,7 @@ jobs:
         with:
           qgoda-version: latest-node
           qgoda-srcdir: packages/docs
+          alpine-dependencies: git
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v4
