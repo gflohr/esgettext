@@ -17,9 +17,19 @@ exclude:
 - /node_modules
 - /webpack.config.js
 - /postcss.config.js
-- /README.md
 precious:
   - /api-docs
 paths:
-  site: ../../docs
+  site: _site/esgettext
+permalink: '/esgettext{significant-path}'
+helpers:
+  webpack: bun run start
+  browser-sync: bun run server
+pre-build:
+  - name: webpack
+    run: npm run build
+# See https://github.com/peaceiris/actions-gh-pages/issues/892!
+post-build:
+  - name: disable-jekyll
+    run: touch _site/esgettext/.nojekyll
 title: esgettext - gettext for the web

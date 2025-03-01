@@ -1,0 +1,36 @@
+name: Deploy Docs with Qgoda
+
+on:
+  push:
+    branches:
+      - '**'
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Install Dependencies
+        run: npm run typedoc
+
+      - name: Build with Qgoda
+        uses: gflohr/qgoda-action@v1
+        with:
+          qgoda-version: latest-node
+          qgoda-srcdir: packages/docs
+          alpine-dependencies: git
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v4
+        if: github.ref == 'refs/heads/main'
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./packages/docs/_site/esgettext

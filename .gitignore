@@ -5,7 +5,6 @@ lib-esm/
 dist/
 /tmp
 /out-tsc
-packages/runtime/api-docs
 packages/tools/src/package.ts
 
 # dependencies
@@ -50,3 +49,7 @@ Thumbs.db
 
 write-package.json
 /.nx
+
+# Built documentation.
+packages/docs/_site/esgettext
+packages/docs/api-docs
