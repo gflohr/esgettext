@@ -1,0 +1,29 @@
+name: Deploy Docs with Qgoda
+
+on:
+  push:
+    branches:
+      - '**'
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Build with Qgoda
+        uses: gflohr/qgoda-action@v1
+        with:
+          qgoda-version: latest-node
+          qgoda-srcdir: packages/docs
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v4
+        if: github.ref == 'refs/heads/main'
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./packages/docs/_site/e-invoice-eu

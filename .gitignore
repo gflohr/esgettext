@@ -50,3 +50,6 @@ Thumbs.db
 
 write-package.json
 /.nx
+
+# Built documentation.
+packages/docs/_site/esgettext
