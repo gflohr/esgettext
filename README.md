@@ -1,5 +1,6 @@
-[![Travis (.org)](https://img.shields.io/travis/gflohr/esgettext.svg)](https://travis-ci.org/gflohr/esgettext)
-[![Coverage Status](https://coveralls.io/repos/github/gflohr/esgettext/badge.svg?branch=master)](https://coveralls.io/github/gflohr/esgettext?branch=master)
+[![licence](https://img.shields.io/badge/licence-WTFPL-blue)](http://www.wtfpl.net/)
+[![coverage](https://img.shields.io/coverallsCoverage/github/gflohr/esgettext?branch=main)](https://coveralls.io/github/gflohr/e-invoice-eu?branch=main)
+[![documentation](https://img.shields.io/badge/documentation-Qgoda🍓-ffc107)](https://www.qgoda.net/)
 
 # esgettext
 

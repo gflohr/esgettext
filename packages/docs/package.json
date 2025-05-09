@@ -9,7 +9,7 @@
 		"build": "webpack",
 		"prestart": "npm install",
 		"start": "webpack --watch",
-		"server": "browser-sync start --server ../../docs --watch --files=_timestamp",
+		"server": "browser-sync start --server ./_site --watch --files=_timestamp",
 		"test": "exit 0"
 	},
 	"keywords": [],
