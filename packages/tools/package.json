@@ -112,7 +112,7 @@
 		"jsonfile": "^6.1.0",
 		"mkdirp": "^3.0.1",
 		"valibot": "^1.1.0",
-		"yargs": "^17.7.2"
+		"yargs": "^18.0.0"
 	},
 	"gitHead": "5db17405f51ca17bea3d7ccf5f8c5eb8a06cb1c6"
 }
