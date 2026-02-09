@@ -31,8 +31,8 @@
 		"prepare": "husky"
 	},
 	"devDependencies": {
-		"husky": "^9.0.11",
-		"lerna": "^9.0.0"
+		"husky": "^9.1.7",
+		"lerna": "^9.0.3"
 	},
 	"version": ""
 }
