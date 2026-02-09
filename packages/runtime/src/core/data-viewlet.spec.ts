@@ -57,8 +57,17 @@ describe('bufferling', () => {
 		it('at offset 0', () => {
 			expect(dv.readString(undefined, 4)).toEqual('ABCD');
 		});
-		it('utf-8 string', () => {
-			expect(dv.readString(26, 8)).toEqual('Ã„Ã–ÃœÃŸ');
+		it('utf-8 string (decoded as windows-1252, code points)', () => {
+			const s = dv.readString(26, 8);
+
+			const codes: number[] = [];
+			for (let i = 0; i < s.length; i++) {
+				codes.push(s.charCodeAt(i));
+			}
+
+			expect(codes).toEqual([
+				0x00c3, 0x0084, 0x00c3, 0x0096, 0x00c3, 0x009c, 0x00c3, 0x009f,
+			]);
 		});
 		it('past end of buffer', () => {
 			expect(() => dv.readString(30, 5)).toThrow();
