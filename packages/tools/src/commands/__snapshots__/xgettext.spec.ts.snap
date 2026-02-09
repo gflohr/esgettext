@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`xgettext command-line options and arguments choice of input language option --language should accept the language typescript 1`] = `
 "# SOME DESCRIPTIVE TITLE

@@ -20,7 +20,7 @@ describe('format', () => {
 			expect(gtx.catalogFormat).toEqual('mo');
 		});
 		it('should reject me', () => {
-			expect(() => (gtx.catalogFormat = 'me')).toThrowError();
+			expect(() => (gtx.catalogFormat = 'me')).toThrow();
 		});
 	});
 
