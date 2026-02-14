@@ -13,7 +13,7 @@
 	"scripts": {
 		"build": "npm run build:lib && npm run build:lib-esm && npm run build:webpack",
 		"build:lib": "npm run clean:lib && tsc",
-		"build:lib-esm": "npm run clean:lib-esm && tsc -m es6 --outDir lib-esm",
+		"build:lib-esm": "npm run clean:lib-esm && tsc -p ./tsconfig.esm.json --outDir lib-esm",
 		"build:webpack": "npm run clean:webpack && webpack --config webpack.dev.js && webpack --config webpack.prod.js",
 		"clean": "npm run clean:lib && npm run clean:lib-esm && npm run clean:webpack",
 		"clean:lib": "rimraf lib",

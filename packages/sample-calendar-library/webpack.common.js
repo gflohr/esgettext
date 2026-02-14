@@ -4,38 +4,51 @@ const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
 module.exports = {
 	mode: 'production',
+
+	// enables source maps for minified output
 	devtool: 'source-map',
-	node: {
-		fs: 'empty',
-	},
+
 	optimization: {
+		minimize: true,
 		minimizer: [
 			new TerserPlugin({
-				cache: true,
-				parallel: true,
-				sourceMap: true,
-				terserOptions: {},
+				terserOptions: {
+					format: {
+						comments: false,
+					},
+				},
+				extractComments: false,
 			}),
 		],
 	},
+
 	module: {
 		rules: [
 			{
 				test: /\.tsx?$/,
 				loader: 'ts-loader',
-				exclude: [/node_modules/],
+				exclude: /node_modules/,
 			},
 		],
 	},
+
 	resolve: {
-		plugins: [new TsconfigPathsPlugin({ configFile: './tsconfig.json' })],
 		extensions: ['.ts', '.tsx', '.js'],
+		plugins: [new TsconfigPathsPlugin({ configFile: './tsconfig.json' })],
+
+		fallback: {
+			fs: false,
+		},
 	},
+
 	output: {
 		path: path.resolve(__dirname, 'dist'),
 		filename: '[name].js',
-		libraryTarget: 'umd',
-		library: 'esgettext',
-		umdNamedDefine: true,
+		library: {
+			name: 'esgettext',
+			type: 'umd',
+			umdNamedDefine: true,
+		},
+		globalObject: 'this', // prevents UMD issues in Node vs browser
 	},
 };
