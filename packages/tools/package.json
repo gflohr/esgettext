@@ -89,7 +89,7 @@
 		"@types/glob": "^9.0.0",
 		"@types/jest": "^30.0.0",
 		"@types/jsonfile": "^6.1.4",
-		"@types/node": "^25.2.2",
+		"@types/node": "^25.2.3",
 		"@types/npmcli__package-json": "^4.0.4",
 		"@types/yargs": "^17.0.35",
 		"eslint": "^10.0.0",
@@ -99,7 +99,7 @@
 		"rimraf": "^6.1.2",
 		"tsx": "^4.21.0",
 		"typescript": "^5.9.3",
-		"typescript-eslint": "^8.54.0"
+		"typescript-eslint": "^8.55.0"
 	},
 	"dependencies": {
 		"@babel/parser": "^7.29.0",
