@@ -54,14 +54,14 @@ importers:
         specifier: ^4.0.0
         version: 4.0.0(webpack@5.105.4)
       compression-webpack-plugin:
-        specifier: ^11.1.0
-        version: 11.1.0(webpack@5.105.4)
+        specifier: ^12.0.0
+        version: 12.0.0(webpack@5.105.4)
       css-loader:
-        specifier: ^7.1.3
+        specifier: ^7.1.4
         version: 7.1.4(webpack@5.105.4)
       css-minimizer-webpack-plugin:
-        specifier: ^7.0.4
-        version: 7.0.4(webpack@5.105.4)
+        specifier: ^8.0.0
+        version: 8.0.0(webpack@5.105.4)
       fs-extra:
         specifier: ^11.3.4
         version: 11.3.4
@@ -69,19 +69,19 @@ importers:
         specifier: github:cferdinandi/gumshoe
         version: https://codeload.github.com/cferdinandi/gumshoe/tar.gz/20adfaa41d8204e283ed926c5628ca986ebb4d4b
       mini-css-extract-plugin:
-        specifier: ^2.10.0
+        specifier: ^2.10.1
         version: 2.10.1(webpack@5.105.4)
       postcss-loader:
-        specifier: ^8.2.0
+        specifier: ^8.2.1
         version: 8.2.1(postcss@8.5.8)(typescript@5.9.3)(webpack@5.105.4)
       postcss-preset-env:
-        specifier: ^11.1.3
+        specifier: ^11.2.0
         version: 11.2.0(postcss@8.5.8)
       prismjs:
         specifier: ^1.30.0
         version: 1.30.0
       sass:
-        specifier: ^1.97.3
+        specifier: ^1.98.0
         version: 1.98.0
       sass-loader:
         specifier: ^16.0.7
@@ -90,7 +90,7 @@ importers:
         specifier: ^5.4.0
         version: 5.4.0(webpack@5.105.4)
       webpack:
-        specifier: ^5.105.2
+        specifier: ^5.105.4
         version: 5.105.4(webpack-cli@6.0.1)
       webpack-cli:
         specifier: ^6.0.1
@@ -113,7 +113,7 @@ importers:
         version: 2.8.1
     devDependencies:
       '@rollup/plugin-commonjs':
-        specifier: ^29.0.0
+        specifier: ^29.0.2
         version: 29.0.2(rollup@4.59.0)
       '@rollup/plugin-node-resolve':
         specifier: ^16.0.3
@@ -122,8 +122,8 @@ importers:
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.59.0)
       '@rollup/plugin-terser':
-        specifier: ^0.4.4
-        version: 0.4.4(rollup@4.59.0)
+        specifier: ^1.0.0
+        version: 1.0.0(rollup@4.59.0)
       '@rollup/plugin-typescript':
         specifier: ^12.3.0
         version: 12.3.0(rollup@4.59.0)(tslib@2.8.1)(typescript@5.9.3)
@@ -134,22 +134,22 @@ importers:
         specifier: ^25.4.0
         version: 25.4.0
       eslint:
-        specifier: ^10.0.0
+        specifier: ^10.0.3
         version: 10.0.3(jiti@2.6.1)
       jest:
-        specifier: ^30.2.0
+        specifier: ^30.3.0
         version: 30.3.0(@types/node@25.4.0)
       lint-staged:
-        specifier: ^16.2.7
+        specifier: ^16.3.3
         version: 16.3.3
       prettier:
         specifier: ^3.8.1
         version: 3.8.1
       rimraf:
-        specifier: ^6.1.2
+        specifier: ^6.1.3
         version: 6.1.3
       rollup:
-        specifier: ^4.57.1
+        specifier: ^4.59.0
         version: 4.59.0
       ts-jest:
         specifier: ^29.4.6
@@ -164,7 +164,7 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
       typescript-eslint:
-        specifier: ^8.55.0
+        specifier: ^8.57.0
         version: 8.57.0(eslint@10.0.3(jiti@2.6.1))(typescript@5.9.3)
       webpack-cli:
         specifier: ^6.0.1
@@ -216,10 +216,10 @@ importers:
         specifier: workspace:*
         version: link:../runtime
       '@inquirer/prompts':
-        specifier: ^8.2.0
+        specifier: ^8.3.0
         version: 8.3.0(@types/node@25.4.0)
       '@npmcli/package-json':
-        specifier: ^7.0.4
+        specifier: ^7.0.5
         version: 7.0.5
       '@valibot/i18n':
         specifier: ^1.0.0
@@ -253,7 +253,7 @@ importers:
         specifier: ^1.3.4
         version: 'link:'
       '@eslint/config-array':
-        specifier: ^0.23.1
+        specifier: ^0.23.3
         version: 0.23.3
       '@humanwhocodes/retry':
         specifier: ^0.4.3
@@ -271,7 +271,7 @@ importers:
         specifier: ^6.1.4
         version: 6.1.4
       '@types/node':
-        specifier: ^25.2.3
+        specifier: ^25.4.0
         version: 25.4.0
       '@types/normalize-package-data':
         specifier: ^2.4.4
@@ -283,10 +283,10 @@ importers:
         specifier: ^17.0.35
         version: 17.0.35
       eslint:
-        specifier: ^10.0.0
+        specifier: ^10.0.3
         version: 10.0.3(jiti@2.6.1)
       jest:
-        specifier: ^30.2.0
+        specifier: ^30.3.0
         version: 30.3.0(@types/node@25.4.0)
       lint-staged:
         specifier: ^16.3.3
@@ -298,7 +298,7 @@ importers:
         specifier: ^3.8.1
         version: 3.8.1
       rimraf:
-        specifier: ^6.1.2
+        specifier: ^6.1.3
         version: 6.1.3
       tsx:
         specifier: ^4.21.0
@@ -307,7 +307,7 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
       typescript-eslint:
-        specifier: ^8.55.0
+        specifier: ^8.57.0
         version: 8.57.0(eslint@10.0.3(jiti@2.6.1))(typescript@5.9.3)
 
 packages:
@@ -1763,9 +1763,9 @@ packages:
       rollup:
         optional: true
 
-  '@rollup/plugin-terser@0.4.4':
-    resolution: {integrity: sha512-XHeJC5Bgvs8LfukDwWZp7yeqin6ns8RTl2B9avbejt6tZqsqvVoWI7ZTQrcNsfKEDWBTnTxM8nMDkO2IFFbd0A==}
-    engines: {node: '>=14.0.0'}
+  '@rollup/plugin-terser@1.0.0':
+    resolution: {integrity: sha512-FnCxhTBx6bMOYQrar6C8h3scPt8/JwIzw3+AJ2K++6guogH5fYaIFia+zZuhqv0eo1RN7W1Pz630SyvLbDjhtQ==}
+    engines: {node: '>=20.0.0'}
     peerDependencies:
       rollup: ^2.0.0||^3.0.0||^4.0.0
     peerDependenciesMeta:
@@ -2835,9 +2835,9 @@ packages:
   compare-func@2.0.0:
     resolution: {integrity: sha512-zHig5N+tPWARooBnb0Zx1MFcdfpyJrfTJ3Y5L+IFvUm8rM74hHz66z0gw0x4tijh5CorKkKUCnW82R2vmpeCRA==}
 
-  compression-webpack-plugin@11.1.0:
-    resolution: {integrity: sha512-zDOQYp10+upzLxW+VRSjEpRRwBXJdsb5lBMlRxx1g8hckIFBpe3DTI0en2w7h+beuq89576RVzfiXrkdPGrHhA==}
-    engines: {node: '>= 18.12.0'}
+  compression-webpack-plugin@12.0.0:
+    resolution: {integrity: sha512-LR4mS19Jqq41XfA3xVMLrtzVNzqJbUHdzPeLRfQoLiAS9s87f0021fDuU89xxVQFcB6d20ufBkv4j1rQ4OowHw==}
+    engines: {node: '>= 20.9.0'}
     peerDependencies:
       webpack: ^5.1.0
 
@@ -2960,9 +2960,9 @@ packages:
       webpack:
         optional: true
 
-  css-minimizer-webpack-plugin@7.0.4:
-    resolution: {integrity: sha512-2iACis+P8qdLj1tHcShtztkGhCNIRUajJj7iX0IM9a5FA0wXGwjV8Nf6+HsBjBfb4LO8TTAVoetBbM54V6f3+Q==}
-    engines: {node: '>= 18.12.0'}
+  css-minimizer-webpack-plugin@8.0.0:
+    resolution: {integrity: sha512-9bEpzHs8gEq6/cbEj418jXL/YWjBUD2YTLLk905Npt2JODqnRITin0+So5Vx4Dp5vyi2Lpt9pp2QHzQ7fdxNrw==}
+    engines: {node: '>= 20.9.0'}
     peerDependencies:
       '@parcel/css': '*'
       '@swc/css': '*'
@@ -8088,7 +8088,7 @@ snapshots:
     optionalDependencies:
       rollup: 4.59.0
 
-  '@rollup/plugin-terser@0.4.4(rollup@4.59.0)':
+  '@rollup/plugin-terser@1.0.0(rollup@4.59.0)':
     dependencies:
       serialize-javascript: 7.0.4
       smob: 1.6.1
@@ -9160,7 +9160,7 @@ snapshots:
       array-ify: 1.0.0
       dot-prop: 5.3.0
 
-  compression-webpack-plugin@11.1.0(webpack@5.105.4):
+  compression-webpack-plugin@12.0.0(webpack@5.105.4):
     dependencies:
       schema-utils: 4.3.3
       serialize-javascript: 7.0.4
@@ -9312,7 +9312,7 @@ snapshots:
     optionalDependencies:
       webpack: 5.105.4(webpack-cli@6.0.1)
 
-  css-minimizer-webpack-plugin@7.0.4(webpack@5.105.4):
+  css-minimizer-webpack-plugin@8.0.0(webpack@5.105.4):
     dependencies:
       '@jridgewell/trace-mapping': 0.3.31
       cssnano: 7.1.3(postcss@8.5.8)
@@ -11498,7 +11498,7 @@ snapshots:
       npm-install-checks: 8.0.0
       npm-normalize-package-bin: 5.0.0
       npm-package-arg: 13.0.1
-      semver: 7.7.2
+      semver: 7.7.4
 
   npm-registry-fetch@19.1.0:
     dependencies:
