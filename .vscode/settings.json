@@ -5,5 +5,7 @@
 		"**/lib-esm": true,
 		"**/node_modules": true,
 		"**/dist": true
-	}
+	},
+	"npm.packageManager": "auto",
+	"typescript.preferences.preferTypeOnlyAutoImports": true
 }

@@ -6,8 +6,8 @@
 		"declaration": true,
 		"declarationMap": true,
 		"declarationDir": "./dist",
-		"rootDir": "./src"
+		"rootDir": "./src",
+		"types": ["node", "jest"]
 	},
-	"includes": ["./src"],
-	"exclude": ["./src/**/*.spec.ts"]
+	"includes": ["./src"]
 }

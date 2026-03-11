@@ -72,7 +72,7 @@ export class DataViewlet {
 	 * @returns the 32-bit unsigned integer at position `offset`.s
 	 */
 	readUInt32LE(offset = 0): number {
-		if (offset + 4 > this.array.byteLength + this.array.byteOffset) {
+		if (offset + 4 > this.array.byteLength) {
 			throw new Error('read past array end');
 		}
 
@@ -93,17 +93,14 @@ export class DataViewlet {
 	 *                 buffer if not specified.
 	 */
 	readString(offset = 0, length?: number): string {
-		if (
-			offset + (length as number) >
-			this.array.byteLength + this.array.byteOffset
-		) {
-			throw new Error('read past array end');
-		}
-
-		if (typeof length === 'undefined') {
+		if (length === undefined) {
 			length = this.array.byteLength - offset;
 		}
 
-		return this.decoder.decode(this.array.slice(offset, offset + length));
+		if (offset + length > this.array.byteLength) {
+			throw new Error('read past array end');
+		}
+
+		return this.decoder.decode(this.array.subarray(offset, offset + length));
 	}
 }
