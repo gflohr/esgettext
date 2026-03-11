@@ -1,6 +1,6 @@
 {
 	"name": "@esgettext/sample-calendar-library",
-	"version": "1.1.0",
+	"version": "1.3.10",
 	"description": "Example library internationalized with esgettext",
 	"main": "lib/index.js",
 	"private": true,
