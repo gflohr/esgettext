@@ -156,7 +156,7 @@ FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 					.map(entry => entry.toString(width))
 					.join('\n');
 
-		let body = '';
+		let body: string;
 		if (options.sortOutput) {
 			body = this.entries
 				.filter(isNotHeader)

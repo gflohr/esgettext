@@ -285,9 +285,9 @@ export class Convert implements Command {
 				filename = gtx._('[standard input]');
 			}
 
-			throw Error(
-				gtx._x('{filename}: read failed: {error}', { filename, error }),
-			);
+			throw new Error(gtx._x('{filename}: read failed', { filename }), {
+				cause: error,
+			});
 		}
 	}
 
@@ -375,6 +375,7 @@ export class Convert implements Command {
 			} catch (error) {
 				throw Error(
 					gtx._x('{filename}: write failed: {error}', { filename, error }),
+					{ cause: error },
 				);
 			}
 		}
