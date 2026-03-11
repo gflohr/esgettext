@@ -65,9 +65,9 @@
 		]
 	},
 	"dependencies": {
-		"@esgettext/runtime": "file:../runtime"
+		"@esgettext/runtime": "workspace:*"
 	},
 	"devDependencies": {
-		"@esgettext/tools": "file:../tools"
+		"@esgettext/tools": "workspace:*"
 	}
 }

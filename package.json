@@ -25,12 +25,13 @@
 		"typedoc": "lerna run typedoc --stream",
 		"publish": "lerna publish --no-private",
 		"prepublish": "lerna run --no-private --stream check:clean",
-		"prepare": "husky"
+		"prepare": "husky",
+		"preinstall": "npx only-allow pnpm"
 	},
 	"devDependencies": {
 		"@tsconfig/recommended": "^1.0.13",
 		"husky": "^9.1.7",
-		"lerna": "^9.0.4"
-	},
-	"version": ""
+		"lerna": "^9.0.4",
+		"pnpm": "^10.30.3"
+	}
 }

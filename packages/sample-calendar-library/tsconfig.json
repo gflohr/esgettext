@@ -8,5 +8,6 @@
 			"@esgettext/runtime": ["../runtime/src"]
 		}
 	},
-	"includes": ["./src"]
+	"includes": ["./src"],
+	"exclude": ["./src/**/*.spec.ts"]
 }
