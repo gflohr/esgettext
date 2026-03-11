@@ -20,6 +20,9 @@ importers:
       pnpm:
         specifier: ^10.30.3
         version: 10.32.1
+      prettier:
+        specifier: ^3.8.1
+        version: 3.8.1
 
   packages/documentation:
     devDependencies:
