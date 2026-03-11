@@ -13,7 +13,6 @@ import { germanicPlural } from './germanic-plural';
 import { CatalogCache } from './catalog-cache';
 import { explodeLocale, ExplodedLocale } from './explode-locale';
 import { LocaleContainer } from './locale-container';
-import { pathSeparator } from './platform';
 
 type PluralFunction = (numItems: number) => number;
 
@@ -81,7 +80,7 @@ function assemblePath(
 	domainname: string,
 	extender: string,
 ): string {
-	return [base, id, 'LC_MESSAGES', domainname].join(pathSeparator) + `.${extender}`;
+	return `${base}/${id}/LC_MESSAGES/${domainname}.${extender}`;
 }
 
 async function loadLanguageFromObject(
