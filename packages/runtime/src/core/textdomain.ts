@@ -5,7 +5,6 @@ import { browserEnvironment } from './browser-environment';
 import { gettextImpl } from './gettext-impl';
 import { germanicPlural } from './germanic-plural';
 import { splitLocale } from './split-locale';
-import { pathSeparator } from './platform';
 import { userLocales } from './user-locales';
 import { selectLocale } from './select-locale';
 import type { LocaleContainer } from './locale-container';
@@ -640,10 +639,7 @@ export class Textdomain {
 		let path = this.bindtextdomain();
 
 		if (typeof path === 'undefined' || path === null) {
-			const parts = browserEnvironment()
-				? ['', 'assets', 'locale']
-				: ['.', 'locale'];
-			path = parts.join(pathSeparator);
+			path = browserEnvironment() ? '/assets/locale' : './locale';
 		}
 
 		const resolvedLocale = locale ? locale : Textdomain.locale;

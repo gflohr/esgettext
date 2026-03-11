@@ -10,7 +10,7 @@
 		"prestart": "pnpm install",
 		"start": "webpack --watch",
 		"server": "browser-sync start --server ../../docs --watch --files=_timestamp",
-		"test": "exit 0"
+		"test": "echo no tests defined"
 	},
 	"keywords": [],
 	"author": "Guido Flohr <www.guido-flohr.net>",
@@ -33,6 +33,7 @@
 		"prismjs": "^1.30.0",
 		"sass": "^1.97.3",
 		"sass-loader": "^16.0.7",
+		"terser-webpack-plugin": "^5.4.0",
 		"webpack": "^5.105.2",
 		"webpack-cli": "^6.0.1"
 	}

@@ -1,1 +1,1 @@
-npm run test:cov -- --since origin/main
+pnpm run test:cov-changed

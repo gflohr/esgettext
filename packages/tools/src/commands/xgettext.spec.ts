@@ -452,6 +452,7 @@ files-from-2.js
 						`ENOENT: no such file or directory, open '${filename}'`,
 					);
 				});
+
 				const xgettext = new XGettext(baseConfig, date);
 				expect(await xgettext.run(argv)).toEqual(1);
 				expect(readFileSync).toHaveBeenCalledTimes(3);

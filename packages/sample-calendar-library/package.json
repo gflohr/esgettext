@@ -31,8 +31,10 @@
 		"lint:fix-dry-run": "eslint --fix './src/**/*.ts'",
 		"lint:staged": "lint-staged",
 		"test": "jest",
+		"test:changed": "jest --changedSince origin/main --passWithNoTests",
 		"test:watch": "jest --watch",
 		"test:cov": "jest --coverage",
+		"test:cov-changed": "jest --coverage --changedSince origin/main --passWithNoTests",
 		"test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand"
 	},
 	"author": "Guido Flohr <guido.flohr@cantanea.com> (http://www.guido.flohr.net/)",
@@ -92,6 +94,8 @@
 		"@types/node": "^25.4.0",
 		"jest": "^30.3.0",
 		"rimraf": "^6.1.3",
-		"ts-loader": "^9.5.4"
+		"ts-loader": "^9.5.4",
+		"typescript": "^5.9.3",
+		"webpack": "^5.105.4"
 	}
 }

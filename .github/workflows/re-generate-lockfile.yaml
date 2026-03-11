@@ -1,0 +1,45 @@
+name: Re-generate lockfile
+
+on:
+  workflow_dispatch:
+
+jobs:
+  regenerate-lockfile:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Delete lockfile
+        run: rm -f pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --ignore-scripts
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v8
+        with:
+          branch: regenerate-pnpm-lockfile
+          delete-branch: true
+          commit-message: "chore: regenerate pnpm lockfile"
+          title: "Regenerate pnpm lockfile"
+          body: |
+            This PR was created automatically to regenerate `pnpm-lock.yaml`.
