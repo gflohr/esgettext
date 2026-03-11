@@ -92,6 +92,10 @@ importers:
         version: link:../tools
 
   packages/runtime:
+    dependencies:
+      tslib:
+        specifier: ^2.8.1
+        version: 2.8.1
     devDependencies:
       '@rollup/plugin-commonjs':
         specifier: ^29.0.0
@@ -123,6 +127,9 @@ importers:
       lint-staged:
         specifier: ^16.2.7
         version: 16.3.3
+      prettier:
+        specifier: ^3.8.1
+        version: 3.8.1
       rimraf:
         specifier: ^6.1.2
         version: 6.1.3
