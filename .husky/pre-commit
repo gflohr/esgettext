@@ -1,1 +1,1 @@
-pnpm test -- --changedSince origin/main && pnpm run lint:staged
+pnpm run test:changed && pnpm run lint:staged

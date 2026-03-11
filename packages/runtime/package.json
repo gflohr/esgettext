@@ -38,8 +38,10 @@
 		"lint:staged": "lint-staged",
 		"typedoc": "typedoc --out ../../docs/api-docs --excludeNotDocumented --excludePrivate --excludeProtected src",
 		"test": "jest",
+		"test:changed": "jest --changedSince origin/main --passWithNoTests",
 		"test:watch": "jest --watch",
 		"test:cov": "jest --coverage",
+		"test:cov-changed": "jest --coverage --changedSince origin/main --passWithNoTests",
 		"test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand"
 	},
 	"author": "Guido Flohr <guido.flohr@cantanea.com> (http://www.guido.flohr.net/)",
