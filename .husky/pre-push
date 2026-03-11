@@ -1,1 +1,1 @@
-pnpm run test:cov -- --since origin/main
+pnpm run test:cov -- --changedSince origin/main
