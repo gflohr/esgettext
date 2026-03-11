@@ -74,6 +74,9 @@ importers:
       sass-loader:
         specifier: ^16.0.7
         version: 16.0.7(sass@1.98.0)(webpack@5.105.4)
+      terser-webpack-plugin:
+        specifier: ^5.4.0
+        version: 5.4.0(webpack@5.105.4)
       webpack:
         specifier: ^5.105.2
         version: 5.105.4(webpack-cli@6.0.1)
