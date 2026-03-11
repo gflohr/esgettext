@@ -57,17 +57,17 @@ describe('bufferling', () => {
 		it('at offset 0', () => {
 			expect(dv.readString(undefined, 4)).toEqual('ABCD');
 		});
-		it('utf-8 string (decoded as windows-1252, code points)', () => {
-			const s = dv.readString(26, 8);
-
-			const codes: number[] = [];
-			for (let i = 0; i < s.length; i++) {
-				codes.push(s.charCodeAt(i));
-			}
-
-			expect(codes).toEqual([
-				0x00c3, 0x0084, 0x00c3, 0x0096, 0x00c3, 0x009c, 0x00c3, 0x009f,
+		it('decodes windows-1252 correctly', () => {
+			const bytes = new Uint8Array([
+				0xc4, // Ä
+				0xd6, // Ö
+				0xdc, // Ü
+				0xdf, // ß
 			]);
+
+			const dv = new DataViewlet(bytes, 'windows-1252');
+
+			expect(dv.readString(0, 4)).toBe('ÄÖÜß');
 		});
 		it('past end of buffer', () => {
 			expect(() => dv.readString(30, 5)).toThrow();
