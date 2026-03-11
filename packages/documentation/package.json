@@ -5,9 +5,9 @@
 	"main": "index.js",
 	"private": true,
 	"scripts": {
-		"prebuild": "npm install",
+		"prebuild": "pnpm install",
 		"build": "webpack",
-		"prestart": "npm install",
+		"prestart": "pnpm install",
 		"start": "webpack --watch",
 		"server": "browser-sync start --server ../../docs --watch --files=_timestamp",
 		"test": "exit 0"
@@ -25,6 +25,7 @@
 		"compression-webpack-plugin": "^11.1.0",
 		"css-loader": "^7.1.3",
 		"css-minimizer-webpack-plugin": "^7.0.4",
+		"fs-extra": "^11.3.4",
 		"gumshoejs": "github:cferdinandi/gumshoe",
 		"mini-css-extract-plugin": "^2.10.0",
 		"postcss-loader": "^8.2.0",
