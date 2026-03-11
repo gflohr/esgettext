@@ -10,9 +10,6 @@
 		"gettext",
 		"xgettext"
 	],
-	"workspaces": [
-		"packages/*"
-	],
 	"scripts": {
 		"build": "lerna run build --stream",
 		"format": "prettier --write *.js *.json *.md && lerna run format --stream",
