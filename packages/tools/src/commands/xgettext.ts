@@ -462,7 +462,7 @@ export class XGettext implements Command {
 			if (dir === '') {
 				return file;
 			} else {
-				return dir + path.sep + file;
+				return dir + '/' + file;
 			}
 		};
 
