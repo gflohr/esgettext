@@ -7,7 +7,7 @@ on:
 
 jobs:
   test:
-    name: Test on ubuntu-latest with Node.js 22
+    name: Test on ubuntu-latest with Node.js 24
     runs-on: ubuntu-latest
 
     steps:
@@ -17,7 +17,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
 
       - name: Set up pnpm
         uses: pnpm/action-setup@v4
