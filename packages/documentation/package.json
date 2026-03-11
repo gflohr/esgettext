@@ -10,7 +10,7 @@
 		"prestart": "pnpm install",
 		"start": "webpack --watch",
 		"server": "browser-sync start --server ../../docs --watch --files=_timestamp",
-		"test": "exit 0"
+		"test": "echo no tests defined"
 	},
 	"keywords": [],
 	"author": "Guido Flohr <www.guido-flohr.net>",
