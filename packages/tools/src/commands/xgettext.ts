@@ -596,12 +596,12 @@ export class XGettext implements Command {
 			filename = this.options.output;
 		}
 
-		const outputDir =
+		const outputFilename =
 			typeof this.options.outputDir === 'undefined'
-				? ''
-				: this.options.outputDir;
+				? filename
+				: `${this.options.outputDir}/${filename}`;
 
-		writeFileSync(path.join(outputDir, filename), po);
+		writeFileSync(outputFilename, po);
 	}
 
 	private fillExclusionCatalog(catalogs: Array<string>): boolean {
