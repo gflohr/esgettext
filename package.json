@@ -33,10 +33,12 @@
 		"pnpm": ">=10.29.1"
 	},
 	"devDependencies": {
+		"@eslint/js": "^10.0.1",
 		"@tsconfig/recommended": "^1.0.13",
 		"husky": "^9.1.7",
 		"lerna": "^9.0.4",
 		"pnpm": "^10.30.3",
-		"prettier": "^3.8.1"
+		"prettier": "^3.8.1",
+		"typescript-eslint": "^8.57.0"
 	}
 }
