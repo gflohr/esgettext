@@ -32,7 +32,7 @@
 		"node": ">=20.0.0",
 		"pnpm": ">=10.29.1"
 	},
-	"packageManager": "pnpm@10.29.1",
+	"packageManager": "pnpm@10",
 	"devDependencies": {
 		"@tsconfig/recommended": "^1.0.13",
 		"husky": "^9.1.7",
